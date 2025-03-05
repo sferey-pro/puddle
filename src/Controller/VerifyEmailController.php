@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Common\Query\QueryBusInterface;
 use App\Entity\User;
 use App\Security\EmailVerifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
