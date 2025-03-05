@@ -11,7 +11,40 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body id="{% block body_id %}{% endblock %}">
+        {% block header %}
+            {% set _route = app.current_route %}
+            <header>
+                <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="#">Puddle</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li class="nav-item">
+                            <a class="nav-link{{ _route == 'app_homepage' ? ' active' : '' }}" aria-current="page" href="{{ path('app_homepage') }}">Home</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link{{ _route == 'app_user_index' ? ' active' : '' }}" href="{{ path('app_user_index') }}">Users</a>
+                          </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link{{ _route == 'app_register' ? ' active' : '' }}" aria-current="page" href="{{ path('app_register') }}">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link{{ _route == 'app_login' ? ' active' : '' }}" aria-current="page" href="{{ path('app_login') }}">Login</a>
+                            </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </nav>
+            </header>
+        {% endblock %}
+        <div class="container body-container">
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>
