@@ -9,6 +9,7 @@
         "php": ">=8.3.17",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-xsl": "*",
         "api-platform/doctrine-orm": "^4.1",
         "api-platform/symfony": "^4.1",
         "doctrine/dbal": "^3.9.4",
@@ -31,6 +32,7 @@
         "symfony/mailer": "7.2.*",
         "symfony/mercure-bundle": "^0.3.9",
         "symfony/messenger": "7.2.*",
+        "symfony/notifier": "7.2.*",
         "symfony/property-access": "7.2.*",
         "symfony/property-info": "7.2.*",
         "symfony/runtime": "7.2.*",
@@ -44,7 +46,9 @@
         "symfony/yaml": "7.2.*",
         "symfonycasts/sass-bundle": "^0.8.2",
         "symfonycasts/verify-email-bundle": "^1.17.3",
-        "twig/extra-bundle": "^2.12|^3.20",
+        "twig/cssinliner-extra": "^3.20",
+        "twig/extra-bundle": "^3.20",
+        "twig/inky-extra": "^3.20",
         "twig/twig": "^2.12|^3.20"
     },
     "config": {
