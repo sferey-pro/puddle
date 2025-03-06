@@ -1,0 +1,9 @@
+<td>{{ user.id }}</td>
+<td>{{ user.email }}</td>
+<td>{{ user.uuid }}</td>
+<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+<td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+<td>
+    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+</td>

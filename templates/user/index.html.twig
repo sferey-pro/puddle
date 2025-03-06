@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %}User index{% endblock %}
 
@@ -12,28 +12,18 @@
                 <th>Email</th>
                 <th>Uuid</th>
                 <th>Roles</th>
-                <th>Password</th>
                 <th>IsVerified</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.uuid }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-                </td>
+            <tr id="user_{{ user.id }}">
+                {{ include('user/_user_item.html.twig', { user: user}) }}
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="6">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
