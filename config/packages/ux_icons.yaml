@@ -1,0 +1,12 @@
+ux_icons:
+    default_icon_attributes:
+        width: 1.2em
+        height: 1.2em
+        style: 'position: relative; top: -2px;'
+    ignore_not_found: true
+    aliases:
+        settings: 'lucide:settings'
+        pencil: 'lucide:pencil'
+        eye: 'lucide:eye'
+    iconify:
+        enabled: true

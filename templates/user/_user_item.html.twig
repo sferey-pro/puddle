@@ -3,7 +3,14 @@
 <td>{{ user.uuid }}</td>
 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
 <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-<td>
-    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+<td class="text-right">
+    <div class="item-actions">
+        <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-secondary">
+            <twig:ux:icon name="eye"/> {{ 'action.show'|trans }}
+        </a>
+
+        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-primary">
+            <twig:ux:icon name="pencil"/> {{ 'action.edit'|trans }}
+        </a>
+    </div>
 </td>
