@@ -1,2 +1,5 @@
 workers:
+    sass:
+        cmd: ['symfony', 'console', 'sass:build', '--watch']
+
     docker_compose: ~
