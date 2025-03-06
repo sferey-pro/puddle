@@ -18,7 +18,15 @@
             </header>
         {% endblock %}
         <div class="container body-container">
-            {% block body %}{% endblock %}
+            {% block body %}
+                <div class="row">
+                    <div id="main">
+                        {{ include('default/_flash_messages.html.twig') }}
+
+                        {% block main %}{% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
         </div>
     </body>
 </html>

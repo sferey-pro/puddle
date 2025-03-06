@@ -32,4 +32,19 @@ return [
         'version' => '5.3.3',
         'type' => 'css',
     ],
+    'bootstrap/js/dist/alert' => [
+        'version' => '5.3.3',
+    ],
+    'bootstrap/js/dist/dropdown' => [
+        'version' => '5.3.3',
+    ],
+    'bootstrap/js/dist/collapse' => [
+        'version' => '5.3.3',
+    ],
+    'bootstrap/js/dist/tab' => [
+        'version' => '5.3.3',
+    ],
+    'bootstrap/js/dist/modal' => [
+        'version' => '5.3.3',
+    ],
 ];
