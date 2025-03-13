@@ -33,6 +33,7 @@ class AuthenticationLoginLinkSuccessHandler implements AuthenticationSuccessHand
         $userLogin = $this->em->getRepository(UserLogin::class)->findOneBy([
             'user' => $user,
             'expiresAt' => $date->setTimestamp($request->get('expires')),
+            'hash' => $request->get('hash'),
         ]);
 
         $userLogin->verified();
