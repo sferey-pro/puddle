@@ -34,7 +34,7 @@ final class CreateLoginLinkHandler
         $userRequest = clone $request;
         $userRequest->setLocale($user->getLocale() ?? $request->getDefaultLocale());
 
-        $loginLinkDetails = $this->loginLinkHandler->createLoginLink($user, );
+        $loginLinkDetails = $this->loginLinkHandler->createLoginLink($user);
 
         // create a notification based on the login link details
         $notification = new CustomLoginLinkNotification(

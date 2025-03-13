@@ -19,7 +19,7 @@ final class CreateLoginLink implements CommandInterface
         $this->user = $user;
     }
 
-    public function getUuid(): UUid
+    public function getUuid(): Uuid
     {
         return $this->uuid;
     }

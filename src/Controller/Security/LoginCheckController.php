@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/login/check', name: 'app_login_check')]
 final class LoginCheckController extends AbstractController
 {
-
     #[Template('security/process_login_link.html.twig')]
     public function __invoke(
         Request $request,

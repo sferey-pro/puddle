@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserLoginRepository;
@@ -34,7 +36,6 @@ class UserLogin
 
     #[ORM\Column(length: 255)]
     private ?string $ipAddress = null;
-
 
     public function getId(): ?int
     {
@@ -119,5 +120,4 @@ class UserLogin
 
         return $this;
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\Authentication;
 
 use App\Entity\UserLogin;
@@ -12,7 +14,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationLoginLinkSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
-
     protected array $defaultOptions = [
         'default_target_path' => '/',
     ];
@@ -21,7 +22,6 @@ class AuthenticationLoginLinkSuccessHandler implements AuthenticationSuccessHand
         private HttpUtils $httpUtils,
         private EntityManagerInterface $em,
     ) {
-
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
@@ -32,7 +32,7 @@ class AuthenticationLoginLinkSuccessHandler implements AuthenticationSuccessHand
         /** @var UserLogin $userLogin */
         $userLogin = $this->em->getRepository(UserLogin::class)->findOneBy([
             'user' => $user,
-            'expiresAt' => $date->setTimestamp($request->get('expires'))
+            'expiresAt' => $date->setTimestamp($request->get('expires')),
         ]);
 
         $userLogin->verified();

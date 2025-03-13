@@ -12,15 +12,14 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 #[Route(path: '/login', name: 'app_login')]
 final class LoginController extends AbstractController
 {
-
     public function __construct(
         private AuthenticationUtils $authenticationUtils,
     ) {
-
     }
 
     #[Template('security/login.html.twig')]
-    public function __invoke(): array {
+    public function __invoke(): array
+    {
         // get the login error if there is one
         $error = $this->authenticationUtils->getLastAuthenticationError();
 
@@ -32,5 +31,4 @@ final class LoginController extends AbstractController
             'error' => $error,
         ];
     }
-
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Messenger\EventSubscriber;
 
-use App\Entity\User;
 use App\Entity\UserLogin;
 use App\Messenger\Event\LoginLinkCreated;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +20,6 @@ class WhenUserCreatedLoginLinkThenSaveUserLogin
 
     public function __invoke(LoginLinkCreated $event): void
     {
-
         $loginLinkDetails = $event->getLoginLinkDetails();
 
         $request = Request::create($loginLinkDetails->getUrl());

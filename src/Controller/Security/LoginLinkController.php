@@ -18,26 +18,24 @@ use Symfony\Component\Uid\Uuid;
 #[Route('/login/link', name: 'app_login_link')]
 final class LoginLinkController extends AbstractController
 {
-
     public function __construct(
         private NotifierInterface $notifier,
         private LoginLinkHandlerInterface $loginLinkHandler,
         private UserRepository $userRepository,
         private CommandBusInterface $commandBus,
     ) {
-
     }
 
     public function __invoke(
         Request $request,
     ): Response {
-
         if ($request->isMethod('POST')) {
             $email = $request->getPayload()->get('_username');
             $user = $this->userRepository->findOneBy(['email' => $email]);
 
-            if(null === $user) {
+            if (null === $user) {
                 $this->addFlash('warning', 'Your email address not exist.');
+
                 return $this->redirectToRoute('app_login');
             }
 
@@ -51,7 +49,7 @@ final class LoginLinkController extends AbstractController
             // render a "Login link is sent!" page
             return $this->render('security/login_link_sent.html.twig', [
                 'identifier' => $uuid,
-                'email' => $email
+                'email' => $email,
             ]);
         }
 
