@@ -5,54 +5,77 @@
 {% block body_id 'login' %}
 
 {% block main %}
-    <form action="{{ path('app_login') }}" method="post" novalidate>
-        <img class="mb-4" src="{{ asset('images/puddle-logo.png') }}" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <form action="{{ path('app_login') }}" method="POST" novalidate {{ stimulus_controller('login') }}>
+        <img class="mb-4"src="{{ asset('images/puddle-logo.png') }}" alt="" width="72" height="57">
 
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        <div class="form-floating">
-            <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus placeholder="name@example.com">
-            <label for="username">Email address</label>
+        <div id="email-form" {{ stimulus_target('login', 'emailField') }}>
+            <h1 class="h3 mb-3 fw-normal">Hey!👋</h1>
+            <div class="form-floating mb-2">
+                <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus placeholder="name@example.com">
+                <label for="username">Email address</label>
+            </div>
+
+            <div {{ stimulus_action('login', 'nextStep', 'click') }} name="next" class="btn btn-primary w-100 py-2 mb-2">Continue with Email</div>
+
+            <div class="text-center mb-2">
+                <div class="d-flex">
+                    <hr class="my-auto flex-grow-1">
+                    <div class="px-4">or sign up with</div>
+                    <hr class="my-auto flex-grow-1">
+                </div>
+                <button  type="button" class="btn btn-link btn-floating mx-1">
+                    <twig:ux:icon name="devicon:facebook"/>
+                </button>
+
+                <button  type="button" class="btn btn-link btn-floating mx-1">
+                    <twig:ux:icon name="devicon:google"/>
+                </button>
+
+                <button  type="button" class="btn btn-link btn-floating mx-1">
+                    <twig:ux:icon name="devicon:twitter"/>
+                </button>
+
+                <button  type="button" class="btn btn-link btn-floating mx-1">
+                    <twig:ux:icon name="devicon:github"/>
+                </button>
+            </div>
         </div>
-        <div class="form-floating">
-            <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="*******">
-            <label for="password">Password</label>
+
+        <div id="password-form" {{ stimulus_target('login', 'passwordField') }} hidden>
+            <h1 class="h3 mb-3 fw-normal">Welcome !</h1>
+            <p class="fw-light text-center" {{ stimulus_target('login', 'emailDisplay') }} ></p>
+            <p><a href="#" {{ stimulus_action('login', 'previousStep', 'click') }}>Change Email address</a></p>
+
+            <button formaction="{{ path('app_login_link') }}" class="btn btn-primary w-100 py-2 my-2" type="submit" >Sign in with Magic Link</button>
+
+            <div class="text-center">
+                <div class="d-flex mb-2">
+                    <hr class="my-auto flex-grow-1">
+                    <div class="px-4">or sign in with password</div>
+                    <hr class="my-auto flex-grow-1">
+                </div>
+
+                <div class="form-floating">
+                    <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="*******">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" name="_remember_me" id="_remember_me">
+                <label class="form-check-label" for="_remember_me">
+                  Remember me
+                </label>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2 mb-4" type="submit">Sign in</button>
         </div>
 
-        <div class="form-check text-start my-3">
-            <input class="form-check-input" type="checkbox" name="_remember_me" id="_remember_me">
-            <label class="form-check-label" for="_remember_me">
-              Remember me
-            </label>
-        </div>
+        <p>Not a member? <a href="{{ path('app_register') }}">Register</a></p>
 
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-        <button class="btn btn-primary w-100 py-2 mb-4" type="submit">Sign in</button>
-
-        <!-- Register buttons -->
-        <div class="text-center">
-            <p>Not a member? <a href="{{ path('app_register') }}">Register</a></p>
-            <p>or sign up with:</p>
-            <button  type="button" class="btn btn-link btn-floating mx-1">
-                <twig:ux:icon name="devicon:facebook"/>
-            </button>
-
-            <button  type="button" class="btn btn-link btn-floating mx-1">
-                <twig:ux:icon name="devicon:google"/>
-            </button>
-
-            <button  type="button" class="btn btn-link btn-floating mx-1">
-                <twig:ux:icon name="devicon:twitter"/>
-            </button>
-
-            <button  type="button" class="btn btn-link btn-floating mx-1">
-                <twig:ux:icon name="devicon:github"/>
-            </button>
-        </div>
+        <input type="hidden" name="_csrf_token" {{ stimulus_controller('csrf-protection') }} value="{{ csrf_token('authenticate') }}">
     </form>
 {% endblock %}

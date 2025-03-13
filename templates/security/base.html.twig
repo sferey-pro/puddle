@@ -69,48 +69,12 @@
         {% endblock %}
     </head>
     <body class="d-flex align-items-center py-4 bg-body-tertiary" id="{% block body_id %}{% endblock %}">
-
-        <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-            <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
-                    id="bd-theme"
-                    type="button"
-                    aria-expanded="false"
-                    data-bs-toggle="dropdown"
-                    aria-label="Toggle theme (auto)">
-              <twig:ux:icon name="circle-half" class="bi my-1 theme-icon-active" width="1em" height="1em" />
-              <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
-              <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
-                  <twig:ux:icon name="sun" class="bi me-2 opacity-50" width="1em" height="1em"/>
-                  Light
-                  <twig:ux:icon name="check" class="bi ms-auto d-none" width="1em" height="1em"/>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
-                  <twig:ux:icon name="moon" class="bi me-2 opacity-50" width="1em" height="1em"/>
-                  Dark
-                  <twig:ux:icon name="check" class="bi ms-auto d-none" width="1em" height="1em"/>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
-                  <twig:ux:icon name="circle-half" class="bi me-2 opacity-50" width="1em" height="1em"/>
-                  Auto
-                  <twig:ux:icon name="check" class="bi ms-auto d-none" width="1em" height="1em"/>
-                </button>
-              </li>
-            </ul>
-        </div>
-
-        <main class="form-signin w-100 m-auto">
-            {% block body %}
+        {% block body %}
+            {{ include('default/_dark_mode.html.twig') }}
+            <main class="form-signin w-100 m-auto">
                 {{ include('default/_flash_messages.html.twig') }}
                 {% block main %}{% endblock %}
-            {% endblock %}
-            </div>
-        </main>
+            </main>
+        {% endblock %}
     </body>
 </html>

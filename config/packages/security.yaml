@@ -16,17 +16,28 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+
+            login_link:
+                check_route: app_login_check
+                check_post_only: true
+                max_uses: 1
+                signature_properties: [id, email]
+                lifetime: 300 # lifetime in seconds
+                success_handler: App\Security\Authentication\AuthenticationLoginLinkSuccessHandler
+
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
+
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
+                
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_homepage
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -37,8 +48,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:

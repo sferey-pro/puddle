@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -43,6 +45,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    /**
+     * @var Collection<int, UserLogin>
+     */
+    #[ORM\OneToMany(targetEntity: UserLogin::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userLogins;
+
+    #[ORM\Column(length: 5, nullable: true)]
+    private ?string $locale = null;
+
+    public function __construct()
+    {
+        $this->userLogins = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -139,6 +155,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLogin>
+     */
+    public function getUserLogins(): Collection
+    {
+        return $this->userLogins;
+    }
+
+    public function addUserLogin(UserLogin $userLogin): static
+    {
+        if (!$this->userLogins->contains($userLogin)) {
+            $this->userLogins->add($userLogin);
+            $userLogin->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLogin(UserLogin $userLogin): static
+    {
+        if ($this->userLogins->removeElement($userLogin)) {
+            // set the owning side to null (unless already changed)
+            if ($userLogin->getUser() === $this) {
+                $userLogin->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): static
+    {
+        $this->locale = $locale;
 
         return $this;
     }
