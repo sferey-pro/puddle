@@ -1,0 +1,18 @@
+{% props type = null, color = null %}
+
+{% set role = cva({
+    base: 'badge',
+    variants: {
+        color: {
+            red: 'text-bg-danger',
+            orange: 'text-bg-warning',
+            green: 'text-bg-success',
+            blue: 'text-bg-primary',
+            gray: 'text-bg-secondary',
+        }
+    }
+}) %}
+
+<div {{ attributes }} class="{{ role.apply({color}) }}">
+    {{ type }}
+</div>

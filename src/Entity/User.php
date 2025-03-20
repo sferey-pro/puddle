@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Config\Role;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Uuid $uuid = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<Role> The user roles
      */
     #[ORM\Column]
     private array $roles = [];
@@ -97,6 +98,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+    /**
+     * @return list<Role|null>
+     */
+    public function getEnumRoles(): array
+    {
+        return array_map(fn (string $role): ?Role => Role::tryFrom($role), $this->getRoles());
+    }
+
+    public function getMainRole(): Role
+    {
+        return Role::USER;
     }
 
     /**

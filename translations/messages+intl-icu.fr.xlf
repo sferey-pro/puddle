@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="fr">
+  <file id="messages.fr">
+    <unit id="Wn8Y2YE" name="action.show">
+      <segment>
+        <source>action.show</source>
+        <target>Voir</target>
+      </segment>
+    </unit>
+    <unit id="SFB94SX" name="action.edit">
+      <segment>
+        <source>action.edit</source>
+        <target>Modifier</target>
+      </segment>
+    </unit>
+    <unit id="n7uNUhj" name="label.actions">
+      <segment>
+        <source>label.actions</source>
+        <target>Actions</target>
+      </segment>
+    </unit>
+    <unit id="PO_UHtX" name="action.close">
+      <segment>
+        <source>action.close</source>
+        <target>Fermer</target>
+      </segment>
+    </unit>
+    <unit id="fjIFBll" name="Super Administrator">
+      <segment>
+        <source>Super Administrator</source>
+        <target>Super Administrateur</target>
+      </segment>
+    </unit>
+    <unit id="WIZcgyv" name="Administrator">
+      <segment>
+        <source>Administrator</source>
+        <target>Administrateur</target>
+      </segment>
+    </unit>
+    <unit id="TkiKoB6" name="User">
+      <segment>
+        <source>User</source>
+        <target>Utilisateur</target>
+      </segment>
+    </unit>
+    <unit id="p.fuLaB" name="Guest">
+      <segment>
+        <source>Guest</source>
+        <target>Invité</target>
+      </segment>
+    </unit>
+    <unit id="xquKCWn" name="Allowed to switch">
+      <segment>
+        <source>Allowed to switch</source>
+        <target>Autorisé à switch</target>
+      </segment>
+    </unit>
+    <unit id="Cd4XVNn" name="action.delete">
+      <segment>
+        <source>action.delete</source>
+        <target>Delete</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

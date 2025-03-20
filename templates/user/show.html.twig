@@ -21,15 +21,15 @@
             </tr>
             <tr>
                 <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
+                <td>
+                    {% for role in user.getEnumRoles() %}
+                        <twig:Role type="{{ role | trans }}" color="{{ role.getColors }}" />
+                    {% endfor %}
+                </td>
             </tr>
             <tr>
                 <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                <td>{{ user.isVerified ? ux_icon('material-symbols:check-circle') : ux_icon('material-symbols:check-cancel') }}</td>
             </tr>
         </tbody>
     </table>

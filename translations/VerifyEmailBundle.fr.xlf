@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="fr">
+  <file id="VerifyEmailBundle.fr">
+    <unit id="U_NoHhq" name="%count% year|%count% years">
+      <segment>
+        <source>%count% year|%count% years</source>
+        <target>%count% année|%count% années</target>
+      </segment>
+    </unit>
+    <unit id="NCe6niW" name="%count% month|%count% months">
+      <segment>
+        <source>%count% month|%count% months</source>
+        <target>%count% mois|%count% mois</target>
+      </segment>
+    </unit>
+    <unit id="E69bPZ6" name="%count% day|%count% days">
+      <segment>
+        <source>%count% day|%count% days</source>
+        <target>%count% jour|%count% jours</target>
+      </segment>
+    </unit>
+    <unit id="H3jnVKg" name="%count% hour|%count% hours">
+      <segment>
+        <source>%count% hour|%count% hours</source>
+        <target>%count% heure|%count% heures</target>
+      </segment>
+    </unit>
+    <unit id="30tji6_" name="%count% minute|%count% minutes">
+      <segment>
+        <source>%count% minute|%count% minutes</source>
+        <target>%count% minute|%count% minutes</target>
+      </segment>
+    </unit>
+    <unit id="F0PcQoi" name="The link to verify your email has expired. Please request a new link.">
+      <segment>
+        <source>The link to verify your email has expired. Please request a new link.</source>
+        <target>Le lien pour vérifier votre adresse e-mail a expiré. Veuillez demander un nouveau lien.</target>
+      </segment>
+    </unit>
+    <unit id="dSF4hGL" name="The link to verify your email is invalid. Please request a new link.">
+      <segment>
+        <source>The link to verify your email is invalid. Please request a new link.</source>
+        <target>Le lien pour vérifier votre adresse e-mail est invalide. Veuillez demander un nouveau lien.</target>
+      </segment>
+    </unit>
+    <unit id="GTlrnoK">
+      <segment>
+        <source>The link to verify your email appears to be for a different account or email. Please request a new link.</source>
+        <target>Le lien permettant de vérifier votre adresse e-mail semble correspondre à un autre compte ou e-mail. Veuillez demander un nouveau lien.</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>
