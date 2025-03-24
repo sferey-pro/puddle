@@ -47,18 +47,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(length: 5, nullable: true)]
+    private ?string $locale = null;
+
     /**
      * @var Collection<int, UserLogin>
      */
     #[ORM\OneToMany(targetEntity: UserLogin::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $userLogins;
 
-    #[ORM\Column(length: 5, nullable: true)]
-    private ?string $locale = null;
+    /**
+     * @var Collection<int, UserSocialNetwork>
+     */
+    #[ORM\OneToMany(targetEntity: UserSocialNetwork::class, mappedBy: 'userAccount', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $userSocialNetworks;
 
     public function __construct()
     {
         $this->userLogins = new ArrayCollection();
+        $this->userSocialNetworks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,6 +180,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): static
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, UserLogin>
      */
@@ -203,14 +222,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLocale(): ?string
+    /**
+     * @return Collection<int, UserSocialNetwork>
+     */
+    public function getUserSocialNetworks(): Collection
     {
-        return $this->locale;
+        return $this->userSocialNetworks;
     }
 
-    public function setLocale(?string $locale): static
+    public function addUserSocialNetwork(UserSocialNetwork $userSocialNetwork): static
     {
-        $this->locale = $locale;
+        if (!$this->userSocialNetworks->contains($userSocialNetwork)) {
+            $this->userSocialNetworks->add($userSocialNetwork);
+            $userSocialNetwork->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserSocialNetwork(UserSocialNetwork $userSocialNetwork): static
+    {
+        if ($this->userSocialNetworks->removeElement($userSocialNetwork)) {
+            // set the owning side to null (unless already changed)
+            if ($userSocialNetwork->getUser() === $this) {
+                $userSocialNetwork->setUser(null);
+            }
+        }
 
         return $this;
     }

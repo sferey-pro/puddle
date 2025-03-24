@@ -27,21 +27,21 @@
                     <div class="px-4">or sign up with</div>
                     <hr class="my-auto flex-grow-1">
                 </div>
-                <button  type="button" class="btn btn-link btn-floating mx-1">
+                {# <a href="{{ oauthUrl(enum('App\\Config\\SocialNetwork').FACEBOOK) }}"  class="btn btn-link btn-floating mx-1">
                     <twig:ux:icon name="devicon:facebook"/>
-                </button>
+                </a> #}
 
-                <button  type="button" class="btn btn-link btn-floating mx-1">
+                <a href="{{ oauthUrl(enum('App\\Config\\SocialNetwork').GOOGLE) }}" class="btn btn-link btn-floating mx-1">
                     <twig:ux:icon name="devicon:google"/>
-                </button>
+                </a>
 
-                <button  type="button" class="btn btn-link btn-floating mx-1">
+                {# <a href="#" class="btn btn-link btn-floating mx-1">
                     <twig:ux:icon name="devicon:twitter"/>
-                </button>
+                </a> #}
 
-                <button  type="button" class="btn btn-link btn-floating mx-1">
+                <a href="{{ oauthUrl(enum('App\\Config\\SocialNetwork').GITHUB) }}" class="btn btn-link btn-floating mx-1">
                     <twig:ux:icon name="devicon:github"/>
-                </button>
+                </a>
             </div>
         </div>
 
