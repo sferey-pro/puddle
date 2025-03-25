@@ -47,4 +47,7 @@ return [
     'bootstrap/js/dist/modal' => [
         'version' => '5.3.3',
     ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
 ];

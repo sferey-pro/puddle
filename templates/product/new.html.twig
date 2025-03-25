@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Product{% endblock %}
+
+{% block main %}
+    <h1 class="mt-5">Create new Product</h1>
+
+    <twig:NewProductForm />
+
+    <a href="{{ path('app_product_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,19 @@
+<td>{{ product.id }}</td>
+<td>{{ product.name }}</td>
+<td>{{ product.price }}</td>
+<td>{{ product.description }}</td>
+<td>{{ product.slug }}</td>
+<td>{{ product.createdAt ? product.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+<td>{{ product.updatedAt ? product.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+<td class="text-center">
+    <div class="btn-group gap-2">
+        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-secondary">
+            <twig:ux:icon name="eye"/> {{ 'action.show'|trans }}
+        </a>
+
+        <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-sm btn-primary">
+            <twig:ux:icon name="pencil"/> {{ 'action.edit'|trans }}
+        </a>
+        {{ include('product/_delete_form.html.twig') }}
+    </div>
+</td>
