@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Config\SocialNetwork;
@@ -11,25 +13,24 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class GoogleAuthenticator extends AbstractOAuth2Authenticator
 {
-
     protected SocialNetwork $serviceName = SocialNetwork::GOOGLE;
 
     protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner): ?User
     {
         if (!($resourceOwner instanceof GoogleUser)) {
-            throw new \RuntimeException("Expecting google user");
+            throw new \RuntimeException('Expecting google user');
         }
 
         if (true !== ($resourceOwner->toArray()['email_verified'] ?? null)) {
-            throw new AuthenticationException("Email not verified");
+            throw new AuthenticationException('Email not verified');
         }
 
         $userSocialNetwork = $this->entityManager->getRepository(UserSocialNetwork::class)->findOneBy([
             'socialNetwork' => $this->serviceName,
-            'socialId' => $resourceOwner->getId()
+            'socialId' => $resourceOwner->getId(),
         ]);
 
-        if(!$userSocialNetwork) {
+        if (!$userSocialNetwork) {
             return null;
         }
 

@@ -16,11 +16,11 @@ use Symfony\Component\Routing\Requirement\EnumRequirement;
 #[Route(
     '/oauth/connect/{socialNetwork}',
     requirements: [
-        'socialNetwork' => new EnumRequirement(SocialNetwork::class)
+        'socialNetwork' => new EnumRequirement(SocialNetwork::class),
     ],
     name: 'security_oauth_connect',
     methods: [
-        Request::METHOD_GET
+        Request::METHOD_GET,
     ]
 )]
 final class ConnectController extends AbstractController
@@ -32,9 +32,8 @@ final class ConnectController extends AbstractController
 
     public function __invoke(
         SocialNetwork $socialNetwork,
-        ClientRegistry $clientRegistry
+        ClientRegistry $clientRegistry,
     ): RedirectResponse {
-
         /** @var OAuth2Client $client */
         $client = $clientRegistry
             ->getClient($socialNetwork->value);

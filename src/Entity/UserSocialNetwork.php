@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Config\SocialNetwork;
@@ -25,8 +27,8 @@ class UserSocialNetwork
     #[ORM\Column(enumType: SocialNetwork::class)]
     private ?SocialNetwork $socialNetwork = null;
 
-    #[ORM\Column(type:Types::STRING, length: 255)]
-    private $socialId = null;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private $socialId;
 
     #[ORM\Column]
     private ?bool $isActive = null;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Config\SocialNetwork;
@@ -29,27 +31,25 @@ abstract class AbstractOAuth2Authenticator extends OAuth2Authenticator
 
     protected SocialNetwork $serviceName;
 
-
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
         private readonly RouterInterface $router,
         private readonly OAuthRegistration $registrationService,
-        protected readonly EntityManagerInterface $entityManager
+        protected readonly EntityManagerInterface $entityManager,
     ) {
-
     }
 
     public function supports(Request $request): ?bool
     {
-        return 'security_oauth_check' === $request->attributes->get('_route') &&
-            $this->serviceName === SocialNetwork::tryFrom($request->get('socialNetwork'));
+        return 'security_oauth_check' === $request->attributes->get('_route')
+            && $this->serviceName === SocialNetwork::tryFrom($request->get('socialNetwork'));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
 
-        if($targetPath) {
+        if ($targetPath) {
             return new RedirectResponse($targetPath);
         }
 
@@ -72,7 +72,6 @@ abstract class AbstractOAuth2Authenticator extends OAuth2Authenticator
 
         $user = $this->getUserFromResourceOwner($resourceOwner);
 
-
         if (null === $user) {
             $user = $this->registrationService->persist($this->serviceName, $resourceOwner);
         }
@@ -80,7 +79,7 @@ abstract class AbstractOAuth2Authenticator extends OAuth2Authenticator
         return new SelfValidatingPassport(
             userBadge: new UserBadge($user->getUserIdentifier(), fn () => $user),
             badges: [
-                new RememberMeBadge()
+                new RememberMeBadge(),
             ]
         );
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Common\Command\CommandBusInterface;
@@ -16,8 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/product')]
-final class ProductController extends AbstractController{
-
+final class ProductController extends AbstractController
+{
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
@@ -37,7 +39,6 @@ final class ProductController extends AbstractController{
     {
         $rawMaterialList = new RawMaterialList();
         $form = $this->createForm(RawMaterialListFormType::class, $rawMaterialList);
-
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
@@ -79,7 +80,6 @@ final class ProductController extends AbstractController{
     public function duplicate(Request $request, Product $product, CommandBusInterface $commandBus): Response
     {
         if ($this->isCsrfTokenValid('duplicate'.$product->getId(), $request->getPayload()->getString('_token'))) {
-
             $commandBus->dispatch(new NewProduct(
                 name: $product->getName(),
                 price: $product->getPrice(),

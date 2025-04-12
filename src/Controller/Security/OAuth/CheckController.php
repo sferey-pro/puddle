@@ -14,17 +14,18 @@ use Symfony\Component\Routing\Requirement\EnumRequirement;
 #[Route(
     '/oauth/check/{socialNetwork}',
     requirements: [
-        'socialNetwork' => new EnumRequirement(SocialNetwork::class)
+        'socialNetwork' => new EnumRequirement(SocialNetwork::class),
     ],
     name: 'security_oauth_check',
     methods: [
         Request::METHOD_GET,
-        Request::METHOD_POST
+        Request::METHOD_POST,
     ]
 )]
 final class CheckController extends AbstractController
 {
-    public function __invoke(): Response {
+    public function __invoke(): Response
+    {
         return new Response(status: 200);
     }
 }

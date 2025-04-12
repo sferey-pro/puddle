@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Twig\Components;
 
 use App\Common\Command\CommandBusInterface;
 use App\Entity\Category;
 use App\Form\RawMaterialFormType;
-use App\Form\RawMaterialType;
-use App\Messenger\Command\Product\NewProduct;
 use App\Messenger\Command\Product\NewRawMaterial;
 use App\Repository\CategoryRepository;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +20,6 @@ use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsLiveComponent]
@@ -42,7 +40,6 @@ class NewRawMaterialForm extends AbstractController
     {
         return $this->createForm(RawMaterialFormType::class);
     }
-
 
     public function hasValidationErrors(): bool
     {
@@ -69,8 +66,7 @@ class NewRawMaterialForm extends AbstractController
     #[LiveAction]
     public function saveRawMaterial(
         CommandBusInterface $commandBus,
-    ): Response
-    {
+    ): Response {
         $this->submitForm();
 
         $commandBus->dispatch(new NewRawMaterial(

@@ -16,19 +16,18 @@ final readonly class OAuthRegistration
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
-
     }
 
     public function persist(SocialNetwork $serviceName, ResourceOwnerInterface $resourceOwner): User
     {
-        $userSocialNetwork = new UserSocialNetwork;
+        $userSocialNetwork = new UserSocialNetwork();
         $userSocialNetwork
             ->setSocialNetwork($serviceName)
             ->setSocialId($resourceOwner->getId())
             ->setAsActive()
         ;
 
-        $user = new User;
+        $user = new User();
 
         $user->setUuid(Uuid::v7())
             ->setPassword(md5(random_bytes(10)))
@@ -45,6 +44,5 @@ final readonly class OAuthRegistration
 
     public function getEmail(ResourceOwnerInterface $resourceOwner)
     {
-
     }
 }

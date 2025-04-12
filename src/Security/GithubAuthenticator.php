@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Config\SocialNetwork;
@@ -15,15 +17,15 @@ class GithubAuthenticator extends AbstractOAuth2Authenticator
     protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner): ?User
     {
         if (!($resourceOwner instanceof GithubResourceOwner)) {
-            throw new \RuntimeException("Expecting Github user");
+            throw new \RuntimeException('Expecting Github user');
         }
 
         $userSocialNetwork = $this->entityManager->getRepository(UserSocialNetwork::class)->findOneBy([
             'socialNetwork' => $this->serviceName,
-            'socialId' => $resourceOwner->getId()
+            'socialId' => $resourceOwner->getId(),
         ]);
 
-        if(!$userSocialNetwork) {
+        if (!$userSocialNetwork) {
             return null;
         }
 

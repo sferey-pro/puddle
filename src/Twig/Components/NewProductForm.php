@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Twig\Components;
 
 use App\Common\Command\CommandBusInterface;
 use App\Entity\Category;
 use App\Messenger\Command\Product\NewProduct;
 use App\Repository\CategoryRepository;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -64,8 +65,7 @@ class NewProductForm extends AbstractController
     #[LiveAction]
     public function saveProduct(
         CommandBusInterface $commandBus,
-    ): Response
-    {
+    ): Response {
         $this->validate();
 
         $commandBus->dispatch(new NewProduct(

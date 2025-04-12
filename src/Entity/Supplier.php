@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SupplierRepository;
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
-class Supplier implements JsonSerializable
+class Supplier implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,7 +38,7 @@ class Supplier implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'name' => $this->getName()
+            'name' => $this->getName(),
         ];
     }
 }

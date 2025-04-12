@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Messenger\Command\RawMaterial;
 
-use App\Entity\Product;
 use App\Entity\RawMaterial;
 use App\Messenger\Attribute\AsCommandHandler;
 use Doctrine\ORM\EntityManagerInterface;

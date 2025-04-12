@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Category;
@@ -16,11 +18,11 @@ class ProductFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class ,[
-                'label' => 'Product name:'
+            ->add('name', TextType::class, [
+                'label' => 'Product name:',
             ])
             ->add('price', MoneyType::class, [
-                'scale' => 2
+                'scale' => 2,
             ])
             ->add('description')
             ->add('slug')

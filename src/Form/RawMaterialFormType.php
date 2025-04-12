@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Category;
@@ -22,7 +24,7 @@ class RawMaterialFormType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => function (Category $category): string {
                     return $category->getDisplayName();
-                }
+                },
             ])
             ->add('priceVariability')
             ->add('unit')
