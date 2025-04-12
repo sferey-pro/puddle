@@ -1,0 +1,29 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Supplier{% endblock %}
+
+{% block body_id 'supplier_show' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'supplier.show' | trans }}" />
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ supplier.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ supplier.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <twig:Button:ActionItem
+        withDelete="app_supplier_delete"
+        withEdit="app_supplier_edit"
+        withBackToList="app_supplier_index"
+        :itemId="supplier.id"
+    />
+{% endblock %}

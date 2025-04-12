@@ -1,40 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="fr">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="fr" trgLang="fr">
   <file id="messages.fr">
-    <unit id="Wn8Y2YE" name="action.show">
-      <segment>
-        <source>action.show</source>
-        <target>Voir</target>
-      </segment>
-    </unit>
-    <unit id="SFB94SX" name="action.edit">
-      <segment>
-        <source>action.edit</source>
-        <target>Modifier</target>
-      </segment>
-    </unit>
-    <unit id="n7uNUhj" name="label.actions">
-      <segment>
-        <source>label.actions</source>
-        <target>Actions</target>
-      </segment>
-    </unit>
-    <unit id="PO_UHtX" name="action.close">
-      <segment>
-        <source>action.close</source>
-        <target>Fermer</target>
-      </segment>
-    </unit>
     <unit id="fjIFBll" name="Super Administrator">
       <segment>
         <source>Super Administrator</source>
-        <target>Super Administrateur</target>
+        <target>Super Admin</target>
       </segment>
     </unit>
     <unit id="WIZcgyv" name="Administrator">
       <segment>
         <source>Administrator</source>
-        <target>Administrateur</target>
+        <target>Admin</target>
       </segment>
     </unit>
     <unit id="TkiKoB6" name="User">
@@ -55,10 +31,316 @@
         <target>Autorisé à switch</target>
       </segment>
     </unit>
+    <unit id="xHsbIh6" name="Dashboard">
+      <segment>
+        <source>Dashboard</source>
+        <target>Tableaux de bord</target>
+      </segment>
+    </unit>
+    <unit id="55hK47U" name="user.edit">
+      <segment>
+        <source>user.edit</source>
+        <target>Edition Utilisateur</target>
+      </segment>
+    </unit>
+    <unit id="sAShEIV" name="label.update_user">
+      <segment>
+        <source>label.update_user</source>
+        <target>Modifier l'utilisateur</target>
+      </segment>
+    </unit>
+    <unit id="Ne.8oB4" name="user.index">
+      <segment>
+        <source>user.index</source>
+        <target>Utilisateurs</target>
+      </segment>
+    </unit>
+    <unit id="n7uNUhj" name="label.actions">
+      <segment>
+        <source>label.actions</source>
+        <target>Actions</target>
+      </segment>
+    </unit>
+    <unit id="3148iZ3" name="default.no_record_found">
+      <segment>
+        <source>default.no_record_found</source>
+        <target>Aucun enregistrement trouvé</target>
+      </segment>
+    </unit>
+    <unit id="HMLsEMh" name="user.show">
+      <segment>
+        <source>user.show</source>
+        <target>Utilisateur</target>
+      </segment>
+    </unit>
+    <unit id="esEoaa_" name="user.new">
+      <segment>
+        <source>user.new</source>
+        <target>Nouvelle Utilisateur</target>
+      </segment>
+    </unit>
     <unit id="Cd4XVNn" name="action.delete">
       <segment>
         <source>action.delete</source>
-        <target>Delete</target>
+        <target>Suppression</target>
+      </segment>
+    </unit>
+    <unit id="2lspxnT" name="label.create_user">
+      <segment>
+        <source>label.create_user</source>
+        <target>Crée l'utilisateur</target>
+      </segment>
+    </unit>
+    <unit id="ozZU_B5" name="supplier.edit">
+      <segment>
+        <source>supplier.edit</source>
+        <target>__supplier.edit</target>
+      </segment>
+    </unit>
+    <unit id="IOsFLrt" name="label.update_supplier">
+      <segment>
+        <source>label.update_supplier</source>
+        <target>__label.update_supplier</target>
+      </segment>
+    </unit>
+    <unit id="ATtw2Cz" name="supplier.index">
+      <segment>
+        <source>supplier.index</source>
+        <target>__supplier.index</target>
+      </segment>
+    </unit>
+    <unit id="Z.lt6rj" name="supplier.show">
+      <segment>
+        <source>supplier.show</source>
+        <target>__supplier.show</target>
+      </segment>
+    </unit>
+    <unit id="b8jlkMd" name="supplier.new">
+      <segment>
+        <source>supplier.new</source>
+        <target>__supplier.new</target>
+      </segment>
+    </unit>
+    <unit id="a18mOq8" name="label.create_supplier">
+      <segment>
+        <source>label.create_supplier</source>
+        <target>__label.create_supplier</target>
+      </segment>
+    </unit>
+    <unit id="xJshAbU" name="category.edit">
+      <segment>
+        <source>category.edit</source>
+        <target>__category.edit</target>
+      </segment>
+    </unit>
+    <unit id="Sp3Thg9" name="label.update_category">
+      <segment>
+        <source>label.update_category</source>
+        <target>__label.update_category</target>
+      </segment>
+    </unit>
+    <unit id="rAnasBh" name="category.index">
+      <segment>
+        <source>category.index</source>
+        <target>__category.index</target>
+      </segment>
+    </unit>
+    <unit id="ioo6hwB" name="category.show">
+      <segment>
+        <source>category.show</source>
+        <target>__category.show</target>
+      </segment>
+    </unit>
+    <unit id="6.rAXsX" name="category.new">
+      <segment>
+        <source>category.new</source>
+        <target>__category.new</target>
+      </segment>
+    </unit>
+    <unit id="wZKmwZy" name="action.delete_category">
+      <segment>
+        <source>action.delete_category</source>
+        <target>__action.delete_category</target>
+      </segment>
+    </unit>
+    <unit id="_uhjSpu" name="label.create_category">
+      <segment>
+        <source>label.create_category</source>
+        <target>__label.create_category</target>
+      </segment>
+    </unit>
+    <unit id="ibDadWR" name="product.edit">
+      <segment>
+        <source>product.edit</source>
+        <target>__product.edit</target>
+      </segment>
+    </unit>
+    <unit id="upI8UGO" name="label.update_product">
+      <segment>
+        <source>label.update_product</source>
+        <target>__label.update_product</target>
+      </segment>
+    </unit>
+    <unit id="mkJg1Bu" name="product.index">
+      <segment>
+        <source>product.index</source>
+        <target>__product.index</target>
+      </segment>
+    </unit>
+    <unit id="bRtjOc5" name="product.show">
+      <segment>
+        <source>product.show</source>
+        <target>__product.show</target>
+      </segment>
+    </unit>
+    <unit id="Nv9p6EI" name="product.new">
+      <segment>
+        <source>product.new</source>
+        <target>__product.new</target>
+      </segment>
+    </unit>
+    <unit id="7AT4Sko" name="action.delete_product">
+      <segment>
+        <source>action.delete_product</source>
+        <target>__action.delete_product</target>
+      </segment>
+    </unit>
+    <unit id="f4H1Ba_" name="label.create_product">
+      <segment>
+        <source>label.create_product</source>
+        <target>__label.create_product</target>
+      </segment>
+    </unit>
+    <unit id="hKr7yFA" name="action.duplicate_product">
+      <segment>
+        <source>action.duplicate_product</source>
+        <target>__action.duplicate_product</target>
+      </segment>
+    </unit>
+    <unit id="CLaU8ID" name="action.back_to_list">
+      <segment>
+        <source>action.back_to_list</source>
+        <target>Retour à la liste</target>
+      </segment>
+    </unit>
+    <unit id="Wn8Y2YE" name="action.show">
+      <segment>
+        <source>action.show</source>
+        <target>Voir</target>
+      </segment>
+    </unit>
+    <unit id="SFB94SX" name="action.edit">
+      <segment>
+        <source>action.edit</source>
+        <target>Editer</target>
+      </segment>
+    </unit>
+    <unit id="IzBoXOt" name="action.duplicate">
+      <segment>
+        <source>action.duplicate</source>
+        <target>Duppliquer</target>
+      </segment>
+    </unit>
+    <unit id="VW0VxgP" name="label.button.create">
+      <segment>
+        <source>label.button.create</source>
+        <target>Créer</target>
+      </segment>
+    </unit>
+    <unit id="PO_UHtX" name="action.close">
+      <segment>
+        <source>action.close</source>
+        <target>Fermé</target>
+      </segment>
+    </unit>
+    <unit id="4MAb4fw" name="menu.home">
+      <segment>
+        <source>menu.home</source>
+        <target>Accueil</target>
+      </segment>
+    </unit>
+    <unit id="L3fUN28" name="menu.users">
+      <segment>
+        <source>menu.users</source>
+        <target>Utilisateurs</target>
+      </segment>
+    </unit>
+    <unit id="iveNYXv" name="menu.products">
+      <segment>
+        <source>menu.products</source>
+        <target>Produits</target>
+      </segment>
+    </unit>
+    <unit id="U26hNZh" name="menu.raw_materials">
+      <segment>
+        <source>menu.raw_materials</source>
+        <target>Matières Premières</target>
+      </segment>
+    </unit>
+    <unit id="16YX9Yo" name="menu.suppliers">
+      <segment>
+        <source>menu.suppliers</source>
+        <target>Fournisseurs</target>
+      </segment>
+    </unit>
+    <unit id="j5rZ6Bs" name="menu.register">
+      <segment>
+        <source>menu.register</source>
+        <target>Inscription</target>
+      </segment>
+    </unit>
+    <unit id="zzYGM2M" name="menu.logout">
+      <segment>
+        <source>menu.logout</source>
+        <target>Déconnexion</target>
+      </segment>
+    </unit>
+    <unit id="tC.ojOm" name="menu.login">
+      <segment>
+        <source>menu.login</source>
+        <target>Se Connecter</target>
+      </segment>
+    </unit>
+    <unit id=".yeYS8C" name="raw_material.edit">
+      <segment>
+        <source>raw_material.edit</source>
+        <target>__raw_material.edit</target>
+      </segment>
+    </unit>
+    <unit id="FJ32hi5" name="raw_material.index">
+      <segment>
+        <source>raw_material.index</source>
+        <target>__raw_material.index</target>
+      </segment>
+    </unit>
+    <unit id="YptDdId" name="raw_material.show">
+      <segment>
+        <source>raw_material.show</source>
+        <target>__raw_material.show</target>
+      </segment>
+    </unit>
+    <unit id="uGw1j8K" name="raw_material.new">
+      <segment>
+        <source>raw_material.new</source>
+        <target>__raw_material.new</target>
+      </segment>
+    </unit>
+    <unit id="0iHWQ9U" name="action.delete_raw_material">
+      <segment>
+        <source>action.delete_raw_material</source>
+        <target>__action.delete_raw_material</target>
+      </segment>
+    </unit>
+    <unit id="h.hIGO8" name="label.create_raw_material">
+      <segment>
+        <source>label.create_raw_material</source>
+        <target>__label.create_raw_material</target>
+      </segment>
+    </unit>
+    <unit id="oSdPhVa" name="label.button.create_category">
+      <segment>
+        <source>label.button.create_category</source>
+        <target>Créer une categorie</target>
       </segment>
     </unit>
   </file>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="fr">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="fr" trgLang="fr">
   <file id="validators.fr">
     <unit id="jysioaA" name="This value should be false.">
       <segment>
@@ -904,25 +904,25 @@
     <unit id="vsM4tSv" name="There is already an account with this email">
       <segment>
         <source>There is already an account with this email</source>
-        <target>NEW_There is already an account with this email</target>
+        <target>__There is already an account with this email</target>
       </segment>
     </unit>
     <unit id="6h2NNfX" name="You should agree to our terms.">
       <segment>
         <source>You should agree to our terms.</source>
-        <target>NEW_You should agree to our terms.</target>
+        <target>__You should agree to our terms.</target>
       </segment>
     </unit>
     <unit id="B7yoMOR" name="Please enter a password">
       <segment>
         <source>Please enter a password</source>
-        <target>NEW_Please enter a password</target>
+        <target>__Please enter a password</target>
       </segment>
     </unit>
     <unit id="_OmnKuR" name="Your password should be at least {{ limit }} characters">
       <segment>
         <source>Your password should be at least {{ limit }} characters</source>
-        <target>NEW_Your password should be at least {{ limit }} characters</target>
+        <target>__Your password should be at least {{ limit }} characters</target>
       </segment>
     </unit>
   </file>

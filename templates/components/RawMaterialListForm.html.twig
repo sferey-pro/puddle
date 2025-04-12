@@ -1,0 +1,55 @@
+<div
+    {{ attributes }}
+>
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-4">
+                {{ form_row(form.product) }}
+            </div>
+        </div>
+
+        <table class="table table-borderless form-no-mb">
+            <thead>
+                <tr>
+                    <td>Raw Material</td>
+                    <td>Quantity</td>
+                    <td>Unit</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item_form in form.rawMaterialItems %}
+                    <tr>
+                        <td>
+                            {{ form_row(item_form.raw_material, {
+                                label: false,
+                                row_attr: {class: 'mb-1'},
+                                attr: {
+                                    placeholder: 'Walk the pygmy hippo'
+                                }
+                            }) }}
+                        </td>
+                        <td>
+                            {{ form_row(item_form.quantity, {
+                                label: false,
+                                row_attr: {class: ''},
+                            }) }}
+                        </td>
+                        <td>
+                            {{ form_row(item_form.unit, {
+                                label: false,
+                                row_attr: {class: ''},
+                            }) }}
+                        </td>
+                        <td>
+                            {{ form_row(item_form.vars.button_delete, {label: 'X', attr: {class: 'btn btn-outline-danger'}}) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {{ form_widget(form.rawMaterialItems.vars.button_add, {label: '+ Add Item', attr: {class: 'btn btn-outline-primary'}}) }}
+
+        <button type="submit" class="btn btn-success" formnovalidate>Save</button>
+    {{ form_end(form) }}
+</div>

@@ -2,8 +2,10 @@
 
 {% block title %}Product{% endblock %}
 
-{% block body %}
-    <h1 class="mt-5">Product</h1>
+{% block body_id 'product_show' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'product.show' | trans }}" />
 
     <table class="table">
         <tbody>
@@ -38,9 +40,12 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_product_index') }}">back to list</a>
+    <twig:Button:ActionItem
+        withDelete="app_product_delete"
+        withEdit="app_product_edit"
+        withBackToList="app_product_index"
+        :itemId="product.id"
+    />
 
-    <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
-
-    {{ include('product/_delete_form.html.twig') }}
+    {# <twig:RawMaterialListForm :form="form" :rawMaterialList="rawMaterialList" /> #}
 {% endblock %}

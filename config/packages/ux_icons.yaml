@@ -13,6 +13,7 @@ ux_icons:
         moon: 'lucide:moon'
         sun: 'lucide:sun'
         'circle-half': 'bi:circle-half'
+        'tabler:save-changes': 'tabler:device-floppy'
 
     iconify:
         enabled: true

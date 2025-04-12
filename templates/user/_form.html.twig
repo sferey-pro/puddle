@@ -1,4 +1,11 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+    <button type="submit" class="btn btn-primary">
+        <twig:ux:icon name="tabler:save-changes"/> {{ button_label|default('label.create_user'|trans) }}
+    </button>
+
+    <twig:Button:ActionItem
+        withBackToList="app_user_index"
+    />
 {{ form_end(form) }}

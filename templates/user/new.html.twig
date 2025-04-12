@@ -2,10 +2,10 @@
 
 {% block title %}New User{% endblock %}
 
-{% block body %}
-    <h1>Create new User</h1>
+{% block body_id 'user_create' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'user.new' | trans }}" />
 
     {{ include('user/_form.html.twig') }}
-
-    <a href="{{ path('app_user_index') }}">back to list</a>
 {% endblock %}

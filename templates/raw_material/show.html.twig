@@ -1,0 +1,57 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}RawMaterial{% endblock %}
+
+{% block body_id 'raw_material_show' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'raw_material.show' | trans }}" />
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ raw_material.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ raw_material.name }}</td>
+            </tr>
+            <tr>
+                <th>UnitPrice</th>
+                <td>{{ raw_material.unitPrice }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ raw_material.raw_material }}</td>
+            </tr>
+            <tr>
+                <th>PriceVariability</th>
+                <td>{{ raw_material.priceVariability ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>PriceGlobal</th>
+                <td>{{ raw_material.priceGlobal ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Unit</th>
+                <td>{{ raw_material.unit }}</td>
+            </tr>
+            <tr>
+                <th>TotalCost</th>
+                <td>{{ raw_material.totalCost }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ raw_material.notes }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <twig:Button:ActionItem
+        withDelete="app_raw_material_delete"
+        withEdit="app_raw_material_edit"
+        withBackToList="app_raw_material_index"
+        :itemId="raw_material.id"
+    />
+{% endblock %}

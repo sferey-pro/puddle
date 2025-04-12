@@ -1,0 +1,16 @@
+<td>{{ raw_material.name }}</td>
+<td>{{ raw_material.unitPrice }}</td>
+<td>{{ raw_material.supplier }}</td>
+<td>{{ raw_material.priceVariability ? ux_icon('material-symbols:check-circle') : ux_icon('material-symbols:check-cancel') }}</td>
+<td>{{ raw_material.unit }}</td>
+<td>{{ raw_material.totalCost }}</td>
+<td>{{ raw_material.notes }}</td>
+<td>
+    <twig:Button:ActionItem
+        withShow="app_raw_material_show"
+        withEdit="app_raw_material_edit"
+        withDelete="app_raw_material_delete"
+        withDuplicate="app_raw_material_duplicate"
+        :itemId="raw_material.id"
+    />
+</td>

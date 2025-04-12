@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}New Supplier{% endblock %}
+
+{% block body_id 'supplier_create' %}
+
+{% block body %}
+    <twig:Semantic:Title content="{{ 'supplier.new' | trans }}" />
+
+    {{ include('supplier/_form.html.twig') }}
+{% endblock %}

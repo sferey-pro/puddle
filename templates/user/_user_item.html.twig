@@ -5,15 +5,11 @@
         <twig:Role type="{{ role | trans }}" color="{{ role.getColors }}" />
     {% endfor %}
 <td>{{ user.isVerified ? ux_icon('material-symbols:check-circle') : ux_icon('material-symbols:check-cancel') }}</td>
-<td class="text-center">
-    <div class="btn-group gap-2">
-        <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-secondary">
-            <twig:ux:icon name="eye"/> {{ 'action.show'|trans }}
-        </a>
-
-        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-primary">
-            <twig:ux:icon name="pencil"/> {{ 'action.edit'|trans }}
-        </a>
-        {{ include('user/_delete_form.html.twig') }}
-    </div>
+<td class="text-end">
+    <twig:Button:ActionItem
+        withShow="app_user_show"
+        withEdit="app_user_edit"
+        withDelete="app_user_delete"
+        :itemId="user.id"
+    />
 </td>

@@ -2,12 +2,10 @@
 
 {% block title %}Edit User{% endblock %}
 
-{% block body %}
-    <h1>Edit User</h1>
+{% block body_id 'user_edit' %}
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+{% block main %}
+    <twig:Semantic:Title content="{{ 'user.edit' | trans }}" />
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+    {{ include('user/_form.html.twig', {'button_label': 'label.update_user'|trans }) }}
 {% endblock %}

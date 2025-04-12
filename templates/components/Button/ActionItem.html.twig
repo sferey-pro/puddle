@@ -1,0 +1,31 @@
+<div class="btn-group gap-2">
+    {% if(withShow is defined) %}
+        <a href="{{ path(withShow, {'id': itemId}) }}" class="btn btn-block btn-light">
+            <twig:ux:icon name="eye"/> {{ 'action.show'|trans }}
+        </a>
+    {% endif %}
+
+    {% if(withEdit is defined) %}
+        <a href="{{ path(withEdit, {'id': itemId}) }}" class="btn btn-block btn-primary">
+            <twig:ux:icon name="pencil"/> {{ 'action.edit'|trans }}
+        </a>
+    {% endif %}
+
+    {% if(withDelete is defined) %}
+        <form class="form-inline" method="post" action="{{ path(withDelete, {'id': itemId}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ itemId) }}">
+            <button class="btn btn-block btn-danger"><twig:ux:icon name="trash"/> {{ 'action.delete'|trans }}</button>
+        </form>
+    {% endif %}
+
+    {% if(withDuplicate is defined) %}
+        <form class="form-inline" method="post" action="{{ path(withDuplicate, {'id': itemId}) }}" onsubmit="return confirm('Are you sure you want to duplicate this item?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('duplicate' ~ itemId) }}">
+            <button class="btn btn-block btn-warning"><twig:ux:icon name="tabler:copy"/> {{ 'action.duplicate'|trans }}</button>
+        </form>
+    {% endif %}
+
+    {% if(withBackToList is defined) %}
+        <twig:Button:BackToList routeName="{{ withBackToList }}" />
+    {% endif %}
+</div>

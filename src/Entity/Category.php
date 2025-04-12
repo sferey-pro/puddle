@@ -18,6 +18,9 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 7)]
+    private ?string $color = null;
+
     /**
      * @var Collection<int, Product>
      */
@@ -39,9 +42,27 @@ class Category
         return $this->name;
     }
 
+    public function getDisplayName(): ?string
+    {
+        return ucfirst($this->name);
+    }
+
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

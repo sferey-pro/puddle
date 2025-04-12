@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Edit RawMaterial{% endblock %}
+
+{% block body_id 'raw_material_edit' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'raw_material.edit' | trans }}" />
+
+    {{ include('raw_material/_form.html.twig', {'button_label': 'label.update_supplier'|trans }) }}
+{% endblock %}

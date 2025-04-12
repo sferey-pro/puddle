@@ -6,8 +6,10 @@ export default class extends Controller {
 
   nextStep() {
       let emailValue = this.emailFieldTarget.querySelector('input').value
-      this.emailDisplayTarget.innerHTML = emailValue
-      this.toogleStep()
+      if(emailValue) {
+        this.emailDisplayTarget.innerHTML = emailValue
+        this.toogleStep()
+      }
   }
 
   previousStep() {

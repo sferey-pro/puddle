@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Common\Command\CommandBusInterface;
 use App\Entity\Product;
+use App\Entity\RawMaterialList;
 use App\Form\ProductFormType;
-use App\Form\ProductType;
+use App\Form\RawMaterialListFormType;
+use App\Messenger\Command\Product\NewProduct;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/product')]
 final class ProductController extends AbstractController{
+
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
@@ -31,8 +35,14 @@ final class ProductController extends AbstractController{
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
+        $rawMaterialList = new RawMaterialList();
+        $form = $this->createForm(RawMaterialListFormType::class, $rawMaterialList);
+
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
+            'form' => $form,
+            'rawMaterialList' => $rawMaterialList,
         ]);
     }
 
@@ -60,6 +70,23 @@ final class ProductController extends AbstractController{
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/duplicate', name: 'app_product_duplicate', methods: ['POST'])]
+    public function duplicate(Request $request, Product $product, CommandBusInterface $commandBus): Response
+    {
+        if ($this->isCsrfTokenValid('duplicate'.$product->getId(), $request->getPayload()->getString('_token'))) {
+
+            $commandBus->dispatch(new NewProduct(
+                name: $product->getName(),
+                price: $product->getPrice(),
+                category: $product->getCategory(),
+            ));
+
+            $this->addFlash('live_demo_success', 'Product duplicated!');
         }
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);

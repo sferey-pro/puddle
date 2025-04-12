@@ -8,18 +8,24 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link{{ _route == 'app_homepage' ? ' active' : '' }}" aria-current="page" href="{{ path('app_homepage') }}">Home</a>
+            <a class="nav-link{{ _route == 'app_homepage' ? ' active' : '' }}" aria-current="page" href="{{ path('app_homepage') }}">{{ 'menu.home'|trans }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{{ _route == 'app_user_index' ? ' active' : '' }}" href="{{ path('app_user_index') }}">Users</a>
+            <a class="nav-link{{ _route == 'app_user_index' ? ' active' : '' }}" href="{{ path('app_user_index') }}">{{ 'menu.users'|trans }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{{ _route == 'app_product_index' ? ' active' : '' }}" href="{{ path('app_product_index') }}">Product</a>
+            <a class="nav-link{{ _route == 'app_product_index' ? ' active' : '' }}" href="{{ path('app_product_index') }}">{{ 'menu.products'|trans }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{ _route == 'app_raw_material_index' ? ' active' : '' }}" href="{{ path('app_raw_material_index') }}">{{ 'menu.raw_materials'|trans }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{ _route == 'app_supplier_index' ? ' active' : '' }}" href="{{ path('app_supplier_index') }}">{{ 'menu.suppliers'|trans }}</a>
           </li>
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link{{ _route == 'app_register' ? ' active' : '' }}" aria-current="page" href="{{ path('app_register') }}">Register</a>
+                <a class="nav-link{{ _route == 'app_register' ? ' active' : '' }}" aria-current="page" href="{{ path('app_register') }}">{{ 'menu.register'|trans }}</a>
             </li>
             <li class="nav-item">
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}

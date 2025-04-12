@@ -34,7 +34,7 @@ class NewProductForm extends AbstractController
     public string $name = '';
 
     #[LiveProp(writable: true)]
-    public int $price = 0;
+    public float $price = 0;
 
     #[LiveProp(writable: true)]
     #[NotBlank]
