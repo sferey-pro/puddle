@@ -45,6 +45,11 @@ class Category extends AbstractEntity
         return ucfirst($this->name);
     }
 
+    public function __toString(): string
+    {
+        return $this->getDisplayName();
+    }
+
     public function setName(string $name): static
     {
         $this->name = $name;

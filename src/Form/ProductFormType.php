@@ -28,7 +28,9 @@ class ProductFormType extends AbstractType
             ->add('slug')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Category $category): string {
+                    return $category->getDisplayName();
+                }
             ])
         ;
     }

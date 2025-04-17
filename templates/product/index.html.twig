@@ -12,6 +12,7 @@
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
+                <th scope="col">Category</th>
                 <th scope="col">Price</th>
                 <th scope="col">CreatedAt</th>
                 <th scope="col" class="text-end"><twig:ux:icon name="settings" /> {{ 'label.actions'|trans }}</th>
@@ -24,7 +25,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">{{ 'default.no_record_found'|trans }}</td>
+                <td colspan="6">{{ 'default.no_record_found'|trans }}</td>
             </tr>
         {% endfor %}
         </tbody>
