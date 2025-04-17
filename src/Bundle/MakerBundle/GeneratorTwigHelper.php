@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Bundle\MakerBundle;
 
 use Symfony\Bundle\MakerBundle\FileManager;
@@ -13,7 +15,7 @@ final class GeneratorTwigHelper
 
     public function getEntityFieldPrintCode($entity, $field): string
     {
-        $twigField = preg_replace_callback('/(?!^)_([a-z0-9])/', static fn ($s) => strtoupper($s[1]), $field['fieldName']);
+        $twigField = preg_replace_callback('/(?!^)_([a-z0-9])/', static fn ($s) => mb_strtoupper($s[1]), $field['fieldName']);
         $printCode = $entity.'.'.str_replace('_', '', $twigField);
 
         match ($field['type']) {

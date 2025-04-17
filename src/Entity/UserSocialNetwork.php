@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`user_social_networks`')]
 class UserSocialNetwork extends AbstractEntity
 {
-
     #[ORM\ManyToOne(inversedBy: 'userSocialNetworks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;

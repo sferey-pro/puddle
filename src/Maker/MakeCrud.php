@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Maker;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -275,7 +277,7 @@ final class MakeCrud extends AbstractMaker
                     'route_name' => $routeName,
                     'form_fields' => $entityDoctrineDetails->getFormFields(),
                     'repository_class_name' => EntityManagerInterface::class,
-                    'form_field_prefix' => strtolower(Str::asSnakeCase($entityTwigVarSingular)),
+                    'form_field_prefix' => mb_strtolower(Str::asSnakeCase($entityTwigVarSingular)),
                 ]
             );
 

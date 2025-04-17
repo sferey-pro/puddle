@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Bundle\MakerBundle;
 
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\FileManager;
+use Symfony\Bundle\MakerBundle\Generator as BaseGenerator;
+use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Bundle\MakerBundle\Util\ClassNameDetails;
 use Symfony\Bundle\MakerBundle\Util\ClassSource\Model\ClassData;
 use Symfony\Bundle\MakerBundle\Util\TemplateComponentGenerator;
-use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Bundle\MakerBundle\Validator;
-use Symfony\Bundle\MakerBundle\Generator as BaseGenerator;
 
 /**
- * Overrride Symfony\Bundle\MakerBundle\Generator
- * @package App\Bundle\MakerBundle
+ * Overrride Symfony\Bundle\MakerBundle\Generator.
  */
 class Generator extends BaseGenerator
 {
@@ -26,8 +27,7 @@ class Generator extends BaseGenerator
         private string $namespacePrefix,
         private ?TemplateComponentGenerator $templateComponentGenerator = null,
     ) {
-
-        //@TODO : Ajouter un trigger_deprecation si la version du bundle est différente de la surcharge
+        // @TODO : Ajouter un trigger_deprecation si la version du bundle est différente de la surcharge
 
         $this->twigHelper = new GeneratorTwigHelper($fileManager);
         $this->namespacePrefix = trim($namespacePrefix, '\\');
@@ -40,9 +40,9 @@ class Generator extends BaseGenerator
      * @param string $templateName Template name in Resources/skeleton to use
      * @param array  $variables    Array of variables to pass to the template
      *
-     * @return string The path where the file will be created
-     *
      * @throws \Exception
+     *
+     * @return string The path where the file will be created
      */
     public function generateClass(string $className, string $templateName, array $variables = []): string
     {
@@ -139,7 +139,7 @@ class Generator extends BaseGenerator
         $fullNamespacePrefix = $this->namespacePrefix.'\\'.$namespacePrefix;
         if ('\\' === $name[0]) {
             // class is already "absolute" - leave it alone (but strip opening \)
-            $className = substr($name, 1);
+            $className = mb_substr($name, 1);
         } else {
             $className = Str::asClassName($name, $suffix);
 
@@ -227,9 +227,9 @@ class Generator extends BaseGenerator
         );
     }
 
-    private function overridingTemplateName($templateName): string {
-
-        $templatePath = 'templates/bundles/MakerBundle/' . $templateName;
+    private function overridingTemplateName($templateName): string
+    {
+        $templatePath = 'templates/bundles/MakerBundle/'.$templateName;
 
         if (file_exists($templatePath)) {
             $templateName = $templatePath;
@@ -256,7 +256,7 @@ class Generator extends BaseGenerator
 
         $templatePath = $this->overridingTemplateName($templateName);
         if (!file_exists($templatePath)) {
-            $templatePath = \sprintf('%s/templates/%s', \dirname(__DIR__) . '/../../vendor/symfony/maker-bundle', $templateName);
+            $templatePath = \sprintf('%s/templates/%s', \dirname(__DIR__).'/../../vendor/symfony/maker-bundle', $templateName);
 
             if (!file_exists($templatePath)) {
                 throw new \Exception(\sprintf('Cannot find template "%s" in the templates/ dir.', $templateName));

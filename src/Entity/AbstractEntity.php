@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Uuid;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 abstract class AbstractEntity implements EntityInterface, \JsonSerializable
 {
