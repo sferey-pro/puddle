@@ -9,14 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategoryRepository::class)]
-class Category
-{
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\Table(name: '`categories`')]
+class Category extends AbstractEntity
+{
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -34,9 +31,9 @@ class Category
         $this->products = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
+        return [];
     }
 
     public function getName(): ?string

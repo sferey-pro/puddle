@@ -8,19 +8,17 @@ use App\Repository\SupplierRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
-class Supplier implements \JsonSerializable
+#[ORM\Table(name: '`suppliers`')]
+class Supplier extends AbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
+        return [
+            'name' => $this->getName(),
+        ];
     }
 
     public function getName(): ?string
@@ -33,12 +31,5 @@ class Supplier implements \JsonSerializable
         $this->name = $name;
 
         return $this;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'name' => $this->getName(),
-        ];
     }
 }

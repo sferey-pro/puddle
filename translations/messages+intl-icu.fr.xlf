@@ -172,7 +172,7 @@
     <unit id="ibDadWR" name="product.edit">
       <segment>
         <source>product.edit</source>
-        <target>__product.edit</target>
+        <target>Edition Produit</target>
       </segment>
     </unit>
     <unit id="upI8UGO" name="label.update_product">
@@ -184,19 +184,19 @@
     <unit id="mkJg1Bu" name="product.index">
       <segment>
         <source>product.index</source>
-        <target>__product.index</target>
+        <target>Produits</target>
       </segment>
     </unit>
     <unit id="bRtjOc5" name="product.show">
       <segment>
         <source>product.show</source>
-        <target>__product.show</target>
+        <target>Produit</target>
       </segment>
     </unit>
     <unit id="Nv9p6EI" name="product.new">
       <segment>
         <source>product.new</source>
-        <target>__product.new</target>
+        <target>Nouveau Produit</target>
       </segment>
     </unit>
     <unit id="7AT4Sko" name="action.delete_product">
@@ -341,6 +341,48 @@
       <segment>
         <source>label.button.create_category</source>
         <target>Créer une categorie</target>
+      </segment>
+    </unit>
+    <unit id="KEsAR0x" name="additional_cost.edit">
+      <segment>
+        <source>additional_cost.edit</source>
+        <target>__additional_cost.edit</target>
+      </segment>
+    </unit>
+    <unit id="9YPzNgC" name="label.update_additional_cost">
+      <segment>
+        <source>label.update_additional_cost</source>
+        <target>__label.update_additional_cost</target>
+      </segment>
+    </unit>
+    <unit id="tmCPU55" name="additional_cost.index">
+      <segment>
+        <source>additional_cost.index</source>
+        <target>__additional_cost.index</target>
+      </segment>
+    </unit>
+    <unit id="GRQHmKU" name="additional_cost.show">
+      <segment>
+        <source>additional_cost.show</source>
+        <target>__additional_cost.show</target>
+      </segment>
+    </unit>
+    <unit id="aa1Xozf" name="additional_cost.new">
+      <segment>
+        <source>additional_cost.new</source>
+        <target>__additional_cost.new</target>
+      </segment>
+    </unit>
+    <unit id="aVl8UGK" name="label.create_additional_cost">
+      <segment>
+        <source>label.create_additional_cost</source>
+        <target>__label.create_additional_cost</target>
+      </segment>
+    </unit>
+    <unit id="8y6wrsO" name="menu.app_additional_cost">
+      <segment>
+        <source>menu.app_additional_cost</source>
+        <target>Coûts Annexes</target>
       </segment>
     </unit>
   </file>

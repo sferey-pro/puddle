@@ -5,7 +5,7 @@
 {% block body_id 'user_show' %}
 
 {% block main %}
-     <twig:Semantic:Title content="{{ 'user.show' | trans }}" />
+    <twig:Semantic:Title content="{{ 'user.show' | trans }}" />
 
     <table class="table">
         <tbody>
@@ -41,5 +41,5 @@
         withEdit="app_user_edit"
         withBackToList="app_user_index"
         :itemId="user.id"
-    />
+        />
 {% endblock %}

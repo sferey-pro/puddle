@@ -20,7 +20,7 @@
         <tbody>
         {% for product in products %}
             <tr id="product_{{ product.id }}">
-                {{ include('product/_product_item.html.twig', { product: product}) }}
+                {{ include('product/_item.html.twig', { product: product}) }}
             </tr>
         {% else %}
             <tr>

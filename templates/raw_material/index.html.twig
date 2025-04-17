@@ -23,7 +23,7 @@
         <tbody>
         {% for raw_material in raw_materials %}
             <tr id="raw_material_{{ raw_material.id }}">
-                {{ include('raw_material/_raw_material_item.html.twig', { raw_material: raw_material}) }}
+                {{ include('raw_material/_item.html.twig', { raw_material: raw_material}) }}
             </tr>
         {% else %}
             <tr>

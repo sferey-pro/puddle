@@ -10,13 +10,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RawMaterialListRepository::class)]
-class RawMaterialList
+#[ORM\Table(name: '`raw_material_lists`')]
+class RawMaterialList extends AbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     private ?Product $product = null;
 
     #[ORM\OneToMany(mappedBy: 'rawMaterialList', targetEntity: RawMaterialItem::class, orphanRemoval: true, cascade: ['persist'])]
@@ -27,9 +23,9 @@ class RawMaterialList
         $this->rawMaterialItems = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
+        return [];
     }
 
     public function getProduct(): ?Product

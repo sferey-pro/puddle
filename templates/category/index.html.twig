@@ -19,7 +19,7 @@
         <tbody>
         {% for category in categories %}
             <tr id="category_{{ category.id }}">
-                {{ include('category/_category_item.html.twig', { category: category}) }}
+                {{ include('category/_item.html.twig', { category: category}) }}
             </tr>
         {% else %}
             <tr>

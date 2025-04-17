@@ -9,13 +9,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RawMaterialRepository::class)]
-class RawMaterial
+#[ORM\Table(name: '`raw_materials`')]
+class RawMaterial extends AbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -45,9 +41,9 @@ class RawMaterial
     #[ORM\Column]
     private ?string $link = null;
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
+        return [];
     }
 
     public function getName(): ?string

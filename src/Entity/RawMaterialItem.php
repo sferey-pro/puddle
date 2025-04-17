@@ -7,13 +7,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-class RawMaterialItem
+#[ORM\Table(name: '`raw_material_items`')]
+class RawMaterialItem extends AbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column]
     private ?RawMaterial $rawMaterial = null;
 
@@ -27,9 +23,9 @@ class RawMaterialItem
     #[ORM\JoinColumn(nullable: false)]
     private ?RawMaterialList $rawMaterialList;
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
+        return [];
     }
 
     public function getRawMaterial(): ?RawMaterial

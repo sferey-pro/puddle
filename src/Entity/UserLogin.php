@@ -7,20 +7,11 @@ namespace App\Entity;
 use App\Repository\UserLoginRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserLoginRepository::class)]
-class UserLogin
+#[ORM\Table(name: '`user_logins`')]
+class UserLogin extends AbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(type: UuidType::NAME)]
-    private ?Uuid $uuid = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $expiresAt = null;
 
@@ -37,21 +28,9 @@ class UserLogin
     #[ORM\Column(length: 255)]
     private ?string $ipAddress = null;
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
-    }
-
-    public function getUuid(): ?Uuid
-    {
-        return $this->uuid;
-    }
-
-    public function setUuid(Uuid $uuid): static
-    {
-        $this->uuid = $uuid;
-
-        return $this;
+        return [];
     }
 
     public function getExpiresAt(): ?\DateTimeImmutable

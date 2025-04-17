@@ -17,7 +17,7 @@
         <tbody>
         {% for supplier in suppliers %}
             <tr id="supplier_{{ supplier.id }}">
-                {{ include('supplier/_supplier_item.html.twig', { supplier: supplier}) }}
+                {{ include('supplier/_item.html.twig', { supplier: supplier}) }}
             </tr>
         {% else %}
             <tr>

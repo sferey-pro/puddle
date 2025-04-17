@@ -20,25 +20,27 @@
             <a class="nav-link{{ _route == 'app_raw_material_index' ? ' active' : '' }}" href="{{ path('app_raw_material_index') }}">{{ 'menu.raw_materials'|trans }}</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link{{ _route == 'app_additional_cost_index' ? ' active' : '' }}" href="{{ path('app_additional_cost_index') }}">{{ 'menu.app_additional_cost'|trans }}</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link{{ _route == 'app_supplier_index' ? ' active' : '' }}" href="{{ path('app_supplier_index') }}">{{ 'menu.suppliers'|trans }}</a>
           </li>
         </ul>
         <ul class="navbar-nav">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ logout_path() }}">
+                    <twig:ux:icon name="tabler:logout"/> {{ 'menu.logout'|trans }}
+                </a>
+            </li>
+            {% else %}
             <li class="nav-item">
                 <a class="nav-link{{ _route == 'app_register' ? ' active' : '' }}" aria-current="page" href="{{ path('app_register') }}">{{ 'menu.register'|trans }}</a>
             </li>
             <li class="nav-item">
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <a class="nav-link" href="{{ logout_path() }}">
-                        <twig:ux:icon name="tabler:logout"/> {{ 'menu.logout'|trans }}
-                    </a>
-                {% else %}
-                    <a class="nav-link{{ _route == 'app_login' ? ' active' : '' }}" aria-current="page" href="{{ path('app_login') }}">{{ 'menu.login'|trans }}</a>
-                {% endif %}
+                <a class="nav-link{{ _route == 'app_login' ? ' active' : '' }}" aria-current="page" href="{{ path('app_login') }}">{{ 'menu.login'|trans }}</a>
             </li>
-            <li class="nav-item">
-
-            </li>
+            {% endif %}
         </ul>
       </div>
     </div>

@@ -46,3 +46,17 @@ services:
             - { name: doctrine.event_listener, event: 'prePersist' }
         calls:
             - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
+
+    maker.maker.make_crud:
+        class: App\Maker\MakeCrud
+        arguments:
+            - '@maker.doctrine_helper'
+            - '@maker.renderer.form_type_renderer'
+
+    maker.generator:
+        class: App\Bundle\MakerBundle\Generator
+        arguments:
+            - '@maker.file_manager'
+            - 'App'
+            - '@maker.template_component_generator'
+

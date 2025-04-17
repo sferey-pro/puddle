@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}New AdditionalCost{% endblock %}
+
+{% block body_id 'additional_cost_new' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'additional_cost.new' | trans }}" />
+
+    {{ include('additional_cost/_form.html.twig') }}
+{% endblock %}

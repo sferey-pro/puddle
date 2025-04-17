@@ -1,0 +1,4 @@
+when@dev:
+    maker:
+        generate_final_classes: true
+        generate_final_entities: true

@@ -1,0 +1,15 @@
+<td>{{ additional_cost.type }}</td>
+<td>{{ additional_cost.name }}</td>
+<td>{{ additional_cost.price }}</td>
+<td>{{ additional_cost.id }}</td>
+<td>{{ additional_cost.uuid }}</td>
+<td>{{ additional_cost.createdAt ? additional_cost.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+<td>{{ additional_cost.updatedAt ? additional_cost.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+<td class="text-end">
+    <twig:Button:ActionItem
+        withShow='app_additional_cost_show'
+        withEdit='app_additional_cost_edit'
+        withDelete='app_additional_cost_delete'
+        :itemId='additional_cost.id'
+        />
+</td>

@@ -1,0 +1,20 @@
+{# templates/bundles/TwigBundle/Exception/error403.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+        <div class="max-w-2xl m-auto mt-16">
+
+            <div class="text-center px-4">
+                <div class="inline-flex mb-8">
+                    <img class="rounded-full transition-all duration-300 blur-sm hover:blur-none" src="{{ asset('images/error-403.jpg') }}" alt="403 illustration" />
+                </div>
+                <div class="mb-6">Hmm... you don't have permission to access to this resource.!</div>
+                <a href="{{ path('app_dashboard') }}" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">Back To Dashboard</a>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

@@ -8,17 +8,11 @@ use App\Config\SocialNetwork;
 use App\Repository\UserSocialNetworkRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: UserSocialNetworkRepository::class)]
-class UserSocialNetwork
+#[ORM\Table(name: '`user_social_networks`')]
+class UserSocialNetwork extends AbstractEntity
 {
-    use TimestampableEntity;
-
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userSocialNetworks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -33,9 +27,9 @@ class UserSocialNetwork
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    public function getId(): ?int
+    public function jsonSerialize(): array
     {
-        return $this->id;
+        return [];
     }
 
     public function getUser(): ?User

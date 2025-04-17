@@ -27,7 +27,6 @@ final class RegisterUserHandler
     public function __invoke(RegisterUser $command): void
     {
         $user = new User();
-        $user->setUuid(Uuid::v7());
         $user->setEmail($command->getEmail());
 
         $plainPassword = $command->getPlainPassword();

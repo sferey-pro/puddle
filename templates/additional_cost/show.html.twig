@@ -1,0 +1,49 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}AdditionalCost{% endblock %}
+
+{% block body_id 'additional_cost_show' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'additional_cost.show' | trans }}" />
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Type</th>
+                <td>{{ additional_cost.type }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ additional_cost.name }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ additional_cost.price }}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ additional_cost.id }}</td>
+            </tr>
+            <tr>
+                <th>Uuid</th>
+                <td>{{ additional_cost.uuid }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ additional_cost.createdAt ? additional_cost.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ additional_cost.updatedAt ? additional_cost.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <twig:Button:ActionItem
+        withBackToList='app_additional_cost_index'
+        withEdit='app_additional_cost_edit'
+        withDelete='app_additional_cost_delete'
+        :itemId='additional_cost.id'
+        />
+{% endblock %}
