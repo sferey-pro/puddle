@@ -67,7 +67,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "DataFixtures\\": "fixtures/"
         }
     },
     "autoload-dev": {
@@ -112,13 +113,13 @@
         "dama/doctrine-test-bundle": "^8.3",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "nikic/php-parser": "^5.4",
-        "phpunit/phpunit": "^12",
+        "phpunit/phpunit": "^12.1.2",
         "symfony/maker-bundle": "^1.62.1",
         "symfony/panther": "^2.2",
         "symfony/stopwatch": "7.2.*",
         "symfony/web-profiler-bundle": "7.2.*",
         "twbs/bootstrap": "^5.3.5",
-        "zenstruck/browser": "^1.9",
+        "zenstruck/browser": "^1.9.1",
         "zenstruck/foundry": "^2.4.2"
     }
 }

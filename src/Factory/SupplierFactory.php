@@ -4,31 +4,32 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\Category;
+use App\Entity\Supplier;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<Category>
+ * @extends PersistentObjectFactory<Supplier>
  */
-final class CategoryFactory extends PersistentObjectFactory
+final class SupplierFactory extends PersistentObjectFactory
 {
-    public const DEFAULT_UUID = '01964933-040c-7b09-9d1a-24438a63df5e';
+    public const DEFAULT_UUID = '01964952-2372-7d99-81f4-bac10fa2851a';
 
     public static function class(): string
     {
-        return Category::class;
+        return Supplier::class;
     }
 
     public function noRandom(): static
     {
         return $this->with([
             'name' => 'some name',
-            'color' => '#000000',
 
             'uuid' => Uuid::fromString(static::DEFAULT_UUID),
             'createdAt' => new \DateTime('2015-11-01 00:00:00', new \DateTimeZone('Europe/Paris')),
             'updatedAt' => new \DateTime('2015-11-01 02:00:00', new \DateTimeZone('Europe/Paris')),
+            'createdBy' => UserFactory::new()->noRandom(),
+            'updatedBy' => UserFactory::new()->noRandom(),
         ]);
     }
 
@@ -36,7 +37,6 @@ final class CategoryFactory extends PersistentObjectFactory
     {
         return [
             'name' => self::faker()->word(),
-            'color' => self::faker()->hexColor(),
 
             'uuid' => Uuid::fromString(self::faker()->uuid()),
             'createdAt' => self::faker()->dateTime(),

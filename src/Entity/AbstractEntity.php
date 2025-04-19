@@ -10,6 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
+#[ORM\MappedSuperclass]
 abstract class AbstractEntity implements EntityInterface, \JsonSerializable
 {
     use TimestampableEntity;

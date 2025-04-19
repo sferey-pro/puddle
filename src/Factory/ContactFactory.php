@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\Category;
+use App\Entity\Contact;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<Category>
+ * @extends PersistentObjectFactory<Contact>
  */
-final class CategoryFactory extends PersistentObjectFactory
+class ContactFactory extends PersistentObjectFactory
 {
-    public const DEFAULT_UUID = '01964933-040c-7b09-9d1a-24438a63df5e';
+    public const DEFAULT_UUID = '01964943-6945-70b2-9209-bbc3f877aa72';
 
     public static function class(): string
     {
-        return Category::class;
+        return Contact::class;
     }
 
     public function noRandom(): static
     {
         return $this->with([
             'name' => 'some name',
-            'color' => '#000000',
+            'address' => AddressFactory::new()->noRandom(),
+            'category' => CategoryFactory::new()->noRandom(),
 
             'uuid' => Uuid::fromString(static::DEFAULT_UUID),
             'createdAt' => new \DateTime('2015-11-01 00:00:00', new \DateTimeZone('Europe/Paris')),
@@ -32,17 +33,16 @@ final class CategoryFactory extends PersistentObjectFactory
         ]);
     }
 
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'name' => self::faker()->word(),
-            'color' => self::faker()->hexColor(),
+            'address' => AddressFactory::new(),
+            'category' => CategoryFactory::new(),
 
             'uuid' => Uuid::fromString(self::faker()->uuid()),
             'createdAt' => self::faker()->dateTime(),
             'updatedAt' => self::faker()->dateTime(),
-            'createdBy' => UserFactory::new(),
-            'updatedBy' => UserFactory::new(),
         ];
     }
 }

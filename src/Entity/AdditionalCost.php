@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\AdditionalCostRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`additional_costs`')]
 class AdditionalCost extends AbstractEntity
 {
+    use BlameableEntity;
+
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 

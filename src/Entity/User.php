@@ -37,7 +37,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\Column(length: 5, nullable: true)]
+    #[ORM\Column(length: 12, nullable: true)]
     private ?string $locale = null;
 
     /**

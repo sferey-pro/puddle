@@ -30,7 +30,7 @@ class ProductFormType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => function (Category $category): string {
                     return $category->getDisplayName();
-                }
+                },
             ])
         ;
     }

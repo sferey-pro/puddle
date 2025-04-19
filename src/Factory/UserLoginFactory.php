@@ -4,27 +4,30 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\Category;
+use App\Entity\UserLogin;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<Category>
+ * @extends PersistentObjectFactory<UserLogin>
  */
-final class CategoryFactory extends PersistentObjectFactory
+final class UserLoginFactory extends PersistentObjectFactory
 {
-    public const DEFAULT_UUID = '01964933-040c-7b09-9d1a-24438a63df5e';
+    public const DEFAULT_UUID = '01964955-ed48-71f8-ab57-a0b9624a9c92';
 
     public static function class(): string
     {
-        return Category::class;
+        return UserLogin::class;
     }
 
     public function noRandom(): static
     {
         return $this->with([
-            'name' => 'some name',
-            'color' => '#000000',
+            'hash' => 'some hash',
+            'ipAddress' => '127.0.0.1',
+            'isVerified' => true,
+            'user' => UserFactory::new()->noRandom(),
+            'expiresAt' => new \DateTime('2015-11-01 04:00:00', new \DateTimeZone('Europe/Paris')),
 
             'uuid' => Uuid::fromString(static::DEFAULT_UUID),
             'createdAt' => new \DateTime('2015-11-01 00:00:00', new \DateTimeZone('Europe/Paris')),
@@ -35,14 +38,15 @@ final class CategoryFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'name' => self::faker()->word(),
-            'color' => self::faker()->hexColor(),
+            'hash' => self::faker()->lexify('????????????'),
+            'ipAddress' => self::faker()->ipv4(),
+            'isVerified' => self::faker()->boolean(),
+            'user' => UserFactory::new(),
+            'expiresAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
 
             'uuid' => Uuid::fromString(self::faker()->uuid()),
             'createdAt' => self::faker()->dateTime(),
             'updatedAt' => self::faker()->dateTime(),
-            'createdBy' => UserFactory::new(),
-            'updatedBy' => UserFactory::new(),
         ];
     }
 }

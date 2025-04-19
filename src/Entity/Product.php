@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: '`products`')]
 class Product extends AbstractEntity
 {
+    use BlameableEntity;
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

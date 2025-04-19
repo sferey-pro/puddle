@@ -26,7 +26,7 @@ final class Version20250417072405 extends AbstractMigration
           roles JSON NOT NULL,
           password VARCHAR(255) NOT NULL,
           is_verified BOOLEAN NOT NULL,
-          locale VARCHAR(5) DEFAULT NULL,
+          locale VARCHAR(12) DEFAULT NULL,
           uuid UUID NOT NULL,
           created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
           updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\RawMaterialRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`raw_materials`')]
 class RawMaterial extends AbstractEntity
 {
+    use BlameableEntity;
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

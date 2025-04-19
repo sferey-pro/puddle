@@ -1,0 +1,34 @@
+services:
+    gedmo.mapping.driver.attribute:
+        class: Gedmo\Mapping\Driver\AttributeReader
+
+    # Gedmo Timestampable Extension Listener
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
+            - [ setClock, [ '@clock' ] ]
+    
+    # Gedmo Sluggable Extension Listener
+    gedmo.listener.sluggable:
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+            - { name: doctrine.event_listener, event: 'prePersist' }
+        calls:
+            - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
+
+    # Gedmo Blameable Extension Listener
+    gedmo.listener.blameable:
+        class: Gedmo\Blameable\BlameableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]

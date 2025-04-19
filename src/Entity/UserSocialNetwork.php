@@ -72,6 +72,13 @@ class UserSocialNetwork extends AbstractEntity
         return $this->isActive;
     }
 
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
     public function setAsActive(): static
     {
         $this->isActive = true;

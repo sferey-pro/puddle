@@ -5,12 +5,12 @@
 <td>{{ raw_material.unit }}</td>
 <td>{{ raw_material.totalCost }}</td>
 <td>{{ raw_material.notes }}</td>
+<td><twig:Semantic:ExternalLink content="{{ 'action.external_link'|trans }}" link="{{ raw_material.link }}" /></td>
 <td>
     <twig:Button:ActionItem
         withShow="app_raw_material_show"
         withEdit="app_raw_material_edit"
         withDelete="app_raw_material_delete"
-        withDuplicate="app_raw_material_duplicate"
         :itemId="raw_material.id"
     />
 </td>
