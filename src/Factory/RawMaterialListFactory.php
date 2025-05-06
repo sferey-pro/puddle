@@ -25,7 +25,7 @@ final class RawMaterialListFactory extends PersistentObjectFactory
         return $this->with([
             'product' => ProductFactory::new()->random(),
             'rawMaterialItems' => [
-                RawMaterialItemFactory::new()->random()
+                RawMaterialItemFactory::new()->random(),
             ],
             'quantity' => 4,
             'unit' => 'some unit',

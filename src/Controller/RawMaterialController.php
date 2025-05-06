@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Common\Command\CommandBusInterface;
 use App\Entity\RawMaterial;
 use App\Form\RawMaterialType;
 use App\Repository\RawMaterialRepository;

@@ -7,7 +7,6 @@ namespace App\Twig\Components;
 use App\Common\Command\CommandBusInterface;
 use App\Entity\Category;
 use App\Form\RawMaterialFormType;
-use App\Messenger\Command\Product\NewRawMaterial;
 use App\Messenger\Command\RawMaterial\NewRawMaterial as RawMaterialNewRawMaterial;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
