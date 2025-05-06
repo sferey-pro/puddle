@@ -67,6 +67,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Api\\": "src/ApiResource/",
             "App\\": "src/",
             "DataFixtures\\": "fixtures/"
         }

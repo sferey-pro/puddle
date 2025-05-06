@@ -94,7 +94,7 @@
     <unit id="ozZU_B5" name="supplier.edit">
       <segment>
         <source>supplier.edit</source>
-        <target>__supplier.edit</target>
+        <target>Edition fournnisseur</target>
       </segment>
     </unit>
     <unit id="IOsFLrt" name="label.update_supplier">
@@ -130,7 +130,7 @@
     <unit id="xJshAbU" name="category.edit">
       <segment>
         <source>category.edit</source>
-        <target>__category.edit</target>
+        <target>Edition categorie</target>
       </segment>
     </unit>
     <unit id="Sp3Thg9" name="label.update_category">
@@ -172,7 +172,7 @@
     <unit id="ibDadWR" name="product.edit">
       <segment>
         <source>product.edit</source>
-        <target>Edition Produit</target>
+        <target>Edition produit</target>
       </segment>
     </unit>
     <unit id="upI8UGO" name="label.update_product">
@@ -196,7 +196,7 @@
     <unit id="Nv9p6EI" name="product.new">
       <segment>
         <source>product.new</source>
-        <target>Nouveau Produit</target>
+        <target>Nouveau produit</target>
       </segment>
     </unit>
     <unit id="7AT4Sko" name="action.delete_product">
@@ -304,13 +304,13 @@
     <unit id=".yeYS8C" name="raw_material.edit">
       <segment>
         <source>raw_material.edit</source>
-        <target>__raw_material.edit</target>
+        <target>Edition matières première</target>
       </segment>
     </unit>
     <unit id="FJ32hi5" name="raw_material.index">
       <segment>
         <source>raw_material.index</source>
-        <target>__raw_material.index</target>
+        <target>Matières premières</target>
       </segment>
     </unit>
     <unit id="YptDdId" name="raw_material.show">
@@ -383,6 +383,12 @@
       <segment>
         <source>menu.app_additional_cost</source>
         <target>Coûts Annexes</target>
+      </segment>
+    </unit>
+    <unit id="zDaUJj7" name="action.external_link">
+      <segment>
+        <source>action.external_link</source>
+        <target>Lien</target>
       </segment>
     </unit>
   </file>

@@ -26,14 +26,7 @@ class Product extends AbstractEntity
     private ?string $description = null;
 
     #[ORM\Column(unique: true)]
-    #[Gedmo\Slug(
-        fields: ['name', 'createdAt'],
-        style: 'lowercase',
-        separator: '_',
-        updatable: false,
-        unique: true,
-        dateFormat: 'd/m/Y H-i-s',
-    )]
+    #[Gedmo\Slug(fields: ['name'])]
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]

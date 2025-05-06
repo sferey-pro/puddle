@@ -50,11 +50,7 @@ class NewProductForm extends AbstractController
     #[LiveListener('category:created')]
     public function onCategoryCreated(#[LiveArg] Category $category): void
     {
-        // change category to the new one
         $this->category = $category;
-
-        // the re-render will also cause the <select> to re-render with
-        // the new option included
     }
 
     public function isCurrentCategory(Category $category): bool

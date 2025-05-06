@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\Product;
-use App\Entity\RawMaterialList;
+use App\Entity\RawMaterialItem;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<Product>
+ * @extends PersistentObjectFactory<RawMaterialItem>
  */
-final class ProductFactory extends PersistentObjectFactory
+final class RawMaterialItemFactory extends PersistentObjectFactory
 {
-    public const DEFAULT_UUID = '1964951-39b9-7747-8faa-25d369eb676a';
+    public const DEFAULT_UUID = '0196502b-7aab-73e2-9180-5f78740fca92';
 
     public static function class(): string
     {
-        return Product::class;
+        return RawMaterialItem::class;
     }
 
     public function noRandom(): static
     {
         return $this->with([
-            'name' => 'some name',
-            'category' => CategoryFactory::new()->noRandom(),
-            'price' => 42.0,
+            'rawMaterial' => RawMaterialFactory::new()->random(),
+            'quantity' => 4,
+            'unit' => 'some unit',
 
             'uuid' => Uuid::fromString(static::DEFAULT_UUID),
             'createdAt' => new \DateTime('2015-11-01 00:00:00', new \DateTimeZone('Europe/Paris')),
@@ -39,9 +38,8 @@ final class ProductFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'name' => self::faker()->word(),
-            'category' => CategoryFactory::new(),
-            'price' => self::faker()->randomFloat(nbMaxDecimals: 2, min: 1, max: 4),
+            'quantity' => self::faker()->randomDigit(),
+            'unit' => self::faker()->word(),
 
             'uuid' => Uuid::fromString(self::faker()->uuid()),
             'createdAt' => self::faker()->dateTime(),

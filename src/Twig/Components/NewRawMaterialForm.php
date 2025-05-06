@@ -8,6 +8,7 @@ use App\Common\Command\CommandBusInterface;
 use App\Entity\Category;
 use App\Form\RawMaterialFormType;
 use App\Messenger\Command\Product\NewRawMaterial;
+use App\Messenger\Command\RawMaterial\NewRawMaterial as RawMaterialNewRawMaterial;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -69,7 +70,7 @@ class NewRawMaterialForm extends AbstractController
     ): Response {
         $this->submitForm();
 
-        $commandBus->dispatch(new NewRawMaterial(
+        $commandBus->dispatch(new RawMaterialNewRawMaterial(
             name: $this->getForm()->getData('name'),
             unitPrice: $this->getForm()->getData('unitPrice'),
             supplier: $this->getForm()->getData('supplier'),

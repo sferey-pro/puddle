@@ -925,5 +925,11 @@
         <target>__Your password should be at least {{ limit }} characters</target>
       </segment>
     </unit>
+    <unit id=".R9Uh2W" name="Please enter an email!">
+      <segment>
+        <source>Please enter an email!</source>
+        <target>__Please enter an email!</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

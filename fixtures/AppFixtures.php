@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace DataFixtures;
 
+use App\Entity\Product;
+use App\Entity\RawMaterialList;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Factory\AdditionalCostFactory;
 use App\Factory\CategoryFactory;
 use App\Factory\ProductFactory;
 use App\Factory\RawMaterialFactory;
+use App\Factory\RawMaterialListFactory;
 use App\Factory\SupplierFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -31,6 +34,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         $this->loadRawMaterials($user, $supplier);
         $this->loadAdditionalCosts($user);
         $this->loadProducts($user);
+        $this->loadProductsIngredients();
     }
 
     public function getDependencies(): array
@@ -57,14 +61,14 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
     protected function loadRawMaterials(User $createdBy, Supplier $supplier): void
     {
-        $categorie = CategoryFactory::new(['name' => 'Laits et Boissons végétales'])
+        $category = CategoryFactory::new(['name' => 'Laits et Boissons végétales'])
             ->reuse($createdBy)
             ->create();
 
         // Create RawMaterial
         RawMaterialFactory::new()
             ->reuse($createdBy)
-            ->reuse($categorie)
+            ->reuse($category)
             ->reuse($supplier)
             ->sequence(
                 [
@@ -88,13 +92,13 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
             )
             ->create();
 
-        $categorie = CategoryFactory::new(['name' => 'Cafés en grains'])
+        $category = CategoryFactory::new(['name' => 'Cafés en grains'])
             ->reuse($createdBy)
             ->create();
 
         RawMaterialFactory::new()
             ->reuse($createdBy)
-            ->reuse($categorie)
+            ->reuse($category)
             ->reuse($supplier)
             ->sequence(
                 [
@@ -121,26 +125,39 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
     protected function loadProducts(User $createdBy): array
     {
-        $categories = CategoryFactory::new()
+        $categoryHotDrink = CategoryFactory::new(['name' => 'Boisson chaude'])
             ->reuse($createdBy)
-            ->sequence(
-            [
-                ['name' => 'category 1'],
-                ['name' => 'category 2'],
-            ]
-        )->create();
+            ->create();
 
         // Create Product
         return ProductFactory::new()
             ->reuse($createdBy)
+            ->reuse($categoryHotDrink)
             ->sequence(
                 [
-                    ['name' => 'product 1'],
-                    ['name' => 'product 2'],
+                    [
+                        'name' => 'Cappucino',
+                        'price' => 4,
+                    ]
                 ]
             )
-            ->distribute('category', $categories)
             ->create();
+    }
+
+    protected function loadProductsIngredients(): void
+    {
+        $category = CategoryFactory::findBy(['slug' => 'laits-et-boissons-vegetales']);
+        $rawMaterial = RawMaterialFactory::random(['category' => $category]);
+
+        $product = ProductFactory::findBy(['slug' => 'cappucino']);
+
+        RawMaterialListFactory::new()
+            ->reuse($product[0])
+            ->create([
+                'rawMaterialItems' => [
+                    $rawMaterial,
+                ]
+            ]);
     }
 
     protected function loadSuppliers(User $createdBy): void
