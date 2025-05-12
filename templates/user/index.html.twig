@@ -6,29 +6,47 @@
 
 {% block main %}
     <twig:Semantic:Title content="{{ 'user.index' | trans }}" />
-
-    <table class="table table-striped table-middle-aligned table-borderless table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Email</th>
-                <th scope="col">Roles</th>
-                <th scope="col">IsVerified</th>
-                <th scope="col" class="text-end"><twig:ux:icon name="settings" /> {{ 'label.actions'|trans }}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr id="user_{{ user.id }}">
-                {{ include('user/_item.html.twig', { user: user}) }}
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">{{ 'default.no_record_found'|trans }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <twig:Button:CreateNew routeName="app_user_new" />
+    <div class="container">
+        <div class="row">
+            <twig:Paginator:ItemsPerPageForm />
+            <div class="col">
+                <div class="row g-2 align-items-center justify-content-end">
+                    <div class="col-auto">
+                        <label>Search:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="search" class="form-control form-control-sm" placeholder=""></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped table-middle-aligned table-borderless table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Identifier</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Roles</th>
+                            <th scope="col">IsVerified</th>
+                            <th scope="col" class="text-end"><twig:ux:icon name="settings" /> {{ 'label.actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                        <tr id="user_{{ user.id }}">
+                            {{ include('user/_item.html.twig', { user: user}) }}
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">{{ 'default.no_record_found'|trans }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <twig:Paginator:Paginator routeName="user_index_paginated" paginator="{{ users.paginator }}" />
+    </div>
+    <twig:Button:CreateNew routeName="user_new" />
 {% endblock %}

@@ -6,16 +6,29 @@ namespace App\Entity;
 
 use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\SupplierRepository;
+use App\Entity\ValueObject\SupplierId;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
 #[ORM\Table(name: '`suppliers`')]
-class Supplier extends AbstractEntity
+class Supplier extends BaseEntity
 {
     use BlameableEntity;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    public function __construct(
+        #[ORM\Embedded(columnPrefix: false)]
+        private readonly SupplierId $identifier,
+        #[ORM\Column(length: 255)]
+        private ?string $name = null,
+
+    ) {
+
+    }
+
+    public function identifier(): SupplierId
+    {
+        return $this->identifier;
+    }
 
     public function jsonSerialize(): array
     {

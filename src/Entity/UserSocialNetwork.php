@@ -6,29 +6,36 @@ namespace App\Entity;
 
 use App\Config\SocialNetwork;
 use App\Repository\UserSocialNetworkRepository;
+use App\Entity\ValueObject\UserSocialNetworkId;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserSocialNetworkRepository::class)]
 #[ORM\Table(name: '`user_social_networks`')]
-class UserSocialNetwork extends AbstractEntity
+class UserSocialNetwork extends BaseEntity
 {
-    #[ORM\ManyToOne(inversedBy: 'userSocialNetworks')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
 
-    #[ORM\Column(enumType: SocialNetwork::class)]
-    private ?SocialNetwork $socialNetwork = null;
+    public function __construct(
+        #[ORM\Embedded(columnPrefix: false)]
+        private readonly UserSocialNetworkId $identifier,
+        #[ORM\Column(type: Types::STRING, length: 255)]
+        private $socialId,
 
-    #[ORM\Column(type: Types::STRING, length: 255)]
-    private $socialId;
+        #[ORM\ManyToOne(inversedBy: 'userSocialNetworks')]
+        #[ORM\JoinColumn(nullable: false)]
+        private ?User $user = null,
+        #[ORM\Column(enumType: SocialNetwork::class)]
+        private ?SocialNetwork $socialNetwork = null,
+        #[ORM\Column]
+        private ?bool $isActive = null,
 
-    #[ORM\Column]
-    private ?bool $isActive = null;
+    ) {
 
-    public function jsonSerialize(): array
+    }
+
+    public function identifier(): UserSocialNetworkId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getUser(): ?User

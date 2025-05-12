@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Factory;
 
 use App\Entity\Supplier;
+use App\Entity\ValueObject\SupplierId;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
@@ -25,7 +26,7 @@ final class SupplierFactory extends PersistentObjectFactory
         return $this->with([
             'name' => 'some name',
 
-            'uuid' => Uuid::fromString(static::DEFAULT_UUID),
+            'identifier' => new SupplierId(Uuid::fromString(static::DEFAULT_UUID)),
             'createdAt' => new \DateTime('2015-11-01 00:00:00', new \DateTimeZone('Europe/Paris')),
             'updatedAt' => new \DateTime('2015-11-01 02:00:00', new \DateTimeZone('Europe/Paris')),
             'createdBy' => UserFactory::new()->noRandom(),
@@ -38,7 +39,7 @@ final class SupplierFactory extends PersistentObjectFactory
         return [
             'name' => self::faker()->word(),
 
-            'uuid' => Uuid::fromString(self::faker()->uuid()),
+            'identifier' => new SupplierId(Uuid::fromString(self::faker()->uuid())),
             'createdAt' => self::faker()->dateTime(),
             'updatedAt' => self::faker()->dateTime(),
             'createdBy' => UserFactory::new(),

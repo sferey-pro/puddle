@@ -5,21 +5,25 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use App\Entity\ValueObject\AddressId;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
 #[ORM\Table(name: '`addresses`')]
-class Address extends AbstractEntity
+class Address extends BaseEntity
 {
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly AddressId $identifier;
+
     #[ORM\OneToOne(targetEntity: Contact::class, mappedBy: 'address')]
     protected ?Contact $contact = null;
 
     #[ORM\Column(length: 255)]
     private string $city;
 
-    public function jsonSerialize(): array
+    public function id(): AddressId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getContact(): ?Contact

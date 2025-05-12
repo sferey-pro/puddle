@@ -10,16 +10,16 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Database ID</th>
                 <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Identifier</th>
+                <td>{{ user.identifier }}</td>
             </tr>
             <tr>
                 <th>Email</th>
                 <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Uuid</th>
-                <td>{{ user.uuid }}</td>
             </tr>
             <tr>
                 <th>Roles</th>
@@ -37,9 +37,9 @@
     </table>
 
     <twig:Button:ActionItem
-        withDelete="app_user_delete"
-        withEdit="app_user_edit"
-        withBackToList="app_user_index"
-        :itemId="user.id"
-        />
+        withDelete="user_delete"
+        withEdit="user_edit"
+        withBackToList="user_index"
+        :item="user"
+    />
 {% endblock %}

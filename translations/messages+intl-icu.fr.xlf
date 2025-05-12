@@ -391,5 +391,23 @@
         <target>Lien</target>
       </segment>
     </unit>
+    <unit id="ANpWHHW" name="paginator.previous">
+      <segment>
+        <source>paginator.previous</source>
+        <target>Précédent</target>
+      </segment>
+    </unit>
+    <unit id="ppXuVZq" name="paginator.current">
+      <segment>
+        <source>paginator.current</source>
+        <target></target>
+      </segment>
+    </unit>
+    <unit id="SaZbUiU" name="paginator.next">
+      <segment>
+        <source>paginator.next</source>
+        <target>Suivant</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

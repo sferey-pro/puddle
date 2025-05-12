@@ -6,6 +6,7 @@ namespace App\Factory;
 
 use App\Config\SocialNetwork;
 use App\Entity\UserSocialNetwork;
+use App\Entity\ValueObject\UserSocialNetworkId;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
@@ -29,7 +30,7 @@ final class UserSocialNetworkFactory extends PersistentObjectFactory
             'user' => UserFactory::new()->noRandom(),
             'isActive' => true,
 
-            'uuid' => Uuid::fromString(static::DEFAULT_UUID),
+            'identifier' => new UserSocialNetworkId(Uuid::fromString(static::DEFAULT_UUID)),
             'createdAt' => new \DateTime('2015-11-01 00:00:00', new \DateTimeZone('Europe/Paris')),
             'updatedAt' => new \DateTime('2015-11-01 02:00:00', new \DateTimeZone('Europe/Paris')),
         ]);
@@ -43,7 +44,7 @@ final class UserSocialNetworkFactory extends PersistentObjectFactory
             'user' => UserFactory::new(),
             'isActive' => self::faker()->boolean(),
 
-            'uuid' => Uuid::fromString(self::faker()->uuid()),
+            'identifier' => new UserSocialNetworkId(Uuid::fromString(self::faker()->uuid())),
             'createdAt' => self::faker()->dateTime(),
             'updatedAt' => self::faker()->dateTime(),
         ];

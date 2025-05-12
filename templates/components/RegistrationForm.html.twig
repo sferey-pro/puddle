@@ -1,0 +1,26 @@
+<div {{ attributes }}>
+    {{ form_errors(form) }}
+
+    {{ form_start(form, {
+        attr: {novalidate: true}
+    }) }}
+        <div class="space-y-4">
+            <div>
+                {{ form_row(form.email) }}
+            </div>
+            <div>
+                {{ form_row(form.plainPassword, {
+                    label: 'Password'
+                }) }}
+            </div>
+            <div class="flex items-center justify-between mt-6">
+                <div class="mr-1">
+                    <label class="flex items-center">
+                        {{ form_widget(form.agreeTerms) }}
+                        <span class="text-sm ml-2">Agree terms <span class="text-rose-500">*</span></span>
+                    </label>
+                </div>
+                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3 whitespace-nowrap">Sign Up</button>
+            </div>
+    {{ form_end(form) }}
+</div>

@@ -1,4 +1,4 @@
-{% extends 'layout.html.twig' %}
+{% extends 'registration/base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
@@ -9,17 +9,8 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1 class="mt-5">Register</h1>
+    <img class="mb-4" src="{{ asset('images/puddle-logo.png') }}" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">Register!🌴</h1>
 
-    {{ form_errors(registrationForm) }}
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+    <twig:RegistrationForm :form="registrationForm" />
 {% endblock %}

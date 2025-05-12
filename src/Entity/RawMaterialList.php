@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\RawMaterialListRepository;
+use App\Entity\ValueObject\RawMaterialListId;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RawMaterialListRepository::class)]
 #[ORM\Table(name: '`raw_material_lists`')]
-class RawMaterialList extends AbstractEntity
+class RawMaterialList extends BaseEntity
 {
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly RawMaterialListId $identifier;
+
     private ?Product $product = null;
 
     #[ORM\OneToMany(mappedBy: 'rawMaterialList', targetEntity: RawMaterialItem::class, orphanRemoval: true, cascade: ['persist'])]
@@ -23,9 +27,9 @@ class RawMaterialList extends AbstractEntity
         $this->rawMaterialItems = new ArrayCollection();
     }
 
-    public function jsonSerialize(): array
+    public function id(): RawMaterialListId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getProduct(): ?Product

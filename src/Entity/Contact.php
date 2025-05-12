@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ContactRepository;
+use App\Entity\ValueObject\ContactId;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 #[ORM\Table(name: '`contacts`')]
-class Contact extends AbstractEntity
+class Contact extends BaseEntity
 {
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly ContactId $identifier;
+
     #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: true)]
     protected ?Category $category = null;
@@ -22,9 +26,9 @@ class Contact extends AbstractEntity
     #[ORM\Column(length: 255)]
     private string $name;
 
-    public function jsonSerialize(): array
+    public function id(): ContactId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getName(): ?string

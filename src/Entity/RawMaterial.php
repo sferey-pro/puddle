@@ -6,14 +6,18 @@ namespace App\Entity;
 
 use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\RawMaterialRepository;
+use App\Entity\ValueObject\RawMaterialId;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RawMaterialRepository::class)]
 #[ORM\Table(name: '`raw_materials`')]
-class RawMaterial extends AbstractEntity
+class RawMaterial extends BaseEntity
 {
     use BlameableEntity;
+
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly RawMaterialId $identifier;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -44,9 +48,9 @@ class RawMaterial extends AbstractEntity
     #[ORM\Column]
     private ?string $link = null;
 
-    public function jsonSerialize(): array
+    public function id(): RawMaterialId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getName(): ?string

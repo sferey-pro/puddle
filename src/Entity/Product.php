@@ -6,15 +6,19 @@ namespace App\Entity;
 
 use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\ProductRepository;
+use App\Entity\ValueObject\ProductId;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(name: '`products`')]
-class Product extends AbstractEntity
+class Product extends BaseEntity
 {
     use BlameableEntity;
+
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly ProductId $identifier;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -33,9 +37,9 @@ class Product extends AbstractEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
-    public function jsonSerialize(): array
+    public function id(): ProductId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getName(): ?string

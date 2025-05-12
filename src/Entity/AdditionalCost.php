@@ -6,13 +6,17 @@ namespace App\Entity;
 
 use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\AdditionalCostRepository;
+use App\Entity\ValueObject\AdditionalCostId;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdditionalCostRepository::class)]
 #[ORM\Table(name: '`additional_costs`')]
-class AdditionalCost extends AbstractEntity
+class AdditionalCost extends BaseEntity
 {
     use BlameableEntity;
+
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly AdditionalCostId $identifier;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
@@ -23,9 +27,9 @@ class AdditionalCost extends AbstractEntity
     #[ORM\Column(length: 255)]
     private ?string $price = null;
 
-    public function jsonSerialize(): array
+    public function id(): AdditionalCostId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getType(): ?string

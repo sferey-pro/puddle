@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Config\Role;
 use App\Repository\UserRepository;
+use App\Entity\ValueObject\UserId;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,29 +18,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: '`users`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
+class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Column(length: 180)]
-    private ?string $email = null;
-
-    /**
-     * @var list<Role> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
-
-    #[ORM\Column]
-    private bool $isVerified = false;
-
-    #[ORM\Column(length: 12, nullable: true)]
-    private ?string $locale = null;
-
     /**
      * @var Collection<int, UserLogin>
      */
@@ -52,8 +32,21 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[ORM\OneToMany(targetEntity: UserSocialNetwork::class, mappedBy: 'userAccount', orphanRemoval: true, cascade: ['persist'])]
     private Collection $userSocialNetworks;
 
-    public function __construct()
-    {
+    public function __construct(
+        #[ORM\Embedded(columnPrefix: false)]
+        private readonly UserId $identifier,
+        #[ORM\Column(length: 180)]
+        private ?string $email = null,
+        #[ORM\Column]
+        private array $roles = [],
+        #[ORM\Column]
+        private ?string $password = null,
+        #[ORM\Column]
+        private bool $isVerified = false,
+        #[ORM\Column(length: 12, nullable: true)]
+        private ?string $locale = null,
+
+    ) {
         $this->userLogins = new ArrayCollection();
         $this->userSocialNetworks = new ArrayCollection();
     }
@@ -64,6 +57,12 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
             'email' => $this->getEmail(),
         ];
     }
+
+    public function identifier(): UserId
+    {
+        return $this->identifier;
+    }
+
 
     public function getEmail(): ?string
     {

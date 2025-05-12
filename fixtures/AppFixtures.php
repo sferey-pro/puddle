@@ -27,14 +27,14 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         $user = UserFactory::new()->withRoleAdmin()->create();
 
         /** @var Supplier $supplier */
-        $supplier = SupplierFactory::new(['name' => 'Carrefour'])
-            ->reuse($user)
-            ->create();
+        // $supplier = SupplierFactory::new(['name' => 'Carrefour'])
+        //     ->reuse($user)
+        //     ->create();
 
-        $this->loadRawMaterials($user, $supplier);
-        $this->loadAdditionalCosts($user);
-        $this->loadProducts($user);
-        $this->loadProductsIngredients();
+        // $this->loadRawMaterials($user, $supplier);
+        // $this->loadAdditionalCosts($user);
+        // $this->loadProducts($user);
+        // $this->loadProductsIngredients();
     }
 
     public function getDependencies(): array

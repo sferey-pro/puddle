@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Doctrine\Traits\BlameableEntity;
 use App\Repository\CategoryRepository;
+use App\Entity\ValueObject\CategoryId;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,9 +14,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: '`categories`')]
-class Category extends AbstractEntity
+class Category extends BaseEntity
 {
     use BlameableEntity;
+
+    #[ORM\Embedded(columnPrefix: false)]
+    private readonly CategoryId $identifier;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -38,9 +42,9 @@ class Category extends AbstractEntity
         $this->products = new ArrayCollection();
     }
 
-    public function jsonSerialize(): array
+    public function id(): CategoryId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getName(): ?string

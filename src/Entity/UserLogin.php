@@ -5,32 +5,38 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserLoginRepository;
+use App\Entity\ValueObject\UserLoginId;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserLoginRepository::class)]
 #[ORM\Table(name: '`user_logins`')]
-class UserLogin extends AbstractEntity
+class UserLogin extends BaseEntity
 {
-    #[ORM\Column]
-    private ?\DateTimeImmutable $expiresAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'userLogins')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $hash = null;
+    public function __construct(
+        #[ORM\Embedded(columnPrefix: false)]
+        private readonly UserLoginId $identifier,
+        #[ORM\Column]
+        private ?\DateTimeImmutable $expiresAt = null,
+        #[ORM\ManyToOne(inversedBy: 'userLogins')]
+        #[ORM\JoinColumn(nullable: false)]
+        private ?User $user = null,
+        #[ORM\Column(type: Types::TEXT)]
+        private ?string $hash = null,
+        #[ORM\Column]
+        private ?bool $isVerified = null,
+        #[ORM\Column(length: 255)]
+        private ?string $ipAddress = null,
 
-    #[ORM\Column]
-    private ?bool $isVerified = null;
+    ) {
 
-    #[ORM\Column(length: 255)]
-    private ?string $ipAddress = null;
+    }
 
-    public function jsonSerialize(): array
+    public function identifier(): UserLoginId
     {
-        return [];
+        return $this->identifier;
     }
 
     public function getExpiresAt(): ?\DateTimeImmutable

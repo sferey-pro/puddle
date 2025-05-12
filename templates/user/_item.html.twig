@@ -1,4 +1,4 @@
-<td>{{ user.id }}</td>
+<td>{{ user.identifier }}</td>
 <td>{{ user.email }}</td>
 <td>
     {% for role in user.getEnumRoles() %}
@@ -7,9 +7,9 @@
 <td>{{ user.isVerified ? ux_icon('material-symbols:check-circle') : ux_icon('material-symbols:check-cancel') }}</td>
 <td class="text-end">
     <twig:Button:ActionItem
-        withShow="app_user_show"
-        withEdit="app_user_edit"
-        withDelete="app_user_delete"
-        :itemId="user.id"
+        withShow="user_show"
+        withEdit="user_edit"
+        withDelete="user_delete"
+        :item="user"
     />
 </td>
