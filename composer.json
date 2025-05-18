@@ -10,8 +10,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-xsl": "*",
-        "api-platform/doctrine-orm": "^4.1.7",
-        "api-platform/symfony": "^4.1.7",
+        "api-platform/doctrine-orm": "^4.1.9",
+        "api-platform/symfony": "^4.1.9",
         "doctrine/dbal": "^3.9.4",
         "doctrine/doctrine-bundle": "^2.14.0",
         "doctrine/doctrine-migrations-bundle": "^3.4.2",
@@ -29,7 +29,7 @@
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
         "symfony/expression-language": "7.2.*",
-        "symfony/flex": "^2.5",
+        "symfony/flex": "^2.5.1",
         "symfony/form": "7.2.*",
         "symfony/framework-bundle": "7.2.*",
         "symfony/mailer": "7.2.*",
@@ -116,13 +116,13 @@
         "dama/doctrine-test-bundle": "^8.3",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "nikic/php-parser": "^5.4",
-        "phpunit/phpunit": "^12.1.4",
+        "phpunit/phpunit": "^12.1.5",
         "symfony/maker-bundle": "^1.63.0",
         "symfony/panther": "^2.2",
         "symfony/stopwatch": "7.2.*",
         "symfony/web-profiler-bundle": "7.2.*",
         "twbs/bootstrap": "^5.3.6",
         "zenstruck/browser": "^1.9.1",
-        "zenstruck/foundry": "^2.4.3"
+        "zenstruck/foundry": "^2.5.0"
     }
 }
