@@ -2,19 +2,27 @@
 
 {% block title %}Hello HomepageController!{% endblock %}
 
+{% block body_id 'homepage' %}
+
 {% block main %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="page-body">
+    <div class="container-xl">
+        <div class="row row-deck row-cards">
+            <div class="col-12">
+            <div class="card">
+                <div class="card-body" style="height: 10rem">
+                    <h1>Hello {{ controller_name }}! ✅</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/app/src/Controller/HomepageController.php</code></li>
-        <li>Your template at <code>/app/templates/homepage/index.html.twig</code></li>
-    </ul>
+                    This friendly message is coming from:
+                    <ul>
+                        <li>Your controller at <code>/app/src/Controller/HomepageController.php</code></li>
+                        <li>Your template at <code>/app/templates/homepage/index.html.twig</code></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

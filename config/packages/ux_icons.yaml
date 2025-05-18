@@ -5,14 +5,6 @@ ux_icons:
         style: 'position: relative;'
     ignore_not_found: true
     aliases:
-        settings: 'lucide:settings'
-        pencil: 'lucide:pencil'
-        trash: 'lucide:trash-2'
-        eye: 'lucide:eye'
-        check: 'lucide:check'
-        moon: 'lucide:moon'
-        sun: 'lucide:sun'
-        'circle-half': 'bi:circle-half'
         'tabler:save-changes': 'tabler:device-floppy'
 
     iconify:

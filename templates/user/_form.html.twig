@@ -1,11 +1,23 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-
-    <button type="submit" class="btn btn-primary">
-        <twig:ux:icon name="tabler:save-changes"/> {{ button_label|default('label.create_user'|trans) }}
-    </button>
-
-    <twig:Button:ActionItem
-        withBackToList="user_index"
-    />
+{{ form_start(form, {
+        attr: {
+            class: 'card',
+            novalidate: true,
+        }
+    }) }}
+    <div class="card-header">
+        <h4 class="card-title">Création utilisateur</h4>
+    </div>
+    <div class="card-body">
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+    </div>
+    <div class="card-footer text-end">
+        <button type="submit" class="btn btn-primary">
+            <twig:ux:icon name="tabler:save-changes"/> {{ button_label|default('label.create_user'|trans) }}
+        </button>
+        <twig:Button:ActionItem
+            withBackToList="user_index"
+        />
+    </div>
+    {{ form_rest(form) }}
 {{ form_end(form) }}

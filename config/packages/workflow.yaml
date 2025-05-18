@@ -1,0 +1,3 @@
+framework:
+    workflows: null
+        # import: '%kernel.project_dir%/config/workflows/*.yaml'

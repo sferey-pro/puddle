@@ -1,4 +1,0 @@
-<form class="form-inline" method="post" action="{{ path('app_product_duplicate', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to duplicate this item?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('duplicate' ~ product.id) }}">
-    <button class="btn btn-block btn-warning"><twig:ux:icon name="tabler:copy"/> {{ 'action.duplicate_product'|trans }}</button>
-</form>

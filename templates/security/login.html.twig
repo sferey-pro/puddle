@@ -5,73 +5,81 @@
 {% block body_id 'login' %}
 
 {% block main %}
-    <form action="{{ path('app_login') }}" method="POST" novalidate {{ stimulus_controller('login') }}>
-        <img class="mb-4" src="{{ asset('images/puddle-logo.png') }}" alt="" width="72" height="57">
-
-        <div id="email-form" {{ stimulus_target('login', 'emailField') }}>
-            <h1 class="h3 mb-3 fw-normal">Hey!👋</h1>
-            <div class="form-floating mb-2">
+<form action="{{ path('login') }}"  method="POST" novalidate {{ stimulus_controller('login') }}>
+    <div class="card card-md" id="email-form" {{ stimulus_target('login', 'emailField') }}>
+        <div class="card-body"  >
+            <h2 class="h2 text-center mb-4">Login to your account</h2>
+            <div class="mb-3">
+                <label class="form-label">Email address</label>
                 <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus placeholder="name@example.com">
-                <label for="username">Email address or Username</label>
             </div>
 
-            <div {{ stimulus_action('login', 'nextStep', 'click') }} name="next" class="btn btn-primary w-100 py-2 mb-2">Continue with Email</div>
-
-            <div class="text-center mb-2">
-                <div class="d-flex">
-                    <hr class="my-auto flex-grow-1">
-                    <div class="px-4">or sign up with</div>
-                    <hr class="my-auto flex-grow-1">
-                </div>
-                {# <a href="{{ oauthUrl(enum('App\\Config\\SocialNetwork').FACEBOOK) }}"  class="btn btn-link btn-floating mx-1">
-                    <twig:ux:icon name="devicon:facebook"/>
-                </a> #}
-
-                <a href="{{ oauthUrl(enum('App\\Config\\SocialNetwork').GOOGLE) }}" class="btn btn-link btn-floating mx-1">
-                    <twig:ux:icon name="devicon:google"/>
-                </a>
-
-                {# <a href="#" class="btn btn-link btn-floating mx-1">
-                    <twig:ux:icon name="devicon:twitter"/>
-                </a> #}
-
-                <a href="{{ oauthUrl(enum('App\\Config\\SocialNetwork').GITHUB) }}" class="btn btn-link btn-floating mx-1">
-                    <twig:ux:icon name="devicon:github"/>
-                </a>
+            <div class="form-footer">
+                <div {{ stimulus_action('login', 'nextStep', 'click') }} name="next" class="btn btn-primary w-100">Continue with Email</div>
             </div>
         </div>
 
-        <div id="password-form" {{ stimulus_target('login', 'passwordField') }} hidden>
-            <h1 class="h3 mb-3 fw-normal">Welcome !</h1>
-            <p class="fw-light text-center" {{ stimulus_target('login', 'emailDisplay') }} ></p>
-            <p><a href="#" {{ stimulus_action('login', 'previousStep', 'click') }}>Change Email address</a></p>
+        <div class="hr-text">or</div>
 
-            <button formaction="{{ path('app_login_link') }}" class="btn btn-primary w-100 py-2 my-2" type="submit" >Sign in with Magic Link</button>
-
-            <div class="text-center">
-                <div class="d-flex mb-2">
-                    <hr class="my-auto flex-grow-1">
-                    <div class="px-4">or sign in with password</div>
-                    <hr class="my-auto flex-grow-1">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <a href="{{ oauthUrl(enum('App\\Module\\Auth\\Domain\\Enum\\SocialNetwork').GOOGLE) }}" class="btn btn-4 w-100">
+                        <twig:ux:icon name="tabler:brand-google" class="icon text-google icon-2" />
+                        Login with Google
+                    </a>
                 </div>
-
-                <div class="form-floating">
-                    <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="*******">
-                    <label for="password">Password</label>
+                <div class="col">
+                    <a href="{{ oauthUrl(enum('App\\Module\\Auth\\Domain\\Enum\\SocialNetwork').GITHUB) }}" class="btn btn-4 w-100">
+                        <twig:ux:icon name="tabler:brand-github" class="icon text-github icon-2" />
+                        Login with Github
+                    </a>
                 </div>
             </div>
-            <div class="form-check text-start my-3">
-                <input class="form-check-input" type="checkbox" name="_remember_me" id="_remember_me">
-                <label class="form-check-label" for="_remember_me">
-                  Remember me
+        </div>
+    </div>
+
+    <div class="card card-md" id="password-form" {{ stimulus_target('login', 'passwordField') }} hidden>
+        <div class="card-body" >
+            <h2 class="h2 text-center mb-4">Welcome !</h2>
+            <div class="text-center text-secondary mt-3">
+                <p class="fs-h3" {{ stimulus_target('login', 'emailDisplay') }}></p>
+                <a href="#" {{ stimulus_action('login', 'previousStep', 'click') }}>Change Email address</a>
+            </div>
+
+            <div class="form-footer">
+                <button formaction="{{ path('login_link') }}" type="submit" class="btn btn-primary w-100">Sign in with Magic Link</button>
+            </div>
+        </div>
+
+        <div class="hr-text">or sign in with password</div>
+
+        <div class="card-body" >
+            <div class="mb-3">
+                <label class="form-label">
+                    Password
+                    {# <span class="form-label-description">
+                        <a href="{{ path('forgot-password')}}">I forgot password</a>
+                    </span> #}
+                </label>
+                <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="*******">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-check">
+                    <input class="form-check-input" type="checkbox" name="_remember_me" id="_remember_me">
+                    <span class="form-check-label" for="_remember_me">Remember me on this device</span>
                 </label>
             </div>
 
-            <button class="btn btn-primary w-100 py-2 mb-4" type="submit">Sign in</button>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+            </div>
         </div>
+    </div>
+</form>
 
-        <p>Not a member? <a href="{{ path('app_register') }}">Register</a></p>
-
-        <input type="hidden" name="_csrf_token" {{ stimulus_controller('csrf-protection') }} value="{{ csrf_token('authenticate') }}">
-    </form>
+<div class="text-center text-secondary mt-3">
+	Don't have account yet? <a href="{{ path('register') }}" tabindex="-1">Sign up</a>
+</div>
 {% endblock %}

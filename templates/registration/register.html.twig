@@ -8,9 +8,5 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
-
-    <img class="mb-4" src="{{ asset('images/puddle-logo.png') }}" alt="" width="72" height="57">
-    <h1 class="h3 mb-3 fw-normal">Register!🌴</h1>
-
     <twig:RegistrationForm :form="registrationForm" />
 {% endblock %}

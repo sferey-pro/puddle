@@ -5,7 +5,14 @@
 {% block body_id 'user_create' %}
 
 {% block main %}
-    <twig:Semantic:Title content="{{ 'user.new' | trans }}" />
-
-    {{ include('user/_form.html.twig') }}
+    <twig:Semantic:Title content="{{ 'user.index' | trans }}" />
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-md-6">
+                    {{ include('user/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

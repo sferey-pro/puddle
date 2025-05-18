@@ -1,6 +1,6 @@
 // start the Stimulus application
 import './bootstrap.js';
-import './styles/app.scss';
+import './styles/tabler.css';
 
 // loads the Bootstrap
 import 'bootstrap';
