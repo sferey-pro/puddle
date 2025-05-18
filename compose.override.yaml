@@ -12,6 +12,7 @@ services:
       #  from the bind-mount for better performance by enabling the next line:
       #- /app/vendor
     environment:
+      FRANKENPHP_WORKER_CONFIG: watch
       MERCURE_EXTRA_DIRECTIVES: demo
       # See https://xdebug.org/docs/all_settings#mode
       XDEBUG_MODE: "${XDEBUG_MODE:-off}"
@@ -27,8 +28,14 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5432"
+      - "5432:5432"
 ###< doctrine/doctrine-bundle ###
+
+###> doctrine/mongodb-odm-bundle ###
+  mongodb:
+    ports:
+      - "27017:27017"
+###< doctrine/mongodb-odm-bundle ###
 
 ###> symfony/mailer ###
   mailer:

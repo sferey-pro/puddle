@@ -8,9 +8,9 @@ framework:
     #esi: true
     #fragments: true
 
-    form: { csrf_protection: { token_id: submit } }
-    csrf_protection:
-        stateless_token_ids: [submit, authenticate, logout]
+    # form: { csrf_protection: { token_id: submit } }
+    # csrf_protection:
+    #     stateless_token_ids: [submit, authenticate, logout]
 
 when@test:
     framework:

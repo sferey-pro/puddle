@@ -1,62 +1,62 @@
 {
-    "name": "symfony/skeleton",
+    "name": "sferey/puddle",
     "type": "project",
     "license": "MIT",
     "description": "A minimal Symfony project recommended to create bare bones applications",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.3.17",
+        "php": ">=8.3.14",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "ext-xsl": "*",
-        "api-platform/doctrine-orm": "^4.1.9",
-        "api-platform/symfony": "^4.1.9",
-        "doctrine/dbal": "^3.9.4",
-        "doctrine/doctrine-bundle": "^2.14.0",
-        "doctrine/doctrine-migrations-bundle": "^3.4.2",
-        "doctrine/orm": "^3.3.3",
-        "knpuniversity/oauth2-client-bundle": "^2.18.3",
-        "league/oauth2-github": "^3.1.1",
-        "league/oauth2-google": ">=4.0.1",
+        "ext-mongodb": "*",
+        "api-platform/doctrine-odm": "^4.1",
+        "api-platform/doctrine-orm": "^4.1",
+        "api-platform/symfony": "^4.1",
+        "doctrine/dbal": "^3",
+        "doctrine/doctrine-bundle": "^2.14",
+        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/mongodb-odm-bundle": "^5.3",
+        "doctrine/orm": "^3.3",
+        "knpuniversity/oauth2-client-bundle": "^2.18",
+        "league/oauth2-github": "^3.1",
+        "league/oauth2-google": "^4.0",
         "nelmio/cors-bundle": "^2.5",
-        "phpdocumentor/reflection-docblock": "^5.6.2",
+        "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.1",
         "runtime/frankenphp-symfony": "^0.2.0",
         "stof/doctrine-extensions-bundle": "^1.14",
-        "symfony/asset": "7.2.*",
-        "symfony/asset-mapper": "7.2.*",
-        "symfony/console": "7.2.*",
-        "symfony/dotenv": "7.2.*",
-        "symfony/expression-language": "7.2.*",
-        "symfony/flex": "^2.5.1",
-        "symfony/form": "7.2.*",
-        "symfony/framework-bundle": "7.2.*",
-        "symfony/mailer": "7.2.*",
+        "symfony/asset": "7.1.*",
+        "symfony/asset-mapper": "7.1.*",
+        "symfony/console": "7.1.*",
+        "symfony/dotenv": "7.1.*",
+        "symfony/expression-language": "7.1.*",
+        "symfony/flex": "^2",
+        "symfony/form": "7.1.*",
+        "symfony/framework-bundle": "7.1.*",
+        "symfony/mailer": "7.1.*",
         "symfony/mercure-bundle": "^0.3.9",
-        "symfony/messenger": "7.2.*",
-        "symfony/notifier": "7.2.*",
-        "symfony/property-access": "7.2.*",
-        "symfony/property-info": "7.2.*",
-        "symfony/runtime": "7.2.*",
-        "symfony/security-bundle": "7.2.*",
-        "symfony/serializer": "7.2.*",
+        "symfony/messenger": "7.1.*",
+        "symfony/notifier": "7.1.*",
+        "symfony/property-access": "7.1.*",
+        "symfony/property-info": "7.1.*",
+        "symfony/runtime": "7.1.*",
+        "symfony/security-bundle": "7.1.*",
+        "symfony/serializer": "7.1.*",
         "symfony/stimulus-bundle": "^2.24",
-        "symfony/translation": "7.2.*",
-        "symfony/twig-bundle": "7.2.*",
+        "symfony/translation": "7.1.*",
+        "symfony/twig-bundle": "7.1.*",
         "symfony/ux-icons": "^2.24",
         "symfony/ux-live-component": "^2.24",
         "symfony/ux-toggle-password": "^2.24",
         "symfony/ux-twig-component": "^2.24",
-        "symfony/validator": "7.2.*",
-        "symfony/workflow": "7.2.*",
-        "symfony/yaml": "7.2.*",
-        "symfonycasts/sass-bundle": "^0.8.2",
-        "symfonycasts/verify-email-bundle": "^1.17.3",
-        "twig/cssinliner-extra": "^3.21",
-        "twig/extra-bundle": "^3.21",
-        "twig/inky-extra": "^3.21",
-        "twig/twig": "^2.12|^3.21.1"
+        "symfony/validator": "7.1.*",
+        "symfony/workflow": "7.1.*",
+        "symfony/yaml": "7.1.*",
+        "symfonycasts/verify-email-bundle": "^1.17",
+        "symfonycasts/sass-bundle": "^0.8",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     },
     "config": {
         "allow-plugins": {
@@ -64,19 +64,16 @@
             "symfony/flex": true,
             "symfony/runtime": true
         },
-        "bump-after-update": true,
         "sort-packages": true
     },
     "autoload": {
         "psr-4": {
-            "Api\\": "src/ApiResource/",
-            "App\\": "src/",
-            "DataFixtures\\": "fixtures/"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "App\\Tests\\": "tests/"
         }
     },
     "replace": {
@@ -108,21 +105,18 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.2.*",
+            "require": "7.1.*",
             "docker": true
         }
     },
     "require-dev": {
-        "dama/doctrine-test-bundle": "^8.3",
+        "dama/doctrine-test-bundle": "^8.2",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
-        "nikic/php-parser": "^5.4",
-        "phpunit/phpunit": "^12.1.5",
-        "symfony/maker-bundle": "^1.63.0",
+        "phpunit/phpunit": "^12.1",
+        "symfony/maker-bundle": "^1.63",
         "symfony/panther": "^2.2",
-        "symfony/stopwatch": "7.2.*",
-        "symfony/web-profiler-bundle": "7.2.*",
-        "twbs/bootstrap": "^5.3.6",
-        "zenstruck/browser": "^1.9.1",
-        "zenstruck/foundry": "^2.5.0"
+        "symfony/stopwatch": "7.1.*",
+        "symfony/web-profiler-bundle": "7.1.*",
+        "zenstruck/foundry": "^2.5"
     }
 }
