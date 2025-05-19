@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\EventSubscriber;
 
 use App\Module\Auth\Application\Event\UserRegistered;
-use App\Module\Auth\Domain\Model\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
+use App\Module\Auth\Domain\User;
 use App\Module\Auth\Infrastructure\Symfony\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

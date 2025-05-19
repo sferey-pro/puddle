@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\DTO;
 
-use App\Module\Auth\Domain\Model\User;
+use App\Module\Auth\Domain\User;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;

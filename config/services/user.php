@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use App\Module\User\Domain\Repository\UserRepositoryInterface;
-use App\Module\User\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
+use App\Module\UserManagement\Infrastructure\Doctrine\Repository\UserRepository;
 
 return function(ContainerConfigurator $container): void {
 
@@ -15,10 +15,11 @@ return function(ContainerConfigurator $container): void {
         ->autoconfigure()
     ;
 
-    $services->load('App\\Module\\User\\', dirname(__DIR__, 2).'/src/Module/User')
+    $services->load('App\\Module\\UserManagement\\', dirname(__DIR__, 2).'/src/Module/UserManagement')
         ->exclude([
-            dirname(__DIR__, 2).'/src/Module/User/Domain/Model',
-            dirname(__DIR__, 2).'/src/Module/User/Domain/ValueObjects',
+            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain',
+            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain/Model',
+            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain/ValueObjects',
         ]);
 
     $services->set(UserRepositoryInterface::class)

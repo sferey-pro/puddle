@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Module\Auth\Domain\Model;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\UserSocialNetworkId;
-use App\Shared\Domain\Model\BaseModel;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: '`user_social_networks`')]
-class UserSocialNetwork extends BaseModel
+class UserSocialNetwork
 {
     #[ORM\Embedded(columnPrefix: false)]
     private readonly UserSocialNetworkId $identifier;
@@ -22,7 +22,7 @@ class UserSocialNetwork extends BaseModel
         private $socialId,
         #[ORM\ManyToOne(inversedBy: 'userSocialNetworks')]
         #[ORM\JoinColumn(nullable: false)]
-        private ?User $user = null,
+        private ?UserAccount $user = null,
         #[ORM\Column(enumType: SocialNetwork::class)]
         private ?SocialNetwork $socialNetwork = null,
         #[ORM\Column]

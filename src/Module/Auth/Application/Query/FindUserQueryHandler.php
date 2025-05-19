@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Query;
 
 use App\Module\Auth\Domain\Exception\UserNotFoundException;
-use App\Module\Auth\Domain\Model\User;
+use App\Module\Auth\Domain\User;
 use App\Module\Auth\Infrastructure\Doctrine\Repository\UserRepository;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 

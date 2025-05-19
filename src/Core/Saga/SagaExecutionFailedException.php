@@ -6,4 +6,8 @@ namespace App\Core\Saga;
 
 class SagaExecutionFailedException extends \RuntimeException
 {
+    public function __construct()
+    {
+        parent::__construct('Execution of saga failed');
+    }
 }

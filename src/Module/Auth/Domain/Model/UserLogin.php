@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Module\Auth\Domain\Model;
 
 use App\Module\Auth\Domain\Repository\UserLoginRepositoryInterface;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\UserLoginId;
-use App\Shared\Infrastructure\Doctrine\AbstractEntity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: UserLoginRepositoryInterface::class)]
 #[ORM\Table(name: '`user_logins`')]
-class UserLogin extends AbstractEntity
+class UserLogin
 {
     use TimestampableEntity;
 
@@ -24,7 +24,7 @@ class UserLogin extends AbstractEntity
         private ?\DateTimeImmutable $expiresAt = null,
         #[ORM\ManyToOne(inversedBy: 'userLogins')]
         #[ORM\JoinColumn(nullable: false)]
-        private ?User $user = null,
+        private ?UserAccount $user = null,
         #[ORM\Column(type: Types::TEXT)]
         private ?string $hash = null,
         #[ORM\Column]
@@ -44,7 +44,7 @@ class UserLogin extends AbstractEntity
         return $this->expiresAt;
     }
 
-    public function user(): ?User
+    public function user(): ?UserAccount
     {
         return $this->user;
     }

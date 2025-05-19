@@ -22,6 +22,7 @@ return function(ContainerConfigurator $container): void {
 
     $services->load('App\\Module\\Auth\\', dirname(__DIR__, 2).'/src/Module/Auth/')
         ->exclude([
+            dirname(__DIR__, 2).'/src/Module/Auth/Domain',
             dirname(__DIR__, 2).'/src/Module/Auth/Domain/Model',
             dirname(__DIR__, 2).'/src/Module/Auth/Domain/ValueObjects',
         ]);

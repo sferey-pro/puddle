@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Module\Auth\Infrastructure\Symfony\Services\OAuth;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
-use App\Module\Auth\Domain\Model\User;
 use App\Module\Auth\Domain\Model\UserSocialNetwork;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\Domain\ValueObject\Locale;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
 final readonly class OAuthRegistration
@@ -19,15 +19,15 @@ final readonly class OAuthRegistration
     ) {
     }
 
-    public function persist(SocialNetwork $serviceName, ResourceOwnerInterface $resourceOwner): User
+    public function persist(SocialNetwork $serviceName, ResourceOwnerInterface $resourceOwner): UserAccount
     {
-        $user = new User(
-            email: $resourceOwner->getEmail(),
-            roles: [],
+        $user = UserAccount::register(
+            identifier: UserId::generate(),
             password: new Password(md5(random_bytes(10))),
-            isVerified: true,
-            locale: new Locale(null)
+            email: $resourceOwner->getEmail(),
         );
+
+        $user->verified();
 
         $userSocialNetwork = new UserSocialNetwork(
             socialId: $resourceOwner->getId(),

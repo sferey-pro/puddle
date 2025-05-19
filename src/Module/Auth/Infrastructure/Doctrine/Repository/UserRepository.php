@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Doctrine\Repository;
 
-use App\Module\Auth\Domain\Model\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
-use App\Module\Shared\Domain\ValueObject\Email;
-use App\Module\Shared\Domain\ValueObject\UserId;
+use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -16,11 +16,11 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends ServiceEntityRepository<UserAccount>
  */
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface, PasswordUpgraderInterface
 {
-    private const ENTITY_CLASS = User::class;
+    private const ENTITY_CLASS = UserAccount::class;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,7 +32,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof UserAccount) {
             throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -41,7 +41,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $this->save($user, true);
     }
 
-    public function save(User $user, bool $flush = false): void
+    public function save(UserAccount $user, bool $flush = false): void
     {
         $this->add($user);
 
@@ -50,17 +50,17 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         }
     }
 
-    public function add(User $user): void
+    public function add(UserAccount $user): void
     {
         $this->getEntityManager()->persist($user);
     }
 
-    public function ofIdentifier(UserId $identifier): ?User
+    public function ofIdentifier(UserId $identifier): ?UserAccount
     {
         return $this->findOneBy(['identifier.value' => $identifier->value]);
     }
 
-    public function ofEmail(Email $email): ?User
+    public function ofEmail(Email $email): ?UserAccount
     {
         return $this->findOneBy(['email.value' => $email]);
     }

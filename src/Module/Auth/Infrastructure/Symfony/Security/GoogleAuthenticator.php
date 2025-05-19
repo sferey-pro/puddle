@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
-use App\Module\Auth\Domain\Model\User;
 use App\Module\Auth\Domain\Model\UserSocialNetwork;
+use App\Module\Auth\Domain\UserAccount;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -15,7 +15,7 @@ class GoogleAuthenticator extends AbstractOAuth2Authenticator
 {
     protected SocialNetwork $serviceName = SocialNetwork::GOOGLE;
 
-    protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner): ?User
+    protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner): ?UserAccount
     {
         if (!($resourceOwner instanceof GoogleUser)) {
             throw new \RuntimeException('Expecting google user');

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Module\Auth\Domain\Model\User;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkSuccessHandler;
 use App\Module\Auth\Infrastructure\Symfony\Security\GoogleAuthenticator;
 use Symfony\Config\SecurityConfig;
@@ -19,7 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
 
     $security->provider('app_user_provider')
         ->entity()
-            ->class(User::class)
+            ->class(UserAccount::class)
             ->property('email')
     ;
 

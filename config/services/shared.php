@@ -17,10 +17,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->load('App\\Shared\\', dirname(__DIR__, 2).'/src/Shared')
         ->exclude([dirname(__DIR__, 2).'/src/Shared/Infrastructure/Symfony/Kernel.php']);
 
-    $services->load('App\\Module\\Shared\\', dirname(__DIR__, 2).'/src/Module/Shared')
+    $services->load('App\\Module\\SharedContext\\', dirname(__DIR__, 2).'/src/Module/SharedContext')
         ->exclude([
-            dirname(__DIR__, 2).'/src/Module/Shared/Domain/Model',
-            dirname(__DIR__, 2).'/src/Module/Shared/Domain/ValueObjects',
+            dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/Model',
+            dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/ValueObjects',
         ]);;
 
     $services

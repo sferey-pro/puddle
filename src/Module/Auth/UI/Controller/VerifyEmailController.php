@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Controller;
 
-use App\Module\Auth\Domain\Model\User;
+use App\Module\Auth\Domain\User;
 use App\Module\Auth\Infrastructure\Symfony\Security\EmailVerifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

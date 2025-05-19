@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Doctrine\Types;
 
-use App\Module\Shared\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\Email;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 

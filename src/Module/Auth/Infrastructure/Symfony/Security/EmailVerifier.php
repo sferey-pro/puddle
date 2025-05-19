@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
-use App\Module\Auth\Domain\Model\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
+use App\Module\Auth\Domain\UserAccount;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -21,7 +21,7 @@ class EmailVerifier
     ) {
     }
 
-    public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void
+    public function sendEmailConfirmation(string $verifyEmailRouteName, UserAccount $user, TemplatedEmail $email): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
@@ -42,7 +42,7 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(Request $request, User $user): void
+    public function handleEmailConfirmation(Request $request, UserAccount $user): void
     {
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest(
             $request,

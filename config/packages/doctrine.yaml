@@ -23,16 +23,16 @@ doctrine:
                 is_bundle: false
                 dir: "%kernel.project_dir%/src/Module/Auth/Infrastructure/Doctrine/Mapping"
                 prefix: 'App\Module\Auth\Domain'
-            User:
+            UserManagement:
                 type: xml
                 is_bundle: false
-                dir: "%kernel.project_dir%/src/Module/User/Infrastructure/Doctrine/Mapping"
-                prefix: 'App\Module\User\Domain'
-            Shared:
+                dir: "%kernel.project_dir%/src/Module/UserManagement/Infrastructure/Doctrine/Mapping"
+                prefix: 'App\Module\UserManagement\Domain'
+            SharedContext:
                 type: xml
                 is_bundle: false
-                dir: "%kernel.project_dir%/src/Module/Shared/Infrastructure/Doctrine/Mapping"
-                prefix: 'App\Module\Shared\Domain'
+                dir: "%kernel.project_dir%/src/Module/SharedContext/Infrastructure/Doctrine/Mapping"
+                prefix: 'App\Module\SharedContext\Domain'
         controller_resolver:
             auto_mapping: false
 

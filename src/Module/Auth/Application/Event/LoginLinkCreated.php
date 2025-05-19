@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Event;
 
-use App\Module\Auth\Domain\Model\User;
+use App\Module\Auth\Domain\User;
 use App\Module\Auth\Domain\ValueObject\UserLoginId;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
 

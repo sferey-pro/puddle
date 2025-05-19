@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\UserManagement\Domain\Event;
+
+use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
+use App\Shared\Domain\Event\DomainEvent;
+use App\Shared\Domain\Event\DomainEventInterface;
+
+final class UserCreated extends DomainEvent implements DomainEventInterface
+{
+    public function __construct(
+        private(set) UserId $identifier,
+        private(set) Email $email,
+    ) {
+        parent::__construct();
+    }
+
+    public function identifier(): UserId
+    {
+        return $this->identifier;
+    }
+
+    public function email(): Email
+    {
+        return $this->email;
+    }
+}

@@ -7,7 +7,7 @@ namespace App\Module\Auth\Application\EventSubscriber;
 use App\Module\Auth\Application\Command\Register\RegisterUser;
 use App\Module\Auth\Application\DTO\RegisterUserDTO;
 use App\Module\Auth\Application\Query\UserExistsQuery;
-use App\Module\User\Domain\Event\UserCreated;
+use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -7,7 +7,7 @@ namespace App\Module\Auth\UI\Controller\Security;
 use App\Module\Auth\Application\Command\Security\CreateLoginLink;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\ValueObject\UserLoginId;
-use App\Module\Shared\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +43,7 @@ final class LoginLinkController extends AbstractController
 
             $this->commandBus->dispatch(
                 new CreateLoginLink(
-                    identifier: new UserLoginId(),
+                    identifier: UserLoginId::generate(),
                     user: $user,
                 )
             );

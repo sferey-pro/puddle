@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\EventSubscriber;
 
 use App\Module\Auth\Application\Event\LoginLinkCreated;
-use App\Module\Auth\Domain\Model\UserLogin;
 use App\Module\Auth\Domain\Repository\UserLoginRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

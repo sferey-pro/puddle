@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
-use App\Module\Auth\Domain\Model\User;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Infrastructure\Symfony\Services\OAuth\OAuthRegistration;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -94,5 +94,5 @@ abstract class AbstractOAuth2Authenticator extends OAuth2Authenticator
         return $this->clientRegistry->getClient($this->serviceName->value);
     }
 
-    abstract protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner): ?User;
+    abstract protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner): ?UserAccount;
 }

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command\Register;
 
 use App\Module\Auth\Application\Event\UserRegistered;
-use App\Module\Auth\Domain\Model\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
-use App\Module\Shared\Domain\ValueObject\Email;
-use App\Module\Shared\Domain\ValueObject\UserId;
+use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -33,7 +33,7 @@ final class RegisterUserHandler
         $plainPassword = $command->dto->plainPassword;
         $email = $command->dto->email;
 
-        $user = User::register(
+        $user = UserAccount::register(
             identifier: $command->identifier ?? UserId::generate(),
             email: new Email($email),
         );
