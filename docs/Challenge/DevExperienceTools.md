@@ -55,5 +55,16 @@ Ce document liste les outils et pratiques que nous envisageons d'intégrer pour 
 *   **Statut :** À explorer (si le volume de documentation le justifie).
 
 ---
+## 5. Développement et Test d'API
+
+### Bruno
+*   **Description :** Un client API open-source moderne (similaire à Postman/Insomnia) qui stocke les collections directement dans le système de fichiers en utilisant un langage de balisage simple, Bru.
+*   **Cas d'usage :**
+    *   Concevoir, tester et documenter des API.
+    *   Faciliter la collaboration sur les collections d'API grâce au versionnement Git (puisque les collections sont des fichiers).
+    *   Intégrer les tests d'API dans les pipelines CI/CD.
+*   **Statut :** Recommandé / À explorer.
+
+---
 
 *(Cette liste sera mise à jour au fur et à mesure de l'évolution du projet et des besoins.)*
