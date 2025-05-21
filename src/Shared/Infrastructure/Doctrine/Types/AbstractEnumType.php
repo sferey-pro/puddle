@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\Exception\InvalidFormat;
+use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Type;
 
 abstract class AbstractEnumType extends Type
@@ -15,7 +16,7 @@ abstract class AbstractEnumType extends Type
         return 'TEXT';
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         if (null === $value) {
             return $value;
@@ -25,13 +26,17 @@ abstract class AbstractEnumType extends Type
             return $value->value;
         }
 
-        throw ConversionException::conversionFailedInvalidType($value, $this->lookupName($this), ['null', self::class]);
+        throw InvalidType::new(
+            $value,
+            static::class,
+            ['null', \BackedEnum::class],
+        );
     }
 
     /**
      * @param ?string $value
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
         if (null === $value) {
             return $value;
@@ -42,7 +47,12 @@ abstract class AbstractEnumType extends Type
             return $this::getEnumsClass()::tryFrom($value);
         }
 
-        throw ConversionException::conversionFailedFormat($value, $this->lookupName($this), $platform->getDateFormatString());
+        throw InvalidFormat::new(
+                $value,
+                static::class,
+                null
+        );
+
     }
 
     /**
