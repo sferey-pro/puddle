@@ -1,14 +1,12 @@
-<div class="col" {{ attributes.defaults(stimulus_controller('items-per-page')) }}>
+<div class="card-body border-bottom py-3" {{ attributes.defaults(stimulus_controller('items-per-page')) }}>
     {{ form_start(form, { attr: {novalidate: true} }) }}
-    <div class="row g-3 align-items-center">
-        <div class="col-auto">
-            <label class="col-form-label">Show</label>
-        </div>
-        <div class="col-auto">
-            {{ form_widget(form.items) }}
-        </div>
-        <div class="col-auto">
-            <label class="col-form-label">entries</label>
+    <div class="d-flex">
+        <div class="text-secondary">
+            Show
+            <div class="mx-2 d-inline-block">
+                {{ form_widget(form.items, {attr: {class: 'form-select-sm'} }) }}
+            </div>
+            entries
         </div>
     </div>
     {{ form_end(form) }}

@@ -15,6 +15,9 @@
             <div class="row row-cards">
                 <div class="col-12">
                     <div class="card">
+                        {% if users.paginator().hasToPaginate() %}
+                            <twig:Paginator:ItemsPerPageForm />
+                        {% endif %}
                         <div class="table-responsive">
                             <table class="table table-vcenter card-table table-striped">
                                 <thead>
@@ -36,10 +39,30 @@
                                 </thead>
                             </table>
                         </div>
+                        {% if users.paginator().hasToPaginate() %}
+                            {% set paginator = users.paginator() %}
+                            {% set start = (paginator.getCurrentPage - 1) * paginator.getItemsPerPage + 1 %}
+                            {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
+
+                            <div class="card-footer">
+                                <div class="row g-2 justify-content-center justify-content-sm-between">
+                                    <div class="col-auto d-flex align-items-center">
+                                        <p class="m-0 text-secondary">Showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong> of <strong>{{ paginator.getTotalItems }} entries</strong></p>
+                                    </div>
+                                    <div class="col-auto">
+                                        {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
+                                            routeName: app.request.attributes.get('_route'),
+                                            routeParams: app.request.query.all|merge({'page': paginator.getPagerFanta().getCurrentPage()})
+                                        }) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 {% endblock %}
 

@@ -21,7 +21,7 @@ interface RepositoryInterface extends \IteratorAggregate, \Countable
     /**
      * @return PaginatorInterface<T>|null
      */
-    public function paginator(): ?PaginatorInterface;
+    public function paginator();
 
     /**
      * @return static<T>

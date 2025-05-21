@@ -16,38 +16,45 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
-    '@hotwired/stimulus' => [
-        'version' => '3.2.2',
-    ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
+    ],
     'bootstrap' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
     ],
     '@popperjs/core' => [
         'version' => '2.11.8',
     ],
     'bootstrap/dist/css/bootstrap.min.css' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
         'type' => 'css',
     ],
     'bootstrap/js/dist/alert' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
     ],
     'bootstrap/js/dist/dropdown' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
     ],
     'bootstrap/js/dist/collapse' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
     ],
     'bootstrap/js/dist/tab' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
     ],
     'bootstrap/js/dist/modal' => [
-        'version' => '5.3.3',
+        'version' => '5.3.6',
     ],
-    '@symfony/ux-live-component' => [
-        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    '@tabler/core' => [
+        'version' => '1.3.2',
+    ],
+    '@tabler/core/dist/css/tabler.min.css' => [
+        'version' => '1.3.2',
+        'type' => 'css',
     ],
 ];

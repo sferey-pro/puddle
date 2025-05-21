@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Query;
 
-use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
+use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 
 #[AsQueryHandler]
-final readonly class FindUsersQueryHandler
+final readonly class ListUsersQueryHandler
 {
     public function __construct(
-        private UserRepositoryInterface $repository,
+        private UserViewRepositoryInterface $repository,
     ) {
     }
 
-    public function __invoke(FindUsersQuery $query): UserRepositoryInterface
+    public function __invoke(ListUsersQuery $query): UserViewRepositoryInterface
     {
         $repository = $this->repository;
 

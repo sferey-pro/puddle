@@ -4,19 +4,18 @@ doctrine_mongodb:
     connections:
         default:
             server: '%env(resolve:MONGODB_URL)%'
-            options: {}
+            options: 
+                username: app
+                password: ChangeMe
     default_database: '%env(resolve:MONGODB_DB)%'
     document_managers:
         default:
-            auto_mapping: true
             mappings:
-                App:
-                    dir: '%kernel.project_dir%/src/Document'
-                    mapping: true
-                    type: attribute
-                    prefix: 'App\Document'
+                UserManagement:
                     is_bundle: false
-                    alias: App
+                    type: xml
+                    dir: '%kernel.project_dir%/src/Module/UserManagement/Infrastructure/ReadModel/Mapping'
+                    prefix: 'App\Module\UserManagement\Application\ReadModel'
 
 when@prod:
     doctrine_mongodb:

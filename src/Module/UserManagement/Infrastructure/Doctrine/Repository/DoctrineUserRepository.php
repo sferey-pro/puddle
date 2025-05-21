@@ -9,13 +9,13 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Repository\CheckUserByEmailInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
-use App\Shared\Infrastructure\Doctrine\AbstractRepository;
+use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
-class UserRepository extends AbstractRepository implements UserRepositoryInterface, CheckUserByEmailInterface
+class DoctrineUserRepository extends ORMAbstractRepository implements UserRepositoryInterface, CheckUserByEmailInterface
 {
     private const ENTITY_CLASS = User::class;
     private const ALIAS = 'user';

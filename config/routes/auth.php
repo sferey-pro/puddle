@@ -13,6 +13,7 @@ use App\Module\Auth\UI\Controller\Security\LogoutController;
 use App\Module\Auth\UI\Controller\Security\OAuth\CheckController;
 use App\Module\Auth\UI\Controller\Security\OAuth\ConnectController;
 use App\Module\Auth\UI\Controller\VerifyEmailController;
+use App\Module\Static\UI\Controller\UnderConstructionController;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Requirement\EnumRequirement;
@@ -35,6 +36,16 @@ return function (RoutingConfigurator $routes): void {
 
     $routes->add('login', '/login')
         ->controller(LoginController::class)
+        ->methods([Request::METHOD_GET, Request::METHOD_POST])
+    ;
+
+    $routes->add('reset_password', '/reset-password')
+        ->controller(UnderConstructionController::class)
+        ->methods([Request::METHOD_GET, Request::METHOD_POST])
+    ;
+
+    $routes->add('forget_password', '/forget-password')
+        ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET, Request::METHOD_POST])
     ;
 

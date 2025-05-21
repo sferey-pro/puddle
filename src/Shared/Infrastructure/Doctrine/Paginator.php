@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\Doctrine;
 
 use App\Shared\Domain\Repository\PaginatorInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Pagerfanta\PagerfantaInterface;
 
 /**
  * @template T of object
@@ -16,56 +16,43 @@ final readonly class Paginator implements PaginatorInterface
 {
     final public const PAGE_SIZE = 10;
 
-    private int $firstResult;
-    private int $maxResults;
-
     /**
-     * @param DoctrinePaginator<T> $paginator
+     * @param PagerfantaInterface<T> $paginator
      */
-    public function __construct(
-        private DoctrinePaginator $paginator,
-    ) {
-        $firstResult = $paginator->getQuery()->getFirstResult();
-        $maxResults = $paginator->getQuery()->getMaxResults();
-
-        if (null === $maxResults) {
-            throw new \InvalidArgumentException('Missing maxResults from the query.');
-        }
-
-        $this->firstResult = $firstResult;
-        $this->maxResults = $maxResults;
+    public function __construct(private PagerfantaInterface $paginator)
+    {
     }
 
     public function getItemsPerPage(): int
     {
-        return $this->maxResults;
+        return $this->paginator->getMaxPerPage();
     }
 
     public function getCurrentPage(): int
     {
-        if (0 >= $this->maxResults) {
-            return 1;
-        }
-
-        return (int) (1 + floor($this->firstResult / $this->maxResults));
+        return $this->paginator->getCurrentPage();
     }
 
     public function getLastPage(): int
     {
-        if (0 >= $this->maxResults) {
-            return 1;
-        }
-
-        return (int) (ceil($this->getTotalItems() / $this->maxResults) ?: 1);
+        // Pagerfanta getNbPages can return 0 if no results, ensure it's at least 1 for getLastPage logic
+        return $this->paginator->getNbPages() ?: 1;
     }
 
     public function getTotalItems(): int
     {
-        return $this->paginator->count();
+        return $this->paginator->getNbResults(); // Total items in the whole set
     }
 
     public function count(): int
     {
+        // Nombre d'éléments sur la page actuelle
+        $currentPageResults = $this->paginator->getCurrentPageResults();
+        if ($currentPageResults instanceof \Countable || \is_array($currentPageResults)) {
+            return \count($currentPageResults);
+        }
+
+        // Fallback si ce n'est pas directement comptable (devrait l'être pour les adaptateurs Doctrine)
         return iterator_count($this->getIterator());
     }
 
@@ -76,34 +63,31 @@ final readonly class Paginator implements PaginatorInterface
 
     public function hasToPaginate(): bool
     {
-        return $this->getTotalItems() > $this->maxResults;
+        return $this->paginator->haveToPaginate();
     }
 
     public function hasPreviousPage(): bool
     {
-        return $this->getCurrentPage() > 1;
+        return $this->paginator->hasPreviousPage();
     }
 
     public function getPreviousPage(): int
     {
-        return max(1, $this->getCurrentPage() - 1);
+        return $this->paginator->getPreviousPage();
     }
 
     public function hasNextPage(): bool
     {
-        return $this->getCurrentPage() < $this->getLastPage();
+        return $this->paginator->hasNextPage();
     }
 
     public function getNextPage(): int
     {
-        return min($this->getLastPage(), $this->getCurrentPage() + 1);
+        return $this->paginator->getNextPage();
     }
 
-    /**
-     * @return \Traversable<int, object>
-     */
-    public function getResults(): \Traversable
+    public function getPagerfanta(): PagerfantaInterface
     {
-        return $this->paginator->getIterator();
+        return $this->paginator;
     }
 }

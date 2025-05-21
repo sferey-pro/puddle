@@ -9,7 +9,7 @@ use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserSocialNetworkRepositoryInterface;
 
 use App\Module\Auth\Infrastructure\Doctrine\Repository\UserLoginRepository;
-use App\Module\Auth\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserRepository;
 use App\Module\Auth\Infrastructure\Doctrine\Repository\UserSocialNetworkRepository;
 
 return function(ContainerConfigurator $container): void {
@@ -28,7 +28,7 @@ return function(ContainerConfigurator $container): void {
         ]);
     // repositories
     $services->set(UserRepositoryInterface::class)
-        ->class(UserRepository::class);
+        ->class(DoctrineUserRepository::class);
 
     $services->set(UserSocialNetworkRepositoryInterface::class)
         ->class(UserSocialNetworkRepository::class);

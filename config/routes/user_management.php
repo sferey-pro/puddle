@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Module\User\UI\Controller\UserController;
+use App\Module\UserManagement\UI\Controller\UserController;
+use App\Module\UserManagement\UI\Controller\UserViewController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Requirement\Requirement;
@@ -10,15 +11,8 @@ use Symfony\Component\Routing\Requirement\Requirement;
 return function (RoutingConfigurator $routes): void {
 
     $routes->add('user_index', '/users')
-        ->controller([UserController::class, 'index'])
-        ->defaults(['page' => '1', '_format' => 'html'])
-        ->methods([Request::METHOD_GET])
-    ;
-
-    $routes->add('user_paginated', '/users/page/{page}')
-        ->controller([UserController::class, 'index'])
+        ->controller([UserViewController::class, 'index'])
         ->defaults(['_format' => 'html'])
-        ->requirements(['page' => Requirement::POSITIVE_INT])
         ->methods([Request::METHOD_GET])
     ;
 

@@ -62,8 +62,8 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=${MONGODB_DB:-app}
       # You should definitely set a root username and password in production
-      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME:-app}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD:-ChangeMe}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME:-}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD:-}
     volumes:
       - mongodb_data:/data/db:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!

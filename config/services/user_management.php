@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
-use App\Module\UserManagement\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Module\UserManagement\Infrastructure\Doctrine\Repository\DoctrineUserRepository;
+use App\Module\UserManagement\Infrastructure\ReadModel\Repository\DoctrineUserViewRepository;
 
 return function(ContainerConfigurator $container): void {
 
@@ -23,5 +25,8 @@ return function(ContainerConfigurator $container): void {
         ]);
 
     $services->set(UserRepositoryInterface::class)
-        ->class(UserRepository::class);
+        ->class(DoctrineUserRepository::class);
+
+    $services->set(UserViewRepositoryInterface::class)
+        ->class(DoctrineUserViewRepository::class);
 };

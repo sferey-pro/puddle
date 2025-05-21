@@ -1,9 +1,13 @@
 // start the Stimulus application
 import './bootstrap.js';
-import './styles/tabler.css';
+import './styles/app.scss';
 
-// loads the Bootstrap
-import 'bootstrap';
+// load the Tabler
+import '@tabler/core/dist/css/tabler.min.css'
+import '@tabler/core'
+
+// loads the Bootstrap plugins
+// import 'bootstrap';
 
 // loads the code color-mode
-import './js/color-modes.js';
+import './js/color-modes.js'

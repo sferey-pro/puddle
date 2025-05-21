@@ -3,6 +3,10 @@ twig:
         - 'form/layout.html.twig'
     file_name_pattern: '*.twig'
 
+babdev_pagerfanta:
+  default_view: twig
+  default_twig_template: 'default/_pagination.html.twig'
+
 when@test:
     twig:
         strict_variables: true

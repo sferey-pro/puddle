@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\Command\Register;
+namespace App\Module\Auth\Application\Command\Logout;
 
 use App\Module\Auth\Domain\Event\UserLoggedOut;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
