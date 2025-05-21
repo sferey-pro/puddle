@@ -12,13 +12,33 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Contrôleur gérant le processus d'inscription des nouveaux utilisateurs.
+ *
+ * Ce contrôleur est responsable de l'affichage et du traitement du formulaire d'inscription.
+ * En cas de soumission valide du formulaire, il délègue la création de l'utilisateur
+ * à la couche applicative via une commande.
+ */
 class RegistrationController extends AbstractController
 {
+    /**
+     * @param CommandBusInterface $commandBus Le bus de commandes pour dispatcher la commande d'inscription.
+     */
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
     ) {
     }
 
+    /**
+     * Gère la requête d'inscription.
+     *
+     * Crée et traite le formulaire d'inscription. Si le formulaire est soumis et valide,
+     * une commande RegisterUser est envoyée au bus de commandes et l'utilisateur est redirigé.
+     * Sinon, le template du formulaire d'inscription est rendu.
+     *
+     * @param Request $request La requête HTTP entrante.
+     * @return Response La réponse HTTP (redirection ou rendu du template).
+     */
     public function __invoke(
         Request $request,
     ): Response {
