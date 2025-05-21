@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
-use App\Module\Auth\Domain\Event\UserLoggedIn;
-
 use App\Module\Auth\Domain\Enum\Role;
+use App\Module\Auth\Domain\Event\UserLoggedIn;
 use App\Module\Auth\Domain\Event\UserLoggedOut;
 use App\Module\Auth\Domain\Event\UserPasswordChanged;
 use App\Module\Auth\Domain\Event\UserRegistered;
@@ -39,10 +38,11 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      * Un mot de passe aléatoire est généré si aucun n'est fourni.
      * Enregistre un événement UserRegistered.
      *
-     * @param UserId $identifier L'identifiant unique de l'utilisateur.
-     * @param Email $email L'adresse e-mail de l'utilisateur.
-     * @param Password|null $password Le mot de passe de l'utilisateur (optionnel, sera généré si null).
-     * @return self La nouvelle instance de UserAccount.
+     * @param UserId        $identifier L'identifiant unique de l'utilisateur
+     * @param Email         $email      L'adresse e-mail de l'utilisateur
+     * @param Password|null $password   le mot de passe de l'utilisateur (optionnel, sera généré si null)
+     *
+     * @return self la nouvelle instance de UserAccount
      */
     public static function register(
         UserId $identifier,
@@ -91,7 +91,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      * Modifie le mot de passe de l'utilisateur.
      * Enregistre un événement UserPasswordChanged.
      *
-     * @param Password $password Le nouveau mot de passe de l'utilisateur.
+     * @param Password $password le nouveau mot de passe de l'utilisateur
      */
     public function changePassword(Password $password): void
     {
@@ -185,6 +185,4 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     {
         return $this->isVerified;
     }
-
-
 }

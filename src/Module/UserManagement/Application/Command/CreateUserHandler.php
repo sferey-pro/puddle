@@ -9,9 +9,9 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
 use App\Module\UserManagement\Domain\ValueObject\Name;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use App\Shared\Application\Event\EventBusInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 #[AsCommandHandler]
 final class CreateUserHandler

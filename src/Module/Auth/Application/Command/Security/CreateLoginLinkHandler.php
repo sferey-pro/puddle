@@ -15,7 +15,6 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 /**
  * @todo
- * @package App\Module\Auth\Application\Command\Security
  */
 #[AsCommandHandler]
 final class CreateLoginLinkHandler

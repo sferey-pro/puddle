@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 final class LoginController extends AbstractController
 {
     /**
-     * @param AuthenticationUtils $authenticationUtils L'utilitaire pour récupérer les informations d'authentification.
+     * @param AuthenticationUtils $authenticationUtils L'utilitaire pour récupérer les informations d'authentification
      */
     public function __construct(
         private AuthenticationUtils $authenticationUtils,
@@ -31,7 +31,7 @@ final class LoginController extends AbstractController
      * et le dernier nom d'utilisateur saisi par l'utilisateur.
      * Ces informations sont passées au template 'security/login.html.twig'.
      *
-     * @return array Les données à transmettre au template Twig.
+     * @return array les données à transmettre au template Twig
      */
     #[Template('security/login.html.twig')]
     public function __invoke(): array

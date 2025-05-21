@@ -6,9 +6,8 @@ namespace App\Shared\Domain\Event;
 
 /**
  * @todo
- * @package App\Shared\Domain\Event
  */
 interface DomainEventSubscriber
 {
-	public static function subscribedTo(): array;
+    public static function subscribedTo(): array;
 }

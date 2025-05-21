@@ -23,7 +23,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class VerifyEmailController extends AbstractController
 {
     /**
-     * @param EmailVerifier $emailVerifier Le service pour gérer la vérification de l'e-mail.
+     * @param EmailVerifier $emailVerifier le service pour gérer la vérification de l'e-mail
      */
     public function __construct(
         private EmailVerifier $emailVerifier,
@@ -37,12 +37,11 @@ class VerifyEmailController extends AbstractController
      * met à jour l'utilisateur et ajoute un message flash. En cas d'échec,
      * ajoute un message flash d'erreur et redirige.
      *
-     * @param Request $request La requête HTTP entrante contenant les paramètres de vérification.
-     * @return RedirectResponse
+     * @param Request $request la requête HTTP entrante contenant les paramètres de vérification
      */
     public function __invoke(
         Request $request,
-    ): RedirectResponse  {
+    ): RedirectResponse {
         try {
             /** @var UserAccount $user */
             $user = $this->getUser();

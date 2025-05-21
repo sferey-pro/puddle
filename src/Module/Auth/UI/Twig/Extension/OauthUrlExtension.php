@@ -18,7 +18,7 @@ use Twig\TwigFunction;
 class OauthUrlExtension extends AbstractExtension
 {
     /**
-     * @param UrlGeneratorInterface $generator Le générateur d'URL de Symfony pour créer les routes.
+     * @param UrlGeneratorInterface $generator le générateur d'URL de Symfony pour créer les routes
      */
     public function __construct(
         private UrlGeneratorInterface $generator,
@@ -28,7 +28,7 @@ class OauthUrlExtension extends AbstractExtension
     /**
      * Retourne la liste des fonctions fournies par cette extension.
      *
-     * @return TwigFunction[] Un tableau contenant la fonction `oauthUrl`.
+     * @return TwigFunction[] un tableau contenant la fonction `oauthUrl`
      */
     public function getFunctions(): array
     {
@@ -40,8 +40,9 @@ class OauthUrlExtension extends AbstractExtension
     /**
      * Génère l'URL pour la connexion OAuth avec le réseau social spécifié.
      *
-     * @param SocialNetwork $socialNetwork Le réseau social pour lequel générer l'URL de connexion.
-     * @return string L'URL de connexion OAuth générée.
+     * @param SocialNetwork $socialNetwork le réseau social pour lequel générer l'URL de connexion
+     *
+     * @return string L'URL de connexion OAuth générée
      */
     public function generateOauthUrl(SocialNetwork $socialNetwork): string
     {

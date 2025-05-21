@@ -19,13 +19,12 @@ abstract class DomainEvent extends Event
     }
 
     final public function eventId(): EventId
-	{
-		return $this->eventId;
-	}
+    {
+        return $this->eventId;
+    }
 
     final public function occurredOn(): \DateTimeImmutable
     {
         return $this->occurredOn;
     }
-
 }

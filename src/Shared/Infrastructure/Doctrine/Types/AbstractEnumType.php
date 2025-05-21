@@ -26,11 +26,7 @@ abstract class AbstractEnumType extends Type
             return $value->value;
         }
 
-        throw InvalidType::new(
-            $value,
-            static::class,
-            ['null', \BackedEnum::class],
-        );
+        throw InvalidType::new($value, static::class, ['null', \BackedEnum::class]);
     }
 
     /**
@@ -47,12 +43,7 @@ abstract class AbstractEnumType extends Type
             return $this::getEnumsClass()::tryFrom($value);
         }
 
-        throw InvalidFormat::new(
-                $value,
-                static::class,
-                null
-        );
-
+        throw InvalidFormat::new($value, static::class, null);
     }
 
     /**

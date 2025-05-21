@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RegistrationController extends AbstractController
 {
     /**
-     * @param CommandBusInterface $commandBus Le bus de commandes pour dispatcher la commande d'inscription.
+     * @param CommandBusInterface $commandBus le bus de commandes pour dispatcher la commande d'inscription
      */
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
@@ -36,8 +36,9 @@ class RegistrationController extends AbstractController
      * une commande RegisterUser est envoyée au bus de commandes et l'utilisateur est redirigé.
      * Sinon, le template du formulaire d'inscription est rendu.
      *
-     * @param Request $request La requête HTTP entrante.
-     * @return Response La réponse HTTP (redirection ou rendu du template).
+     * @param Request $request la requête HTTP entrante
+     *
+     * @return Response la réponse HTTP (redirection ou rendu du template)
      */
     public function __invoke(
         Request $request,

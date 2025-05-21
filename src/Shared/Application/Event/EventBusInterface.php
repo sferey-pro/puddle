@@ -12,5 +12,5 @@ use App\Shared\Domain\Event\DomainEventInterface;
  */
 interface EventBusInterface
 {
-	public function publish(DomainEventInterface ...$events): void;
+    public function publish(DomainEventInterface ...$events): void;
 }
