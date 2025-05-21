@@ -17,17 +17,9 @@ final class MessengerCommandBus implements CommandBusInterface
         $this->messageBus = $commandBus;
     }
 
-    /**
-     * @template T
-     *
-     * @param CommandInterface<T> $command
-     *
-     * @return T
-     */
     public function dispatch(CommandInterface $command): mixed
     {
         try {
-            /** @var T */
             return $this->handle($command);
         } catch (HandlerFailedException $e) {
             if ($exception = current($e->getWrappedExceptions())) {

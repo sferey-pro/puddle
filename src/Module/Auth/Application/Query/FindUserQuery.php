@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Query;
 
-use App\Module\Auth\Domain\User;
+use App\Module\Auth\Domain\UserAccount;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Application\Query\QueryInterface;
 
 /**
- * @implements QueryInterface<User>
+ * @implements QueryInterface<UserAccount>
  */
 final readonly class FindUserQuery implements QueryInterface
 {

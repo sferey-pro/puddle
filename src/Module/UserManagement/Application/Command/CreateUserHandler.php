@@ -9,14 +9,16 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
 use App\Module\UserManagement\Domain\ValueObject\Name;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Shared\Application\Event\EventBusInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommandHandler]
 final class CreateUserHandler
 {
     public function __construct(
-        private MessageBusInterface $eventBus,
+        private EventDispatcherInterface $eventDispatcher,
+        private EventBusInterface $eventBus,
         private UserRepositoryInterface $repository,
     ) {
     }
@@ -36,7 +38,9 @@ final class CreateUserHandler
         $this->repository->save($user, true);
 
         foreach ($user->pullDomainEvents() as $domainEvent) {
-            $this->eventBus->dispatch($domainEvent);
+            $this->eventDispatcher->dispatch($domainEvent);
         }
+
+        // $this->eventBus->publish(...$user->pullDomainEvents());
     }
 }

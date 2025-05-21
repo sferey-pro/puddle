@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Projector;
 
-use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface as RepositoryUserViewRepositoryInterface;
+use App\Module\Auth\Domain\Event\UserRegistered;
+use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Application\ReadModel\UserView;
-use App\Module\UserManagement\Domain\Event\UserRegistered;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class UserViewProjector implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly RepositoryUserViewRepositoryInterface $userViewRepository,
+        private readonly UserViewRepositoryInterface $userViewRepository,
     ) {
     }
 
@@ -34,7 +34,7 @@ class UserViewProjector implements EventSubscriberInterface
     {
         // Idéalement, vérifiez l'idempotence : si la vue existe déjà, ne la recréez pas
         // ou mettez-la à jour si nécessaire. Pour une création simple :
-        $existingView = $this->userViewRepository->findById($event->getUserId());
+        $existingView = $this->userViewRepository->findById($event->identifier());
         if ($existingView) {
             // Gérer le cas où la vue existe déjà (par exemple, logguer ou ignorer)
             // Pour cet exemple, nous allons simplement retourner pour éviter une erreur de duplication.
@@ -42,12 +42,11 @@ class UserViewProjector implements EventSubscriberInterface
         }
 
         $userView = new UserView(
-            userId: $event->getUserId()->value(), // Assumant que UserView attend un string pour userId
-            email: $event->getEmail(),
-            username: $event->getUsername(),
-            isVerified: false // Par défaut, un nouvel utilisateur n'est pas vérifié
+            userId: (string) $event->identifier(), // Assumant que UserView attend un string pour userId
         );
 
-        $this->userViewRepository->save($userView);
+        $userView->setEmail((string) $event->email());
+
+        $this->userViewRepository->save($userView, true);
     }
 }

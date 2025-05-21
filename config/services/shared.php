@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Shared\Application\Event\EventBusInterface;
+use App\Shared\Application\Event\MessengerEventBus;
 use App\Shared\Infrastructure\Doctrine\Types\AbstractEnumType;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Uid\Command\GenerateUuidCommand;
@@ -30,4 +32,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->instanceof(AbstractEnumType::class)
             ->tag('app.doctrine_enum_type');
+
+    $services
+        ->alias(EventBusInterface::class, 'event.bus');
+
+    $services->set(EventBusInterface::class)
+        ->class(MessengerEventBus::class);
 };

@@ -12,4 +12,6 @@ interface UserViewRepositoryInterface
     public function findById(UserId $identifier): ?UserView;
 
     public function findAll(): array; // Retourne un tableau de UserView
+
+    public function save(UserView $user, bool $flush = false): void;
 }

@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command\Logout;
 
-use App\Module\Auth\Domain\Event\UserLoggedOut;
 use App\Module\Auth\Domain\UserAccount;
+use App\Shared\Application\Event\EventBusInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 #[AsCommandHandler]
 final class LogoutUserHandler
 {
     public function __construct(
-        private MessageBusInterface $eventBus,
+        private EventDispatcherInterface $eventDispatcher,
+        private EventBusInterface $eventBus,
     ) {
     }
 
@@ -22,7 +23,9 @@ final class LogoutUserHandler
         $user = UserAccount::logout($command->identifier());
 
         foreach ($user->pullDomainEvents() as $domainEvent) {
-            $this->eventBus->dispatch($domainEvent);
+            $this->eventDispatcher->dispatch($domainEvent);
         }
+
+        // $this->eventBus->publish(...$user->pullDomainEvents());
     }
 }

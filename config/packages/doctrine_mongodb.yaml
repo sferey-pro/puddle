@@ -3,11 +3,10 @@ doctrine_mongodb:
     auto_generate_hydrator_classes: true
     connections:
         default:
-            server: '%env(resolve:MONGODB_URL)%'
+            server: '%env(resolve:MONGO_URL)%'
             options: 
-                username: app
-                password: ChangeMe
-    default_database: '%env(resolve:MONGODB_DB)%'
+                {}
+    default_database: '%env(resolve:MONGO_DB)%'
     document_managers:
         default:
             mappings:

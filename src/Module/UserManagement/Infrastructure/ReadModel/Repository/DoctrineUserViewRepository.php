@@ -28,4 +28,18 @@ class DoctrineUserViewRepository extends ODMAbstractRepository implements UserVi
     {
         return parent::findAll();
     }
+
+    public function add(UserView $user): void
+    {
+        $this->getDocumentManager()->persist($user);
+    }
+
+    public function save(UserView $user, bool $flush = false): void
+    {
+        $this->add($user);
+
+        if ($flush) {
+            $this->getDocumentManager()->flush();
+        }
+    }
 }

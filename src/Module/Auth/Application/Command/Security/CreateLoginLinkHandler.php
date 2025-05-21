@@ -6,20 +6,22 @@ namespace App\Module\Auth\Application\Command\Security;
 
 use App\Module\Auth\Application\Event\LoginLinkCreated;
 use App\Module\Auth\Application\Notifier\CustomLoginLinkNotification;
+use App\Shared\Application\Event\EventBusInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Notifier\Recipient\Recipient;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
+/**
+ * @todo
+ * @package App\Module\Auth\Application\Command\Security
+ */
 #[AsCommandHandler]
 final class CreateLoginLinkHandler
 {
     public function __construct(
-        private MessageBusInterface $eventBus,
+        private EventBusInterface $eventBus,
         private NotifierInterface $notifier,
         private LoginLinkHandlerInterface $loginLinkHandler,
         private RequestStack $requestStack,
@@ -54,9 +56,6 @@ final class CreateLoginLinkHandler
             ipAddressClient: $request->getClientIp()
         );
 
-        $this->eventBus->dispatch(
-            (new Envelope($event))
-                ->with(new DispatchAfterCurrentBusStamp())
-        );
+        $this->eventBus->publish($event);
     }
 }

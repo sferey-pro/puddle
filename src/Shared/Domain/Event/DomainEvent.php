@@ -9,17 +9,23 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class DomainEvent extends Event
 {
-    public readonly EventId $id;
+    public readonly EventId $eventId;
     public readonly \DateTimeImmutable $occurredOn;
 
     public function __construct()
     {
-        $this->id = EventId::random();
+        $this->eventId = EventId::random();
         $this->occurredOn = new \DateTimeImmutable();
     }
 
-    public function occurredOn(): \DateTimeImmutable
+    final public function eventId(): EventId
+	{
+		return $this->eventId;
+	}
+
+    final public function occurredOn(): \DateTimeImmutable
     {
         return $this->occurredOn;
     }
+
 }

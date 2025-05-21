@@ -27,7 +27,7 @@
                                     </tr>
                                     <tbody>
                                         {% for user in users %}
-                                            <tr id="user_{{ user.identifier }}">
+                                            <tr id="user_{{ user.userId }}">
                                                 {{ include('user/_item.html.twig', { user: user}) }}
                                             </tr>
                                         {% else %}

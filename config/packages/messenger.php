@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Shared\Application\Command\CommandInterface;
 use App\Shared\Application\Query\QueryInterface;
+use App\Shared\Domain\Event\DomainEventInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -17,6 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     ],
                 ],
                 'query.bus' => [],
+                'event.bus' => [],
             ],
             'transports' => [
                 'sync' => 'sync://',
@@ -24,6 +26,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'routing' => [
                 QueryInterface::class => 'sync',
                 CommandInterface::class => 'sync',
+                DomainEventInterface::class => 'sync',
             ],
         ],
     ]);

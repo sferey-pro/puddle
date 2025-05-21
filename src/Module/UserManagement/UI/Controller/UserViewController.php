@@ -24,7 +24,6 @@ final class UserViewController extends AbstractController
         #[MapQueryParameter(filter: \FILTER_VALIDATE_INT)] int $limit = Paginator::PAGE_SIZE,
     ): array {
         $models = $this->queryBus->ask(new ListUsersQuery($page, $limit));
-        dd(\count($models));
 
         return [
             'users' => $models,
