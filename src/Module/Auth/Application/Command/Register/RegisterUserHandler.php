@@ -11,7 +11,6 @@ use App\Module\Auth\Domain\ValueObject\Password;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
@@ -22,7 +21,6 @@ final class RegisterUserHandler
 {
     public function __construct(
         private MessageBusInterface $eventBus,
-        private EventDispatcherInterface $eventDispatcher,
         private UserPasswordHasherInterface $userPasswordHasher,
         private UserRepositoryInterface $userRepository,
     ) {
@@ -46,14 +44,10 @@ final class RegisterUserHandler
         $this->userRepository->save($user, true);
 
         foreach ($user->pullDomainEvents() as $domainEvent) {
-            $this->eventDispatcher->dispatch($domainEvent);
+            $this->eventBus->dispatch(
+                (new Envelope($domainEvent))
+                        ->with(new DispatchAfterCurrentBusStamp())
+                );
         }
-
-        $event = new UserRegistered(identifier: $user->identifier(), email: $user->email());
-
-        $this->eventBus->dispatch(
-            (new Envelope($event))
-                ->with(new DispatchAfterCurrentBusStamp())
-        );
     }
 }

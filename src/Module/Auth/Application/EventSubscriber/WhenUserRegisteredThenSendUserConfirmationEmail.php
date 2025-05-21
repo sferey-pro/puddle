@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\EventSubscriber;
 
-use App\Module\Auth\Application\Event\UserRegistered;
+use App\Module\Auth\Domain\Event\UserRegistered;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\Domain\User;
 use App\Module\Auth\Infrastructure\Symfony\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -23,14 +22,13 @@ class WhenUserRegisteredThenSendUserConfirmationEmail
 
     public function __invoke(UserRegistered $event): void
     {
-        /** @var User $user */
-        $user = $this->userRepository->ofIdentifier($event->identifier);
+        $user = $this->userRepository->ofIdentifier($event->identifier());
 
         // generate a signed url and email it to the user
         $this->emailVerifier->sendEmailConfirmation('verify_email', $user,
             (new TemplatedEmail())
                 ->from(new Address('no-reply@puddle.com', 'Puddle Mail Bot'))
-                ->to((string) $event->email)
+                ->to((string) $event->email())
                 ->subject('Please Confirm your Email')
                 ->htmlTemplate('emails/registration/confirmation_email.html.twig')
         );

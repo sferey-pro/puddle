@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
+use App\Module\Auth\Domain\Event\UserLoggedIn;
+
 use App\Module\Auth\Domain\Enum\Role;
+use App\Module\Auth\Domain\Event\UserLoggedOut;
+use App\Module\Auth\Domain\Event\UserPasswordChanged;
 use App\Module\Auth\Domain\Event\UserRegistered;
+use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\Auth\Domain\ValueObject\Password;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
@@ -20,13 +25,25 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
 
     private function __construct(
         private UserId $identifier,
-        private Password $password,
-        private Email $email,
+        private ?Password $password = null,
+        private ?Email $email = null,
         private array $roles = [],
         private bool $isVerified = false,
     ) {
     }
 
+    /**
+     * Crée une nouvelle instance de UserAccount pour un nouvel utilisateur.
+     *
+     * Initialise l'utilisateur avec un rôle par défaut et un statut non vérifié.
+     * Un mot de passe aléatoire est généré si aucun n'est fourni.
+     * Enregistre un événement UserRegistered.
+     *
+     * @param UserId $identifier L'identifiant unique de l'utilisateur.
+     * @param Email $email L'adresse e-mail de l'utilisateur.
+     * @param Password|null $password Le mot de passe de l'utilisateur (optionnel, sera généré si null).
+     * @return self La nouvelle instance de UserAccount.
+     */
     public static function register(
         UserId $identifier,
         Email $email,
@@ -47,6 +64,54 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         return $user;
     }
 
+    /**
+     * Enregistre le fait que l'utilisateur s'est connecté.
+     * Cet événement est généralement déclenché après une authentification réussie.
+     */
+    public static function login(UserId $identifier): self
+    {
+        $user = new self($identifier);
+        $user->recordDomainEvent(new UserLoggedIn(identifier: $user->identifier()));
+
+        return $user;
+    }
+
+    /**
+     * Enregistre le fait que l'utilisateur s'est déconnecté.
+     */
+    public static function logout(UserId $identifier): self
+    {
+        $user = new self($identifier);
+        $user->recordDomainEvent(new UserLoggedOut(identifier: $user->identifier()));
+
+        return $user;
+    }
+
+    /**
+     * Modifie le mot de passe de l'utilisateur.
+     * Enregistre un événement UserPasswordChanged.
+     *
+     * @param Password $password Le nouveau mot de passe de l'utilisateur.
+     */
+    public function changePassword(Password $password): void
+    {
+        $this->password = $password;
+
+        $this->recordDomainEvent(new UserPasswordChanged(identifier: $this->identifier));
+    }
+
+    /**
+     * Marque le compte de l'utilisateur comme vérifié.
+     *
+     * Enregistre un événement UserVerified.
+     */
+    public function verified(): void
+    {
+        $this->isVerified = true;
+
+        $this->recordDomainEvent(new UserVerified(identifier: $this->identifier));
+    }
+
     public function identifier(): UserId
     {
         return $this->identifier;
@@ -55,11 +120,6 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     public function email(): Email
     {
         return $this->email;
-    }
-
-    public function changePassword(Password $password): void
-    {
-        $this->password = $password;
     }
 
     /**
@@ -126,10 +186,5 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         return $this->isVerified;
     }
 
-    public function verified(): static
-    {
-        $this->isVerified = true;
 
-        return $this;
-    }
 }
