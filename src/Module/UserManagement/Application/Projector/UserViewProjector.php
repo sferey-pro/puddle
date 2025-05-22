@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace App\Module\UserManagement\Application\Projector;
 
 use App\Module\Auth\Domain\Event\UserRegistered;
+use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Application\ReadModel\UserView;
+use App\Module\UserManagement\Domain\Event\UserCreated;
+use App\Module\UserManagement\Domain\Event\UserDeleted;
+use App\Module\UserManagement\Domain\Event\UserEmailChanged;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -19,34 +24,95 @@ class UserViewProjector implements EventSubscriberInterface
 {
     public function __construct(
         private readonly UserViewRepositoryInterface $userViewRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     public static function getSubscribedEvents(): array
     {
-        // S'abonne à l'événement UserRegistered et appelle la méthode onUserRegistered
+        // S'abonne aux événements concernant les données UserView modifié par les Bounded Context UserManagement et Auth
         return [
+            // Auth Event
             UserRegistered::class => 'onUserRegistered',
+            UserVerified::class => 'onUserVerified',
+
+            // UserManagement Event
+            UserCreated::class => 'onUserCreated',
+            UserDeleted::class => 'onUserDeleted',
+            UserEmailChanged::class => 'onUserEmailChanged',
         ];
     }
 
     public function onUserRegistered(UserRegistered $event): void
     {
-        // Idéalement, vérifiez l'idempotence : si la vue existe déjà, ne la recréez pas
-        // ou mettez-la à jour si nécessaire. Pour une création simple :
         $existingView = $this->userViewRepository->findById($event->identifier());
         if ($existingView) {
-            // Gérer le cas où la vue existe déjà (par exemple, logguer ou ignorer)
-            // Pour cet exemple, nous allons simplement retourner pour éviter une erreur de duplication.
             return;
         }
 
         $userView = new UserView(
-            userId: (string) $event->identifier(), // Assumant que UserView attend un string pour userId
+            userId: (string) $event->identifier(),
         );
 
         $userView->setEmail((string) $event->email());
 
         $this->userViewRepository->save($userView, true);
+    }
+
+    public function onUserCreated(UserCreated $event): void
+    {
+        $existingView = $this->userViewRepository->findById($event->identifier());
+        if ($existingView) {
+            return;
+        }
+
+        $userView = new UserView(
+            userId: (string) $event->identifier(),
+        );
+
+        $userView->setEmail((string) $event->email());
+
+        $this->userViewRepository->save($userView, true);
+    }
+
+    public function onUserDeleted(UserDeleted $event): void
+    {
+        $existingView = $this->userViewRepository->findById($event->identifier());
+
+        if (null === $existingView) {
+            return;
+        }
+
+        $userView = new UserView(
+            userId: (string) $event->identifier(),
+        );
+
+        $this->userViewRepository->delete($userView, true);
+    }
+
+    public function onUserEmailChanged(UserEmailChanged $event): void
+    {
+        $existingView = $this->userViewRepository->findById($event->identifier());
+
+        if (null === $existingView) {
+            return;
+        }
+
+        $existingView->setEmail((string) $event->email());
+
+        $this->userViewRepository->save($existingView, true);
+    }
+
+    public function onUserVerified(UserVerified $event): void
+    {
+        $existingView = $this->userViewRepository->findById($event->identifier());
+
+        if (null === $existingView) {
+            return;
+        }
+
+        $existingView->setIsVerified($event->verified());
+
+        $this->userViewRepository->save($existingView, true);
     }
 }

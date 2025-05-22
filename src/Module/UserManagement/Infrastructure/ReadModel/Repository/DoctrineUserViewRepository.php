@@ -42,4 +42,18 @@ class DoctrineUserViewRepository extends ODMAbstractRepository implements UserVi
             $this->getDocumentManager()->flush();
         }
     }
+
+    public function delete(UserView $user, bool $flush = false): void
+    {
+        $this->remove($user);
+
+        if ($flush) {
+            $this->getDocumentManager()->flush();
+        }
+    }
+
+    public function remove(UserView $user): void
+    {
+        $this->getDocumentManager()->remove($user);
+    }
 }

@@ -14,4 +14,6 @@ interface UserViewRepositoryInterface
     public function findAll(): array; // Retourne un tableau de UserView
 
     public function save(UserView $user, bool $flush = false): void;
+
+    public function delete(UserView $user, bool $flush = false): void;
 }

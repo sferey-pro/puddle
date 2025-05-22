@@ -12,6 +12,7 @@ final class UserVerified extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
         private UserId $identifier,
+        private bool $verified,
     ) {
         parent::__construct();
     }
@@ -19,5 +20,10 @@ final class UserVerified extends DomainEvent implements DomainEventInterface
     public function identifier(): UserId
     {
         return $this->identifier;
+    }
+
+    public function verified(): bool
+    {
+        return $this->verified;
     }
 }
