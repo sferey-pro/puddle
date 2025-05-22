@@ -1,0 +1,29 @@
+{% set _route = app.current_route %}
+<div class="container">
+<!-- BEGIN NAVBAR LOGO -->
+    <a href="{{ path('homepage') }}" class="navbar-brand navbar-brand-autodark me-3">
+        <img src="{{ asset('images/puddle-logo.png') }}" class="navbar-brand-image" alt="" width="72" height="57">
+    </a>
+<!-- END NAVBAR LOGO -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <nav class="navbar-nav ms-auto">
+            <div class="nav-item">
+                <a class="nav-link" href="https://github.com/sferey-pro/puddle" target="_blank">
+                    <span class="nav-link-icon">
+                        <twig:ux:icon name="tabler:brand-github" class="icon icon-2"/>
+                    </span>
+                    <span class="nav-link-title">Github</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="{{ path('register') }}"><span class="nav-link-title">Register</span></a>
+            </div>
+            <div class="nav-item ms-4">
+                <a href="{{ path('login') }}" class="btn btn-primary">Login</a>
+            </div>
+        </nav>
+    </div>
+</div>

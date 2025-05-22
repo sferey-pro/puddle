@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html data-bs-theme="auto">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{% block title %}Accueil - Projet Puddle{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('styles/tabler-marketing.min.css') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body id="{% block body_id %}{% endblock %}" class="body-marketing body-gradient">
+        {% block header %}
+            <header class="navbar navbar-expand-lg navbar-transparent py-3">
+                {{ include('default/_static_navigation.html.twig') }}
+            </header>
+        {% endblock %}
+        <div class="hero pb-0">
+            <div class="container">
+                <h1 class="hero-title">Bienvenue sur Puddle</h1>
+                <p class="hero-description mt-4">
+                    Une application backend PHP/Symfony explorant le DDD, l'Architecture Hexagonale et CQRS.
+                </p>
+                <div class="my-5">
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-auto">
+                        <a href="{{ path('register') }}" class="btn btn-lg">Register</a>
+                        </div>
+                        <div class="col-auto">
+                        <a href="{{ path('login') }}" class="btn btn-lg btn-primary" target="_blank" rel="noopener noreferrer">Login</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-text text-green">In Progress</div>
+                <section class="section">
+                    <div class="container">
+                        <div class="row items-center text-center g-lg-10">
+                        <div class="col-md-6 col-lg">
+                            <div class="shape shape-md mb-3">
+                                <twig:ux:icon name="tabler:stack-middle" class="icon icon-1"/>
+                            </div>
+                            <h2 class="h2">Domain-Driven Design (DDD)</h2>
+                            <p class="text-secondary">Puddle est conçu en suivant les principes du DDD pour une modélisation claire du métier, une meilleure maintenabilité et une architecture évolutive.</p>
+                        </div>
+                        <div class="col-md-6 col-lg">
+                            <div class="shape shape-md mb-3">
+                                <twig:ux:icon name="tabler:brand-symfony" class="icon icon-1"/>
+                            </div>
+                            <h2 class="h2">Symfony Framework</h2>
+                            <p class="text-secondary">Le projet exploite la puissance et la flexibilité du framework Symfony, en utilisant de nombreux composants (Messenger, UX, Forms, etc.) pour construire une application robuste.</p>
+                        </div>
+                        <div class="col-md-6 col-lg">
+                            <div class="shape shape-md mb-3">
+                                <twig:ux:icon name="tabler:brand-tabler-filled" class="icon icon-1"/>
+                            </div>
+                            <h2 class="h2">Tabler UI Kit</h2>
+                            <p class="text-secondary">L'interface utilisateur est construite avec Tabler, un kit UI moderne et responsive basé sur Bootstrap, offrant une expérience utilisateur soignée et professionnelle.</p>
+                        </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </body>
+</html>
