@@ -1,16 +1,16 @@
-import { Controller } from '@hotwired/stimulus';
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = {
-    disabled: { default: false, type: Boolean},
+    disabled: { default: false, type: Boolean },
     withDisabled: String,
-    withEnabled: String
+    withEnabled: String,
   }
 
   connect() {
-    this.element.dataset['action'] = 'submit->disable#disableForm'
+    this.element.dataset["action"] = "submit->disable#disableForm"
 
-    if(this.disabledValue) {
+    if (this.disabledValue) {
       this.disableForm()
     }
 
@@ -20,14 +20,14 @@ export default class extends Controller {
   }
 
   disableForm() {
-    this.submitButtons().forEach(button => {
+    this.submitButtons().forEach((button) => {
       button.disabled = true
       button.value = this.withDisabledValue
     })
   }
 
   enabledForm() {
-    this.submitButtons().forEach(button => {
+    this.submitButtons().forEach((button) => {
       button.disabled = false
       button.value = this.withEnabledValue
     })

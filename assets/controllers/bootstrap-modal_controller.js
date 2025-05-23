@@ -1,5 +1,5 @@
-import { Controller } from '@hotwired/stimulus';
-import { Modal } from 'bootstrap';
+import { Controller } from "@hotwired/stimulus"
+import { Modal } from "bootstrap"
 
 /**
  * Allows you to dispatch a "modal:close" JavaScript event to close it.
@@ -12,10 +12,10 @@ import { Modal } from 'bootstrap';
  */
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
-    modal = null;
+  modal = null
 
-    connect() {
-        this.modal = Modal.getOrCreateInstance(this.element);
-        document.addEventListener('modal:close', () => this.modal.hide());
-    }
+  connect() {
+    this.modal = Modal.getOrCreateInstance(this.element)
+    document.addEventListener("modal:close", () => this.modal.hide())
+  }
 }
