@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Music\Infrastructure\Provider;
 
+use App\Module\Music\Domain\Exception\AccessTokenUnavailableException;
 use App\Module\Music\Domain\Model\CurrentlyPlayingTrack;
 use App\Module\Music\Domain\Port\AccessTokenProviderInterface;
 use App\Module\Music\Domain\Port\CurrentlyPlayingMusicProviderInterface;
@@ -12,7 +13,6 @@ use App\Module\Music\Infrastructure\Spotify\DTO\ValueObject\Item;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -30,14 +30,8 @@ class SpotifyCurrentlyPlayingMusicProvider implements CurrentlyPlayingMusicProvi
 
     public function fetchCurrentlyPlaying(): CurrentlyPlayingTrack
     {
-        $accessToken = $this->authTokenProvider->getAccessToken();
-
-        if (!$accessToken) {
-            $this->logger->warning('Spotify access token is not configured.');
-
-            return CurrentlyPlayingTrack::nothingPlaying();
-        }
         try {
+            $accessToken = $this->authTokenProvider->getAccessToken();
             $response = $this->requestCurrentlyPlaying($accessToken);
 
             if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
@@ -72,6 +66,10 @@ class SpotifyCurrentlyPlayingMusicProvider implements CurrentlyPlayingMusicProvi
                 albumName: $item->album->name,
                 albumArtUrl: $item->album->artUrl,
             );
+        } catch (AccessTokenUnavailableException $e) {
+            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+
+            return CurrentlyPlayingTrack::nothingPlaying();
         } catch (ExceptionInterface $e) {
             $this->logger->error('Spotify HTTP client exception: '.$e->getMessage(), ['exception' => $e]);
 

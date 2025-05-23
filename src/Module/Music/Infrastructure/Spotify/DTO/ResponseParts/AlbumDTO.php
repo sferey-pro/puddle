@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Music\Infrastructure\Spotify\DTO\ValueObject;
+namespace App\Module\Music\Infrastructure\Spotify\DTO\ResponseParts;
 
-final readonly class Album
+final readonly class AlbumDTO
 {
     public ?string $name;
     public ?string $artUrl;

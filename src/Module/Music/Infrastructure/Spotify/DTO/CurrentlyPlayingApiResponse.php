@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Music\Infrastructure\Spotify\DTO;
 
-use App\Module\Music\Infrastructure\Spotify\DTO\ValueObject\Item;
+use App\Module\Music\Infrastructure\Spotify\DTO\ResponseParts\ItemDTO;
 
 /**
  * Value Object représentant la réponse globale de l'API Spotify "currently-playing".
@@ -25,8 +25,8 @@ final readonly class CurrentlyPlayingApiResponse
                && isset($this->responseData['item']);
     }
 
-    public function getItem(): ?Item
+    public function getItem(): ?ItemDTO
     {
-        return $this->isPlaying() && isset($this->responseData['item']) ? new Item($this->responseData['item']) : null;
+        return $this->isPlaying() && isset($this->responseData['item']) ? new ItemDTO($this->responseData['item']) : null;
     }
 }

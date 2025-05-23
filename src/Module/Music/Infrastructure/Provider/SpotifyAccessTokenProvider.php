@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Music\Infrastructure\Provider;
 
+use App\Module\Music\Domain\Exception\AccessTokenUnavailableException;
 use App\Module\Music\Domain\Port\AccessTokenProviderInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
@@ -51,9 +52,9 @@ final class SpotifyAccessTokenProvider implements AccessTokenProviderInterface
                     'status_code' => $response->getStatusCode(),
                     'content' => $response->getContent(false),
                 ]);
-                $this->cache->deleteItem(self::ACCESS_TOKEN_CACHE_KEY);
 
-                return null;
+                $this->cache->deleteItem(self::ACCESS_TOKEN_CACHE_KEY);
+                throw new AccessTokenUnavailableException();
             }
 
             return $cachedTokenItem
@@ -62,8 +63,7 @@ final class SpotifyAccessTokenProvider implements AccessTokenProviderInterface
                 ->get() ?? null;
         } catch (\Throwable $e) {
             $this->logger->error('Exception while refreshing Spotify access token', ['exception' => $e]);
-
-            return null;
+            throw new AccessTokenUnavailableException();
         }
     }
 
