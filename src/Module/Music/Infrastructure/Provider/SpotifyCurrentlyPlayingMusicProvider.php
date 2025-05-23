@@ -10,6 +10,7 @@ use App\Module\Music\Domain\Port\CurrentlyPlayingMusicProviderInterface;
 use App\Module\Music\Infrastructure\Spotify\DTO\CurrentlyPlayingApiResponse;
 use App\Module\Music\Infrastructure\Spotify\DTO\ValueObject\Item;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -18,13 +19,12 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class SpotifyCurrentlyPlayingMusicProvider implements CurrentlyPlayingMusicProviderInterface
 {
-    private const SPOTIFY_API_CURRENTLY_PLAYING = 'https://api.spotify.com/v1/me/player/currently-playing';
-
     public function __construct(
         private readonly AccessTokenProviderInterface $authTokenProvider,
-        private readonly CacheInterface $cache,
         private HttpClientInterface $httpClient,
         private readonly LoggerInterface $logger,
+        #[Autowire(env: 'SPOTIFY_CURRENTLY_PLAYING_URL')]
+        private string $apiCurrentlyPlayingUrl,
     ) {
     }
 
@@ -81,7 +81,7 @@ class SpotifyCurrentlyPlayingMusicProvider implements CurrentlyPlayingMusicProvi
 
     private function requestCurrentlyPlaying(string $accessToken): ResponseInterface
     {
-        return $this->httpClient->request('GET', self::SPOTIFY_API_CURRENTLY_PLAYING, [
+        return $this->httpClient->request('GET', $this->apiCurrentlyPlayingUrl, [
             'headers' => [
                 'Authorization' => 'Bearer '.$accessToken,
                 'Accept' => 'application/json',

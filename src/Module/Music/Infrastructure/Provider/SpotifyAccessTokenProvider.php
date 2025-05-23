@@ -15,7 +15,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class SpotifyAccessTokenProvider implements AccessTokenProviderInterface
 {
-    private const SPOTIFY_API_TOKEN_URL = 'https://accounts.spotify.com/api/token';
     private const ACCESS_TOKEN_CACHE_KEY = 'spotify_access_token';
     private const ACCESS_TOKEN_EXPIRY_SECONDS = 3500; // Tokens last 3600s, refresh a bit earlier
 
@@ -29,6 +28,8 @@ final class SpotifyAccessTokenProvider implements AccessTokenProviderInterface
         private string $refreshToken,
         private CacheItemPoolInterface $cache,
         private LoggerInterface $logger,
+        #[Autowire(env: 'SPOTIFY_TOKEN_URL')]
+        private string $apiTokenUrl,
     ) {
     }
 
@@ -73,7 +74,7 @@ final class SpotifyAccessTokenProvider implements AccessTokenProviderInterface
 
     private function requestAccessToken(): ResponseInterface
     {
-        return $this->httpClient->request(Request::METHOD_POST, self::SPOTIFY_API_TOKEN_URL, [
+        return $this->httpClient->request(Request::METHOD_POST, $this->apiTokenUrl, [
             'headers' => [
                 'Authorization' => 'Basic '.base64_encode($this->clientId.':'.$this->clientSecret),
                 'Content-Type' => 'application/x-www-form-urlencoded',
