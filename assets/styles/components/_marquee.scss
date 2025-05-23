@@ -1,0 +1,51 @@
+@keyframes marquee-loop {
+    from {
+        // La transformation de base de l'élément <a> (définie par JS)
+        // le place déjà hors champ à droite (translateX(var(--container-width))).
+        // translateX(0) ici signifie que l'animation commence à cette position de base.
+        transform: translateX(0);
+    }
+    to {
+        // Déplacer l'élément <a> vers la gauche d'une distance égale à la largeur du conteneur
+        // plus la largeur du texte. Cela assure que le texte sort complètement par la gauche.
+        // Cette translation est relative à la transformation de base de l'élément <a>.
+        transform: translateX(calc(-1 * var(--text-segment-width)));
+    }
+}
+
+.scrollable-track-title {
+    overflow: hidden; /* Cache le texte qui dépasse */
+    position: relative;
+    // La propriété max-width est gérée dynamiquement par le contrôleur Stimulus via un style inline.
+    // Elle ne doit pas être définie ici.
+
+    a {
+        display: block; // Pour que les spans internes se comportent bien et que la transformation s'applique
+        white-space: nowrap; // Pour que les spans et leur contenu restent sur une ligne
+        text-decoration: none; // Optionnel, si vous ne voulez pas de soulignement
+        color: inherit; // Optionnel, pour hériter la couleur du texte
+        // will-change: transform; // Optimisation pour l'animation, appliquée conditionnellement ci-dessous
+
+        span {
+            display: inline-block; // Comportement de bloc pour les spans
+            // Le padding-right est appliqué conditionnellement ci-dessous via .is-scrolling-active
+        }
+    }
+
+    &.is-scrolling-active {
+        a {
+            // La durée de l'animation contrôle la vitesse. Ajustez 15s selon vos besoins.
+            // linear: vitesse constante. infinite: boucle indéfiniment.
+            animation: marquee-loop var(--animation-duration) linear infinite;
+            will-change: transform; // Optimisation pour l'animation
+
+            span {
+                padding-right: 3em; // Espace à la fin du texte. Ajustez au besoin.
+            }
+        }
+
+        &:hover a {
+            animation-play-state: paused;  // Pause au survol du conteneur .scrollable-track-title
+        }
+    }
+}

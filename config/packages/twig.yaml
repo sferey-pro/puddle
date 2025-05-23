@@ -2,6 +2,8 @@ twig:
     form_themes:
         - 'form/layout.html.twig'
     file_name_pattern: '*.twig'
+    paths:
+        '%kernel.project_dir%/src/Module/Music/UI/Resources/views': 'MusicUI'
 
 babdev_pagerfanta:
   default_view: twig

@@ -32,6 +32,7 @@
         "stof/doctrine-extensions-bundle": "^1.14",
         "symfony/asset": "^7.2",
         "symfony/asset-mapper": "^7.2",
+        "symfony/cache": "7.2.*",
         "symfony/console": "^7.2",
         "symfony/dotenv": "^7.2",
         "symfony/expression-language": "^7.2",

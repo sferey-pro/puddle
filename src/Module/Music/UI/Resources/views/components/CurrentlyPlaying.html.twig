@@ -1,0 +1,43 @@
+{% set track = this.track %}
+<div class="toast-container bottom-0 end-0 p-3">
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true"
+        data-bs-autohide="false" data-bs-toggle="toast">
+        <div class="toast-header">
+            <twig:ux:icon name="tabler:music-code" class="icon icon-2"/>
+            <strong class="px-2 me-auto">J'écoute sur Spotify</strong>
+            <button type="button" class="ms-2 btn-close" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+            </div>
+        <div class="toast-body">
+            {% if track %}
+                {% if track.isPlaying and track.trackName %}
+                    <div class="row g-3 align-items-center">
+                        {% if track.albumArtUrl %}
+                            <div class="col-auto">
+                                <img src="{{ track.albumArtUrl | default('#') }}" alt="Pochette de {{ track.albumName | default('l\'album en cours') }}" class="avatar avatar-xl rounded">
+                            </div>
+                        {% endif %}
+                        <div class="col">
+                            <div class="card-title mb-1 scrollable-track-title"
+                                data-controller="marquee"
+                                data-marquee-max-width-value="220"
+                                data-marquee-speed-value="75"
+                                data-marquee-text-value="{{ track.trackName | default('Titre inconnu') }}">
+                                <a href="{{ track.trackUrl | default('#') }}" target="_blank" rel="noopener noreferrer" data-marquee-target="anchor">
+                                    {{ track.trackName | default('Titre inconnu') }}
+                                </a>
+                            </div>
+                            <div class="text-secondary">
+                                {{ track.artistName | default('Artiste inconnu') }}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    Rien en cours de lecture pour le moment.
+                {% endif %}
+            {% else %}
+                Impossible de récupérer les informations de Spotify.
+            {% endif %}
+        </div>
+    </div>
+</div>

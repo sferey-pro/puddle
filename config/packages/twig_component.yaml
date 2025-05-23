@@ -5,3 +5,4 @@ twig_component:
         App\Module\Auth\UI\Twig\Components\: 'components/'
         App\Module\UserManagement\UI\Twig\Components\: 'components/'
         App\Shared\UI\Twig\Components\: 'components/'
+        App\Module\Music\UI\Twig\Components\: '@MusicUI/components/'

@@ -23,7 +23,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->exclude([
             dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/Model',
             dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/ValueObjects',
-        ]);;
+        ]);
 
     $services
         ->set(GenerateUuidCommand::class)
