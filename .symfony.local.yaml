@@ -2,4 +2,7 @@ workers:
     sass:
         cmd: ['symfony', 'console', 'sass:build', '--watch']
 
+    messenger_consume_async_priority_low:
+        cmd: ['symfony', 'run', '-d', '--watch=config,src,templates,vendor/composer/installed.json', 'symfony', 'console', 'messenger:consume', 'async_priority_low', '-vv']
+
     docker_compose: ~

@@ -8,17 +8,13 @@ final class CurrentlyPlayingTrack
 {
     public function __construct(
         public readonly bool $isPlaying,
-        public readonly ?string $trackName,
-        public readonly ?string $trackUrl,
-        public readonly ?string $artistName,
-        public readonly ?string $albumName,
-        public readonly ?string $albumArtUrl,
+        public readonly Track $track,
     ) {
     }
 
     public static function nothingPlaying(): self
     {
-        return new self(false, null, null, null, null, null);
+        return new self(false, Track::nothingPlaying());
     }
 
     public static function create(
@@ -34,11 +30,13 @@ final class CurrentlyPlayingTrack
 
         return new self(
             isPlaying: $actuallyPlaying,
-            trackName: $trackName,
-            trackUrl: $trackUrl,
-            artistName: $artistName,
-            albumName: $albumName,
-            albumArtUrl: $albumArtUrl
+            track : Track::create(
+                trackName: $trackName,
+                trackUrl: $trackUrl,
+                artistName: $artistName,
+                albumName: $albumName,
+                albumArtUrl: $albumArtUrl
+            )
         );
     }
 }

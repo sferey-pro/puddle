@@ -4,26 +4,35 @@ declare(strict_types=1);
 
 namespace App\Module\Music\UI\Twig\Components;
 
-use App\Module\Music\Application\Query\GetCurrentlyPlayingMusicQuery;
-use App\Module\Music\Domain\Model\CurrentlyPlayingTrack;
-use App\Shared\Application\Query\QueryBusInterface;
+use App\Module\Music\Application\Command\FetchCurrentlyPlayingMusicCommand;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent()]
+#[AsLiveComponent(template: '@MusicUI/components/CurrentlyPlaying.html.twig')]
 final class CurrentlyPlaying
 {
     use DefaultActionTrait;
 
+    #[ExposeInTemplate]
+    public string $mercureTopic = 'currently-playing-music';
+
+
     public function __construct(
-        private QueryBusInterface $queryBus,
+        private MessageBusInterface $bus,
     ) {
     }
 
-    #[ExposeInTemplate]
-    public function getTrack(): ?CurrentlyPlayingTrack
+    public function mount(): void
     {
-        return $this->queryBus->ask(new GetCurrentlyPlayingMusicQuery());
+        $this->bus->dispatch(new FetchCurrentlyPlayingMusicCommand($this->mercureTopic));
+    }
+
+    #[LiveAction]
+    public function requestUpdate(): void
+    {
+        $this->bus->dispatch(new FetchCurrentlyPlayingMusicCommand($this->mercureTopic));
     }
 }

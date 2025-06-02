@@ -12,6 +12,13 @@ framework:
     # csrf_protection:
     #     stateless_token_ids: [submit, authenticate, logout]
 
+when@dev:
+    framework:
+        http_client:
+            default_options:
+                verify_peer: false
+                verify_host: false
+
 when@test:
     framework:
         test: true

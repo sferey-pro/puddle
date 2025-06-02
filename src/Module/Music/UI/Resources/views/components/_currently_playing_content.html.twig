@@ -1,0 +1,25 @@
+{% if track %}
+    {% if isPlaying and track %}
+        <div class="row g-3 align-items-center">
+            {% if track.albumArtUrl %}
+                <div class="col-auto">
+                    <img src="{{ track.albumArtUrl | default('#') }}" alt="Pochette de {{ track.albumName | default('l\'album en cours') }}" class="avatar avatar-xl rounded">
+                </div>
+            {% endif %}
+            <div class="col">
+                <div class="card-title mb-1 scrollable-track-title" data-controller="marquee" data-marquee-max-width-value="220" data-marquee-speed-value="50" data-marquee-text-value="{{ track.trackName | default('Titre inconnu') }}">
+                    <a data-live-ignore href="{{ track.trackUrl | default('#') }}" target="_blank" rel="noopener noreferrer" data-marquee-target="anchor">
+                        {{ track.trackName | default('Titre inconnu') }}
+                    </a>
+                </div>
+                <div class="text-secondary">
+                    {{ track.artistName | default('Artiste inconnu') }}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        Rien en cours de lecture pour le moment.
+    {% endif %}
+{% else %}
+    Impossible de récupérer les informations de Spotify.
+{% endif %}

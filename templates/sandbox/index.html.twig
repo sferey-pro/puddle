@@ -1,0 +1,18 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Sandbox index{% endblock %}
+
+{% block body_id 'sandbox_index' %}
+
+{% block main %}
+<h1>Sandbox index</h1>
+
+<script>
+    const eventSource = new EventSource("{{ mercure('https://example.com/books/1')|escape('js') }}");
+    eventSource.onmessage = event => {
+        // Will be called every time an update is published by the server
+        console.log(JSON.parse(event.data));
+    }
+</script>
+
+{% endblock %}
