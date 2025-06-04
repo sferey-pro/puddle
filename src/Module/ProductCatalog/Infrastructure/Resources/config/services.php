@@ -15,11 +15,11 @@ return function(ContainerConfigurator $container): void {
         ->autoconfigure()
     ;
 
-    $services->load('App\\Module\\ProductCatalog\\', dirname(__DIR__, 2).'/src/Module/ProductCatalog')
+    $services->load('App\\Module\\ProductCatalog\\', '%kernel.project_dir%/src/Module/ProductCatalog')
         ->exclude([
-            dirname(__DIR__, 2).'/src/Module/ProductCatalog/Domain',
-            dirname(__DIR__, 2).'/src/Module/ProductCatalog/Domain/ValueObject',
-            dirname(__DIR__, 2).'/src/Module/ProductCatalog/Infrastructure/Resources',
+            '%kernel.project_dir%/src/Module/ProductCatalog/Domain',
+            '%kernel.project_dir%/src/Module/ProductCatalog/Domain/ValueObject',
+            '%kernel.project_dir%/src/Module/ProductCatalog/Infrastructure/Resources',
         ]);
 
     $services->set(ProductRepositoryInterface::class)

@@ -1,12 +1,14 @@
 <div class="page-header d-print-none">
-	<div class="container-xl">
+    <div class="container-xl">
         <div class="row g-2 align-items-center">
             <div class="col">
-                <h2 class="page-title">
-                    {{ content }}
-                </h2>
+                {% if pretitle is defined %}
+                    <!-- Page pre-title -->
+                    <div class="page-pretitle">{{ pretitle }}</div>
+                {% endif %}
+                <h2 class="page-title">{{ title }}</h2>
             </div>
             {% block content %}{% endblock %}
         </div>
-	</div>
+    </div>
 </div>

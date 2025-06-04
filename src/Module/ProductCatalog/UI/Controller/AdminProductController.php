@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\UI\Controller;
 
+use App\Module\ProductCatalog\Application\Command\CreateProduct;
 use App\Module\ProductCatalog\Application\DTO\CostComponentLineDTO;
 use App\Module\ProductCatalog\Application\DTO\CreateProductDTO;
 use App\Module\ProductCatalog\Application\Query\FindProductQuery;
 use App\Module\ProductCatalog\Application\Query\ListProductsQuery;
+use App\Module\ProductCatalog\Domain\ValueObject\ProductId;
 use App\Module\ProductCatalog\UI\Form\ProductFormType;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
@@ -39,12 +41,14 @@ final class AdminProductController extends AbstractController
     }
 
     #[Template('@ProductCatalog/admin/product/show.html.twig')]
-    public function show(): array
+    public function show(Request $request): array
     {
-        $productsPaginator = $this->queryBus->ask(new FindProductQuery());
+        $product = $this->queryBus->ask(new FindProductQuery(
+            identifier: ProductId::fromString($request->get('id'))
+        ));
 
         return [
-            'products' => $productsPaginator,
+            'product' => $product,
         ];
     }
 
@@ -59,17 +63,13 @@ final class AdminProductController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                // Le DTO est rempli par le formulaire
-                $this->commandBus->dispatch(new CreateProductCommand($dto));
+                $this->commandBus->dispatch(new CreateProduct($dto));
 
                 $this->addFlash('success', 'Produit créé avec succès !');
 
                 return $this->redirectToRoute('admin_product_index'); // Nom de la route pour lister les produits
             } catch (\Exception $e) {
-                // Log l'erreur $e->getMessage()
                 $this->addFlash('danger', 'Une erreur est survenue lors de la création du produit.');
-                // Vous pourriez vouloir afficher l'erreur spécifique en mode dev
-                // $this->addFlash('danger', 'Erreur: ' . $e->getMessage());
             }
         }
 

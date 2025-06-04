@@ -29,12 +29,36 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    {{ form_row(componentForm.name) }}
-                    {{ form_row(componentForm.type) }}
-                    {{ form_row(componentForm.costAmount) }}
-                    {# {{ form_row(componentForm.costCurrency) }} #}
-                    {{ form_row(componentForm.quantityValue) }}
-                    {{ form_row(componentForm.quantityUnit) }}
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form_row(componentForm.name) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_row(componentForm.type) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form_row(componentForm.costAmount) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_row(componentForm.costCurrency) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form_row(componentForm.quantityValue) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_row(componentForm.quantityUnit) }}
+                        </div>
+                    </div>
+
+
+
+
+
+
                 </div>
             </div>
             {% endfor %}
