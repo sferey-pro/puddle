@@ -1,0 +1,70 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block body_id 'product_index' %}
+
+{% block main %}
+    <twig:Semantic:Title content="{{ 'product.index' | trans }}" >
+        <div class="col-auto ms-auto d-print-none">
+            <twig:Button:CreateNew routeName="admin_product_new" withIcon="tabler:plus" />
+        </div>
+    </twig:Semantic:Title>
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-12">
+                    <div class="card">
+                        {% if products.paginator().hasToPaginate() %}
+                            <twig:Paginator:ItemsPerPageForm />
+                        {% endif %}
+                        <div class="table-responsive">
+                            <table class="table table-vcenter table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="w-1"></th>
+                                        <th>Status</th>
+                                        <th>Product Name</th>
+                                        <th>Cost</th>
+                                    </tr>
+                                    <tbody>
+                                        {% for product in products %}
+                                            <tr id="product_{{ product.identifier }}">
+                                                {{ include('@ProductCatalog/admin/product/_item.html.twig', { product: product}) }}
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="5">{{ 'default.no_record_found'|trans }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </thead>
+                            </table>
+                        </div>
+                        {% if products.paginator().hasToPaginate() %}
+                            {% set paginator = products.paginator() %}
+                            {% set start = (paginator.getCurrentPage - 1) * paginator.getItemsPerPage + 1 %}
+                            {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
+
+                            <div class="card-footer">
+                                <div class="row g-2 justify-content-center justify-content-sm-between">
+                                    <div class="col-auto d-flex align-items-center">
+                                        <p class="m-0 text-secondary">Showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong> of <strong>{{ paginator.getTotalItems }} entries</strong></p>
+                                    </div>
+                                    <div class="col-auto">
+                                        {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
+                                            routeName: app.request.attributes.get('_route'),
+                                            routeParams: app.request.query.all|merge({'page': paginator.getPagerFanta().getCurrentPage()})
+                                        }) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+

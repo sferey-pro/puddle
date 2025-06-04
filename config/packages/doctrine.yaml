@@ -28,6 +28,11 @@ doctrine:
                 is_bundle: false
                 dir: "%kernel.project_dir%/src/Module/UserManagement/Infrastructure/Doctrine/Mapping"
                 prefix: 'App\Module\UserManagement\Domain'
+            ProductCatalog:
+                type: xml
+                is_bundle: false
+                dir: "%kernel.project_dir%/src/Module/ProductCatalog/Infrastructure/Doctrine/Mapping"
+                prefix: 'App\Module\ProductCatalog\Domain'
             SharedContext:
                 type: xml
                 is_bundle: false

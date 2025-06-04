@@ -1,0 +1,54 @@
+<div {{ attributes }}>
+    {{ form_start(form, { attr: { novalidate: true, class: "space-y" } }) }}
+        <div>
+            {{ form_row(form.name) }}
+        </div>
+        <div>
+            {{ form_row(form.isActive) }}
+        </div>
+        <div>
+            <h4>Composants du Coût</h4>
+        </div>
+        <div>
+            {% for componentForm in form.costComponents %}
+            <div class="card card-sm mb-2">
+                <div class="card-header">
+                    <h4 class="card-title mb-2">
+                        Composant #{{ loop.index }}
+                        <div class="position-absolute top-0 end-0 p-3">
+                            {{ form_row(componentForm.vars.button_delete, {label: 'X', attr: {class: 'btn btn-icon'}}) }}
+                            {# <div
+                                class="btn btn-icon"
+                                data-bs-toggle="tooltip"
+                                aria-label="Supprimer le composant"
+                                data-bs-original-title="Supprimer le composant"
+                            >
+                                <twig:ux:icon name="tabler:trash" class="icon icon-1" />
+                            </div> #}
+                        </div>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {{ form_row(componentForm.name) }}
+                    {{ form_row(componentForm.type) }}
+                    {{ form_row(componentForm.costAmount) }}
+                    {# {{ form_row(componentForm.costCurrency) }} #}
+                    {{ form_row(componentForm.quantityValue) }}
+                    {{ form_row(componentForm.quantityUnit) }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {{ form_widget(form.costComponents.vars.button_add, {label: '+ Ajouter un composant de coût', attr: {class: 'btn btn-outline-primary btn-5 d-none d-sm-inline-block'}}) }}
+        {# <twig:ux:icon name="tabler:plus" class="icon icon-2" /> Ajouter un composant de coût #}
+
+        <div class="text-end">
+            <a href="{{ path('admin_product_index') }}" class="btn btn-1">Annuler</a>
+            <button type="submit" class="btn btn-primary btn-2 d-none d-sm-inline-block">
+                <twig:ux:icon name="tabler:save-changes" class="icon icon-2" /> Enregistrer le Produit
+            </button>
+        </div>
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>

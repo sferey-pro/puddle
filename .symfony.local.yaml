@@ -6,3 +6,6 @@ workers:
         cmd: ['symfony', 'run', '-d', '--watch=config,src,templates,vendor/composer/installed.json', 'symfony', 'console', 'messenger:consume', 'async_priority_low', '-vv']
 
     docker_compose: ~
+
+http:
+    no_tls: true

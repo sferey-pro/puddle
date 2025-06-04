@@ -1,0 +1,8 @@
+<td>
+    <input class="form-check-input m-0 align-middle table-selectable-check" type="checkbox" aria-label="Select product" value="true">
+</td>
+<td>{{ product.isActive ? '<span class="badge bg-success-lt">Active</span>' : '<span class="badge bg-danger-lt">Inactive</span>' }}</td>
+<td>
+    <a href="{{ path('admin_product_show', { 'id': product.identifier }) }}">{{ product.name }}</a>
+</td>
+<td>{{ product.baseCostStructure.totalBaseCost }}</td>

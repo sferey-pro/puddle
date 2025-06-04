@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <embeddable name="App\Module\ProductCatalog\Domain\ValueObject\CostComponentLine">
+        <field name="name" type="string" column="component_name" length="150" />
+        <field name="type" type="cost_component_type_enum" column="component_type" length="50" />
+        <embedded name="cost" class="App\Module\SharedContext\Domain\ValueObject\Money" column-prefix="component_cost_" />
+        <embedded name="quantity" class="App\Module\ProductCatalog\Domain\ValueObject\Quantity" column-prefix="component_quantity_" />
+    </embeddable>
+
+</doctrine-mapping>

@@ -3,7 +3,9 @@ twig:
         - 'form/layout.html.twig'
     file_name_pattern: '*.twig'
     paths:
+        '%kernel.project_dir%/templates/tabler': 'Tabler'
         '%kernel.project_dir%/src/Module/Music/UI/Resources/views': 'MusicUI'
+        '%kernel.project_dir%/src/Module/ProductCatalog/UI/Resources/templates': 'ProductCatalog'
 
 babdev_pagerfanta:
   default_view: twig
