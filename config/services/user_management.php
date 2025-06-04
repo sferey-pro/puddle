@@ -20,8 +20,7 @@ return function(ContainerConfigurator $container): void {
     $services->load('App\\Module\\UserManagement\\', dirname(__DIR__, 2).'/src/Module/UserManagement')
         ->exclude([
             dirname(__DIR__, 2).'/src/Module/UserManagement/Domain',
-            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain/Model',
-            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain/ValueObjects',
+            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain/ValueObject',
         ]);
 
     $services->set(UserRepositoryInterface::class)

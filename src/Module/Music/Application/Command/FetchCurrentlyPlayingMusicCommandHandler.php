@@ -18,7 +18,7 @@ final class FetchCurrentlyPlayingMusicCommandHandler
         private readonly CurrentlyPlayingMusicProviderInterface $musicProvider,
         private readonly HubInterface $mercureHub,
         private readonly TwigEnvironment $twig,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

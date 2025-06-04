@@ -7,7 +7,7 @@ namespace App\Module\Music\Application\Command;
 final class FetchCurrentlyPlayingMusicCommand
 {
     public function __construct(
-        public readonly string $mercureTopic
+        public readonly string $mercureTopic,
     ) {
     }
 }

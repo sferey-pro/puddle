@@ -12,7 +12,7 @@ class EmailType extends Type
 {
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
-        return 'FLOAT';
+        return 'STRING';
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): mixed

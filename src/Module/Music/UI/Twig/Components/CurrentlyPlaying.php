@@ -19,7 +19,6 @@ final class CurrentlyPlaying
     #[ExposeInTemplate]
     public string $mercureTopic = 'currently-playing-music';
 
-
     public function __construct(
         private MessageBusInterface $bus,
     ) {
