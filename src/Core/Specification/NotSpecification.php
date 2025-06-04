@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Specification;
 
-readonly class NotSpecification implements SpecificationInterface
+class NotSpecification implements SpecificationInterface
 {
     /**
      * @param Specification $specification

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Specification;
 
-readonly class AndSpecification implements SpecificationInterface
+class AndSpecification implements SpecificationInterface
 {
     /**
      * @var Specification[]
