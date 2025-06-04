@@ -38,5 +38,4 @@ return static function (RoutingConfigurator $routes): void {
         ->controller([AdminProductController::class, 'delete'])
         ->requirements(['id' => Requirement::UUID_V7])
         ->methods([Request::METHOD_DELETE]);
-
 };

@@ -22,10 +22,9 @@ class UnitOfMeasureType extends AbstractEnumType
         return self::NAME;
     }
 
-    // Optionnel: Si vous voulez que Doctrine connaisse ce type lors de la génération de schéma
-    // public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
-    // {
-    //     // Vous pouvez stocker cela comme une chaîne de longueur appropriée
-    //     return $platform->getVarcharTypeDeclarationSQL(['length' => '10']); // ex: 'kg', 'piece'
-    // }
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    {
+        // Vous pouvez stocker cela comme une chaîne de longueur appropriée
+        return $platform->getStringTypeDeclarationSQL(['length' => '10']); // ex: 'kg', 'piece'
+    }
 }

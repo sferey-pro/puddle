@@ -5,7 +5,7 @@
 {% block body_id 'user_show' %}
 
 {% block main %}
-    <twig:Semantic:Title content="{{ 'user.show' | trans }}" />
+    <twig:Semantic:Title title="{{ 'user.show'|trans }}" />
 
     <table class="table">
         <tbody>
@@ -25,7 +25,7 @@
                 <th>Roles</th>
                 <td>
                     {% for role in user.getEnumRoles() %}
-                        <twig:Role type="{{ role | trans }}" color="{{ role.getColors }}" />
+                        <twig:Role type="{{ role|trans }}" color="{{ role.getColors }}" />
                     {% endfor %}
                 </td>
             </tr>

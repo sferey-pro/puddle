@@ -17,7 +17,7 @@
                 <div class="container container-tight py-4">
                     <div class="text-center mb-4">
                         <a href="{{ path('homepage') }}" class="navbar-brand navbar-brand-autodark">
-                            <img class="mb-4" src="{{ asset('images/puddle-logo.png') }}" class="navbar-brand-image" alt="" width="72" height="57">
+                            <img class="mb-4" src="{{ asset('static/logo.png') }}" class="navbar-brand-image" alt="" width="72" height="57">
                         </a>
                     </div>
                     {{ include('default/_flash_messages.html.twig') }}
@@ -25,6 +25,5 @@
                 </div>
             </div>
         {% endblock %}
-        <twig:CurrentlyPlaying />
     </body>
 </html>

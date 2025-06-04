@@ -61,7 +61,7 @@ final readonly class Paginator implements PaginatorInterface
         return $this->paginator->getIterator();
     }
 
-    public function hasToPaginate(): bool
+    public function haveToPaginate(): bool
     {
         return $this->paginator->haveToPaginate();
     }

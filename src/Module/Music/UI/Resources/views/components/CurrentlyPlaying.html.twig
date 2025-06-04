@@ -1,15 +1,15 @@
 <div {{ attributes }}
     data-poll="delay(20000)|requestUpdate"
 >
-	<div class="toast-container bottom-0 end-0 p-3">
-		<div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" data-bs-toggle="toast">
-			<div class="toast-header">
-				<twig:ux:icon name="tabler:music-code" class="icon icon-2"/>
-				<strong class="ps-2 me-auto">J'écoute sur Spotify</strong>
-				<button type="button" class="ms-2 btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-			</div>
-			<div class="toast-body">
-                <turbo-frame data-live-ignore id="currently-playing-content" {{ turbo_stream_listen(this.mercureTopic | default('currently-playing-music')) }}>
+    <div class="toast-container bottom-0 end-0 p-3">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" data-bs-toggle="toast">
+            <div class="toast-header">
+                <twig:ux:icon name="tabler:music-code" class="icon icon-2"/>
+                <strong class="ps-2 me-auto">J'écoute sur Spotify</strong>
+                <button type="button" class="ms-2 btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <turbo-frame data-live-ignore id="currently-playing-content" {{ turbo_stream_listen(this.mercureTopic|default('currently-playing-music')) }}>
                     <div class="container container-slim">
                         <div class="text-center">
                             <div class="text-secondary mb-3">Chargement des données Spotify...</div>
@@ -18,8 +18,8 @@
                             </div>
                         </div>
                     </div>
-				</turbo-frame>
-			</div>
-		</div>
-	</div>
+                </turbo-frame>
+            </div>
+        </div>
+    </div>
 </div>

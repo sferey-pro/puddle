@@ -67,6 +67,12 @@ services:
       # - ./docker/mongodb/data:/data/db:rw
 ###< doctrine/mongodb-odm-bundle ###
 
+###> symfony/messenger-amqp ###
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports: [5672, 15672]
+###< symfony/messenger-amqp ###
+
 volumes:
   caddy_data:
   caddy_config:

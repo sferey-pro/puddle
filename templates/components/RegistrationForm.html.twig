@@ -5,7 +5,7 @@
         attr: {
             class: 'card card-md',
             novalidate: true,
-        }
+        },
     }) }}
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Create new account</h2>
@@ -15,18 +15,18 @@
             </div>
             <div class="mb-3">
                 {{ form_row(form.plainPassword, {
-                    label: 'Password'
+                    label: 'Password',
                 }) }}
             </div>
             <div class="mb-3">
                 {{ form_widget(form.agreeTerms, {
                     label: 'Agree the <a href="" tabindex="-1">terms and policy</a>.',
-                    label_html: true
+                    label_html: true,
                     })
                 }}
             </div>
             <div class="form-footer">
-                <button type="submit" class="btn btn-primary w-100 {{ this.hasValidationErrors ? 'disabled' : '' }}"">Create new account</button>
+                <button type="submit" class="btn btn-primary w-100 {{ this.hasValidationErrors ? 'disabled' : '' }}">Create new account</button>
             </div>
         </div>
         {{ form_rest(form) }}

@@ -23,6 +23,13 @@ enum CostComponentType: string
     {
         return match ($this) {
             self::RAW_MATERIAL => 'Matière Première',
+            self::DIRECT_LABOR => 'Coût de Main d\'œuvre directe',
+            self::PACKAGING => 'Emballage',
+            self::OPERATIONAL_FIXED_ALLOCATED => 'Part fixe opérationnelle allouée',
+            self::OPERATIONAL_VARIABLE_ALLOCATED => 'Part variable opérationnelle allouée',
+            self::TAX_FEE => 'Impôts et taxes spécifiques',
+            self::MARGIN_CONTINGENCY => 'Marge ou provision pour imprévus',
+            self::SALARY_ALLOCATED => 'Part du salaire allouée',
         };
     }
 }

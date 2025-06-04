@@ -1,4 +1,4 @@
-{% if paginator.hasToPaginate is defined %}
+{% if paginator.haveToPaginate is defined %}
     {% set start = (paginator.currentPage - 1) * paginator.getItemsPerPage + 1 %}
     {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
 

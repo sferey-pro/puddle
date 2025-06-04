@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\Enum;
 
-use Symfony\Contracts\Translation\TranslatableInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 /**
  * @see Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter
  *
@@ -18,7 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * @see AuthenticatedVoter::IS_REMEMBERED
  * @see AuthenticatedVoter::PUBLIC_ACCESS
  */
-enum Role: string implements TranslatableInterface
+enum Role: string
 {
     case SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     case ADMIN = 'ROLE_ADMIN';
@@ -34,17 +31,6 @@ enum Role: string implements TranslatableInterface
             Role::USER => 'green',
             Role::GUEST => 'blue',
             Role::ALLOWED_TO_SWITCH => 'gray',
-        };
-    }
-
-    public function trans(TranslatorInterface $translator, ?string $locale = null): string
-    {
-        return match ($this) {
-            self::SUPER_ADMIN => $translator->trans('Super Administrator', locale: $locale),
-            self::ADMIN => $translator->trans('Administrator', locale: $locale),
-            self::USER => $translator->trans('User', locale: $locale),
-            self::GUEST => $translator->trans('Guest', locale: $locale),
-            self::ALLOWED_TO_SWITCH => $translator->trans('Allowed to switch', locale: $locale),
         };
     }
 }

@@ -1,0 +1,92 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% block title %}Gestion des Postes de Coûts{% endblock %}
+
+{% block page_title %}Liste des Postes de Coûts{% endblock %}
+
+{% block page_title_actions %}
+    <a href="{{ path('cost_item_new') }}" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+        <twig:ux:icon name="tabler:plus" class="icon icon-2" />
+        Create new cost item
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="row row-cards">
+        <div class="col-12">
+            {% if costItems.paginator is defined and costItems.paginator().haveToPaginate() %}
+                <twig:Paginator:ItemsPerPageForm />
+            {% endif %}
+                {% for type in costItemTypes %}
+                    {% set itemsForType = groupedCostItems[type.value] %}
+
+                    {{ component('Table', {
+                        title: type.getLabel() ~ ' (' ~ itemsForType|length ~ ')',
+                        items: itemsForType,
+                        columns: [
+                            { label: 'Nom', path: 'name' },
+                            { label: 'Montant Cible', path: 'targetAmount', format: 'currency' },
+                            { label: 'Couvert', path: 'currentAmount', format: 'currency' },
+                            { label: 'Période Début', path: 'startDate', format: 'date' },
+                            {
+                                label: 'Statut',
+                                path: 'status',
+                                format: 'badge',
+                                enum_class: 'App\\Module\\CostManagement\\Domain\\Enum\\CostItemStatus'
+                            }
+                        ],
+                        actions: [
+                            { route: 'cost_item_show', icon: 'tabler:eye', title: 'Voir' },
+                        ]
+                    }) }}
+
+                    <div class="my-4"></div>
+
+                {% endfor %}
+
+                {% set unrecognizedItems = groupedCostItems.unrecognized|default([]) %}
+                {% if unrecognizedItems is not empty %}
+                    {{ component('Table', {
+                        title: 'Coûts de type non reconnu (' ~ unrecognizedItems|length ~ ')',
+                        items: unrecognizedItems,
+                        columns: [
+                            { label: 'Nom', path: 'name' },
+                            { label: 'Type (brut)', path: 'type' },
+                            { label: 'Montant Cible', path: 'targetAmount', format: 'currency' },
+                            { label: 'Période Début', path: 'startDate', format: 'date' },
+                            {
+                                label: 'Statut',
+                                path: 'status',
+                                format: 'badge',
+                                enum_class: 'App\\Module\\CostManagement\\Domain\\Enum\\CostItemStatus'
+                            }
+                        ],
+                        actions: [
+                            { route: 'cost_item_show', icon: 'tabler:eye', title: 'Voir' },
+                        ]
+                    }) }}
+                {% endif %}
+
+            {# Pagination #}
+            {% if costItems.paginator is defined and costItems.paginator().haveToPaginate() %}
+                {% set paginator = costItems.paginator() %}
+                {% set start = (paginator.getCurrentPage - 1) * paginator.getItemsPerPage + 1 %}
+                {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
+
+                <div class="card-footer">
+                    <div class="row g-2 justify-content-center justify-content-sm-between">
+                        <div class="col-auto d-flex align-items-center">
+                            <p class="m-0 text-secondary">Showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong> of <strong>{{ paginator.getTotalItems }} entries</strong></p>
+                        </div>
+                        <div class="col-auto">
+                            {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
+                                routeName: app.request.attributes.get('_route'),
+                                routeParams: app.request.query.all|merge({page: paginator.getPagerFanta().getCurrentPage()}),
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

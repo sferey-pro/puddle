@@ -15,6 +15,11 @@ doctrine_mongodb:
                     type: xml
                     dir: '%kernel.project_dir%/src/Module/UserManagement/Infrastructure/ReadModel/Mapping'
                     prefix: 'App\Module\UserManagement\Application\ReadModel'
+                CostManagement:
+                    is_bundle: false
+                    type: xml
+                    dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/ReadModel/Mapping'
+                    prefix: 'App\Module\CostManagement\Application\ReadModel'
 
 when@prod:
     doctrine_mongodb:

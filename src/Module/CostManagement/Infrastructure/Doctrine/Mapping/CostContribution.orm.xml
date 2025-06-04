@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Module\CostManagement\Domain\CostContribution" table="cost_contribution">
+        <embedded name="id" class="App\Module\CostManagement\Domain\ValueObject\CostContributionId" use-column-prefix="false" />
+
+        <many-to-one field="costItem" target-entity="App\Module\CostManagement\Domain\CostItem" inversed-by="contributions">
+            <join-column name="cost_item_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+
+        <embedded name="amount" class="App\Module\SharedContext\Domain\ValueObject\Money" use-column-prefix="false"/>
+        <field name="contributedAt" type="datetime_immutable"/>
+
+        <embedded name="sourceProductId" class="App\Module\SharedContext\Domain\ValueObject\ProductId" column-prefix="source_product_" />
+    </entity>
+</doctrine-mapping>

@@ -11,7 +11,6 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class ProductCatalogBundle extends AbstractBundle implements CompilerPassInterface
 {
-
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
@@ -21,13 +20,11 @@ class ProductCatalogBundle extends AbstractBundle implements CompilerPassInterfa
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-
-        $container->import(dirname(__DIR__, 2).'/Resources/config/services.php');
-        $container->import(dirname(__DIR__, 2).'/Resources/config/{packages}/*.{php,yaml}');
-
+        $container->import(\dirname(__DIR__, 2).'/Resources/config/services.php');
+        $container->import(\dirname(__DIR__, 2).'/Resources/config/{packages}/*.{php,yaml}');
     }
 
-    public function process(ContainerBuilder $container) {
-
+    public function process(ContainerBuilder $container)
+    {
     }
 }
