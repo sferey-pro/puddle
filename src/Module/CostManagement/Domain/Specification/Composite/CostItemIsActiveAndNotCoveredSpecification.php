@@ -11,17 +11,21 @@ use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification
 use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
 
 /**
- * Specifies that a CostItem is active AND not fully covered.
- * This is a composite specification.
+ * Spécification composite qui vérifie qu'un CostItem est actif ET non entièrement couvert.
+ *
+ * @extends AndSpecification<CostItem>
  */
 final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
 {
+    /**
+     * Construit la spécification.
+     * Un CostItem est considéré "actif et non couvert" si :
+     * 1. Il est actif (vérifié par CostItemIsActiveSpecification)
+     * ET
+     * 2. Il N'EST PAS entièrement couvert (vérifié par la négation de CostItemIsFullyCoveredSpecification)
+     */
     public function __construct()
     {
-        // A CostItem is considered "active and not covered" if:
-        // 1. It is active (checked by CostItemIsActiveSpecification)
-        // AND
-        // 2. It is NOT fully covered (checked by the negation of CostItemIsFullyCoveredSpecification)
         parent::__construct(
             new CostItemIsActiveSpecification(),
             new NotSpecification(new CostItemIsFullyCoveredSpecification())
@@ -29,9 +33,7 @@ final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
     }
 
     /**
-     * Checks if the given CostItem satisfies the specification.
-     *
-     * @param CostItem $candidate the CostItem to check
+     * {@inheritdoc}
      */
     public function isSatisfiedBy($candidate): bool
     {

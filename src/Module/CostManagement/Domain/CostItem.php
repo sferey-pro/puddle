@@ -11,10 +11,17 @@ use App\Module\CostManagement\Domain\Event\CostItemArchived;
 use App\Module\CostManagement\Domain\Event\CostItemCovered;
 use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemReactivated;
+use App\Module\CostManagement\Domain\Exception\CostItemAlreadyArchivedException;
+use App\Module\CostManagement\Domain\Exception\CostItemCannotBeArchivedException;
+use App\Module\CostManagement\Domain\Exception\CostItemCannotBeReactivatedException;
+use App\Module\CostManagement\Domain\Exception\CostItemCannotReceiveContributionException;
+use App\Module\CostManagement\Domain\Exception\CostItemNotArchivedException;
+use App\Module\CostManagement\Domain\Exception\InvalidContributionAmountException;
+use App\Module\CostManagement\Domain\Exception\TargetAmountUpdateConflictException;
 use App\Module\CostManagement\Domain\Specification\CostItemCanBeArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemCanBeReactivatedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemCanReceiveContributionSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemIsAlreadyArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemTargetCanBeSafelyUpdatedSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
@@ -23,8 +30,14 @@ use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
-use Webmozart\Assert\Assert;
 
+/**
+ * Représente un poste de coût individuel.
+ *
+ * C'est une racine d'agrégat qui encapsule la logique métier pour gérer
+ * les objectifs financiers, les contributions, et le cycle de vie d'un poste de coût
+ * (actif, couvert, archivé).
+ */
 class CostItem extends AggregateRoot
 {
     use DomainEventTrait;
@@ -37,14 +50,12 @@ class CostItem extends AggregateRoot
     private CostItemStatus $status;
 
     private function __construct(
-        private CostItemId $id,
+        private readonly CostItemId $id,
         CostItemName $name,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ) {
-        Assert::true($targetAmount->getAmount() >= 0, 'Target amount cannot be negative.');
-
         $this->name = $name;
         $this->targetAmount = $targetAmount;
         $this->coveragePeriod = $coveragePeriod;
@@ -53,6 +64,9 @@ class CostItem extends AggregateRoot
         $this->status = CostItemStatus::ACTIVE;
     }
 
+    /**
+     * Factory method pour créer un nouveau poste de coût.
+     */
     public static function create(
         CostItemId $id,
         CostItemName $name,
@@ -108,97 +122,53 @@ class CostItem extends AggregateRoot
         return $this->status;
     }
 
+    /**
+     * Ajoute une contribution financière à ce poste de coût.
+     *
+     * @throws CostItemCannotReceiveContributionException Si le poste de coût ne peut pas recevoir de contribution.
+     * @throws InvalidContributionAmountException Si le montant de la contribution est invalide.
+     */
     public function addContribution(Money $contributionAmount): void
     {
-        $spec = new CostItemCanReceiveContributionSpecification();
-        if (!$spec->isSatisfiedBy($this)) {
-            throw new \LogicException('Cannot add contribution to this cost item at its current state.');
+        if (!(new CostItemCanReceiveContributionSpecification())->isSatisfiedBy($this)) {
+            throw CostItemCannotReceiveContributionException::notActive($this->id);
         }
 
-        Assert::eq($contributionAmount->getCurrency(), $this->targetAmount->getCurrency(), 'Contribution currency must match target currency.');
-        Assert::true($contributionAmount->getAmount() > 0, 'Contribution amount must be positive.');
+        if ($contributionAmount->getAmount() <= 0) {
+            throw InvalidContributionAmountException::mustBePositive();
+        }
 
         $this->currentAmountCovered = $this->currentAmountCovered->add($contributionAmount);
 
         $this->recordDomainEvent(new CostContributionReceived(
-            $this->id(),
+            $this->id,
             $contributionAmount,
-            $this->currentAmountCovered()
+            $this->currentAmountCovered
         ));
 
-        $isCoveredSpec = new CostItemIsFullyCoveredSpecification();
-        if ($isCoveredSpec->isSatisfiedBy($this)) {
+        if ((new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
             $this->markAsCovered();
         }
     }
 
-    private function markAsCovered(): void
-    {
-        $isActiveSpec = new CostItemIsActiveSpecification();
-        if ($isActiveSpec->isSatisfiedBy($this)) {
-            $this->status = CostItemStatus::FULLY_COVERED;
-            $this->recordDomainEvent(new CostItemCovered(
-                $this->id(),
-                $this->currentAmountCovered()
-            ));
-        }
-    }
-
-    public function archive(?\DateTimeImmutable $currentDate = null): void
-    {
-        $currentDate = $currentDate ?? new \DateTimeImmutable();
-        $spec = new CostItemCanBeArchivedSpecification($currentDate);
-
-        if (!$spec->isSatisfiedBy($this)) {
-            throw new \LogicException('Cost item cannot be archived at this time based on its state or period.');
-        }
-
-        if (CostItemStatus::ARCHIVED !== $this->status) {
-            $this->status = CostItemStatus::ARCHIVED;
-            $this->recordDomainEvent(new CostItemArchived(
-                $this->id()
-            ));
-        }
-    }
-
-    public function reactivate(?\DateTimeImmutable $currentDate = null): void
-    {
-        $currentDate = $currentDate ?? new \DateTimeImmutable();
-        // Vous devrez créer cette Spécification
-        $spec = new CostItemCanBeReactivatedSpecification($currentDate);
-
-        if (!$spec->isSatisfiedBy($this)) {
-            throw new \LogicException('Cost item cannot be reactivated at this time.');
-        }
-
-        // Déterminer le nouveau statut après réactivation
-        $isCoveredSpec = new CostItemIsFullyCoveredSpecification();
-        $newStatus = $isCoveredSpec->isSatisfiedBy($this) ? CostItemStatus::FULLY_COVERED : CostItemStatus::ACTIVE;
-
-        $this->status = $newStatus;
-        $this->recordDomainEvent(new CostItemReactivated(
-            $this->id(),
-            $this->status
-        ));
-    }
-
+    /**
+     * Met à jour les détails du poste de coût.
+     *
+     * @throws TargetAmountUpdateConflictException Si le nouveau montant cible est inférieur au montant déjà couvert.
+     * @throws \LogicException Si l'item n'est pas dans un état modifiable.
+     */
     public function updateDetails(
         CostItemName $name,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
-        ?string $description,
-        // \DateTimeImmutable $currentDate = null // Optionnel si des règles de MàJ dépendent du temps
+        ?string $description
     ): void {
-        // Règle 1: L'item doit être modifiable (ex: actif)
-        $canBeUpdatedSpec = new CostItemIsActiveSpecification(); // Ou une spec plus spécifique "CanUpdateDetails"
-        if (!$canBeUpdatedSpec->isSatisfiedBy($this)) {
-            throw new \LogicException('Only active cost items can have their details updated.');
+        if ($this->status->equals(CostItemStatus::ARCHIVED)) {
+            throw new \LogicException('Les détails d\'un poste archivé ne peuvent être modifiés.');
         }
 
-        // Règle 2: Le nouveau montant cible est valide
-        $targetUpdateSpec = new CostItemTargetCanBeSafelyUpdatedSpecification($targetAmount);
-        if (!$targetUpdateSpec->isSatisfiedBy($this)) { // On passe $this qui a currentAmountCovered
-            throw new \LogicException('New target amount cannot be less than the currently covered amount or other validation failed.');
+        if (!(new CostItemTargetCanBeSafelyUpdatedSpecification($targetAmount))->isSatisfiedBy($this)) {
+            throw TargetAmountUpdateConflictException::newTargetBelowCurrent($targetAmount, $this->currentAmountCovered);
         }
 
         $oldName = $this->name;
@@ -212,23 +182,79 @@ class CostItem extends AggregateRoot
         $this->description = $description;
 
         $this->recordDomainEvent(new CostItemDetailsUpdated(
-            $this->id(),
-            $this->name,
-            $oldName,
-            $this->targetAmount,
-            $oldTargetAmount,
-            $this->coveragePeriod,
-            $oldCoveragePeriod,
-            $this->description,
-            $oldDescription
+            $this->id,
+            $this->name, $oldName,
+            $this->targetAmount, $oldTargetAmount,
+            $this->coveragePeriod, $oldCoveragePeriod,
+            $this->description, $oldDescription
         ));
 
-        // Après une mise à jour, vérifier si l'item devient couvert si son statut était actif
-        if (CostItemStatus::ACTIVE === $this->status) {
-            $isCoveredSpec = new CostItemIsFullyCoveredSpecification();
-            if ($isCoveredSpec->isSatisfiedBy($this)) {
-                $this->markAsCovered();
+        if ($this->status === CostItemStatus::ACTIVE && (new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
+            $this->markAsCovered();
+        }
+    }
+
+    /**
+     * Archive le poste de coût, le rendant inactif.
+     *
+     * @throws CostItemAlreadyArchivedException Si le poste est déjà archivé.
+     * @throws CostItemCannotBeArchivedException Si les conditions pour l'archivage ne sont pas remplies.
+     */
+    public function archive(?\DateTimeImmutable $currentDate = null): void
+    {
+        if ((new CostItemIsAlreadyArchivedSpecification())->isSatisfiedBy($this)) {
+            throw CostItemAlreadyArchivedException::withId($this->id);
+        }
+
+        $currentDate = $currentDate ?? new \DateTimeImmutable();
+        if (!(new CostItemCanBeArchivedSpecification($currentDate))->isSatisfiedBy($this)) {
+            throw CostItemCannotBeArchivedException::forId($this->id);
+        }
+
+        $this->status = CostItemStatus::ARCHIVED;
+        $this->recordDomainEvent(new CostItemArchived($this->id));
+    }
+
+    /**
+     * Réactive un poste de coût archivé.
+     *
+     * @throws CostItemNotArchivedException si le poste n'est pas actuellement archivé.
+     * @throws CostItemCannotBeReactivatedException si les conditions pour la réactivation ne sont pas remplies (ex: période expirée).
+     */
+    public function reactivate(?\DateTimeImmutable $currentDate = null): void
+    {
+        $currentDate = $currentDate ?? new \DateTimeImmutable();
+
+        // On vérifie toutes les conditions de réactivation en une fois.
+        if (!(new CostItemCanBeReactivatedSpecification($currentDate))->isSatisfiedBy($this)) {
+            // Si la spécification échoue, on vérifie la raison pour lancer une exception plus précise.
+            if (!(new CostItemIsAlreadyArchivedSpecification())->isSatisfiedBy($this)) {
+                throw CostItemNotArchivedException::withId($this->id);
             }
+
+            // Si l'état était bien archivé, l'échec vient forcément de la période de couverture.
+            throw CostItemCannotBeReactivatedException::coveragePeriodEnded($this->id);
+        }
+
+        // Détermination du nouveau statut après réactivation.
+        $this->status = (new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)
+            ? CostItemStatus::FULLY_COVERED
+            : CostItemStatus::ACTIVE;
+
+        $this->recordDomainEvent(new CostItemReactivated(
+            $this->id(),
+            $this->status
+        ));
+    }
+
+    /**
+     * Marque le poste de coût comme étant entièrement couvert.
+     */
+    private function markAsCovered(): void
+    {
+        if ($this->status->equals(CostItemStatus::ACTIVE)) {
+            $this->status = CostItemStatus::FULLY_COVERED;
+            $this->recordDomainEvent(new CostItemCovered($this->id, $this->currentAmountCovered));
         }
     }
 }

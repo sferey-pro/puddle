@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Domain\Enum;
 
 use App\Core\Enum\EnumJsonSerializableTrait;
-use Symfony\Contracts\Translation\TranslatableInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
-enum CostItemStatus: string implements TranslatableInterface
+/**
+ * Représente les différents statuts qu'un poste de coût (CostItem) peut avoir.
+ *
+ * - ACTIVE: Le poste de coût est en cours et peut recevoir des contributions.
+ * - FULLY_COVERED: L'objectif de coût a été atteint.
+ * - ARCHIVED: Le poste de coût est archivé et n'est plus modifiable (sauf pour réactivation).
+ */
+enum CostItemStatus: string
 {
     use EnumJsonSerializableTrait;
 
@@ -27,15 +32,6 @@ enum CostItemStatus: string implements TranslatableInterface
             self::ACTIVE => 'Actif',
             self::FULLY_COVERED => 'Entièrement Couvert',
             self::ARCHIVED => 'Archivé',
-        };
-    }
-
-    public function trans(TranslatorInterface $translator, ?string $locale = null): string
-    {
-        return match ($this) {
-            self::ACTIVE => $translator->trans('Active', locale: $locale),
-            self::FULLY_COVERED => $translator->trans('Fully Covered', locale: $locale),
-            self::ARCHIVED => $translator->trans('Archived', locale: $locale),
         };
     }
 }

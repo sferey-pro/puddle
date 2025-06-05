@@ -12,6 +12,7 @@ doctrine:
         types:
             cost_item_status_enum: App\Module\CostManagement\Infrastructure\Doctrine\Types\CostItemStatusType
             unit_of_measure_enum: App\Module\ProductCatalog\Infrastructure\Doctrine\Types\UnitOfMeasureType
+
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

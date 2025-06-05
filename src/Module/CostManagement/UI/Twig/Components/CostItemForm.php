@@ -29,7 +29,7 @@ final class CostItemForm extends AbstractController
     use DefaultActionTrait;
 
     #[LiveProp()]
-    public ?AddCostItemDTO $initialFormData;
+    public ?AddCostItemDTO $data;
 
     public function __construct(
         private readonly CommandBusInterface $commandBus,
@@ -43,7 +43,7 @@ final class CostItemForm extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         // On passe le DTO (formDto) qui sert de modèle de données au formulaire.
-        return $this->createForm(CostItemFormType::class, $this->initialFormData);
+        return $this->createForm(CostItemFormType::class, $this->data);
     }
 
     /**
