@@ -9,11 +9,10 @@ use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 
 /**
- * @extends AbstractSpecification<CostItem>
+ * Spécification qui vérifie si un CostItem peut être réactivé.
  *
- * Specifies that a CostItem can be reactivated.
- * A CostItem can be reactivated if it is currently archived
- * and its coverage period has not ended yet.
+ * Un item peut être réactivé seulement s'il est actuellement archivé
+ * ET que sa période de couverture n'est pas encore terminée.
  */
 final class CostItemCanBeReactivatedSpecification extends AbstractSpecification
 {

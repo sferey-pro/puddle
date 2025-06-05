@@ -12,6 +12,9 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Event\DomainEventInterface;
 
+/**
+ * Événement émis lorsqu'un nouveau poste de coût est créé avec succès.
+ */
 final class CostItemAdded extends DomainEvent implements DomainEventInterface
 {
     public function __construct(

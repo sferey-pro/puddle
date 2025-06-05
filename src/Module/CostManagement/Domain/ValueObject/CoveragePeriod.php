@@ -8,6 +8,10 @@ use App\Module\CostManagement\Domain\Specification\CoveragePeriodHasEndedSpecifi
 use App\Module\CostManagement\Domain\Specification\CoveragePeriodIsActiveSpecification;
 use Webmozart\Assert\Assert;
 
+/**
+ * Représente la période de temps durant laquelle un poste de coût est pertinent ou actif.
+ * Ce Value Object garantit que la date de fin est toujours postérieure à la date de début.
+ */
 final readonly class CoveragePeriod
 {
     private \DateTimeImmutable $startDate;

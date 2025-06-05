@@ -9,11 +9,10 @@ use App\Module\CostManagement\Domain\CostItem;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 
 /**
- * @extends AbstractSpecification<CostItem>
+ * Spécification qui garantit que le montant cible d'un CostItem peut être mis à jour en toute sécurité.
  *
- * Specifies that the target amount of a CostItem can be safely updated.
- * An update is safe if the new target amount is not less than the currently covered amount.
- * This prevents scenarios where a cost item could become "over-covered" by reducing its target.
+ * Une mise à jour est considérée comme sûre si le nouveau montant cible n'est pas inférieur
+ * au montant déjà couvert, évitant ainsi un état incohérent (sur-couverture).
  */
 final class CostItemTargetCanBeSafelyUpdatedSpecification extends AbstractSpecification
 {

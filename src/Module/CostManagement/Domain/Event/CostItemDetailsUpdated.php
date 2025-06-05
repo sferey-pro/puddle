@@ -11,6 +11,9 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Event\DomainEventInterface;
 
+/**
+ * Événement émis lorsque les détails principaux d'un poste de coût sont mis à jour.
+ */
 final class CostItemDetailsUpdated extends DomainEvent implements DomainEventInterface
 {
     public function __construct(

@@ -9,6 +9,9 @@ use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Event\DomainEventInterface;
 
+/**
+ * Événement émis lorsqu'un poste de coût archivé est réactivé.
+ */
 final class CostItemReactivated extends DomainEvent implements DomainEventInterface
 {
     public function __construct(

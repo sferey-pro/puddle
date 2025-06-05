@@ -9,11 +9,10 @@ use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemIsActiveAndNotCoveredSpecification;
 
 /**
- * @extends AbstractSpecification<CostItem>
+ * Spécification qui vérifie si un CostItem peut être archivé.
  *
- * Specifies that a CostItem can be archived.
- * A CostItem can be archived if it is currently active and not fully covered,
- * OR if its coverage period has ended.
+ * Un poste de coût peut être archivé s'il n'est pas déjà archivé ET
+ * (il est actif mais non couvert OU sa période de couverture est terminée).
  */
 final class CostItemCanBeArchivedSpecification extends AbstractSpecification
 {

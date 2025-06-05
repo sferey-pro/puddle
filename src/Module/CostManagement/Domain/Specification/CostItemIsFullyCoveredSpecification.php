@@ -9,10 +9,10 @@ use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 
 /**
- * @extends AbstractSpecification<CostItem>
+ * Spécification qui vérifie si un CostItem est entièrement couvert.
  *
- * Specifies that a CostItem has its current amount fully covered
- * in relation to its target amount.
+ * La condition est remplie si le statut est déjà FULLY_COVERED, ou si le
+ * montant actuel est supérieur ou égal au montant cible.
  */
 final class CostItemIsFullyCoveredSpecification extends AbstractSpecification
 {
