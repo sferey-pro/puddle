@@ -13,8 +13,8 @@
                 We've sent you a magic link to <strong class="mark">{{ email }}</strong>.<br />
                 Please click the link to confirm your address.
             </p>
-            <div {{ stimulus_controller('countdown', { 'timeLeft': 5, 'callbackFunctionName': 'enabledForm', 'callbackIdentifier': 'disable'}) }}>
-                <form action="{{ path('login_link') }}" method="POST" {{ stimulus_controller('disable', {'withEnabled': "Resend E-mail", 'withDisabled': 'Wait...','disabled': true}) }} {{ stimulus_target('countdown', 'callback') }}>
+            <div {{ stimulus_controller('countdown', {timeLeft: 5, callbackFunctionName: 'enabledForm', callbackIdentifier: 'disable'}) }}>
+                <form action="{{ path('login_link') }}" method="POST" {{ stimulus_controller('disable', {withEnabled: 'Resend E-mail', withDisabled: 'Wait...', disabled: true}) }} {{ stimulus_target('countdown', 'callback') }}>
                     <input type="hidden" name="_username" value="{{ email }}">
                     <input class="btn btn-primary" type="submit" value="" />
                     <span class="p-4 fs-3" {{ stimulus_target('countdown', 'timer') }}></span>

@@ -33,7 +33,7 @@ class CostItemView
         string $status,
         float $progressPercentage,
         bool $isCovered,
-        bool $isActiveNow
+        bool $isActiveNow,
     ) {
         $this->id = $id;
         $this->name = $name;

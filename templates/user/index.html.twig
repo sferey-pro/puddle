@@ -5,7 +5,7 @@
 {% block body_id 'user_index' %}
 
 {% block main %}
-    <twig:Semantic:Title title="{{ 'user.index' | trans }}" >
+    <twig:Semantic:Title title="{{ 'user.index'|trans }}" >
         <div class="col-auto ms-auto d-print-none">
             <twig:Button:CreateNew routeName="user_new" withIcon="tabler:plus" />
         </div>
@@ -28,7 +28,7 @@
                                     <tbody>
                                         {% for user in users %}
                                             <tr id="user_{{ user.userId }}">
-                                                {{ include('user/_item.html.twig', { user: user}) }}
+                                                {{ include('user/_item.html.twig', {user: user}) }}
                                             </tr>
                                         {% else %}
                                             <tr>
@@ -52,7 +52,7 @@
                                     <div class="col-auto">
                                         {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
                                             routeName: app.request.attributes.get('_route'),
-                                            routeParams: app.request.query.all|merge({'page': paginator.getPagerFanta().getCurrentPage()})
+                                            routeParams: app.request.query.all|merge({page: paginator.getPagerFanta().getCurrentPage()}),
                                         }) }}
                                     </div>
                                 </div>
@@ -65,4 +65,3 @@
 
     </div>
 {% endblock %}
-

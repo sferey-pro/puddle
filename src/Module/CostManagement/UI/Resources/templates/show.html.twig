@@ -86,7 +86,7 @@
                                     {% elseif costItem.status == 'archived' %}bg-secondary-lt
                                     {% else %}bg-dark-lt
                                     {% endif %} fs-6">
-                                    {{ costItem.status|replace({'_': ' '})|capitalize }}
+                                    {{ costItem.status|replace({_: ' '})|capitalize }}
                                 </span>
                             </p>
                         </div>

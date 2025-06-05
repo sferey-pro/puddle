@@ -39,7 +39,7 @@
                         <tbody>
                             {% for item in costItems %}
                                 <tr id="product_{{ item.id }}">
-                                    {{ include('@CostManagement/_item.html.twig', { costItem: item}) }}
+                                    {{ include('@CostManagement/_item.html.twig', {costItem: item}) }}
                                 </tr>
 
                             {% else %}
@@ -68,7 +68,7 @@
                             <div class="col-auto">
                                 {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
                                     routeName: app.request.attributes.get('_route'),
-                                    routeParams: app.request.query.all|merge({'page': paginator.getPagerFanta().getCurrentPage()})
+                                    routeParams: app.request.query.all|merge({page: paginator.getPagerFanta().getCurrentPage()}),
                                 }) }}
                             </div>
                         </div>

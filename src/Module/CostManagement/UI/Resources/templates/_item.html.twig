@@ -1,6 +1,6 @@
 <tr>
     <td>
-        <a href="{{ path('cost_item_show', { id: item.id }) }}">{{ item.name }}</a>
+        <a href="{{ path('cost_item_show', {id: item.id}) }}">{{ item.name }}</a>
     </td>
     <td class="text-end">{{ item.targetAmount|format_currency(item.currency) }}</td>
     <td class="text-end">{{ item.currentAmount|format_currency(item.currency) }}</td>
@@ -25,7 +25,7 @@
         <span
             class="badge {% if item.status == 'active' and item.isActiveNow %}bg-azure-lt {% elseif item.status == 'active' and not item.isActiveNow %}bg-orange-lt {% elseif item.status == 'fully_covered' %}bg-green-lt {% elseif item.status == 'archived' %}bg-secondary-lt {% else %}bg-dark-lt {% endif %}"
         >
-            {{ item.status|replace({'_': ' '})|capitalize }}
+            {{ item.status|replace({_: ' '})|capitalize }}
         </span>
     </td>
     <td>{{ item.startDate|date('d/m/Y') }}</td>
@@ -38,7 +38,7 @@
         {% endif %}
     </td>
     <td class="text-end">
-        <a href="{{ path('cost_item_show', { id: item.id }) }}" class="btn btn-sm btn-outline-primary">
+        <a href="{{ path('cost_item_show', {id: item.id}) }}" class="btn btn-sm btn-outline-primary">
             <twig:ux:icon name="tabler:eye" class="icon" />
             Voir
         </a>

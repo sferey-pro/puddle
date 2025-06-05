@@ -11,7 +11,7 @@
         </span>
         <div class="d-none d-xl-block ps-2">
             <div>{{ app.user ? app.user.username : 'Visiteur' }}</div>
-            <div class="mt-1 small text-secondary">{{ app.user and app.user.mainRole ? app.user.mainRole.value|replace({'ROLE_': ''})|capitalize : '' }}</div>
+            <div class="mt-1 small text-secondary">{{ app.user and app.user.mainRole ? app.user.mainRole.value|replace({ROLE_: ''})|capitalize : '' }}</div>
         </div>
     </a>
     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

@@ -1,10 +1,10 @@
 <div {{ attributes }}>
-    {{ form_start(form, { attr: {
+    {{ form_start(form, {attr: {
         'data-action': 'live#action:prevent',
         'data-live-action-param': 'save',
         novalidate: true,
-        class: "space-y"
-    } }) }}
+        class: 'space-y',
+    }}) }}
             <div class="mb-3">
                     {{ form_row(form.name) }}
             </div>

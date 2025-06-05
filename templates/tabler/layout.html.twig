@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="{{ app.request.locale }}" {% if app.user and app.user.theme == 'dark' %}data-bs-theme="dark"{% else %}data-bs-theme="light"{% endif %}>
 <head>
-    {% include '@Tabler/includes/meta.html.twig' %}
+    {{ include('@Tabler/includes/meta.html.twig') }}
     <title>{% block title %}Puddle Project{% endblock %}</title>
-    {% include '@Tabler/includes/favicons.html.twig' %}
+    {{ include('@Tabler/includes/favicons.html.twig') }}
     <style>
         .sf-toolbar {
             position:absolute;
@@ -19,11 +19,11 @@
 <body>
     <div class="page">
         {% block sidebar %}
-            {% include '@Tabler/partials/_sidebar.html.twig' %}
+            {{ include('@Tabler/partials/_sidebar.html.twig') }}
         {% endblock %}
 
         {% block navbar %}
-            {% include '@Tabler/partials/_navbar.html.twig' %}
+            {{ include('@Tabler/partials/_navbar.html.twig') }}
         {% endblock %}
 
         <div class="page-wrapper">
@@ -57,7 +57,7 @@
             <div class="page-body">
                 <div class="container-xl">
                     {% block flash_messages %}
-                        {% include '@Tabler/partials/_flash_messages.html.twig' %}
+                        {{ include('@Tabler/partials/_flash_messages.html.twig') }}
                     {% endblock %}
 
                     {% block content %}{% endblock %}
@@ -65,7 +65,7 @@
             </div>
 
             {% block footer %}
-                {% include '@Tabler/partials/_footer.html.twig' %}
+                {{ include('@Tabler/partials/_footer.html.twig') }}
             {% endblock %}
         </div>
     </div>

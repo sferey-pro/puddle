@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 final class CostItemProjector implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly CostItemViewRepositoryInterface $repository
+        private readonly CostItemViewRepositoryInterface $repository,
     ) {
     }
 
@@ -131,7 +131,6 @@ final class CostItemProjector implements EventSubscriberInterface
         $this->recalculateIsActiveNow($view);
         $this->repository->save($view, true);
     }
-
 
     private function findView(CostItemId $costItemId): ?CostItemView
     {
