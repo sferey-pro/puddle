@@ -7,3 +7,4 @@ twig_component:
         App\Shared\UI\Twig\Components\: 'components/'
         App\Module\Music\UI\Twig\Components\: '@MusicUI/components/'
         App\Module\ProductCatalog\UI\Twig\Components\: '@ProductCatalog/components/'
+        App\Module\CostManagement\UI\Twig\Components\: '@CostManagement/components/'

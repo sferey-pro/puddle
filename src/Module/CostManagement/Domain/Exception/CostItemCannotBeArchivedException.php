@@ -10,6 +10,6 @@ final class CostItemCannotBeArchivedException extends \DomainException
 {
     public static function forId(CostItemId $id, string $reason = 'The CostItem cannot be archived due to current business rules.'): self
     {
-        return new self(sprintf('CostItem with ID "%s": %s', $id, $reason));
+        return new self(\sprintf('CostItem with ID "%s": %s', $id, $reason));
     }
 }

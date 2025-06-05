@@ -51,31 +51,35 @@ final class Money implements \Stringable
     {
         Assert::true(
             $this->currency === $other->currency,
-            sprintf('Cannot compare amounts with different currencies. Got %s and %s.', $this->currency, $other->currency)
+            \sprintf('Cannot compare amounts with different currencies. Got %s and %s.', $this->currency, $other->currency)
         );
     }
 
     public function isGreaterThan(self $other): bool
     {
         $this->assertSameCurrency($other);
+
         return $this->amount > $other->amount;
     }
 
     public function isGreaterThanOrEqual(self $other): bool
     {
         $this->assertSameCurrency($other);
+
         return $this->amount >= $other->amount;
     }
 
     public function isLessThan(self $other): bool
     {
         $this->assertSameCurrency($other);
+
         return $this->amount < $other->amount;
     }
 
     public function isLessThanOrEqual(self $other): bool
     {
         $this->assertSameCurrency($other);
+
         return $this->amount <= $other->amount;
     }
 

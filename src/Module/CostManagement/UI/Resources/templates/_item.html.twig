@@ -1,0 +1,46 @@
+<tr>
+    <td>
+        <a href="{{ path('cost_item_show', { id: item.id }) }}">{{ item.name }}</a>
+    </td>
+    <td class="text-end">{{ item.targetAmount|format_currency(item.currency) }}</td>
+    <td class="text-end">{{ item.currentAmount|format_currency(item.currency) }}</td>
+    <td>
+        <div class="progress progress-sm">
+            <div
+                class="progress-bar {% if item.isCovered %}bg-success{% elseif item.isActiveNow %}bg-azure{% else %}bg-blue{% endif %}"
+                style="width: {{ item.progressPercentage }}%"
+                role="progressbar"
+                aria-valuenow="{{ item.progressPercentage }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            >
+                <span class="visually-hidden">{{ item.progressPercentage|round(2) }}%</span>
+            </div>
+        </div>
+        <small class="text-muted">{{ item.progressPercentage|round(2) }}%</small>
+    </td>
+    <td>
+        {# Vous aurez peut-être besoin d'un filtre Twig pour traduire les statuts #} {# ou de les mapper à des classes
+        de badge spécifiques #}
+        <span
+            class="badge {% if item.status == 'active' and item.isActiveNow %}bg-azure-lt {% elseif item.status == 'active' and not item.isActiveNow %}bg-orange-lt {% elseif item.status == 'fully_covered' %}bg-green-lt {% elseif item.status == 'archived' %}bg-secondary-lt {% else %}bg-dark-lt {% endif %}"
+        >
+            {{ item.status|replace({'_': ' '})|capitalize }}
+        </span>
+    </td>
+    <td>{{ item.startDate|date('d/m/Y') }}</td>
+    <td>{{ item.endDate|date('d/m/Y') }}</td>
+    <td>
+        {% if item.isActiveNow %}
+            <span class="badge bg-lime-lt" title="La période de couverture inclut aujourd'hui">Oui</span>
+        {% else %}
+            <span class="badge bg-red-lt" title="La période de couverture n'inclut pas aujourd'hui">Non</span>
+        {% endif %}
+    </td>
+    <td class="text-end">
+        <a href="{{ path('cost_item_show', { id: item.id }) }}" class="btn btn-sm btn-outline-primary">
+            <twig:ux:icon name="tabler:eye" class="icon" />
+            Voir
+        </a>
+    </td>
+</tr>

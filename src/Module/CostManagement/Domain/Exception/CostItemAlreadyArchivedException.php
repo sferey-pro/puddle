@@ -10,6 +10,6 @@ final class CostItemAlreadyArchivedException extends \DomainException
 {
     public static function withId(CostItemId $id): self
     {
-        return new self(sprintf('CostItem with ID "%s" is already archived.', $id));
+        return new self(\sprintf('CostItem with ID "%s" is already archived.', $id));
     }
 }

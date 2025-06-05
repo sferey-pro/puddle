@@ -11,7 +11,7 @@ final class TargetAmountUpdateConflictException extends \DomainException
     public static function newTargetBelowCurrent(Money $newTarget, Money $currentAmount): self
     {
         return new self(
-            sprintf(
+            \sprintf(
                 'New target amount (%s %s) cannot be less than the current covered amount (%s %s).',
                 $newTarget->toFloat(), // Assuming Money has toFloat() or similar
                 $newTarget->getCurrency(),

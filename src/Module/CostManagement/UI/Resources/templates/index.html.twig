@@ -1,0 +1,80 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% block title %}Gestion des Postes de Coûts{% endblock %}
+
+{% block page_title %}Liste des Postes de Coûts{% endblock %}
+
+{% block page_title_actions %}
+    <a href="{{ path('cost_item_new') }}" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+        <twig:ux:icon name="tabler:plus" class="icon icon-2" />
+        Create new cost item
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="row row-cards">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Postes de Coûts</h3>
+                </div>
+                {% if costItems.paginator().haveToPaginate() %}
+                    <twig:Paginator:ItemsPerPageForm />
+                {% endif %}
+                <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th class="text-end">Montant Cible</th>
+                                <th class="text-end">Montant Couvert</th>
+                                <th class="w-25">Progression</th>
+                                <th>Statut</th>
+                                <th>Début</th>
+                                <th>Fin</th>
+                                <th>Actif Actuellement</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in costItems %}
+                                <tr id="product_{{ item.id }}">
+                                    {{ include('@CostManagement/_item.html.twig', { costItem: item}) }}
+                                </tr>
+
+                            {% else %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">
+                                        <twig:ux:icon name="tabler:exclamation-circle" class="icon icon-2" />
+                                        Aucun poste de coût trouvé.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Pagination #}
+                {% if costItems.paginator().haveToPaginate() %}
+                    {% set paginator = costItems.paginator() %}
+                    {% set start = (paginator.getCurrentPage - 1) * paginator.getItemsPerPage + 1 %}
+                    {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
+
+                    <div class="card-footer">
+                        <div class="row g-2 justify-content-center justify-content-sm-between">
+                            <div class="col-auto d-flex align-items-center">
+                                <p class="m-0 text-secondary">Showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong> of <strong>{{ paginator.getTotalItems }} entries</strong></p>
+                            </div>
+                            <div class="col-auto">
+                                {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
+                                    routeName: app.request.attributes.get('_route'),
+                                    routeParams: app.request.query.all|merge({'page': paginator.getPagerFanta().getCurrentPage()})
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

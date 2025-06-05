@@ -7,7 +7,6 @@ namespace App\Module\CostManagement\Tests\Story;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Tests\Factory\CostItemFactory;
 use Zenstruck\Foundry\Story;
-
 use function Zenstruck\Foundry\faker;
 
 final class CostItemStory extends Story

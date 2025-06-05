@@ -11,9 +11,7 @@ use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-
 use function Zenstruck\Foundry\faker;
-
 
 /**
  * @extends PersistentProxyObjectFactory<CostItem>
@@ -32,12 +30,12 @@ final class CostItemFactory extends PersistentProxyObjectFactory
         $immutableStartDate = \DateTimeImmutable::createFromMutable($mutableStartDate);
 
         // End date is between 15 to 60 days after the start date
-        $mutableEndDate = (clone $mutableStartDate)->modify('+' . faker()->numberBetween(15, 60) . ' days');
+        $mutableEndDate = (clone $mutableStartDate)->modify('+'.faker()->numberBetween(15, 60).' days');
         $immutableEndDate = \DateTimeImmutable::createFromMutable($mutableEndDate);
 
         return [
             'id' => CostItemId::generate(),
-            'name' => new CostItemName(faker()->words(3, true) . ' - Frais de Test'),
+            'name' => new CostItemName(faker()->words(3, true).' - Frais de Test'),
             'targetAmount' => Money::fromFloat($targetAmountCents),
             'currentAmount' => Money::zero(), // Default for a new item
             'coveragePeriod' => CoveragePeriod::create($immutableStartDate, $immutableEndDate),
@@ -60,7 +58,7 @@ final class CostItemFactory extends PersistentProxyObjectFactory
 
     public function covered(): self
     {
-        return $this->with(static function(array $attributes): array {
+        return $this->with(static function (array $attributes): array {
             $targetAmount = $attributes['targetAmount'] ?? Money::fromFloat(100.000); // Valeur par défaut si non définie
             if (!$targetAmount instanceof Money && isset($attributes['targetAmount']['amount'], $attributes['targetAmount']['currency'])) {
                 // Au cas où $attributes['targetAmount'] serait un array (possible avec certains setups de states)
@@ -89,8 +87,9 @@ final class CostItemFactory extends PersistentProxyObjectFactory
     public function forNextMonth(): self
     {
         return $this->with(static function (): array {
-            $startDate = (new \DateTimeImmutable('first day of next month'))->setTime(0,0,0);
-            $endDate = (new \DateTimeImmutable('last day of next month'))->setTime(23,59,59);
+            $startDate = (new \DateTimeImmutable('first day of next month'))->setTime(0, 0, 0);
+            $endDate = (new \DateTimeImmutable('last day of next month'))->setTime(23, 59, 59);
+
             return [
                 'coveragePeriod' => CoveragePeriod::create($startDate, $endDate),
             ];
@@ -100,8 +99,9 @@ final class CostItemFactory extends PersistentProxyObjectFactory
     public function forCurrentMonth(): self
     {
         return $this->with(static function (): array {
-            $startDate = (new \DateTimeImmutable('first day of this month'))->setTime(0,0,0);
-            $endDate = (new \DateTimeImmutable('last day of this month'))->setTime(23,59,59);
+            $startDate = (new \DateTimeImmutable('first day of this month'))->setTime(0, 0, 0);
+            $endDate = (new \DateTimeImmutable('last day of this month'))->setTime(23, 59, 59);
+
             return [
                 'coveragePeriod' => CoveragePeriod::create($startDate, $endDate),
             ];
@@ -111,8 +111,9 @@ final class CostItemFactory extends PersistentProxyObjectFactory
     public function forPreviousMonth(): self
     {
         return $this->with(static function (): array {
-            $startDate = (new \DateTimeImmutable('first day of last month'))->setTime(0,0,0);
-            $endDate = (new \DateTimeImmutable('last day of last month'))->setTime(23,59,59);
+            $startDate = (new \DateTimeImmutable('first day of last month'))->setTime(0, 0, 0);
+            $endDate = (new \DateTimeImmutable('last day of last month'))->setTime(23, 59, 59);
+
             return [
                 'coveragePeriod' => CoveragePeriod::create($startDate, $endDate),
             ];

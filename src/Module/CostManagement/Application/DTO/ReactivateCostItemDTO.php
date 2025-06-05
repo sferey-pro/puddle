@@ -10,7 +10,7 @@ namespace App\Module\CostManagement\Application\DTO;
 final readonly class ReactivateCostItemDTO
 {
     public function __construct(
-        public string $costItemId
+        public string $costItemId,
     ) {
     }
 }

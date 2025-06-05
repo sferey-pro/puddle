@@ -14,7 +14,7 @@ final readonly class AddContributionDTO
         public string $costItemId,
         public int $amount,
         public string $currency, // e.g., "EUR"
-        public ?string $contributorDetails = null // Optional: Details about the source of contribution (e.g., sale ID, user ID)
+        public ?string $contributorDetails = null, // Optional: Details about the source of contribution (e.g., sale ID, user ID)
     ) {
     }
 }

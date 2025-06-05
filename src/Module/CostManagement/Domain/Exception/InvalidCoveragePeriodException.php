@@ -14,7 +14,7 @@ final class InvalidCoveragePeriodException extends \DomainException
     public static function endDateBeforeStartDate(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate): self
     {
         return new self(
-            sprintf(
+            \sprintf(
                 'Coverage period end date (%s) cannot be before start date (%s).',
                 $endDate->format('Y-m-d'),
                 $startDate->format('Y-m-d')

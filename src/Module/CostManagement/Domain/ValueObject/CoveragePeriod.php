@@ -23,7 +23,8 @@ final readonly class CoveragePeriod
         $this->endDate = $endDate;
     }
 
-    public static function create(\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate = null): static {
+    public static function create(\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate = null): static
+    {
         return new self($startDate, $endDate);
     }
 
@@ -40,6 +41,7 @@ final readonly class CoveragePeriod
     public function isActive(\DateTimeImmutable $currentDate): bool
     {
         $spec = new CoveragePeriodIsActiveSpecification($currentDate);
+
         return $spec->isSatisfiedBy($this);
     }
 
@@ -50,6 +52,7 @@ final readonly class CoveragePeriod
     public function isEnded(\DateTimeImmutable $currentDate): bool
     {
         $spec = new CoveragePeriodHasEndedSpecification($currentDate);
+
         return $spec->isSatisfiedBy($this);
     }
 

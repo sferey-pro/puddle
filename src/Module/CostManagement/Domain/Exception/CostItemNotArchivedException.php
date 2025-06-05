@@ -10,6 +10,6 @@ final class CostItemNotArchivedException extends \DomainException
 {
     public static function withId(CostItemId $id): self
     {
-        return new self(sprintf('CostItem with ID "%s" is not archived, cannot reactivate.', $id));
+        return new self(\sprintf('CostItem with ID "%s" is not archived, cannot reactivate.', $id));
     }
 }

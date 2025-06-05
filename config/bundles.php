@@ -1,7 +1,5 @@
 <?php
 
-use App\Module\CostManagement\Infrastructure\Symfony\CostManagementBundle;
-
 return [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
@@ -29,5 +27,6 @@ return [
     Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle::class => ['all' => true],
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
-    CostManagementBundle::class => ['all' => true],
+    App\Module\CostManagement\Infrastructure\Symfony\CostManagementBundle::class => ['all' => true],
+    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
 ];

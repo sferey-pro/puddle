@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\ReadModel\Repository;
 
-use App\Module\CostManagement\Application\Query\ListCostItemsQuery;
 use App\Module\CostManagement\Application\ReadModel\CostItemView;
-use App\Shared\Domain\Repository\PaginatorInterface;
+use App\Module\CostManagement\Domain\ValueObject\CostItemId;
+use App\Shared\Domain\Repository\RepositoryInterface;
 
-interface CostItemViewRepositoryInterface 
+interface CostItemViewRepositoryInterface extends RepositoryInterface
 {
-    public function findById(string $costItemId): ?CostItemView;
+    public function findById(CostItemId $identifier): ?CostItemView;
 }

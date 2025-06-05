@@ -18,13 +18,13 @@ final readonly class UpdateCostItemDetailsDTO
         public ?int $targetAmount = null,
         public ?string $currency = null, // Should be provided if targetAmount is updated
         public ?string $startDate = null, // Format: "Y-m-d"
-        public ?string $endDate = null    // Format: "Y-m-d"
+        public ?string $endDate = null,    // Format: "Y-m-d"
     ) {
-        if ($this->targetAmount !== null && $this->currency === null) {
+        if (null !== $this->targetAmount && null === $this->currency) {
             throw new \InvalidArgumentException('Currency must be provided when targetAmount is updated.');
         }
 
-        if (($this->startDate !== null || $this->endDate !== null) && !($this->startDate !== null && $this->endDate !== null)) {
+        if ((null !== $this->startDate || null !== $this->endDate) && !(null !== $this->startDate && null !== $this->endDate)) {
             throw new \InvalidArgumentException('Both startDate and endDate must be provided to update the coverage period, or neither.');
         }
     }

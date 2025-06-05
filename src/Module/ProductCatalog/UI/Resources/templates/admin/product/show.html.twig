@@ -10,10 +10,7 @@
         <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
                 <twig:Button:BackToList routeName="admin_product_index" />
-                <a href="{{ path('admin_product_edit', {id: product.identifier.value}) }}" class="btn btn-primary btn-5 d-none d-sm-inline-block">
-                    <twig:ux:icon name="tabler:edit" class="icon icon-2" />
-                    Modifier
-                </a>
+                <twig:Button:Update routeName="admin_product_edit" params="{id: product.identifier.value}"/>
             </div>
         </div>
     </twig:Semantic:Title>

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Application\Query;
 
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemViewRepositoryInterface;
-use App\Shared\Domain\Repository\PaginatorInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 
 /**
@@ -16,11 +15,11 @@ use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 final readonly class ListCostItemsQueryHandler
 {
     public function __construct(
-        private CostItemViewRepositoryInterface $repository
+        private CostItemViewRepositoryInterface $repository,
     ) {
     }
 
-    public function __invoke(ListCostItemsQuery $query): PaginatorInterface
+    public function __invoke(ListCostItemsQuery $query): CostItemViewRepositoryInterface
     {
         $repository = $this->repository;
 

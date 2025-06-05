@@ -31,7 +31,7 @@ final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
     /**
      * Checks if the given CostItem satisfies the specification.
      *
-     * @param CostItem $candidate The CostItem to check.
+     * @param CostItem $candidate the CostItem to check
      */
     public function isSatisfiedBy($candidate): bool
     {

@@ -12,7 +12,7 @@ final class CostItemImmutableException extends \DomainException
     public static function whenStatusIs(CostItemId $id, CostItemStatus $status, string $operation): self
     {
         return new self(
-            sprintf(
+            \sprintf(
                 'Operation "%s" is not allowed for CostItem ID "%s" when status is "%s".',
                 $operation,
                 $id,

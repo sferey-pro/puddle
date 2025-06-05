@@ -10,7 +10,6 @@ use App\Module\CostManagement\Infrastructure\Doctrine\Repository\DoctrineCostIte
 use App\Module\CostManagement\Infrastructure\ReadModel\Repository\DoctrineCostItemViewRepository;
 
 return function (ContainerConfigurator $container): void {
-
     $services = $container->services()
         ->defaults()
         ->autowire()
@@ -20,7 +19,7 @@ return function (ContainerConfigurator $container): void {
     $services->load('App\\Module\\CostManagement\\', '%kernel.project_dir%/src/Module/CostManagement')
         ->exclude([
             '%kernel.project_dir%/src/Module/CostManagement/Domain',
-            '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/Resources',
+            '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/Symfony/Resources',
         ]);
 
     $services->set(CostItemRepositoryInterface::class)
@@ -28,5 +27,4 @@ return function (ContainerConfigurator $container): void {
 
     $services->set(CostItemViewRepositoryInterface::class)
         ->class(DoctrineCostItemViewRepository::class);
-
 };

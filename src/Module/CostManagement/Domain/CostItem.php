@@ -153,8 +153,7 @@ class CostItem extends AggregateRoot
             throw new \LogicException('Cost item cannot be archived at this time based on its state or period.');
         }
 
-
-        if ($this->status !== CostItemStatus::ARCHIVED) {
+        if (CostItemStatus::ARCHIVED !== $this->status) {
             $this->status = CostItemStatus::ARCHIVED;
             $this->recordDomainEvent(new CostItemArchived(
                 $this->id()
@@ -187,7 +186,7 @@ class CostItem extends AggregateRoot
         CostItemName $name,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
-        ?string $description
+        ?string $description,
         // \DateTimeImmutable $currentDate = null // Optionnel si des règles de MàJ dépendent du temps
     ): void {
         // Règle 1: L'item doit être modifiable (ex: actif)
@@ -225,8 +224,8 @@ class CostItem extends AggregateRoot
         ));
 
         // Après une mise à jour, vérifier si l'item devient couvert si son statut était actif
-        if ($this->status === CostItemStatus::ACTIVE) {
-             $isCoveredSpec = new CostItemIsFullyCoveredSpecification();
+        if (CostItemStatus::ACTIVE === $this->status) {
+            $isCoveredSpec = new CostItemIsFullyCoveredSpecification();
             if ($isCoveredSpec->isSatisfiedBy($this)) {
                 $this->markAsCovered();
             }

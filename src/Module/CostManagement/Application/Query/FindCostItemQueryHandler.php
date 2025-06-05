@@ -16,12 +16,12 @@ use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 final readonly class FindCostItemQueryHandler
 {
     public function __construct(
-        private CostItemViewRepositoryInterface $repository
+        private CostItemViewRepositoryInterface $repository,
     ) {
     }
 
     public function __invoke(FindCostItemQuery $query): ?CostItemView
     {
-        return $this->repository->findById($query->costItemId);
+        return $this->repository->findById($query->identifier);
     }
 }

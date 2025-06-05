@@ -23,7 +23,8 @@ class DoctrineCostItemRepository extends ORMAbstractRepository implements CostIt
         parent::__construct($registry, self::ENTITY_CLASS, self::ALIAS);
     }
 
-    public function findActiveAndUncovered(): array {
+    public function findActiveAndUncovered(): array
+    {
         return $this->withStatus(CostItemStatus::ACTIVE)
             ->withUncovered(new \DateTimeImmutable())
             ->select(CostItemId::class)

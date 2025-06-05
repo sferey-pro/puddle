@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\ReadModel\Repository;
 
-use App\Module\CostManagement\Application\Query\ListCostItemsQuery;
 use App\Module\CostManagement\Application\ReadModel\CostItemView;
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemViewRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Domain\Repository\PaginatorInterface;
 use App\Shared\Infrastructure\Doctrine\ODMAbstractRepository;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
@@ -21,9 +19,9 @@ class DoctrineCostItemViewRepository extends ODMAbstractRepository implements Co
         parent::__construct($registry, self::DOCUMENT_CLASS);
     }
 
-    public function findById(string $identifier): ?CostItemView
+    public function findById(CostItemId $identifier): ?CostItemView
     {
-        return parent::findOneBy(['costItemId' => $identifier]);
+        return parent::findOneBy(['id' => $identifier->value]);
     }
 
     public function findAll(): array

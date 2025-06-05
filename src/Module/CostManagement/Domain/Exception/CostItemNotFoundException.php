@@ -10,6 +10,6 @@ final class CostItemNotFoundException extends \DomainException
 {
     public static function withId(CostItemId $id): self
     {
-        return new self(sprintf('CostItem with ID "%s" was not found.', $id));
+        return new self(\sprintf('CostItem with ID "%s" was not found.', $id));
     }
 }

@@ -24,7 +24,7 @@ final class CoveragePeriodHasEndedSpecification extends AbstractSpecification
      */
     public function isSatisfiedBy($candidate): bool
     {
-        if (null === $candidate->getEndDate() ) {
+        if (null === $candidate->getEndDate()) {
             return false; // Une période sans date de fin explicite n'est pas "terminée"
         }
 

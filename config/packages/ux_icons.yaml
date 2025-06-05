@@ -5,6 +5,7 @@ ux_icons:
         style: 'position: relative;'
     ignore_not_found: true
     aliases:
+        'tabler:save': 'tabler:device-floppy'
         'tabler:save-changes': 'tabler:device-floppy'
 
     iconify:

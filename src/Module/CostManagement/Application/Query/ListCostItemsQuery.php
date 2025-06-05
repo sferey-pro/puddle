@@ -22,7 +22,7 @@ final readonly class ListCostItemsQuery implements QueryInterface
         public ?string $status = null, // e.g., 'active', 'covered', 'archived' (from CostItemStatus enum values)
         public ?string $nameContains = null, // To filter by name
         public ?string $sortBy = null, // e.g., 'name', 'targetAmount', 'startDate', 'status'
-        public string $sortOrder = self::DEFAULT_SORT_ORDER // 'asc' or 'desc'
+        public string $sortOrder = self::DEFAULT_SORT_ORDER, // 'asc' or 'desc'
     ) {
         if ($this->page < 1) {
             throw new \InvalidArgumentException('Page number must be 1 or greater.');
@@ -30,7 +30,7 @@ final readonly class ListCostItemsQuery implements QueryInterface
         if ($this->itemsPerPage < 1) {
             throw new \InvalidArgumentException('Items per page must be 1 or greater.');
         }
-        if (!in_array($this->sortOrder, ['asc', 'desc'], true)) {
+        if (!\in_array($this->sortOrder, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException('Sort order must be "asc" or "desc".');
         }
     }

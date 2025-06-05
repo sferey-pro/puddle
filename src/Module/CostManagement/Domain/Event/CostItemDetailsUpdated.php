@@ -22,18 +22,53 @@ final class CostItemDetailsUpdated extends DomainEvent implements DomainEventInt
         private readonly CoveragePeriod $newCoveragePeriod,
         private readonly CoveragePeriod $oldCoveragePeriod,
         private readonly ?string $newDescription,
-        private readonly ?string $oldDescription
+        private readonly ?string $oldDescription,
     ) {
         parent::__construct();
     }
 
-    public function costItemId(): CostItemId { return $this->costItemId; }
-    public function newName(): CostItemName { return $this->newName; }
-    public function oldName(): CostItemName { return $this->oldName; }
-    public function newTargetAmount(): Money { return $this->newTargetAmount; }
-    public function oldTargetAmount(): Money { return $this->oldTargetAmount; }
-    public function newCoveragePeriod(): CoveragePeriod { return $this->newCoveragePeriod; }
-    public function oldCoveragePeriod(): CoveragePeriod { return $this->oldCoveragePeriod; }
-    public function newDescription(): ?string { return $this->newDescription; }
-    public function oldDescription(): ?string { return $this->oldDescription; }
+    public function costItemId(): CostItemId
+    {
+        return $this->costItemId;
+    }
+
+    public function newName(): CostItemName
+    {
+        return $this->newName;
+    }
+
+    public function oldName(): CostItemName
+    {
+        return $this->oldName;
+    }
+
+    public function newTargetAmount(): Money
+    {
+        return $this->newTargetAmount;
+    }
+
+    public function oldTargetAmount(): Money
+    {
+        return $this->oldTargetAmount;
+    }
+
+    public function newCoveragePeriod(): CoveragePeriod
+    {
+        return $this->newCoveragePeriod;
+    }
+
+    public function oldCoveragePeriod(): CoveragePeriod
+    {
+        return $this->oldCoveragePeriod;
+    }
+
+    public function newDescription(): ?string
+    {
+        return $this->newDescription;
+    }
+
+    public function oldDescription(): ?string
+    {
+        return $this->oldDescription;
+    }
 }
