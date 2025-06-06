@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\DTO;
 
+use App\Shared\Application\DTO\AbstractDTO;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * DTO for reactivating a Cost Item.
  */
-final readonly class ReactivateCostItemDTO
+final class ReactivateCostItemDTO extends AbstractDTO
 {
-    public function __construct(
-        public string $costItemId,
-    ) {
-    }
+    #[Assert\NotBlank]
+    public ?string $costItemId;
 }

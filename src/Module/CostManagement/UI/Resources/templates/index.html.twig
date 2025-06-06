@@ -38,10 +38,9 @@
                         </thead>
                         <tbody>
                             {% for item in costItems %}
-                                <tr id="product_{{ item.id }}">
+                                <tr id="cost_item_{{ item.id }}">
                                     {{ include('@CostManagement/_item.html.twig', {costItem: item}) }}
                                 </tr>
-
                             {% else %}
                                 <tr>
                                     <td colspan="9" class="text-center text-muted">

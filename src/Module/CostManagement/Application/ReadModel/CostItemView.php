@@ -20,6 +20,8 @@ class CostItemView
     public bool $isCovered;
     public bool $isActiveNow;
 
+    public array $contributions = [];
+
     private function __construct(
         public string $id,
         public string $name,

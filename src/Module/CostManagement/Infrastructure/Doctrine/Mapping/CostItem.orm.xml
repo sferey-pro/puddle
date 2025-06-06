@@ -12,6 +12,14 @@
         <embedded name="currentAmountCovered" class="App\Module\SharedContext\Domain\ValueObject\Money" column-prefix="current_" />
         <embedded name="coveragePeriod" class="App\Module\CostManagement\Domain\ValueObject\CoveragePeriod" use-column-prefix="false" />
         <field name="status" type="string" enum-type="App\Module\CostManagement\Domain\Enum\CostItemStatus" />
+
+        <one-to-many field="contributions" target-entity="App\Module\CostManagement\Domain\CostContribution" mapped-by="costItem" cascade-persist="true" cascade-remove="true" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
     </entity>
+
 
 </doctrine-mapping>

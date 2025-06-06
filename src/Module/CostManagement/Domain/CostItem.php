@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Domain;
 
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
+use App\Module\CostManagement\Domain\Enum\CostItemType;
+use App\Module\CostManagement\Domain\Event\CostContributionCancelled;
 use App\Module\CostManagement\Domain\Event\CostContributionReceived;
+use App\Module\CostManagement\Domain\Event\CostContributionRemoved;
 use App\Module\CostManagement\Domain\Event\CostItemAdded;
 use App\Module\CostManagement\Domain\Event\CostItemArchived;
 use App\Module\CostManagement\Domain\Event\CostItemCovered;
@@ -19,13 +22,17 @@ use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification
 use App\Module\CostManagement\Domain\Specification\CostItemIsAlreadyArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemTargetCanBeSafelyUpdatedSpecification;
+use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\Exception\InvalidMoneyException;
 use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Représente un poste de coût individuel au sein du domaine.
@@ -49,20 +56,29 @@ class CostItem extends AggregateRoot
     private CoveragePeriod $coveragePeriod;
     private CostItemStatus $status;
     private ?string $description;
+    private CostItemType $type;
+
+    /**
+     * @var Collection<int, CostContribution>
+     */
+    private Collection $contributions;
 
     private function __construct(
         private CostItemId $id,
         CostItemName $name,
+        CostItemType $type,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ) {
         $this->name = $name;
+        $this->type = $type;
         $this->targetAmount = $targetAmount;
         $this->coveragePeriod = $coveragePeriod;
         $this->description = $description;
         $this->currentAmountCovered = Money::zero($this->targetAmount->getCurrency());
         $this->status = CostItemStatus::ACTIVE;
+        $this->contributions = new ArrayCollection();
     }
 
     /**
@@ -72,15 +88,17 @@ class CostItem extends AggregateRoot
     public static function create(
         CostItemId $id,
         CostItemName $name,
+        CostItemType $type,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ): self {
-        $costItem = new self($id, $name, $targetAmount, $coveragePeriod, $description);
+        $costItem = new self($id, $name, $type, $targetAmount, $coveragePeriod, $description);
 
         $costItem->recordDomainEvent(new CostItemAdded(
             $costItem->id(),
             $costItem->name(),
+            $costItem->type(),
             $costItem->targetAmount(),
             $costItem->coveragePeriod(),
             $costItem->status()
@@ -90,35 +108,94 @@ class CostItem extends AggregateRoot
     }
 
     /**
+     * Trouve une contribution par son ID au sein de la collection de l'agrégat.
+     *
+     * Cette méthode privée centralise la logique de recherche et la gestion des erreurs,
+     * assurant que toute tentative d'accès à une contribution est sécurisée et cohérente.
+     * Elle lève une exception si la contribution n'est pas trouvée.
+     *
+     * @return CostContribution
+     * @throws CostItemException
+     */
+    private function findContributionOrFail(CostContributionId $contributionId): CostContribution
+    {
+        /** @var CostContribution|false $contribution */
+        $contribution = $this->contributions
+            ->filter(fn(CostContribution $c) => $c->id()->equals($contributionId))
+            ->first();
+
+        if (false === $contribution) {
+            throw CostItemException::contributionNotFound($contributionId);
+        }
+
+        return $contribution;
+    }
+
+    /**
      * Ajoute une contribution financière à ce poste de coût.
      *
      * @throws CostItemException
      */
-    public function addContribution(Money $contributionAmount): void
+    public function addContribution(Money $amount, ?ProductId $sourceProductId = null): void
     {
         if (!(new CostItemCanReceiveContributionSpecification())->isSatisfiedBy($this)) {
             throw CostItemException::cannotReceiveContributionBecauseStatusIs($this->id, $this->status);
         }
 
-        if ($contributionAmount->getCurrency() !== $this->targetAmount->getCurrency()) {
-            throw InvalidMoneyException::currencyMismatch($this->targetAmount->getCurrency(), $contributionAmount->getCurrency());
+        if ($amount->getCurrency() !== $this->targetAmount->getCurrency()) {
+            throw InvalidMoneyException::currencyMismatch($this->targetAmount->getCurrency(), $amount->getCurrency());
         }
 
-        if ($contributionAmount->getAmount() <= 0) {
+        if ($amount->getAmount() <= 0) {
             throw InvalidMoneyException::amountMustBePositive();
         }
 
-        $this->currentAmountCovered = $this->currentAmountCovered->add($contributionAmount);
+        $contribution = CostContribution::create($this, $amount, $sourceProductId);
+        $this->contributions->add($contribution);
 
         $this->recordDomainEvent(new CostContributionReceived(
-            $this->id(),
-            $contributionAmount,
-            $this->currentAmountCovered
+            $this->id,
+            $contribution->id(),
+            $contribution->amount(),
+            $this->currentAmountCovered(),
+            $sourceProductId
         ));
 
         if ((new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
             $this->markAsCovered();
         }
+    }
+
+    /**
+     * Supprime une contribution de ce poste de coût.
+     */
+    public function removeContribution(CostContributionId $contributionId): void
+    {
+        $contributionToRemove = $this->findContributionOrFail($contributionId);
+
+        $this->contributions->removeElement($contributionToRemove);
+
+        $this->recordDomainEvent(new CostContributionRemoved(
+            $this->id,
+            $contributionToRemove->id(),
+            $this->currentAmountCovered()
+        ));
+    }
+
+    /**
+     * Annule une contribution existante sur ce poste de coût.
+     */
+    public function cancelContribution(CostContributionId $contributionId): void
+    {
+        $contributionToCancel = $this->findContributionOrFail($contributionId);
+
+        $contributionToCancel->cancel();
+
+        $this->recordDomainEvent(new CostContributionCancelled(
+            $this->id,
+            $contributionToCancel->id(),
+            $this->currentAmountCovered()
+        ));
     }
 
     /**
@@ -221,6 +298,11 @@ class CostItem extends AggregateRoot
         return $this->name;
     }
 
+    public function type(): CostItemType
+    {
+        return $this->type;
+    }
+
     public function description(): ?string
     {
         return $this->description;
@@ -231,9 +313,17 @@ class CostItem extends AggregateRoot
         return $this->targetAmount;
     }
 
+    /**
+     * Calcule et retourne le montant total actuellement couvert par les contributions.
+     */
     public function currentAmountCovered(): Money
     {
-        return $this->currentAmountCovered;
+        $total = Money::zero();
+        foreach ($this->contributions as $contribution) {
+            $total = $total->add($contribution->amount());
+        }
+
+        return $total;
     }
 
     public function coveragePeriod(): CoveragePeriod

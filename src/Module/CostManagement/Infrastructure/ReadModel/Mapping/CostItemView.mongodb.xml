@@ -17,6 +17,8 @@
         <field field-name="isCovered" type="bool" />
         <field field-name="isActiveNow" type="bool" />
 
+        <embed-many field="contributions" target-document="App\Module\CostManagement\Application\ReadModel\ContributionView" />
+
         <indexes>
             <index>
                 <key name="status" order="asc" />

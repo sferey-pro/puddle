@@ -59,15 +59,22 @@
                     <div class="card-header">
                         <h3 class="card-title">Règles de Contribution</h3>
                         <div class="card-actions">
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-                                Ajouter une règle
-                            </a>
+                            <div class="my-4" data-turbo-permanent>
+                                <h5>Ajouter une contribution</h5>
+                                {{ component('AddContributionForm', {costItem: costItem}) }}
+                            </div>
                         </div>
                     </div>
                     <div class="card-body text-secondary">
-                        <p>Section à venir : liste des produits du catalogue qui contribuent à ce poste de coût.</p>
-                        {# Ici, vous bouclerez sur les ContributionRuleView associées à ce CostItem #}
+                        <div
+                            data-controller="live"
+                            {# On passe l'ID du costItem au composant #}
+                            data-live-id="contribution-list-{{ costItem.id }}"
+                            {# L'événement `contribution:added` (de AddContributionForm) ou `contribution:removed` (de ce composant) déclenchera le rechargement #}
+                            data-action="contribution:added@window->live#reload contribution:removed@window->live#reload"
+                        >
+                            {{ component('CostContributionList', {costItemId: costItem.id}) }}
+                        </div>
                     </div>
                 </div>
 
@@ -92,7 +99,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Période de couverture</label>
-                            <p><svg xmlns="http://www.w3.org/2000/svg" class="icon me-1 text-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon me-1 text-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
                                 Du {{ costItem.startDate|date('d F Y') }} au {{ costItem.endDate|date('d F Y') }}
                             </p>
                         </div>
@@ -101,12 +109,12 @@
                              <p>
                                 {% if costItem.isActiveNow %}
                                     <span class="text-success">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>
+                                        <twig:ux:icon name="tabler:circle-check" class="icon" />
                                         Oui
                                     </span>
                                 {% else %}
                                     <span class="text-danger">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-x me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M10 10l4 4m0 -4l-4 4" /></svg>
+                                        <twig:ux:icon name="tabler:circle-x" class="icon" />
                                         Non
                                     </span>
                                 {% endif %}
@@ -119,7 +127,12 @@
                                 {% if costItem.status == 'archived' %}
                                     <a href="#" class="btn btn-outline-success">Réactiver</a>
                                 {% else %}
-                                     <a href="#" class="btn btn-outline-warning">Archiver</a>
+                                    <form action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ costItem.id) }}">
+                                        <button type="submit" class="btn btn-danger">
+                                            <twig:ux:icon name="tabler:archive" class="icon" /> Archiver
+                                        </button>
+                                    </form>
                                 {% endif %}
                                 <a href="#" class="btn btn-outline-danger">Supprimer</a>
                             </div>

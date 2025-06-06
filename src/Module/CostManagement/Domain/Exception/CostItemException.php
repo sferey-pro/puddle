@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Domain\Exception;
 
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
+use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 
@@ -26,6 +27,11 @@ final class CostItemException extends \DomainException
     public static function notFoundWithId(CostItemId $id): self
     {
         return new self(\sprintf('CostItem with ID "%s" was not found.', $id));
+    }
+
+    public static function contributionNotFound(CostContributionId $id): self
+    {
+        return new self(\sprintf('CostContribution with ID "%s" was not found in this aggregate.', $id));
     }
 
     public static function alreadyArchived(CostItemId $id): self

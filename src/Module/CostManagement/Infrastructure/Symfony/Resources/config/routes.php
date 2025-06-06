@@ -38,4 +38,10 @@ return static function (RoutingConfigurator $routes): void {
         ->controller([CostItemController::class, 'delete'])
         ->requirements(['id' => Requirement::UUID_V7])
         ->methods([Request::METHOD_DELETE]);
+
+    // 6. Archivage d'un produit (Archive)
+    $costItemRoutes->add('archive', '/{id}/archive')
+        ->controller([CostItemController::class, 'delete'])
+        ->requirements(['id' => Requirement::UUID_V7])
+        ->methods([Request::METHOD_POST]);
 };

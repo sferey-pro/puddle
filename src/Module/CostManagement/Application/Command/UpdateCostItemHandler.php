@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
-use App\Module\CostManagement\Domain\CostItem;
+use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
+use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\ValueObject\Money;
@@ -13,7 +14,7 @@ use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 #[AsCommandHandler]
-final class CreateCostItemHandler
+final class UpdateCostItemHandler
 {
     public function __construct(
         private readonly CostItemRepositoryInterface $repository,
@@ -21,25 +22,29 @@ final class CreateCostItemHandler
     ) {
     }
 
-    public function __invoke(CreateCostItem $command): void
+    public function __invoke(UpdateCostItem $command): void
     {
         $dto = $command->dto;
+        $costItemId = CostItemId::fromString($dto->id);
 
-        // Création de l'agrégat à partir des données du DTO
-        $costItem = CostItem::create(
+        $costItem = $this->repository->ofIdentifier($costItemId);
+
+        if (!$costItem) {
+            throw CostItemException::notFoundWithId($costItemId);
+        }
+
+        $costItem->updateDetails(
             name: new CostItemName($dto->name),
-            type: new CostItemType($dto->type),
             targetAmount: new Money($dto->targetAmount, $dto->currency),
             coveragePeriod: CoveragePeriod::create(
                 $dto->startDate,
                 $dto->endDate
-            )
+            ),
+            description: $dto->description
         );
 
-        // Sauvegarde
         $this->repository->save($costItem, true);
 
-        // Dispatch les événements de domaine
         foreach ($costItem->pullDomainEvents() as $domainEvent) {
             $this->eventDispatcher->dispatch($domainEvent);
         }

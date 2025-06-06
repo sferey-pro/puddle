@@ -10,7 +10,7 @@ use App\Shared\Domain\ValueObject\AggregateRootId;
  * Représente l'identifiant unique d'un agrégat CostItem.
  * Il s'agit d'un Value Object basé sur un UUID v7.
  */
-final class CostItemId implements \Stringable
+final readonly class CostItemId implements \Stringable
 {
     use AggregateRootId;
 }

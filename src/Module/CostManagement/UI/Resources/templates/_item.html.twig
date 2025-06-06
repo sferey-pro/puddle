@@ -20,8 +20,6 @@
         <small class="text-muted">{{ item.progressPercentage|round(2) }}%</small>
     </td>
     <td>
-        {# Vous aurez peut-être besoin d'un filtre Twig pour traduire les statuts #} {# ou de les mapper à des classes
-        de badge spécifiques #}
         <span
             class="badge {% if item.status == 'active' and item.isActiveNow %}bg-azure-lt {% elseif item.status == 'active' and not item.isActiveNow %}bg-orange-lt {% elseif item.status == 'fully_covered' %}bg-green-lt {% elseif item.status == 'archived' %}bg-secondary-lt {% else %}bg-dark-lt {% endif %}"
         >
@@ -38,9 +36,27 @@
         {% endif %}
     </td>
     <td class="text-end">
-        <a href="{{ path('cost_item_show', {id: item.id}) }}" class="btn btn-sm btn-outline-primary">
-            <twig:ux:icon name="tabler:eye" class="icon" />
-            Voir
-        </a>
+        <div class="dropdown">
+            <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown">
+                Actions
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="{{ path('cost_item_show', {id: costItem.id}) }}">
+                    <twig:ux:icon name="tabler:eye" class="icon" /> Voir
+                </a>
+                <a class="dropdown-item" href="{{ path('cost_item_edit', {id: costItem.id}) }}">
+                    <twig:ux:icon name="tabler:edit" class="icon" /> Modifier
+                </a>
+                {% if costItem.status != 'archived' %}
+                    <form action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ costItem.id) }}">
+                        <button type="submit" class="dropdown-item text-danger">
+                            <twig:ux:icon name="tabler:archive" class="icon" /> Archiver
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
     </td>
 </tr>

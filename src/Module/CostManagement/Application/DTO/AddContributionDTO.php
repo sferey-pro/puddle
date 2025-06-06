@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\DTO;
 
+use App\Shared\Application\DTO\AbstractDTO;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
- * DTO for adding a contribution to a Cost Item.
- * Amount is expected in the smallest currency unit (e.g., cents).
+ * DTO pour la création d'une nouvelle contribution.
  */
-final readonly class AddContributionDTO
+final class AddContributionDTO extends AbstractDTO
 {
-    public function __construct(
-        public string $costItemId,
-        public int $amount,
-        public string $currency, // e.g., "EUR"
-        public ?string $contributorDetails = null, // Optional: Details about the source of contribution (e.g., sale ID, user ID)
-    ) {
-    }
+    #[Assert\NotBlank]
+    public ?string $costItemId;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    public ?float $amount = 0.0;
+
+    // Optionnel, pour la traçabilité future avec le module Sales
+    public ?string $sourceProductId;
 }

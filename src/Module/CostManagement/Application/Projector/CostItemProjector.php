@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Projector;
 
+use App\Module\CostManagement\Application\ReadModel\ContributionView;
 use App\Module\CostManagement\Application\ReadModel\CostItemView;
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Event\CostContributionReceived;
+use App\Module\CostManagement\Domain\Event\CostContributionRemoved;
 use App\Module\CostManagement\Domain\Event\CostItemAdded;
 use App\Module\CostManagement\Domain\Event\CostItemArchived;
 use App\Module\CostManagement\Domain\Event\CostItemCovered;
@@ -14,6 +16,7 @@ use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemReactivated;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * @docblock
@@ -34,7 +37,6 @@ final class CostItemProjector implements EventSubscriberInterface
         return [
             CostItemAdded::class => 'onCostItemAdded',
             CostItemDetailsUpdated::class => 'onCostItemDetailsUpdated',
-            CostContributionReceived::class => 'onCostContributionReceived',
             CostItemCovered::class => 'onCostItemCovered',
             CostItemArchived::class => 'onCostItemArchived',
             CostItemReactivated::class => 'onCostItemReactivated',
@@ -60,13 +62,39 @@ final class CostItemProjector implements EventSubscriberInterface
 
     public function onCostContributionReceived(CostContributionReceived $event): void
     {
-        $view = $this->findView($event->costItemId());
-        if (!$view) {
-            return;
-        }
+        $costItemView = $this->costItemViewRepository->findOrFail($event->costItemId->value);
 
-        $view->updateFromContribution($event);
-        $this->repository->save($view, true);
+        $contributionView = new ContributionView(
+            id: $event->contributionId->value,
+            amount: $event->amount->toFloat(),
+            currency: $event->amount->getCurrency()->getCode(),
+            contributedAt: new \DateTimeImmutable($event->occurredOn()),
+            sourceProductId: $event->sourceProductId?->value
+        );
+
+        // Ajoute la nouvelle contribution à la liste
+        $costItemView->contributions[] = $contributionView;
+
+        // Met à jour le total couvert
+        $costItemView->currentAmountCovered = $event->newTotalCovered->toFloat();
+
+        $this->costItemViewRepository->save($costItemView);
+    }
+
+    public function onCostContributionRemoved(CostContributionRemoved $event): void
+    {
+        $costItemView = $this->costItemViewRepository->findOrFail($event->costItemId->value);
+
+        // Filtre la liste pour retirer la contribution supprimée
+        $costItemView->contributions = array_values(array_filter(
+            $costItemView->contributions,
+            fn (ContributionView $c) => $c->id !== $event->contributionId->value
+        ));
+
+        // Met à jour le total couvert
+        $costItemView->currentAmountCovered = $event->newTotalCovered->toFloat();
+
+        $this->costItemViewRepository->save($costItemView);
     }
 
     public function onCostItemCovered(CostItemCovered $event): void
