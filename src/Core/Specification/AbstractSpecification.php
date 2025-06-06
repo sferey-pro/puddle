@@ -17,7 +17,7 @@ abstract class AbstractSpecification implements SpecificationInterface
     /**
      * Vérifie si le candidat donné satisfait à la spécification.
      *
-     * @param T $candidate L'objet à valider.
+     * @param t $candidate L'objet à valider
      */
     abstract public function isSatisfiedBy(mixed $candidate): bool;
 }

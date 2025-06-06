@@ -19,8 +19,9 @@ interface SpecificationInterface
     /**
      * Vérifie si le candidat donné satisfait à la spécification.
      *
-     * @param T $candidate L'objet à valider.
-     * @return bool Vrai si le candidat satisfait à la spécification, sinon faux.
+     * @param t $candidate L'objet à valider
+     *
+     * @return bool vrai si le candidat satisfait à la spécification, sinon faux
      */
     public function isSatisfiedBy(mixed $candidate): bool;
 }

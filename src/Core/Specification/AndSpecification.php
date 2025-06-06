@@ -12,6 +12,7 @@ namespace App\Core\Specification;
  * Elle permet de chaîner des règles métier avec une logique d'intersection.
  *
  * @template T Le type de l'objet candidat que cette spécification évalue.
+ *
  * @implements SpecificationInterface<T>
  */
 class AndSpecification implements SpecificationInterface
@@ -35,8 +36,7 @@ class AndSpecification implements SpecificationInterface
      * La méthode retourne `false` dès que la première spécification non satisfaite est trouvée.
      * Si toutes les spécifications sont satisfaites, elle retourne `true`.
      *
-     * @param T $candidate L'objet à valider.
-     * @return bool
+     * @param t $candidate L'objet à valider
      */
     public function isSatisfiedBy(mixed $candidate): bool
     {

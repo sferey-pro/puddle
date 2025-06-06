@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Application\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * DTO pour l'ajout d'un nouveau Cost Item.

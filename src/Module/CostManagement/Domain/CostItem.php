@@ -55,7 +55,7 @@ class CostItem extends AggregateRoot
         CostItemName $name,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
-        ?string $description = null
+        ?string $description = null,
     ) {
         $this->name = $name;
         $this->targetAmount = $targetAmount;
@@ -74,7 +74,7 @@ class CostItem extends AggregateRoot
         CostItemName $name,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
-        ?string $description = null
+        ?string $description = null,
     ): self {
         $costItem = new self($id, $name, $targetAmount, $coveragePeriod, $description);
 
@@ -169,7 +169,7 @@ class CostItem extends AggregateRoot
         CostItemName $name,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
-        ?string $description
+        ?string $description,
     ): void {
         if (!(new CostItemIsActiveSpecification())->isSatisfiedBy($this)) {
             throw CostItemException::detailsUpdateNotAllowed($this->id, $this->status);
@@ -195,7 +195,7 @@ class CostItem extends AggregateRoot
         ));
 
         // Après mise à jour, l'item peut devenir couvert.
-        if ($this->status === CostItemStatus::ACTIVE && (new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
+        if (CostItemStatus::ACTIVE === $this->status && (new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
             $this->markAsCovered();
         }
     }

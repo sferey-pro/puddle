@@ -38,7 +38,7 @@ interface CostItemRepositoryInterface extends RepositoryInterface
     /**
      * Recherche un CostItem par son identifiant unique.
      *
-     * @return CostItem|null L'agrégat trouvé ou null s'il n'existe pas.
+     * @return CostItem|null L'agrégat trouvé ou null s'il n'existe pas
      */
     public function ofIdentifier(CostItemId $identifier): ?CostItem;
 

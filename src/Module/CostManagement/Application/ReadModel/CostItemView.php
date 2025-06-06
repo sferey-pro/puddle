@@ -16,7 +16,6 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  */
 class CostItemView
 {
-
     public float $progressPercentage;
     public bool $isCovered;
     public bool $isActiveNow;
@@ -29,7 +28,7 @@ class CostItemView
         public string $currency,
         public string $startDate,
         public string $endDate,
-        public string $status
+        public string $status,
     ) {
     }
 

@@ -12,6 +12,7 @@ namespace App\Core\Specification;
  * Elle permet de chaîner des règles métier avec une logique d'union.
  *
  * @template T Le type de l'objet candidat que cette spécification évalue.
+ *
  * @implements SpecificationInterface<T>
  */
 class OrSpecification implements SpecificationInterface
@@ -35,8 +36,7 @@ class OrSpecification implements SpecificationInterface
      * La méthode retourne `true` dès que la première spécification satisfaite est trouvée.
      * Si aucune spécification n'est satisfaite, elle retourne `false`.
      *
-     * @param T $candidate L'objet à valider.
-     * @return bool
+     * @param t $candidate L'objet à valider
      */
     public function isSatisfiedBy(mixed $candidate): bool
     {

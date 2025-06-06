@@ -25,7 +25,7 @@ final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
      * Un CostItem est considéré "actif et non couvert" si :
      * 1. Il est actif (vérifié par CostItemIsActiveSpecification)
      * ET
-     * 2. Il N'EST PAS entièrement couvert (vérifié par la négation de CostItemIsFullyCoveredSpecification)
+     * 2. Il N'EST PAS entièrement couvert (vérifié par la négation de CostItemIsFullyCoveredSpecification).
      */
     public function __construct()
     {
@@ -36,7 +36,6 @@ final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
     }
 
     /**
-     * {@inheritdoc}
      * @param CostItem $candidate
      */
     public function isSatisfiedBy($candidate): bool

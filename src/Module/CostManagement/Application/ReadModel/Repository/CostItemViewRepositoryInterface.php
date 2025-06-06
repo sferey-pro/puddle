@@ -22,8 +22,9 @@ interface CostItemViewRepositoryInterface extends RepositoryInterface
     /**
      * Trouve une vue de poste de coût par son identifiant.
      *
-     * @param CostItemId $identifier L'identifiant du poste de coût.
-     * @return CostItemView|null La vue trouvée ou null.
+     * @param CostItemId $identifier L'identifiant du poste de coût
+     *
+     * @return CostItemView|null la vue trouvée ou null
      */
     public function findById(CostItemId $identifier): ?CostItemView;
 
@@ -31,16 +32,16 @@ interface CostItemViewRepositoryInterface extends RepositoryInterface
      * Persiste une vue de poste de coût.
      * Gère à la fois la création (persist) et la mise à jour.
      *
-     * @param CostItemView $costItem La vue à sauvegarder.
-     * @param bool         $flush    Si true, les changements sont immédiatement envoyés en base de données.
+     * @param CostItemView $costItem la vue à sauvegarder
+     * @param bool         $flush    si true, les changements sont immédiatement envoyés en base de données
      */
     public function save(CostItemView $costItem, bool $flush = false): void;
 
     /**
      * Supprime une vue de poste de coût.
      *
-     * @param CostItemView $costItem La vue à supprimer.
-     * @param bool         $flush    Si true, la suppression est immédiatement envoyée en base de données.
+     * @param CostItemView $costItem la vue à supprimer
+     * @param bool         $flush    si true, la suppression est immédiatement envoyée en base de données
      */
     public function delete(CostItemView $costItem, bool $flush = false): void;
 }

@@ -29,7 +29,7 @@ final class CostItemCanBeArchivedSpecification extends AbstractSpecification
     }
 
     /**
-     * @param CostItem $candidate L'objet CostItem à évaluer.
+     * @param CostItem $candidate L'objet CostItem à évaluer
      */
     public function isSatisfiedBy($candidate): bool
     {
