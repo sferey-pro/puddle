@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * DTO pour l'ajout d'un nouveau Cost Item.
  * Conçu pour être utilisé avec le CostItemFormType.
  */
-final class AddCostItemDTO
+final class CreateCostItemDTO
 {
     #[Assert\NotBlank]
     #[Assert\Length(min: 3)]
@@ -30,7 +30,10 @@ final class AddCostItemDTO
 
     #[Assert\NotBlank]
     #[Assert\Type(\DateTimeImmutable::class)]
+    #[Assert\GreaterThan(propertyPath: 'startDate')]
     public ?\DateTimeImmutable $endDate = null;
+
+    public ?string $description = null;
 
     public ?string $userId = null;
 
@@ -43,15 +46,5 @@ final class AddCostItemDTO
         // Pré-remplir les dates pour le mois en cours
         $this->startDate = new \DateTimeImmutable('first day of this month');
         $this->endDate = new \DateTimeImmutable('last day of this month');
-    }
-
-    #[Assert\Callback]
-    public function validate(ExecutionContextInterface $context, $payload): void
-    {
-        if ($this->startDate && $this->endDate && $this->endDate < $this->startDate) {
-            $context->buildViolation('La date de fin ne peut pas être antérieure à la date de début.')
-                ->atPath('endDate') // Associe l'erreur au champ 'endDate' dans le formulaire
-                ->addViolation();
-        }
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
-use App\Module\CostManagement\Application\DTO\AddCostItemDTO;
+use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
 use App\Shared\Application\Command\CommandInterface;
 
 /**
@@ -14,7 +14,7 @@ use App\Shared\Application\Command\CommandInterface;
 final readonly class CreateCostItem implements CommandInterface
 {
     public function __construct(
-        public AddCostItemDTO $dto,
+        public CreateCostItemDTO $dto,
     ) {
     }
 }

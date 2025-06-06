@@ -11,8 +11,10 @@ use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 /**
  * Spécification qui vérifie si un CostItem est entièrement couvert.
  *
- * La condition est remplie si le statut est déjà FULLY_COVERED, ou si le
- * montant actuel est supérieur ou égal au montant cible.
+ * La condition est remplie si le statut est déjà `FULLY_COVERED`, ou si le
+ * montant actuellement couvert est supérieur ou égal au montant cible.
+ *
+ * @template-extends AbstractSpecification<CostItem>
  */
 final class CostItemIsFullyCoveredSpecification extends AbstractSpecification
 {
@@ -26,6 +28,7 @@ final class CostItemIsFullyCoveredSpecification extends AbstractSpecification
             return true;
         }
 
+        // Soit le montant couvert atteint ou dépasse la cible
         return $candidate->currentAmountCovered()->isGreaterThanOrEqual($candidate->targetAmount());
     }
 }

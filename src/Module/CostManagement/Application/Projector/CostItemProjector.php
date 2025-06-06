@@ -17,7 +17,6 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * @docblock
  * Le CostItemProjector écoute les événements de domaine du CostItem
  * et met à jour le ReadModel (CostItemView) dans la base de données de lecture (MongoDB).
  */

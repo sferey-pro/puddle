@@ -12,7 +12,9 @@ use App\Module\CostManagement\Domain\Specification\Composite\CostItemIsActiveAnd
  * Spécification qui détermine si un CostItem peut recevoir une contribution financière.
  *
  * Cette règle est satisfaite si l'item est à la fois actif et pas encore entièrement couvert.
- * Elle réutilise la spécification composite CostItemIsActiveAndNotCoveredSpecification.
+ * Elle délègue cette logique à la spécification composite `CostItemIsActiveAndNotCoveredSpecification`.
+ *
+ * @template-extends AbstractSpecification<CostItem>
  */
 final class CostItemCanReceiveContributionSpecification extends AbstractSpecification
 {

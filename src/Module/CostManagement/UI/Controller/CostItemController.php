@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Controller;
 
-use App\Module\CostManagement\Application\DTO\AddCostItemDTO;
+use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
 use App\Module\CostManagement\Application\Query\FindCostItemQuery;
 use App\Module\CostManagement\Application\Query\ListCostItemsQuery;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
@@ -56,7 +56,7 @@ final class CostItemController extends AbstractController
     public function new(): array
     {
         return [
-            'formDto' => new AddCostItemDTO(),
+            'formDto' => new CreateCostItemDTO(),
         ];
     }
 }

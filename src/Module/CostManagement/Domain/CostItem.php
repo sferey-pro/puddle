@@ -11,12 +11,7 @@ use App\Module\CostManagement\Domain\Event\CostItemArchived;
 use App\Module\CostManagement\Domain\Event\CostItemCovered;
 use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemReactivated;
-use App\Module\CostManagement\Domain\Exception\CostItemAlreadyArchivedException;
-use App\Module\CostManagement\Domain\Exception\CostItemCannotBeArchivedException;
-use App\Module\CostManagement\Domain\Exception\CostItemCannotBeReactivatedException;
-use App\Module\CostManagement\Domain\Exception\CostItemCannotReceiveContributionException;
-use App\Module\CostManagement\Domain\Exception\InvalidContributionAmountException;
-use App\Module\CostManagement\Domain\Exception\TargetAmountUpdateConflictException;
+use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\Specification\CostItemCanBeArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemCanBeReactivatedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemCanReceiveContributionSpecification;
@@ -27,6 +22,7 @@ use App\Module\CostManagement\Domain\Specification\CostItemTargetCanBeSafelyUpda
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
+use App\Module\SharedContext\Domain\Exception\InvalidMoneyException;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
@@ -96,21 +92,20 @@ class CostItem extends AggregateRoot
     /**
      * Ajoute une contribution financière à ce poste de coût.
      *
-     * @throws CostItemCannotReceiveContributionException si l'item ne peut recevoir de contribution.
-     * @throws InvalidContributionAmountException si le montant de la contribution est invalide.
+     * @throws CostItemException
      */
     public function addContribution(Money $contributionAmount): void
     {
         if (!(new CostItemCanReceiveContributionSpecification())->isSatisfiedBy($this)) {
-            throw CostItemCannotReceiveContributionException::notActive($this->id);
+            throw CostItemException::cannotReceiveContributionBecauseStatusIs($this->id, $this->status);
         }
 
-        if (!$contributionAmount->getCurrency() === $this->targetAmount->getCurrency()) {
-            throw new \InvalidArgumentException('Contribution currency must match target currency.');
+        if ($contributionAmount->getCurrency() !== $this->targetAmount->getCurrency()) {
+            throw InvalidMoneyException::currencyMismatch($this->targetAmount->getCurrency(), $contributionAmount->getCurrency());
         }
 
         if ($contributionAmount->getAmount() <= 0) {
-            throw InvalidContributionAmountException::mustBePositive();
+            throw InvalidMoneyException::amountMustBePositive();
         }
 
         $this->currentAmountCovered = $this->currentAmountCovered->add($contributionAmount);
@@ -129,17 +124,16 @@ class CostItem extends AggregateRoot
     /**
      * Archive le poste de coût, le rendant inactif pour de nouvelles contributions.
      *
-     * @throws CostItemAlreadyArchivedException si l'item est déjà archivé.
-     * @throws CostItemCannotBeArchivedException si les règles métier n'autorisent pas l'archivage.
+     * @throws CostItemException
      */
     public function archive(?\DateTimeImmutable $currentDate = new \DateTimeImmutable()): void
     {
         if ((new CostItemIsAlreadyArchivedSpecification())->isSatisfiedBy($this)) {
-            throw CostItemAlreadyArchivedException::withId($this->id);
+            throw CostItemException::alreadyArchived($this->id);
         }
 
         if (!(new CostItemCanBeArchivedSpecification($currentDate))->isSatisfiedBy($this)) {
-            throw CostItemCannotBeArchivedException::forId($this->id);
+            throw CostItemException::cannotBeArchived($this->id);
         }
 
         $this->status = CostItemStatus::ARCHIVED;
@@ -149,12 +143,12 @@ class CostItem extends AggregateRoot
     /**
      * Réactive un poste de coût précédemment archivé.
      *
-     * @throws CostItemCannotBeReactivatedException si les conditions de réactivation ne sont pas remplies.
+     * @throws CostItemException
      */
     public function reactivate(?\DateTimeImmutable $currentDate = new \DateTimeImmutable()): void
     {
         if (!(new CostItemCanBeReactivatedSpecification($currentDate))->isSatisfiedBy($this)) {
-            throw CostItemCannotBeReactivatedException::forId($this->id);
+            throw CostItemException::cannotBeReactivated($this->id);
         }
 
         // Le nouveau statut dépend de si l'item était déjà couvert ou non.
@@ -169,8 +163,7 @@ class CostItem extends AggregateRoot
     /**
      * Met à jour les détails principaux du poste de coût.
      *
-     * @throws TargetAmountUpdateConflictException si le nouveau montant cible est inférieur au montant déjà couvert.
-     * @throws \LogicException si l'item n'est pas dans un état modifiable.
+     * @throws CostItemException
      */
     public function updateDetails(
         CostItemName $name,
@@ -179,11 +172,11 @@ class CostItem extends AggregateRoot
         ?string $description
     ): void {
         if (!(new CostItemIsActiveSpecification())->isSatisfiedBy($this)) {
-            throw new \LogicException('Only active cost items can have their details updated.');
+            throw CostItemException::detailsUpdateNotAllowed($this->id, $this->status);
         }
 
         if (!(new CostItemTargetCanBeSafelyUpdatedSpecification($targetAmount))->isSatisfiedBy($this)) {
-            throw TargetAmountUpdateConflictException::newTargetBelowCurrent($targetAmount, $this->currentAmountCovered);
+            throw CostItemException::targetAmountConflict($targetAmount, $this->currentAmountCovered);
         }
 
         $oldName = $this->name;

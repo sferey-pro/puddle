@@ -8,11 +8,13 @@ use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 
 /**
- * @extends AbstractSpecification<CoveragePeriod>
+ * Spécification qui détermine si une `CoveragePeriod` est actuellement active.
  *
- * Specifies that a CoveragePeriod is currently active.
- * A period is active if the current date is on or after the start date
- * AND on or before the end date.
+ * Une période est active si la date actuelle se situe entre la date de début (incluse)
+ * et la date de fin (incluse). Si la date de fin est nulle, elle est active si
+ * la date actuelle est postérieure ou égale à la date de début.
+ *
+ * @template-extends AbstractSpecification<CoveragePeriod>
  */
 final class CoveragePeriodIsActiveSpecification extends AbstractSpecification
 {

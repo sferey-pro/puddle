@@ -6,14 +6,17 @@ namespace App\Module\CostManagement\Domain\Specification\Composite;
 
 use App\Core\Specification\AndSpecification;
 use App\Core\Specification\NotSpecification;
+use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
 
 /**
- * Spécification composite qui vérifie si un CostItem est actif ET non couvert.
+ * Spécification composite qui vérifie si un CostItem est à la fois actif ET non couvert.
  *
- * Utilise une combinaison de CostItemIsActiveSpecification et de la négation (NotSpecification)
- * de CostItemIsFullyCoveredSpecification pour exprimer cette règle métier complexe.
+ * Utilise une combinaison de `CostItemIsActiveSpecification` et de la négation (`NotSpecification`)
+ * de `CostItemIsFullyCoveredSpecification` pour exprimer cette règle métier.
+ *
+ * @template-extends AndSpecification<CostItem>
  */
 final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
 {
@@ -34,6 +37,7 @@ final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
 
     /**
      * {@inheritdoc}
+     * @param CostItem $candidate
      */
     public function isSatisfiedBy($candidate): bool
     {

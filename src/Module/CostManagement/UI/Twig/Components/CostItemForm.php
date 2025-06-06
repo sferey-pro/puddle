@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\UI\Twig\Components;
 
 use App\Module\CostManagement\Application\Command\CreateCostItem;
-use App\Module\CostManagement\Application\DTO\AddCostItemDTO;
+use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
 use App\Module\CostManagement\UI\Form\CostItemFormType;
 use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +29,7 @@ final class CostItemForm extends AbstractController
     use DefaultActionTrait;
 
     #[LiveProp()]
-    public ?AddCostItemDTO $data;
+    public ?CreateCostItemDTO $data;
 
     public function __construct(
         private readonly CommandBusInterface $commandBus,
@@ -58,7 +58,7 @@ final class CostItemForm extends AbstractController
 
         // Si le formulaire est valide, on procède à la sauvegarde.
         if ($this->getForm()->isValid()) {
-            /** @var AddCostItemDTO $dto */
+            /** @var CreateCostItemDTO $dto */
             $dto = $this->getForm()->getData();
 
             $this->commandBus->dispatch(new CreateCostItem($dto));

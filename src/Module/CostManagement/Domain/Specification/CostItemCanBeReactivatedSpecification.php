@@ -13,6 +13,8 @@ use App\Module\CostManagement\Domain\Enum\CostItemStatus;
  *
  * Un item peut être réactivé seulement s'il est actuellement archivé
  * ET que sa période de couverture n'est pas encore terminée.
+ *
+ * @template-extends AbstractSpecification<CostItem>
  */
 final class CostItemCanBeReactivatedSpecification extends AbstractSpecification
 {

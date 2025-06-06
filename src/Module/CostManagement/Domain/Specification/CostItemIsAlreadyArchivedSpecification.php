@@ -9,9 +9,9 @@ use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 
 /**
- * @extends AbstractSpecification<CostItem>
+ * Spécification qui vérifie si un CostItem est déjà dans l'état ARCHIVED.
  *
- * Specifies that a CostItem is already in an ARCHIVED status.
+ * @template-extends AbstractSpecification<CostItem>
  */
 final class CostItemIsAlreadyArchivedSpecification extends AbstractSpecification
 {

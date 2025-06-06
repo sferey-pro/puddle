@@ -7,15 +7,19 @@ namespace App\Core\Specification;
 /**
  * Interface pour le pattern Specification.
  *
- * Définit un contrat unique : une méthode qui détermine si un objet "candidat"
- * satisfait à une règle ou un critère métier spécifique.
+ * Ce pattern permet d'encapsuler une règle métier qui peut être testée sur un objet (le "candidat").
+ * Le but est de créer des règles métier composables et réutilisables. Une spécification
+ * définit un contrat unique : une méthode qui détermine si un objet candidat satisfait
+ * à un critère spécifique.
+ *
+ * @template T Le type de l'objet candidat que cette spécification évalue.
  */
 interface SpecificationInterface
 {
     /**
      * Vérifie si le candidat donné satisfait à la spécification.
      *
-     * @param mixed $candidate L'objet à valider.
+     * @param T $candidate L'objet à valider.
      * @return bool Vrai si le candidat satisfait à la spécification, sinon faux.
      */
     public function isSatisfiedBy(mixed $candidate): bool;

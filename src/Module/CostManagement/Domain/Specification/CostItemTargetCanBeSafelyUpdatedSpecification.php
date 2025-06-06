@@ -12,7 +12,10 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  * Spécification qui garantit que le montant cible d'un CostItem peut être mis à jour en toute sécurité.
  *
  * Une mise à jour est considérée comme sûre si le nouveau montant cible n'est pas inférieur
- * au montant déjà couvert, évitant ainsi un état incohérent (sur-couverture).
+ * au montant déjà couvert. Cela prévient un état incohérent où un item serait
+ * "sur-couvert" par rapport à sa nouvelle cible.
+ *
+ * @template-extends AbstractSpecification<CostItem>
  */
 final class CostItemTargetCanBeSafelyUpdatedSpecification extends AbstractSpecification
 {
@@ -25,7 +28,7 @@ final class CostItemTargetCanBeSafelyUpdatedSpecification extends AbstractSpecif
      */
     public function isSatisfiedBy($candidate): bool
     {
-        // The new target amount must be greater than or equal to the current amount.
+        // Le nouveau montant cible doit être supérieur ou égal au montant actuel.
         return $this->newTargetAmount->isGreaterThanOrEqual($candidate->currentAmountCovered());
     }
 }

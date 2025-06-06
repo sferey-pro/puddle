@@ -12,7 +12,9 @@ use App\Module\CostManagement\Domain\Enum\CostItemStatus;
  * Spécification qui vérifie si un CostItem est considéré comme actif.
  *
  * Un item est actif si son statut est 'ACTIVE' et que la date actuelle
- * se trouve dans sa période de couverture.
+ * se trouve à l'intérieur de sa période de couverture.
+ *
+ * @template-extends AbstractSpecification<CostItem>
  */
 final class CostItemIsActiveSpecification extends AbstractSpecification
 {

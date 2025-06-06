@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Form;
 
-use App\Module\CostManagement\Application\DTO\AddCostItemDTO;
+use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,17 +40,24 @@ final class CostItemFormType extends AbstractType
             ->add('startDate', DateType::class, [
                 'label' => 'Date de Début',
                 'widget' => 'single_text',
+                'input' => 'datetime_immutable',
             ])
             ->add('endDate', DateType::class, [
                 'label' => 'Date de Fin',
                 'widget' => 'single_text',
-            ]);
+                'input' => 'datetime_immutable',
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Description (Optionnel)',
+                'required' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => AddCostItemDTO::class,
+            'data_class' => CreateCostItemDTO::class,
             'csrf_protection' => true,
             'csrf_token_id' => 'cost_item_form_token',
         ]);

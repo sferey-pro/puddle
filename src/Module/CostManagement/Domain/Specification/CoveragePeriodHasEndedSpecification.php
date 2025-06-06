@@ -8,10 +8,13 @@ use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 
 /**
- * @extends AbstractSpecification<CoveragePeriod>
+ * Spécification qui détermine si une `CoveragePeriod` est terminée.
  *
- * Specifies that a CoveragePeriod has ended based on the current date.
- * The period is considered ended if the current date is past the period's end date.
+ * Une période est considérée comme terminée si la date actuelle est
+ * strictement postérieure à la date de fin de la période. Si la date de fin
+ * est nulle, la période n'est jamais considérée comme terminée.
+ *
+ * @template-extends AbstractSpecification<CoveragePeriod>
  */
 final class CoveragePeriodHasEndedSpecification extends AbstractSpecification
 {
