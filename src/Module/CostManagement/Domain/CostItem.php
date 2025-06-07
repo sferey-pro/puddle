@@ -15,11 +15,11 @@ use App\Module\CostManagement\Domain\Event\CostItemCovered;
 use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemReactivated;
 use App\Module\CostManagement\Domain\Exception\CostItemException;
-use App\Module\CostManagement\Domain\Specification\CostItemCanBeArchivedSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemCanBeReactivatedSpecification;
+use App\Module\CostManagement\Domain\Specification\Composite\CostItemCanBeArchivedSpecification;
+use App\Module\CostManagement\Domain\Specification\Composite\CostItemCanBeReactivatedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemCanReceiveContributionSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemIsAlreadyArchivedSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemIsArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemTargetCanBeSafelyUpdatedSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
@@ -86,17 +86,19 @@ class CostItem extends AggregateRoot
      * C'est la factory method pour instancier un CostItem.
      */
     public static function create(
-        CostItemId $id,
         CostItemName $name,
         CostItemType $type,
         Money $targetAmount,
         CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ): self {
+
+        $id = CostItemId::generate();
+
         $costItem = new self($id, $name, $type, $targetAmount, $coveragePeriod, $description);
 
         $costItem->recordDomainEvent(new CostItemAdded(
-            $costItem->id(),
+            $id,
             $costItem->name(),
             $costItem->type(),
             $costItem->targetAmount(),
@@ -139,7 +141,7 @@ class CostItem extends AggregateRoot
     public function addContribution(Money $amount, ?ProductId $sourceProductId = null): void
     {
         if (!(new CostItemCanReceiveContributionSpecification())->isSatisfiedBy($this)) {
-            throw CostItemException::cannotReceiveContributionBecauseStatusIs($this->id, $this->status);
+            throw CostItemException::cannotReceiveContributionBecauseStatusIs($this->id(), $this->status);
         }
 
         if ($amount->getCurrency() !== $this->targetAmount->getCurrency()) {
@@ -154,7 +156,7 @@ class CostItem extends AggregateRoot
         $this->contributions->add($contribution);
 
         $this->recordDomainEvent(new CostContributionReceived(
-            $this->id,
+            $this->id(),
             $contribution->id(),
             $contribution->amount(),
             $this->currentAmountCovered(),
@@ -176,7 +178,7 @@ class CostItem extends AggregateRoot
         $this->contributions->removeElement($contributionToRemove);
 
         $this->recordDomainEvent(new CostContributionRemoved(
-            $this->id,
+            $this->id(),
             $contributionToRemove->id(),
             $this->currentAmountCovered()
         ));
@@ -192,7 +194,7 @@ class CostItem extends AggregateRoot
         $contributionToCancel->cancel();
 
         $this->recordDomainEvent(new CostContributionCancelled(
-            $this->id,
+            $this->id(),
             $contributionToCancel->id(),
             $this->currentAmountCovered()
         ));
@@ -203,14 +205,14 @@ class CostItem extends AggregateRoot
      *
      * @throws CostItemException
      */
-    public function archive(?\DateTimeImmutable $currentDate = new \DateTimeImmutable()): void
+    public function archive(): void
     {
-        if ((new CostItemIsAlreadyArchivedSpecification())->isSatisfiedBy($this)) {
-            throw CostItemException::alreadyArchived($this->id);
+        if ((new CostItemIsArchivedSpecification())->isSatisfiedBy($this)) {
+            throw CostItemException::alreadyArchived($this->id());
         }
 
-        if (!(new CostItemCanBeArchivedSpecification($currentDate))->isSatisfiedBy($this)) {
-            throw CostItemException::cannotBeArchived($this->id);
+        if (!(new CostItemCanBeArchivedSpecification())->isSatisfiedBy($this)) {
+            throw CostItemException::cannotBeArchived($this->id());
         }
 
         $this->status = CostItemStatus::ARCHIVED;
@@ -222,10 +224,10 @@ class CostItem extends AggregateRoot
      *
      * @throws CostItemException
      */
-    public function reactivate(?\DateTimeImmutable $currentDate = new \DateTimeImmutable()): void
+    public function reactivate(): void
     {
-        if (!(new CostItemCanBeReactivatedSpecification($currentDate))->isSatisfiedBy($this)) {
-            throw CostItemException::cannotBeReactivated($this->id);
+        if (!(new CostItemCanBeReactivatedSpecification())->isSatisfiedBy($this)) {
+            throw CostItemException::cannotBeReactivated($this->id());
         }
 
         // Le nouveau statut dépend de si l'item était déjà couvert ou non.
@@ -249,7 +251,7 @@ class CostItem extends AggregateRoot
         ?string $description,
     ): void {
         if (!(new CostItemIsActiveSpecification())->isSatisfiedBy($this)) {
-            throw CostItemException::detailsUpdateNotAllowed($this->id, $this->status);
+            throw CostItemException::detailsUpdateNotAllowed($this->id(), $this->status);
         }
 
         if (!(new CostItemTargetCanBeSafelyUpdatedSpecification($targetAmount))->isSatisfiedBy($this)) {
@@ -267,7 +269,7 @@ class CostItem extends AggregateRoot
         $this->description = $description;
 
         $this->recordDomainEvent(new CostItemDetailsUpdated(
-            $this->id, $this->name, $oldName, $this->targetAmount, $oldTargetAmount,
+            $this->id(), $this->name, $oldName, $this->targetAmount, $oldTargetAmount,
             $this->coveragePeriod, $oldCoveragePeriod, $this->description, $oldDescription
         ));
 
@@ -284,7 +286,7 @@ class CostItem extends AggregateRoot
     {
         if ((new CostItemIsActiveSpecification())->isSatisfiedBy($this)) {
             $this->status = CostItemStatus::FULLY_COVERED;
-            $this->recordDomainEvent(new CostItemCovered($this->id, $this->currentAmountCovered));
+            $this->recordDomainEvent(new CostItemCovered($this->id(), $this->currentAmountCovered));
         }
     }
 

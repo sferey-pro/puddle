@@ -14,10 +14,22 @@ namespace App\Core\Specification;
  */
 abstract class AbstractSpecification implements SpecificationInterface
 {
+    protected ?string $failureReason = null;
+
     /**
      * Vérifie si le candidat donné satisfait à la spécification.
      *
      * @param t $candidate L'objet à valider
      */
     abstract public function isSatisfiedBy(mixed $candidate): bool;
+
+    public function getFailureReason(): ?string
+    {
+        return $this->failureReason;
+    }
+
+    protected function setFailureReason(string $reason): void
+    {
+        $this->failureReason = $reason;
+    }
 }

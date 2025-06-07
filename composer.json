@@ -33,6 +33,7 @@
         "symfony/asset": "^7",
         "symfony/asset-mapper": "^7",
         "symfony/cache": "^7",
+        "symfony/clock": "7.3.*",
         "symfony/console": "^7",
         "symfony/doctrine-messenger": "^7",
         "symfony/dotenv": "^7",

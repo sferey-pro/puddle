@@ -6,6 +6,7 @@ namespace App\Module\CostManagement\Domain\Specification;
 
 use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
+use App\Shared\Domain\Service\SystemTime;
 
 /**
  * Spécification qui détermine si une `CoveragePeriod` est terminée.
@@ -18,10 +19,6 @@ use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
  */
 final class CoveragePeriodHasEndedSpecification extends AbstractSpecification
 {
-    public function __construct(private readonly \DateTimeImmutable $currentDate)
-    {
-    }
-
     /**
      * @param CoveragePeriod $candidate
      */
@@ -31,6 +28,6 @@ final class CoveragePeriodHasEndedSpecification extends AbstractSpecification
             return false; // Une période sans date de fin explicite n'est pas "terminée"
         }
 
-        return $this->currentDate > $candidate->getEndDate();
+        return SystemTime::now() > $candidate->getEndDate();
     }
 }

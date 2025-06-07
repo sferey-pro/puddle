@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\UI\Controller;
 
 use App\Module\CostManagement\Application\Command\ArchiveCostItem;
+use App\Module\CostManagement\Application\Command\ReactivateCostItem;
 use App\Module\CostManagement\Application\Command\UpdateCostItem;
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
+use App\Module\CostManagement\Application\DTO\ReactivateCostItemDTO;
 use App\Module\CostManagement\Application\DTO\UpdateCostItemDTO;
 use App\Module\CostManagement\Application\Query\FindCostItemQuery;
 use App\Module\CostManagement\Application\Query\ListCostItemsQuery;
+use App\Module\CostManagement\Domain\Enum\CostItemType;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\UI\Form\CostItemFormType;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
-use App\Shared\Infrastructure\Doctrine\Paginator;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 
 final class CostItemController extends AbstractController
 {
@@ -32,22 +33,41 @@ final class CostItemController extends AbstractController
     }
 
     #[Template('@CostManagement/index.html.twig')]
-    public function index(
-        #[MapQueryParameter(filter: \FILTER_VALIDATE_INT)] int $page = 1,
-        #[MapQueryParameter(filter: \FILTER_VALIDATE_INT)] int $limit = Paginator::PAGE_SIZE,
-    ): array {
-        $costItemsPaginator = $this->queryBus->ask(new ListCostItemsQuery($page, $limit));
+    public function index(Request $request): Response
+    {
+        $costItems = $this->queryBus->ask(new ListCostItemsQuery());
 
-        return [
-            'costItems' => $costItemsPaginator,
+        $groupedCostItems = [
+            'unrecognized' => []
         ];
+
+        foreach (CostItemType::cases() as $type) {
+            $groupedCostItems[$type->value] = [];
+        }
+
+        foreach ($costItems as $costItem) {
+            $typeValue = $costItem->type ?: null;
+
+            // Si la clé de type existe dans notre tableau de groupes, c'est un type connu.
+            if (isset($groupedCostItems[$typeValue])) {
+                $groupedCostItems[$typeValue][] = $costItem;
+            } else {
+                // Sinon, c'est un type inconnu, on le met dans le groupe "unrecognized".
+                $groupedCostItems['unrecognized'][] = $costItem;
+            }
+        }
+
+        return $this->render('@CostManagement/index.html.twig', [
+            'groupedCostItems' => $groupedCostItems,
+            'costItemTypes' => CostItemType::cases(),
+        ]);
     }
 
     #[Template('@CostManagement/show.html.twig')]
     public function show(Request $request): array
     {
         $costItem = $this->queryBus->ask(new FindCostItemQuery(
-            identifier: CostItemId::fromString($request->get('id'))
+            id: CostItemId::fromString($request->get('id'))
         ));
 
         return [
@@ -91,9 +111,28 @@ final class CostItemController extends AbstractController
     public function archive(Request $request, string $id): Response
     {
         $costItemId = CostItemId::fromString($id);
-        if ($this->isCsrfTokenValid('archive'.$id, $request->request->get('_token'))) {
+
+        if ($this->isCsrfTokenValid('archive_'.$id, $request->request->get('_token'))) {
             try {
                 $this->commandBus->dispatch(new ArchiveCostItem($costItemId));
+                $this->addFlash('success', 'Le poste de coût a été archivé.');
+            } catch (\DomainException $e) {
+                $this->addFlash('danger', $e->getMessage());
+            }
+        } else {
+            $this->addFlash('danger', 'Jeton CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('cost_item_index');
+    }
+
+    public function reactivate(Request $request, string $id): Response
+    {
+        $costItemId = CostItemId::fromString($id);
+
+        if ($this->isCsrfTokenValid('reactivate_'.$id, $request->request->get('_token'))) {
+            try {
+                $this->commandBus->dispatch(new ReactivateCostItem($costItemId));
                 $this->addFlash('success', 'Le poste de coût a été archivé.');
             } catch (\DomainException $e) {
                 $this->addFlash('danger', $e->getMessage());

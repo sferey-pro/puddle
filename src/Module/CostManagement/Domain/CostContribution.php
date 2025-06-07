@@ -19,7 +19,7 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  */
 class CostContribution
 {
-    private CostContributionId $id;
+
     private CostItem $costItem;
     private Money $amount;
     private \DateTimeImmutable $contributedAt;
@@ -31,11 +31,11 @@ class CostContribution
      * Cela garantit que chaque nouvelle contribution est correctement initialisée.
      */
     private function __construct(
+        private CostContributionId $id,
         CostItem $costItem,
         Money $amount,
         ?ProductId $sourceProductId = null
     ) {
-        $this->id = CostContributionId::generate();
         $this->costItem = $costItem;
         $this->amount = $amount;
         $this->sourceProductId = $sourceProductId;
@@ -51,7 +51,9 @@ class CostContribution
         Money $amount,
         ?ProductId $sourceProductId = null
     ): self {
-        return new self($costItem, $amount, $sourceProductId);
+        $id = CostContributionId::generate();
+
+        return new self($id, $costItem, $amount, $sourceProductId);
     }
 
     /**

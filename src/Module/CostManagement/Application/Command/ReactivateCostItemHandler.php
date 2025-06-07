@@ -9,8 +9,11 @@ use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Gère l'exécution de la commande de réactivation d'un poste de coût.
+ */
 #[AsCommandHandler]
-final class ArchiveCostItemHandler
+final readonly class ReactivateCostItemHandler
 {
     public function __construct(
         private readonly CostItemRepositoryInterface $repository,
@@ -18,15 +21,18 @@ final class ArchiveCostItemHandler
     ) {
     }
 
-    public function __invoke(ArchiveCostItem $command): void
+    /**
+     * Exécute la commande.
+     */
+    public function __invoke(ReactivateCostItem $command): void
     {
-        $costItem = $this->repository->ofId($command->costItemId);
+        $costItem = $this->repository->findOrFail($command->costItemId);
 
         if (!$costItem) {
             throw CostItemException::notFoundWithId($command->costItemId);
         }
 
-        $costItem->archive();
+        $costItem->reactivate();
 
         $this->repository->save($costItem, true);
 

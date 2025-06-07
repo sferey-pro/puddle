@@ -40,7 +40,7 @@ interface CostItemRepositoryInterface extends RepositoryInterface
      *
      * @return CostItem|null L'agrégat trouvé ou null s'il n'existe pas
      */
-    public function ofIdentifier(CostItemId $identifier): ?CostItem;
+    public function ofId(CostItemId $id): ?CostItem;
 
     /**
      * Trouve tous les postes de coûts qui sont actuellement actifs et non entièrement couverts.
@@ -49,4 +49,13 @@ interface CostItemRepositoryInterface extends RepositoryInterface
      * @return CostItem[]
      */
     public function findActiveAndUncovered(): array;
+
+    /**
+     * Trouve une entité CostItem par son ID ou lève une exception si elle n'est pas trouvée.
+     *
+     * @param CostItemId $id
+     * @return CostItem
+     * @throws CostItemException
+     */
+    public function findOrFail(CostItemId $id): CostItem;
 }

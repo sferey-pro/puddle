@@ -15,7 +15,7 @@ namespace App\Core\Specification;
  *
  * @implements SpecificationInterface<T>
  */
-class AndSpecification implements SpecificationInterface
+class AndSpecification extends AbstractSpecification implements SpecificationInterface
 {
     /**
      * @var SpecificationInterface<T>[]

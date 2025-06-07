@@ -41,7 +41,13 @@ return static function (RoutingConfigurator $routes): void {
 
     // 6. Archivage d'un produit (Archive)
     $costItemRoutes->add('archive', '/{id}/archive')
-        ->controller([CostItemController::class, 'delete'])
+        ->controller([CostItemController::class, 'archive'])
+        ->requirements(['id' => Requirement::UUID_V7])
+        ->methods([Request::METHOD_POST]);
+
+    // 7. Réactivation d'un produit archivé (Reactivate)
+    $costItemRoutes->add('reactivate', '/{id}/reactivate')
+        ->controller([CostItemController::class, 'reactivate'])
         ->requirements(['id' => Requirement::UUID_V7])
         ->methods([Request::METHOD_POST]);
 };

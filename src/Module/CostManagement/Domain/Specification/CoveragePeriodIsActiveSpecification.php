@@ -6,6 +6,7 @@ namespace App\Module\CostManagement\Domain\Specification;
 
 use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
+use App\Shared\Domain\Service\SystemTime;
 
 /**
  * Spécification qui détermine si une `CoveragePeriod` est actuellement active.
@@ -18,19 +19,15 @@ use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
  */
 final class CoveragePeriodIsActiveSpecification extends AbstractSpecification
 {
-    public function __construct(private readonly \DateTimeImmutable $currentDate)
-    {
-    }
-
     /**
      * @param CoveragePeriod $candidate
      */
     public function isSatisfiedBy($candidate): bool
     {
         if (null === $candidate->getEndDate()) {
-            return $this->currentDate >= $candidate->getStartDate();
+            return SystemTime::now() >= $candidate->getStartDate();
         }
 
-        return $this->currentDate >= $candidate->getStartDate() && $this->currentDate <= $candidate->getEndDate();
+        return SystemTime::now() >= $candidate->getStartDate() && SystemTime::now() <= $candidate->getEndDate();
     }
 }

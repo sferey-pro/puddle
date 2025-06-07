@@ -14,7 +14,7 @@ use App\Shared\Application\Query\QueryInterface;
 final readonly class FindCostItemQuery implements QueryInterface
 {
     public function __construct(
-        public CostItemId $identifier,
+        public CostItemId $id,
     ) {
     }
 }

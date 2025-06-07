@@ -14,7 +14,7 @@ namespace App\Core\Specification;
  *
  * @implements SpecificationInterface<T>
  */
-class NotSpecification implements SpecificationInterface
+class NotSpecification extends AbstractSpecification implements SpecificationInterface
 {
     /**
      * @param SpecificationInterface<T> $specification la spécification à inverser

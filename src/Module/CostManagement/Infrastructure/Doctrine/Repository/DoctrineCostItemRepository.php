@@ -6,8 +6,10 @@ namespace App\Module\CostManagement\Infrastructure\Doctrine\Repository;
 
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
+use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
+use App\Shared\Domain\Service\SystemTime;
 use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
@@ -26,11 +28,22 @@ class DoctrineCostItemRepository extends ORMAbstractRepository implements CostIt
     public function findActiveAndUncovered(): array
     {
         return $this->withStatus(CostItemStatus::ACTIVE)
-            ->withUncovered(new \DateTimeImmutable())
+            ->withUncovered(SystemTime::now())
             ->select(CostItemId::class)
             ->getQuery()
             ->getResults(AbstractQuery::HYDRATE_ARRAY)
         ;
+    }
+
+    public function findOrFail(CostItemId $id): CostItem
+    {
+        $costItem = $this->ofId($id);
+
+        if (null === $costItem) {
+            throw CostItemException::notFoundWithId($id);
+        }
+
+        return $costItem;
     }
 
     public function withStatus(CostItemStatus $status): ?self
@@ -69,8 +82,8 @@ class DoctrineCostItemRepository extends ORMAbstractRepository implements CostIt
         $this->getEntityManager()->remove($costItem);
     }
 
-    public function ofIdentifier(CostItemId $identifier): ?CostItem
+    public function ofId(CostItemId $id): ?CostItem
     {
-        return $this->findOneBy(['identifier.value' => $identifier->value]);
+        return $this->findOneBy(['id.value' => $id->value]);
     }
 }

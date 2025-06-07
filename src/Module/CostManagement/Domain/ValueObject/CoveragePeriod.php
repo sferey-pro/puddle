@@ -42,23 +42,23 @@ final readonly class CoveragePeriod
         return $this->endDate;
     }
 
-    public function isActive(\DateTimeImmutable $currentDate): bool
-    {
-        $spec = new CoveragePeriodIsActiveSpecification($currentDate);
+    // public function isActive(\DateTimeImmutable $currentDate): bool
+    // {
+    //     $spec = new CoveragePeriodIsActiveSpecification($currentDate);
 
-        return $spec->isSatisfiedBy($this);
-    }
+    //     return $spec->isSatisfiedBy($this);
+    // }
 
     /**
      * Vérifie si la période de couverture est terminée par rapport à une date donnée.
      * Si la date de fin n'est pas définie (null), la période n'est jamais considérée comme terminée.
      */
-    public function isEnded(\DateTimeImmutable $currentDate): bool
-    {
-        $spec = new CoveragePeriodHasEndedSpecification($currentDate);
+    // public function isEnded(\DateTimeImmutable $currentDate): bool
+    // {
+    //     $spec = new CoveragePeriodHasEndedSpecification($currentDate);
 
-        return $spec->isSatisfiedBy($this);
-    }
+    //     return $spec->isSatisfiedBy($this);
+    // }
 
     public function equals(self $other): bool
     {

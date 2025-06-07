@@ -19,8 +19,7 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  */
 final class CostItemTargetCanBeSafelyUpdatedSpecification extends AbstractSpecification
 {
-    public function __construct(private readonly Money $newTargetAmount)
-    {
+    public function __construct(private readonly Money $newTargetAmount) {
     }
 
     /**

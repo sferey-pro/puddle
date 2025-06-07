@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Application\Command;
 
 use App\Module\CostManagement\Domain\CostItem;
+use App\Module\CostManagement\Domain\Enum\CostItemType;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
@@ -28,12 +29,13 @@ final class CreateCostItemHandler
         // Création de l'agrégat à partir des données du DTO
         $costItem = CostItem::create(
             name: new CostItemName($dto->name),
-            type: new CostItemType($dto->type),
+            type: CostItemType::from($dto->type),
             targetAmount: new Money($dto->targetAmount, $dto->currency),
             coveragePeriod: CoveragePeriod::create(
                 $dto->startDate,
                 $dto->endDate
-            )
+            ),
+            description: $dto->description
         );
 
         // Sauvegarde

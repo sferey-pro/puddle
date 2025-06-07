@@ -19,9 +19,9 @@ class DoctrineCostItemViewRepository extends ODMAbstractRepository implements Co
         parent::__construct($registry, self::DOCUMENT_CLASS);
     }
 
-    public function findById(CostItemId $identifier): ?CostItemView
+    public function findById(CostItemId $id): ?CostItemView
     {
-        return parent::findOneBy(['id' => $identifier->value]);
+        return parent::findOneBy(['id' => $id->value]);
     }
 
     public function findAll(): array

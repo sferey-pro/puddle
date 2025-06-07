@@ -7,6 +7,7 @@ namespace App\Module\CostManagement\Domain\Specification;
 use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
+use App\Shared\Domain\Service\ClockInterface;
 
 /**
  * Spécification qui vérifie si un CostItem est considéré comme actif.
@@ -18,18 +19,14 @@ use App\Module\CostManagement\Domain\Enum\CostItemStatus;
  */
 final class CostItemIsActiveSpecification extends AbstractSpecification
 {
-    public function __construct(
-        private readonly \DateTimeImmutable $currentDate = new \DateTimeImmutable(),
-    ) {
-    }
-
     /**
      * @param CostItem $candidate
      */
     public function isSatisfiedBy($candidate): bool
     {
         $statusIsActive = $candidate->status()->equals(CostItemStatus::ACTIVE);
-        $coveragePeriodIsActive = (new CoveragePeriodIsActiveSpecification($this->currentDate))
+
+        $coveragePeriodIsActive = (new CoveragePeriodIsActiveSpecification())
             ->isSatisfiedBy($candidate->coveragePeriod());
 
         return $statusIsActive && $coveragePeriodIsActive;

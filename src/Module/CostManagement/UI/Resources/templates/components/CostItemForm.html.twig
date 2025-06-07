@@ -4,9 +4,15 @@
         'data-live-action-param': 'save',
         novalidate: true,
         class: 'space-y',
-    }}) }}
-            <div class="mb-3">
+        }})
+    }}
+        <div class="row">
+                <div class="col-md-4">
+                    {{ form_row(form.type) }}
+                </div>
+                <div class="col-md-8">
                     {{ form_row(form.name) }}
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
@@ -22,6 +28,11 @@
                 </div>
                 <div class="col-md-6">
                     {{ form_row(form.endDate) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(form.description) }}
                 </div>
             </div>
 

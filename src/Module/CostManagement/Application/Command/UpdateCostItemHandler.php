@@ -27,7 +27,7 @@ final class UpdateCostItemHandler
         $dto = $command->dto;
         $costItemId = CostItemId::fromString($dto->id);
 
-        $costItem = $this->repository->ofIdentifier($costItemId);
+        $costItem = $this->repository->ofId($costItemId);
 
         if (!$costItem) {
             throw CostItemException::notFoundWithId($costItemId);

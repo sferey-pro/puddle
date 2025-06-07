@@ -24,4 +24,10 @@ interface SpecificationInterface
      * @return bool vrai si le candidat satisfait à la spécification, sinon faux
      */
     public function isSatisfiedBy(mixed $candidate): bool;
+
+    /**
+     * Retourne la raison pour laquelle la dernière évaluation a échoué.
+     * Retourne null si la dernière évaluation a réussi.
+     */
+    public function getFailureReason(): ?string;
 }

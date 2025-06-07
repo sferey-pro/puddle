@@ -22,6 +22,6 @@ final readonly class FindCostItemQueryHandler
 
     public function __invoke(FindCostItemQuery $query): ?CostItemView
     {
-        return $this->repository->findById($query->identifier);
+        return $this->repository->findById($query->id);
     }
 }

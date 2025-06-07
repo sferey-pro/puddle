@@ -6,47 +6,45 @@ namespace App\Module\CostManagement\Application\DTO;
 
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemType;
-use App\Shared\Application\DTO\AbstractDTO;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * DTO pour la mise à jour d'un Cost Item.
  * Reprend les champs de CreateCostItemDTO et ajoute l'ID de l'item à modifier.
  */
-final class UpdateCostItemDTO extends AbstractDTO
+final class UpdateCostItemDTO
 {
     #[Assert\NotBlank]
-    public ?string $id;
+    public ?string $id = '';
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 3)]
-    public ?string $name;
+    public ?string $name = '';
 
     #[Assert\NotBlank]
     #[Assert\Choice(callback: [CostItemType::class, 'values'])]
-    public ?string $type;
+    public ?string $type = '';
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public ?int $targetAmount;
+    public ?int $targetAmount = 0;
 
     #[Assert\NotBlank]
     public string $currency = 'EUR';
 
     #[Assert\NotBlank]
     #[Assert\Type(\DateTimeImmutable::class)]
-    public ?\DateTimeImmutable $startDate;
+    public \DateTimeImmutable $startDate;
 
     #[Assert\NotBlank]
     #[Assert\Type(\DateTimeImmutable::class)]
     #[Assert\GreaterThan(propertyPath: 'startDate')]
-    public ?\DateTimeImmutable $endDate;
+    public \DateTimeImmutable $endDate;
 
-    public ?string $description;
+    public ?string $description = null;
 
     /**
      * Factory method pour créer le DTO à partir d'un agrégat CostItem.
-     * C'est utile pour pré-remplir le formulaire d'édition.
      */
     public static function fromCostItem(CostItem $costItem): self
     {

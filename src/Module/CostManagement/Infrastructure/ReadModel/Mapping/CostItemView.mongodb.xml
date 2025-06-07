@@ -7,6 +7,7 @@
     <document name="App\Module\CostManagement\Application\ReadModel\CostItemView" collection="cost_item_views" repository-class="App\Module\CostManagement\Infrastructure\ReadModel\Repository\DoctrineCostItemViewRepository">
         <id field-name="id" strategy="NONE" type="string"/>
         <field field-name="name" type="string"/>
+        <field field-name="type" type="string"/>
         <field field-name="targetAmount" type="float"/>
         <field field-name="currentAmount" type="float"/>
         <field field-name="currency" type="string"/>

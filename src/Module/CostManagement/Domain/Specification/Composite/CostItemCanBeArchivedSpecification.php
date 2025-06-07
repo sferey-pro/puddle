@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\CostManagement\Domain\Specification;
+namespace App\Module\CostManagement\Domain\Specification\Composite;
 
 use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\CostItem;
+use App\Module\CostManagement\Domain\Specification\CostItemHasZeroTargetSpecification;
+use App\Module\CostManagement\Domain\Specification\CoveragePeriodHasEndedSpecification;
 
 /**
  * Spécification qui vérifie si un CostItem remplit les conditions pour être archivé.
@@ -14,6 +16,8 @@ use App\Module\CostManagement\Domain\CostItem;
  * 1. La période de couverture du poste de coût est terminée.
  * OU
  * 2. Le poste est encore actif mais n'est pas entièrement couvert (permettant un archivage anticipé, comme une annulation).
+ * OU
+ * 3. Le coût cible est 0, il n'y a pas d'objectif financier.
  *
  * Note : Cette spécification ne vérifie pas si l'item est *déjà* archivé.
  * Cette vérification est de la responsabilité de l'agrégat (CostItem) avant d'appliquer cette spécification,
@@ -23,27 +27,24 @@ use App\Module\CostManagement\Domain\CostItem;
  */
 final class CostItemCanBeArchivedSpecification extends AbstractSpecification
 {
-    public function __construct(
-        private readonly \DateTimeImmutable $currentDate = new \DateTimeImmutable(),
-    ) {
-    }
-
     /**
      * @param CostItem $candidate L'objet CostItem à évaluer
      */
     public function isSatisfiedBy($candidate): bool
     {
         // Règle 1: La période de couverture est terminée.
-        // On instancie la spécification adéquate et on lui passe la propriété pertinente de notre candidat.
-        $coveragePeriodHasEnded = (new CoveragePeriodHasEndedSpecification($this->currentDate))
+        $coveragePeriodHasEnded = (new CoveragePeriodHasEndedSpecification())
             ->isSatisfiedBy($candidate->coveragePeriod());
 
         // Règle 2: L'item est actif mais pas encore couvert.
-        // On utilise ici la spécification composite qui attend l'objet CostItem en entier.
-        $isActiveAndNotCovered = (new Composite\CostItemIsActiveAndNotCoveredSpecification())
+        $isActiveAndNotCovered = (new CostItemIsActiveAndNotCoveredSpecification())
+            ->isSatisfiedBy($candidate);
+
+        // Règle 3: Le coût cible est 0, il n'y a pas d'objectif financier
+        $hasZeroTarget = (new CostItemHasZeroTargetSpecification())
             ->isSatisfiedBy($candidate);
 
         // Un CostItem peut être archivé si l'une ou l'autre de ces conditions est remplie.
-        return $coveragePeriodHasEnded || $isActiveAndNotCovered;
+        return $coveragePeriodHasEnded || $isActiveAndNotCovered || $hasZeroTarget;
     }
 }

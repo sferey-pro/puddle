@@ -6,7 +6,6 @@ namespace App\Module\CostManagement\UI\Twig\Components;
 
 use App\Module\CostManagement\Application\Command\AddCostContribution;
 use App\Module\CostManagement\Application\DTO\AddContributionDTO;
-use App\Module\CostManagement\Application\ReadModel\CostItemView;
 use App\Module\CostManagement\UI\Form\AddContributionFormType;
 use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,8 +25,8 @@ class AddContributionForm extends AbstractController
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
-    #[LiveProp]
-    public CostItemView $costItem;
+    #[LiveProp(updateFromParent: true)]
+    public string $costItemId;
 
     public AddContributionDTO $data;
 
@@ -42,7 +41,7 @@ class AddContributionForm extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         $this->data = new AddContributionDTO();
-        $this->data->costItemId = $this->costItem->id;
+        $this->data->costItemId = $this->costItemId;
 
         return $this->createForm(AddContributionFormType::class, $this->data);
     }
@@ -59,6 +58,6 @@ class AddContributionForm extends AbstractController
 
         // On réinitialise le formulaire pour un nouvel ajout
         $this->resetForm();
-        $this->data->costItemId = $this->costItem->id;
+        $this->data->costItemId = $this->costItemId;
     }
 }

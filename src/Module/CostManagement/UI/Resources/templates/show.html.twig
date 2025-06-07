@@ -61,16 +61,14 @@
                         <div class="card-actions">
                             <div class="my-4" data-turbo-permanent>
                                 <h5>Ajouter une contribution</h5>
-                                {{ component('AddContributionForm', {costItem: costItem}) }}
+                                {{ component('AddContributionForm', {costItemId: costItem.id}) }}
                             </div>
                         </div>
                     </div>
                     <div class="card-body text-secondary">
                         <div
                             data-controller="live"
-                            {# On passe l'ID du costItem au composant #}
                             data-live-id="contribution-list-{{ costItem.id }}"
-                            {# L'événement `contribution:added` (de AddContributionForm) ou `contribution:removed` (de ce composant) déclenchera le rechargement #}
                             data-action="contribution:added@window->live#reload contribution:removed@window->live#reload"
                         >
                             {{ component('CostContributionList', {costItemId: costItem.id}) }}
@@ -122,14 +120,18 @@
                         </div>
                         <div class="mt-4">
                             <h4 class="card-title">Actions</h4>
-                            <div class="d-grid gap-2">
-                                {# Ajoutez ici la logique pour les actions comme archiver/réactiver #}
+                            <div class="d-grid gap-2 mx-auto">
                                 {% if costItem.status == 'archived' %}
-                                    <a href="#" class="btn btn-outline-success">Réactiver</a>
+                                    <form class="form-block" action="{{ path('cost_item_reactivate', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('reactivate_' ~ costItem.id) }}">
+                                        <button type="submit" class="btn btn-outline-success w-100">
+                                            <twig:ux:icon name="tabler:archive-off" class="icon" /> Réactiver
+                                        </button>
+                                    </form>
                                 {% else %}
-                                    <form action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ costItem.id) }}">
-                                        <button type="submit" class="btn btn-danger">
+                                    <form class="form-block" action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('archive_' ~ costItem.id) }}">
+                                        <button type="submit" class="btn btn-danger w-100">
                                             <twig:ux:icon name="tabler:archive" class="icon" /> Archiver
                                         </button>
                                     </form>

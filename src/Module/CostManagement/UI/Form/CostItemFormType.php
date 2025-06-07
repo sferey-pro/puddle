@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\UI\Form;
 
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
+use App\Module\CostManagement\Domain\Enum\CostItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -24,6 +25,15 @@ final class CostItemFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Ex: Loyer Janvier, Facture électricité',
                 ],
+                'empty_data' => ''
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type ',
+                'choices' => array_combine(
+                    array_map(fn ($case) => $case->getLabel(), CostItemType::cases()),
+                    array_map(fn ($case) => $case->value, CostItemType::cases())
+                ),
+                'placeholder' => 'Sélectionnez un type',
             ])
             ->add('targetAmount', MoneyType::class, [
                 'label' => 'Montant Cible',

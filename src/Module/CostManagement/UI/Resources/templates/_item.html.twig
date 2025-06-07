@@ -36,27 +36,21 @@
         {% endif %}
     </td>
     <td class="text-end">
-        <div class="dropdown">
-            <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown">
-                Actions
-            </button>
-            <div class="dropdown-menu dropdown-menu-end">
-                <a class="dropdown-item" href="{{ path('cost_item_show', {id: costItem.id}) }}">
-                    <twig:ux:icon name="tabler:eye" class="icon" /> Voir
-                </a>
-                <a class="dropdown-item" href="{{ path('cost_item_edit', {id: costItem.id}) }}">
-                    <twig:ux:icon name="tabler:edit" class="icon" /> Modifier
-                </a>
-                {% if costItem.status != 'archived' %}
-                    <form action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ costItem.id) }}">
-                        <button type="submit" class="dropdown-item text-danger">
-                            <twig:ux:icon name="tabler:archive" class="icon" /> Archiver
-                        </button>
-                    </form>
-                {% endif %}
-            </div>
+        <div class="btn-group" role="group" aria-label="Actions pour le poste de coût">
+            <a href="{{ path('cost_item_show', {id: costItem.id}) }}" class="btn btn-outline btn-icon" title="Voir les détails">
+                <twig:ux:icon name="tabler:eye" class="icon"/>
+            </a>
+            <a href="{{ path('cost_item_edit', {id: costItem.id}) }}" class="btn btn-outline btn-icon" title="Modifier">
+                <twig:ux:icon name="tabler:edit" class="icon"/>
+            </a>
+            {% if costItem.status != 'archived' %}
+                <form method="POST" class="input-group" action="{{ path('cost_item_archive', {id: costItem.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ costItem.id) }}">
+                    <button type="button" class="btn btn-danger btn-icon">
+                        <twig:ux:icon name="tabler:archive" class="icon"/>
+                    </button>
+                </form>
+            {% endif %}
         </div>
-
     </td>
 </tr>

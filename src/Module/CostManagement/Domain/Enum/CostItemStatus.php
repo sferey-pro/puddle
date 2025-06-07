@@ -34,4 +34,19 @@ enum CostItemStatus: string
             self::ARCHIVED => 'Archivé',
         };
     }
+
+    /**
+     * @return array{label: string, color: string, dot: bool}
+     */
+    public function getBadgeConfiguration(): array
+    {
+        return [
+            'label' => $this->getLabel(),
+            'color' => match ($this) {
+                self::ACTIVE => 'blue',
+                self::FULLY_COVERED => 'green',
+                self::ARCHIVED => 'orange',
+            }
+        ];
+    }
 }

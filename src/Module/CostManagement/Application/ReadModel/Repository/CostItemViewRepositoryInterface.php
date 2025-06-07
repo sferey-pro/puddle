@@ -22,11 +22,11 @@ interface CostItemViewRepositoryInterface extends RepositoryInterface
     /**
      * Trouve une vue de poste de coût par son identifiant.
      *
-     * @param CostItemId $identifier L'identifiant du poste de coût
+     * @param CostItemId $id L'identifiant du poste de coût
      *
      * @return CostItemView|null la vue trouvée ou null
      */
-    public function findById(CostItemId $identifier): ?CostItemView;
+    public function findById(CostItemId $id): ?CostItemView;
 
     /**
      * Persiste une vue de poste de coût.
