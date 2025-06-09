@@ -17,7 +17,7 @@ final class CreateCostItemDTO
     #[Sequentially(
         constraints: [
             new Assert\NotBlank(),
-            new Assert\Length(min: 3)
+            new Assert\Length(min: 3),
         ]
     )]
     public string $name = '';
@@ -25,7 +25,7 @@ final class CreateCostItemDTO
     #[Sequentially(
         constraints: [
             new Assert\NotBlank(),
-            new Assert\Choice(callback: [CostItemType::class, 'values'])
+            new Assert\Choice(callback: [CostItemType::class, 'values']),
         ]
     )]
     public ?string $type = '';
@@ -33,7 +33,7 @@ final class CreateCostItemDTO
     #[Sequentially(
         constraints: [
             new Assert\NotBlank(),
-            new Assert\PositiveOrZero()
+            new Assert\PositiveOrZero(),
         ]
     )]
     public int $targetAmount = 0;
@@ -44,7 +44,7 @@ final class CreateCostItemDTO
     #[Sequentially(
         constraints: [
             new Assert\NotBlank(),
-            new Assert\Type(\DateTimeImmutable::class)
+            new Assert\Type(\DateTimeImmutable::class),
         ]
     )]
     public \DateTimeImmutable $startDate;
@@ -53,7 +53,7 @@ final class CreateCostItemDTO
         constraints: [
             new Assert\NotBlank(),
             new Assert\Type(\DateTimeImmutable::class),
-            new Assert\GreaterThan(propertyPath: 'startDate')
+            new Assert\GreaterThan(propertyPath: 'startDate'),
         ]
     )]
     public \DateTimeImmutable $endDate;
@@ -62,7 +62,8 @@ final class CreateCostItemDTO
 
     public ?string $userId = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Pré-remplir les dates pour le mois en cours
         $this->startDate = new \DateTimeImmutable('first day of this month');
         $this->endDate = new \DateTimeImmutable('last day of this month');

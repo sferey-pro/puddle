@@ -7,13 +7,10 @@ namespace App\Module\CostManagement\UI\Controller;
 use App\Module\CostManagement\Application\Command\ArchiveCostItem;
 use App\Module\CostManagement\Application\Command\ReactivateCostItem;
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
-use App\Module\CostManagement\Application\DTO\ReactivateCostItemDTO;
-use App\Module\CostManagement\Application\DTO\UpdateCostItemDTO;
 use App\Module\CostManagement\Application\Query\FindCostItemQuery;
 use App\Module\CostManagement\Application\Query\ListCostItemsQuery;
 use App\Module\CostManagement\Domain\Enum\CostItemType;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Module\CostManagement\UI\Form\CostItemFormType;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
 use Psr\Log\LoggerInterface;
@@ -37,7 +34,7 @@ final class CostItemController extends AbstractController
         $costItems = $this->queryBus->ask(new ListCostItemsQuery());
 
         $groupedCostItems = [
-            'unrecognized' => []
+            'unrecognized' => [],
         ];
 
         foreach (CostItemType::cases() as $type) {

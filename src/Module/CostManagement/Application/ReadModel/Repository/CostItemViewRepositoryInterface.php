@@ -48,9 +48,9 @@ interface CostItemViewRepositoryInterface extends RepositoryInterface
     /**
      * Trouve une entité CostItem par son ID ou lève une exception si elle n'est pas trouvée.
      *
-     * @param CostItemId $id
-     * @return CostItem
      * @throws CostItemException
+     *
+     * @return CostItem
      */
     public function findOrFail(CostItemId $id): CostItemView;
 }

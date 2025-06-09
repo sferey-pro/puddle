@@ -34,7 +34,7 @@
                                     <twig:Badge
                                         variant="solid"
                                         value="{{ value }}"
-                                        enumType="{{ column.enum_class | default(null) }}"
+                                        enumType="{{ column.enum_class|default(null) }}"
                                     />
                                 {% else %}
                                     {{ value|default('N/A') }}

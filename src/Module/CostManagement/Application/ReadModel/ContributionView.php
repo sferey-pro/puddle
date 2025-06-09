@@ -12,19 +12,18 @@ use App\Module\CostManagement\Domain\CostContribution;
  */
 class ContributionView
 {
-    public  string $id;
-    public  float $amount;
-    public  string $currency;
-    public  \DateTimeImmutable $contributedAt;
-    public  ?string $sourceProductId = null;
-
+    public string $id;
+    public float $amount;
+    public string $currency;
+    public \DateTimeImmutable $contributedAt;
+    public ?string $sourceProductId = null;
 
     public function __construct(
         string $id,
         float $amount,
         string $currency,
         \DateTimeImmutable $contributedAt,
-         ?string $sourceProductId,
+        ?string $sourceProductId,
     ) {
         $this->id = $id;
         $this->amount = $amount;
@@ -35,9 +34,6 @@ class ContributionView
 
     /**
      * Factory pour créer une vue à partir d'un agrégat existant (pour la réconciliation).
-
-     * @param CostContribution $contribution
-     * @return ContributionView
      */
     public static function fromEntity(CostContribution $contribution): self
     {

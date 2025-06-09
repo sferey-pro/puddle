@@ -19,7 +19,6 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  */
 class CostContribution
 {
-
     private CostItem $costItem;
     private Money $amount;
     private \DateTimeImmutable $contributedAt;
@@ -34,7 +33,7 @@ class CostContribution
         private CostContributionId $id,
         CostItem $costItem,
         Money $amount,
-        ?ProductId $sourceProductId = null
+        ?ProductId $sourceProductId = null,
     ) {
         $this->costItem = $costItem;
         $this->amount = $amount;
@@ -49,7 +48,7 @@ class CostContribution
     public static function create(
         CostItem $costItem,
         Money $amount,
-        ?ProductId $sourceProductId = null
+        ?ProductId $sourceProductId = null,
     ): self {
         $id = CostContributionId::generate();
 
@@ -75,7 +74,7 @@ class CostContribution
 
     public function isActive(): bool
     {
-        return $this->status === ContributionStatus::ACTIVE;
+        return ContributionStatus::ACTIVE === $this->status;
     }
 
     public function id(): CostContributionId

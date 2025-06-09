@@ -30,7 +30,7 @@ class ReconcileCostItemsCommand extends Command
         private readonly EntityManagerInterface $entityManager,
         private readonly CostItemRepositoryInterface $costItemRepository,
         private readonly CostItemViewRepositoryInterface $costItemViewRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }
@@ -52,21 +52,21 @@ class ReconcileCostItemsCommand extends Command
             if (!$costItemView) {
                 // Le Read Model n'existe pas, il faut le créer
                 $this->createViewFromAggregate($costItem);
-                $this->logger->warning('CostItemView manquant créé.', ['id' => (string)$costItem->id()]);
-                $createdCount++;
+                $this->logger->warning('CostItemView manquant créé.', ['id' => (string) $costItem->id()]);
+                ++$createdCount;
             } elseif ($costItemView->isDifferentFrom($costItem)) {
                 // Le Read Model existe mais est désynchronisé, on le met à jour
                 $costItemView->updateFromAggregate($costItem);
                 $this->costItemViewRepository->save($costItemView);
-                $this->logger->info('CostItemView réconcilié.', ['id' => (string)$costItem->id()]);
-                $reconciledCount++;
+                $this->logger->info('CostItemView réconcilié.', ['id' => (string) $costItem->id()]);
+                ++$reconciledCount;
             }
 
             // On détache l'entité du manager pour libérer la mémoire
             $this->entityManager->detach($costItem);
         }
 
-        $io->success(sprintf(
+        $io->success(\sprintf(
             'Réconciliation terminée. %d vues créées, %d vues mises à jour.',
             $createdCount,
             $reconciledCount

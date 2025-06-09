@@ -29,6 +29,7 @@ final class CostItemIsFullyCoveredSpecification extends AbstractSpecification
 
         if ($targetAmount->isEqualTo(Money::zero())) {
             $this->setFailureReason('Le montant cible est de zéro ou moins, le concept de "couverture" ne s\'applique pas.');
+
             return false;
         }
 

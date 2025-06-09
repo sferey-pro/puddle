@@ -7,7 +7,6 @@ namespace App\Module\CostManagement\Domain\Specification;
 use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
-use App\Shared\Domain\Service\ClockInterface;
 
 /**
  * Spécification qui vérifie si un CostItem est considéré comme actif.

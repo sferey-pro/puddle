@@ -18,7 +18,7 @@ final class SystemTime
 
     public static function now(): \DateTimeImmutable
     {
-        if (self::$clock === null) {
+        if (null === self::$clock) {
             // Cette exception garantit que l'horloge est toujours initialisée.
             throw new \LogicException('The SystemTime clock has not been initialized. Please call SystemTime::set() at application startup.');
         }

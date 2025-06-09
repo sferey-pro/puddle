@@ -18,17 +18,17 @@ final class Badge
     /**
      * La méthode mount est le "constructeur" de notre composant.
      *
-     * @param mixed|null $value La donnée brute (bool, string...)
-     * @param string|null $label Forcer un libellé spécifique.
-     * @param string|null $color Forcer une couleur spécifique.
-     * @param string|null $enumType La classe de l'Enum à utiliser pour interpréter $value.
-     * @param string $variant Style du badge ('light' ou 'solid').
-     * @param bool $dot Afficher un point de statut.
-     * @param string|null $icon Afficher une icône.
-     * @param string $trueLabel Libellé pour le booléen TRUE.
-     * @param string $falseLabel Libellé pour le booléen FALSE.
-     * @param string $trueColor Couleur pour le booléen TRUE.
-     * @param string $falseColor Couleur pour le booléen FALSE.
+     * @param mixed|null  $value      La donnée brute (bool, string...)
+     * @param string|null $label      forcer un libellé spécifique
+     * @param string|null $color      forcer une couleur spécifique
+     * @param string|null $enumType   la classe de l'Enum à utiliser pour interpréter $value
+     * @param string      $variant    style du badge ('light' ou 'solid')
+     * @param bool        $dot        afficher un point de statut
+     * @param string|null $icon       afficher une icône
+     * @param string      $trueLabel  libellé pour le booléen TRUE
+     * @param string      $falseLabel libellé pour le booléen FALSE
+     * @param string      $trueColor  couleur pour le booléen TRUE
+     * @param string      $falseColor couleur pour le booléen FALSE
      */
     public function mount(
         mixed $value = null,
@@ -41,7 +41,7 @@ final class Badge
         string $trueLabel = 'Oui',
         string $falseLabel = 'Non',
         string $trueColor = 'green',
-        string $falseColor = 'red'
+        string $falseColor = 'red',
     ): void {
         // On assigne d'abord les props de style qui ne dépendent pas de la logique.
         $this->variant = $variant;
@@ -53,7 +53,7 @@ final class Badge
         $finalColor = $color;
 
         // 1. Logique pour les Enums
-        if ($enumType && is_string($value) && enum_exists($enumType)) {
+        if ($enumType && \is_string($value) && enum_exists($enumType)) {
             $enumCase = $enumType::tryFrom($value);
             if ($enumCase && method_exists($enumCase, 'getBadgeConfiguration')) {
                 $config = $enumCase->getBadgeConfiguration();
@@ -63,7 +63,7 @@ final class Badge
         }
 
         // 2. Logique pour les Booléens
-        elseif (is_bool($value)) {
+        elseif (\is_bool($value)) {
             $finalLabel = $value ? $trueLabel : $falseLabel;
             $finalColor = $value ? $trueColor : $falseColor;
         }

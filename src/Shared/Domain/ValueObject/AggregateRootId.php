@@ -34,8 +34,9 @@ trait AggregateRootId
      *
      * La comparaison se base sur la valeur de l'objet Uid sous-jacent.
      *
-     * @param object|null $other L'objet à comparer.
-     * @return bool Vrai si les identifiants sont identiques, sinon faux.
+     * @param object|null $other L'objet à comparer
+     *
+     * @return bool vrai si les identifiants sont identiques, sinon faux
      */
     public function equals(?object $other): bool
     {

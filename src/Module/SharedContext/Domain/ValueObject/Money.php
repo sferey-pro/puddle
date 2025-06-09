@@ -80,7 +80,6 @@ final class Money implements \Stringable
     {
         $this->assertSameCurrency($other);
 
-
         return $this->amount <= $other->amount;
     }
 

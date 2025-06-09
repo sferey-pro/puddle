@@ -23,20 +23,23 @@ final class Table
 
     /**
      * La liste des objets ou tableaux à afficher.
+     *
      * @var iterable<object|array>
      */
     public iterable $items = [];
 
     /**
      * La configuration des colonnes.
-     * Ex: [['label' => 'Nom', 'path' => 'name'], ['label' => 'Prix', 'path' => 'price.amount', 'format' => 'currency']]
+     * Ex: [['label' => 'Nom', 'path' => 'name'], ['label' => 'Prix', 'path' => 'price.amount', 'format' => 'currency']].
+     *
      * @var array<array{label: string, path: string, format?: string}>
      */
     public array $columns = [];
 
     /**
      * La configuration des actions pour chaque ligne.
-     * Ex: [['route' => 'user_edit', 'icon' => 'tabler:edit']]
+     * Ex: [['route' => 'user_edit', 'icon' => 'tabler:edit']].
+     *
      * @var array<array{route: string, icon: string, title: string}>
      */
     public array $actions = [];

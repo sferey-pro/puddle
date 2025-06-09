@@ -90,7 +90,6 @@ class CostItem extends AggregateRoot
         CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ): self {
-
         $id = CostItemId::generate();
 
         $costItem = new self($id, $name, $type, $targetAmount, $coveragePeriod, $description);
@@ -114,14 +113,13 @@ class CostItem extends AggregateRoot
      * assurant que toute tentative d'accès à une contribution est sécurisée et cohérente.
      * Elle lève une exception si la contribution n'est pas trouvée.
      *
-     * @return CostContribution
      * @throws CostItemException
      */
     private function findContributionOrFail(CostContributionId $contributionId): CostContribution
     {
         /** @var CostContribution|false $contribution */
         $contribution = $this->contributions
-            ->filter(fn(CostContribution $c) => $c->id()->equals($contributionId))
+            ->filter(fn (CostContribution $c) => $c->id()->equals($contributionId))
             ->first();
 
         if (false === $contribution) {

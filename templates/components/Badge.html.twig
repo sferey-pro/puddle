@@ -3,7 +3,7 @@
     variants: {
         variant: {
             light: '',
-            solid: ''
+            solid: '',
         },
         color: {
             red: '',
@@ -11,36 +11,35 @@
             green: '',
             blue: '',
             gray: '',
-            purple: ''
-        }
+            purple: '',
+        },
     },
     compoundVariants: [
-        { variant: 'light', color: 'red',    class: 'bg-red-lt text-red-fg' },
-        { variant: 'light', color: 'orange', class: 'bg-orange-lt text-orange-fg' },
-        { variant: 'light', color: 'green',  class: 'bg-green-lt text-green-fg' },
-        { variant: 'light', color: 'blue',   class: 'bg-blue-lt text-blue-fg' },
-        { variant: 'light', color: 'gray',   class: 'bg-gray-lt text-gray-fg' },
-        { variant: 'light', color: 'purple', class: 'bg-purple-lt text-purple-fg' },
+        {variant: 'light', color: 'red', class: 'bg-red-lt text-red-fg'},
+        {variant: 'light', color: 'orange', class: 'bg-orange-lt text-orange-fg'},
+        {variant: 'light', color: 'green', class: 'bg-green-lt text-green-fg'},
+        {variant: 'light', color: 'blue', class: 'bg-blue-lt text-blue-fg'},
+        {variant: 'light', color: 'gray', class: 'bg-gray-lt text-gray-fg'},
+        {variant: 'light', color: 'purple', class: 'bg-purple-lt text-purple-fg'},
 
-        { variant: 'solid', color: 'red',    class: 'bg-red text-red-fg' },
-        { variant: 'solid', color: 'orange', class: 'bg-orange text-orange-fg' },
-        { variant: 'solid', color: 'green',  class: 'bg-green text-green-fg' },
-        { variant: 'solid', color: 'blue',   class: 'bg-blue text-blue-fg' },
-        { variant: 'solid', color: 'gray',   class: 'bg-gray text-gray-fg' },
-        { variant: 'solid', color: 'purple', class: 'bg-purple text-purple-fg' },
-    ]
+        {variant: 'solid', color: 'red', class: 'bg-red text-red-fg'},
+        {variant: 'solid', color: 'orange', class: 'bg-orange text-orange-fg'},
+        {variant: 'solid', color: 'green', class: 'bg-green text-green-fg'},
+        {variant: 'solid', color: 'blue', class: 'bg-blue text-blue-fg'},
+        {variant: 'solid', color: 'gray', class: 'bg-gray text-gray-fg'},
+        {variant: 'solid', color: 'purple', class: 'bg-purple text-purple-fg'},
+    ],
 }) %}
 
 {% if dot %}
     <span {{ attributes }}>
-        <span class="{{ classes.apply({ variant, color }) }}"></span> {{ label }}
+        <span class="{{ classes.apply({variant, color}) }}"></span> {{ label }}
     </span>
 {% else %}
-    <span {{ attributes }} class="{{ classes.apply({ variant, color }) }}">
+    <span {{ attributes }} class="{{ classes.apply({variant, color}) }}">
         {% if icon %}
             <twig:ux:icon name="{{ icon }}" class="icon-sm me-1" />
         {% endif %}
         {{ label }}
     </span>
 {% endif %}
-

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\CostManagement\Domain\Specification\Composite;
 
 use App\Core\Specification\AbstractSpecification;
@@ -20,7 +22,6 @@ class CostItemCanBeReactivatedSpecification extends AbstractSpecification
      */
     public function isSatisfiedBy($candidate): bool
     {
-
         $costItemIsArchived = new CostItemIsArchivedSpecification()
             ->isSatisfiedBy($candidate);
 
@@ -29,6 +30,5 @@ class CostItemCanBeReactivatedSpecification extends AbstractSpecification
         ;
 
         return $costItemIsArchived && !$coveragePeriodHasEnded;
-
     }
 }

@@ -25,7 +25,7 @@ final class CostItemFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Ex: Loyer Janvier, Facture électricité',
                 ],
-                'empty_data' => ''
+                'empty_data' => '',
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'Type ',

@@ -50,7 +50,9 @@ final class CostItemProjector implements EventSubscriberInterface
     public function onCostItemDetailsUpdated(CostItemDetailsUpdated $event): void
     {
         $view = $this->findView($event->costItemId());
-        if (!$view) { return; }
+        if (!$view) {
+            return;
+        }
 
         $view->updateFromDetails($event);
         $this->repository->save($view, true);
@@ -59,7 +61,9 @@ final class CostItemProjector implements EventSubscriberInterface
     public function onCostContributionReceived(CostContributionReceived $event): void
     {
         $view = $this->findView($event->costItemId());
-        if (!$view) { return; }
+        if (!$view) {
+            return;
+        }
 
         $view->applyCostContributionReceived($event);
         $this->repository->save($view, true);
@@ -68,7 +72,9 @@ final class CostItemProjector implements EventSubscriberInterface
     public function onCostContributionRemoved(CostContributionRemoved $event): void
     {
         $view = $this->findView($event->costItemId());
-        if (!$view) { return; }
+        if (!$view) {
+            return;
+        }
 
         $view->applyCostContributionRemoved($event);
         $this->repository->save($view, true);
@@ -77,7 +83,9 @@ final class CostItemProjector implements EventSubscriberInterface
     public function onCostItemCovered(CostItemCovered $event): void
     {
         $view = $this->findView($event->costItemId());
-        if (!$view) { return; }
+        if (!$view) {
+            return;
+        }
 
         $view->updateStatus('fully_covered');
         $this->repository->save($view, true);
@@ -86,7 +94,9 @@ final class CostItemProjector implements EventSubscriberInterface
     public function onCostItemArchived(CostItemArchived $event): void
     {
         $view = $this->findView($event->costItemId());
-        if (!$view) { return; }
+        if (!$view) {
+            return;
+        }
 
         $view->updateStatus('archived');
         $this->repository->save($view, true);
@@ -95,7 +105,9 @@ final class CostItemProjector implements EventSubscriberInterface
     public function onCostItemReactivated(CostItemReactivated $event): void
     {
         $view = $this->findView($event->costItemId());
-        if (!$view) { return; }
+        if (!$view) {
+            return;
+        }
 
         $view->updateStatus($event->newStatus()->value);
         $this->repository->save($view, true);

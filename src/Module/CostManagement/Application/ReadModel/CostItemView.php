@@ -53,7 +53,7 @@ class CostItemView
         string $currency,
         string $startDate,
         string $endDate,
-        string $status
+        string $status,
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -106,10 +106,11 @@ class CostItemView
 
         // On synchronise aussi les contributions
         foreach ($item->contributions() as $contribution) {
-             $view->contributions->add(ContributionView::fromEntity($contribution));
+            $view->contributions->add(ContributionView::fromEntity($contribution));
         }
 
         $view->updateCalculatedFields();
+
         return $view;
     }
 
@@ -131,7 +132,7 @@ class CostItemView
         // Pour une version robuste, il faudrait comparer chaque contribution
         $this->contributions->clear();
         foreach ($item->contributions() as $contribution) {
-             $this->contributions->add(ContributionView::fromEntity($contribution));
+            $this->contributions->add(ContributionView::fromEntity($contribution));
         }
 
         $this->updateCalculatedFields();
@@ -143,15 +144,25 @@ class CostItemView
      */
     public function isDifferentFrom(CostItem $item): bool
     {
-        if ($this->name !== (string) $item->name()) return true;
-        if ($this->status !== $item->status()->value) return true;
+        if ($this->name !== (string) $item->name()) {
+            return true;
+        }
+        if ($this->status !== $item->status()->value) {
+            return true;
+        }
 
         // Comparaison des floats avec une petite tolérance
-        if (abs($this->targetAmount - $item->targetAmount()->toFloat()) > 0.001) return true;
-        if (abs($this->currentAmount - $item->currentAmountCovered()->toFloat()) > 0.001) return true;
+        if (abs($this->targetAmount - $item->targetAmount()->toFloat()) > 0.001) {
+            return true;
+        }
+        if (abs($this->currentAmount - $item->currentAmountCovered()->toFloat()) > 0.001) {
+            return true;
+        }
 
         // Comparaison du nombre de contributions
-        if ($this->contributions->count() !== count($item->contributions())) return true;
+        if ($this->contributions->count() !== \count($item->contributions())) {
+            return true;
+        }
 
         return false;
     }

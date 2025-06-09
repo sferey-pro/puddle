@@ -46,7 +46,7 @@ enum CostItemStatus: string
                 self::ACTIVE => 'blue',
                 self::FULLY_COVERED => 'green',
                 self::ARCHIVED => 'orange',
-            }
+            },
         ];
     }
 }
