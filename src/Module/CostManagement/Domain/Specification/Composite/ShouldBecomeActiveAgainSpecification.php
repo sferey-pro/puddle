@@ -15,6 +15,7 @@ use App\Module\CostManagement\Domain\Specification\CoveragePeriodIsActiveSpecifi
 
 /**
  * Spécification qui détermine si un CostItem doit redevenir ACTIF après avoir été FULLY_COVERED.
+ *
  * * @template-extends AndSpecification<CostItem>
  */
 final class ShouldBecomeActiveAgainSpecification extends AndSpecification
@@ -29,8 +30,9 @@ final class ShouldBecomeActiveAgainSpecification extends AndSpecification
             new NotSpecification(new CostItemAmountIsSufficientSpecification()),
 
             // Règle 3: ET la période de couverture doit toujours être active
-            new class() extends AbstractSpecification {
-                public function isSatisfiedBy($candidate): bool {
+            new class extends AbstractSpecification {
+                public function isSatisfiedBy($candidate): bool
+                {
                     /** @var CostItem $candidate */
                     return (new CoveragePeriodIsActiveSpecification())->isSatisfiedBy($candidate->coveragePeriod());
                 }

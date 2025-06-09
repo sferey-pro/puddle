@@ -30,8 +30,9 @@ class CostItemCanBeReactivatedSpecification extends AndSpecification
 
             // Règle 2: ET la période de couverture N'EST PAS terminée
             new NotSpecification(
-                new class() extends AbstractSpecification {
-                    public function isSatisfiedBy($candidate): bool {
+                new class extends AbstractSpecification {
+                    public function isSatisfiedBy($candidate): bool
+                    {
                         /** @var CostItem $candidate */
                         return (new CoveragePeriodHasEndedSpecification())->isSatisfiedBy($candidate->coveragePeriod());
                     }

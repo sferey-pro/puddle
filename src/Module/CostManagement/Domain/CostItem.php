@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain;
 
-use App\Core\Specification\AbstractSpecification;
 use App\Core\Specification\AndSpecification;
 use App\Core\Specification\NotSpecification;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
@@ -22,15 +21,14 @@ use App\Module\CostManagement\Domain\Event\CostItemReopened;
 use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemCanBeArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemCanBeReactivatedSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemCanReceiveContributionSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemHasStatusSpecification;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemIsActiveSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemIsArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemIsFullyCoveredSpecification;
 use App\Module\CostManagement\Domain\Specification\Composite\ShouldBecomeActiveAgainSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemAmountIsSufficientSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemCanReceiveContributionSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemHasStatusSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemIsArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemTargetCanBeSafelyUpdatedSpecification;
-use App\Module\CostManagement\Domain\Specification\CoveragePeriodIsActiveSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
@@ -175,7 +173,7 @@ class CostItem extends AggregateRoot
     public function updateContribution(
         CostContributionId $contributionId,
         Money $newAmount,
-        ?ProductId $newSourceProductId
+        ?ProductId $newSourceProductId,
     ): void {
         $contribution = $this->findContributionOrFail($contributionId);
 
@@ -222,6 +220,7 @@ class CostItem extends AggregateRoot
 
         if ($shouldBecomeFullyCoveredSpec->isSatisfiedBy($this)) {
             $this->markAsCovered();
+
             return; // Le statut a changé, on arrête le traitement ici.
         }
 

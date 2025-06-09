@@ -31,14 +31,14 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent]
 class CostContributionManager extends AbstractController
 {
-    use DefaultActionTrait;
     use ComponentWithFormTrait;
+    use DefaultActionTrait;
 
     #[LiveProp(updateFromParent: true)]
     public string $costItemId;
 
     /**
-     * @var AddContributionDTO Le DTO lié au formulaire actuellement affiché (ajout ou édition).
+     * @var AddContributionDTO le DTO lié au formulaire actuellement affiché (ajout ou édition)
      */
     #[LiveProp(writable: true)]
     public AddContributionDTO $data;
@@ -160,7 +160,7 @@ class CostContributionManager extends AbstractController
         $this->commandBus->dispatch(new RemoveCostContribution($this->costItemId, $contributionId));
 
         // Si on supprime l'élément qu'on était en train d'éditer, on reset l'état.
-        if($this->editingId === $contributionId) {
+        if ($this->editingId === $contributionId) {
             $this->resetState();
         }
     }
@@ -182,6 +182,7 @@ class CostContributionManager extends AbstractController
                 return $contribution;
             }
         }
+
         return null;
     }
 }

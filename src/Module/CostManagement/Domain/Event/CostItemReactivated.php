@@ -11,7 +11,7 @@ use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
  * Événement émis lorsqu'un poste de coût archivé est réactivé.
- * Nouveau Status possible Active ou Couvert
+ * Nouveau Status possible Active ou Couvert.
  */
 final class CostItemReactivated extends DomainEvent implements DomainEventInterface
 {

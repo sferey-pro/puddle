@@ -32,8 +32,9 @@ final class CostItemCanBeArchivedSpecification extends OrSpecification
     {
         parent::__construct(
             // Règle 1: La période de couverture est terminée.
-            new class() extends AbstractSpecification {
-                public function isSatisfiedBy($candidate): bool {
+            new class extends AbstractSpecification {
+                public function isSatisfiedBy($candidate): bool
+                {
                     /** @var CostItem $candidate */
                     return (new CoveragePeriodHasEndedSpecification())->isSatisfiedBy($candidate->coveragePeriod());
                 }

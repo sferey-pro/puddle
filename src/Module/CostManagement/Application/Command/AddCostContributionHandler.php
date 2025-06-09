@@ -6,8 +6,8 @@ namespace App\Module\CostManagement\Application\Command;
 
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

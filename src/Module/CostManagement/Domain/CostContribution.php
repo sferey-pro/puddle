@@ -6,8 +6,8 @@ namespace App\Module\CostManagement\Domain;
 
 use App\Module\CostManagement\Domain\Enum\ContributionStatus;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
-use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Service\SystemTime;
 
 /**
@@ -22,22 +22,22 @@ use App\Shared\Domain\Service\SystemTime;
 class CostContribution
 {
     /**
-     * @var CostItem L'agrégat parent.
+     * @var costItem L'agrégat parent
      */
     private CostItem $costItem;
 
     /**
-     * @var Money Le montant de la contribution.
+     * @var Money le montant de la contribution
      */
     private Money $amount;
 
     /**
-     * @var \DateTimeImmutable La date de création de la contribution.
+     * @var \DateTimeImmutable la date de création de la contribution
      */
     private \DateTimeImmutable $contributedAt;
 
     /**
-     * @var ProductId|null Référence optionnelle au produit qui a généré ce coût/cette contribution.
+     * @var ProductId|null référence optionnelle au produit qui a généré ce coût/cette contribution
      */
     private ?ProductId $sourceProductId;
 
@@ -53,7 +53,7 @@ class CostContribution
      */
     private function __construct(
         /**
-         * @var CostContributionId L'identifiant unique de cette contribution.
+         * @var CostContributionId L'identifiant unique de cette contribution
          */
         private CostContributionId $id,
         CostItem $costItem,
@@ -71,10 +71,11 @@ class CostContribution
      * Factory method pour créer une nouvelle instance de CostContribution.
      * C'est le point d'entrée contrôlé pour la création de contributions.
      *
-     * @param CostItem $costItem L'agrégat parent.
-     * @param Money $amount Le montant de la contribution.
-     * @param ProductId|null $sourceProductId L'origine optionnelle de la contribution.
-     * @return self La nouvelle instance de la contribution.
+     * @param costItem       $costItem        L'agrégat parent
+     * @param Money          $amount          le montant de la contribution
+     * @param ProductId|null $sourceProductId L'origine optionnelle de la contribution
+     *
+     * @return self la nouvelle instance de la contribution
      */
     public static function create(
         CostItem $costItem,

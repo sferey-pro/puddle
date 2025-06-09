@@ -29,8 +29,9 @@ final class CostItemIsActiveSpecification extends AndSpecification
             new CostItemHasStatusSpecification(CostItemStatus::ACTIVE),
 
             // Règle 2: La période de couverture doit être active
-            new class() extends AbstractSpecification {
-                public function isSatisfiedBy($candidate): bool {
+            new class extends AbstractSpecification {
+                public function isSatisfiedBy($candidate): bool
+                {
                     /** @var CostItem $candidate */
                     return (new CoveragePeriodIsActiveSpecification())->isSatisfiedBy($candidate->coveragePeriod());
                 }

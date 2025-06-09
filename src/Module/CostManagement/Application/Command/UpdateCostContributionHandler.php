@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
-use App\Module\CostManagement\Domain\CostContribution;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;

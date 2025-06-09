@@ -143,8 +143,6 @@ final class CostItemProjector implements EventSubscriberInterface
         $this->repository->save($view, true);
     }
 
-
-
     private function findView(CostItemId $costItemId): ?CostItemView
     {
         // Utilisation de `findById` au lieu de `findOrFail` pour éviter une exception

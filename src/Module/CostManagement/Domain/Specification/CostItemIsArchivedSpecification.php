@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Specification;
 
-use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 
 /**

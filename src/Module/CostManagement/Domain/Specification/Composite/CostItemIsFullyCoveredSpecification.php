@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Specification\Composite;
 
-use App\Core\Specification\AbstractSpecification;
 use App\Core\Specification\OrSpecification;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 use App\Module\CostManagement\Domain\Specification\CostItemAmountIsSufficientSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemHasStatusSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemHasZeroTargetSpecification;
-use App\Module\SharedContext\Domain\ValueObject\Money;
 
 /**
  * Spécification qui vérifie si un CostItem est entièrement couvert.
@@ -37,6 +35,7 @@ final class CostItemIsFullyCoveredSpecification extends OrSpecification
     /**
      * On surcharge la méthode pour ajouter notre garde métier :
      * le concept de "couverture" ne s'applique pas si la cible est zéro.
+     *
      * @param CostItem $candidate
      */
     public function isSatisfiedBy($candidate): bool

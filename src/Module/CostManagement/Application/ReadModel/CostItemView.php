@@ -317,8 +317,9 @@ class CostItemView
     /**
      * Recherche et retourne une ContributionView à partir de son ID dans la collection.
      *
-     * @param string $id L'identifiant de la contribution à trouver.
-     * @return ContributionView|null La vue de la contribution ou null si elle n'est pas trouvée.
+     * @param string $id L'identifiant de la contribution à trouver
+     *
+     * @return ContributionView|null la vue de la contribution ou null si elle n'est pas trouvée
      */
     private function findContributionViewById(string $id): ?ContributionView
     {

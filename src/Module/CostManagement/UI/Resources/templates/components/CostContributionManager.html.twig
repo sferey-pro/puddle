@@ -75,11 +75,11 @@
                                 <td>
                                     <div class="btn-list flex-nowrap">
                                         {# Ce bouton déclenche la méthode "edit" #}
-                                        <button class="btn btn-ghost-secondary btn-icon" aria-label="Modifier" {{ live_action('edit', {'contributionId': contribution.id }) }}>
+                                        <button class="btn btn-ghost-secondary btn-icon" aria-label="Modifier" {{ live_action('edit', {contributionId: contribution.id}) }}>
                                             <twig:ux:icon name="tabler:edit" />
                                         </button>
                                         {# Ce bouton déclenche la méthode "remove" #}
-                                        <button class="btn btn-ghost-danger btn-icon" aria-label="Supprimer" {{ live_action('remove', {'contributionId': contribution.id }) }} data-confirm="Êtes-vous sûr de vouloir supprimer cette contribution ?">
+                                        <button class="btn btn-ghost-danger btn-icon" aria-label="Supprimer" {{ live_action('remove', {contributionId: contribution.id}) }} data-confirm="Êtes-vous sûr de vouloir supprimer cette contribution ?">
                                             <twig:ux:icon name="tabler:trash" />
                                         </button>
                                     </div>
