@@ -6,6 +6,14 @@ namespace App\Module\SharedContext\Domain\ValueObject;
 
 use Webmozart\Assert\Assert;
 
+/**
+ * Represents a monetary value with a specific currency.
+ *
+ * Important: For precision, monetary values are often stored as integers
+ * representing the smallest currency unit (e.g., cents for EUR/USD).
+ * This example will assume the amount is passed as an integer (e.g., 1050 for 10.50 EUR).
+ * Adjust if your current implementation uses floats or another representation.
+ */
 final class Money implements \Stringable
 {
     public readonly int $amount; // Stocker en centimes pour éviter les problèmes de floating point
@@ -24,9 +32,9 @@ final class Money implements \Stringable
         $this->currency = mb_strtoupper($currencyToUse);
     }
 
-    public static function zero(): self
+    public static function zero(?string $currency = null): self
     {
-        return new self(0);
+        return new self(0, $currency);
     }
 
     public function getAmount(): int
@@ -37,6 +45,42 @@ final class Money implements \Stringable
     public function getCurrency(): string
     {
         return $this->currency;
+    }
+
+    private function assertSameCurrency(self $other): void
+    {
+        Assert::true(
+            $this->currency === $other->currency,
+            \sprintf('Cannot compare amounts with different currencies. Got %s and %s.', $this->currency, $other->currency)
+        );
+    }
+
+    public function isGreaterThan(self $other): bool
+    {
+        $this->assertSameCurrency($other);
+
+        return $this->amount > $other->amount;
+    }
+
+    public function isGreaterThanOrEqual(self $other): bool
+    {
+        $this->assertSameCurrency($other);
+
+        return $this->amount >= $other->amount;
+    }
+
+    public function isLessThan(self $other): bool
+    {
+        $this->assertSameCurrency($other);
+
+        return $this->amount < $other->amount;
+    }
+
+    public function isLessThanOrEqual(self $other): bool
+    {
+        $this->assertSameCurrency($other);
+
+        return $this->amount <= $other->amount;
     }
 
     public function add(self $other): self

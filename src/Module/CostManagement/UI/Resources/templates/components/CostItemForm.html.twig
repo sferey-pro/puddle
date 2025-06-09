@@ -1,0 +1,48 @@
+<div {{ attributes }}>
+    {{ form_start(form, {attr: {
+        'data-action': 'live#action:prevent',
+        'data-live-action-param': 'save',
+        novalidate: true,
+        class: 'space-y',
+        }})
+    }}
+        <div class="row">
+                <div class="col-md-4">
+                    {{ form_row(form.type) }}
+                </div>
+                <div class="col-md-8">
+                    {{ form_row(form.name) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    {{ form_row(form.targetAmount) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_row(form.currency) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.startDate) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.endDate) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(form.description) }}
+                </div>
+            </div>
+
+            <div class="form-footer text-end">
+                <a href="{{ path('cost_item_index') }}" class="btn btn-link">Annuler</a>
+                <button type="submit" class="btn btn-primary">
+                    <twig:ux:icon name="tabler:save" class="icon icon-2" />
+                    Enregistrer
+                </button>
+            </div>
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>

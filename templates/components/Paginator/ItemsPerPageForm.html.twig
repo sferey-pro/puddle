@@ -1,10 +1,10 @@
 <div class="card-body border-bottom py-3" {{ attributes.defaults(stimulus_controller('items-per-page')) }}>
-    {{ form_start(form, { attr: {novalidate: true} }) }}
+    {{ form_start(form, {attr: {novalidate: true}}) }}
     <div class="d-flex">
         <div class="text-secondary">
             Show
             <div class="mx-2 d-inline-block">
-                {{ form_widget(form.items, {attr: {class: 'form-select-sm'} }) }}
+                {{ form_widget(form.items, {attr: {class: 'form-select-sm'}}) }}
             </div>
             entries
         </div>

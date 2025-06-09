@@ -1,0 +1,52 @@
+<div {{ attributes }}>
+    {% set costItem = this.getCostItem() %}
+
+    {% if costItem.contributions is not empty %}
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Source</th>
+                            <th class="w-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contribution in costItem.contributions|reverse %}
+                            <tr>
+                                <td class="text-secondary">{{ contribution.contributedAt|date('d/m/Y H:i') }}</td>
+                                <td>{{ contribution.amount|format_currency(contribution.currency) }}</td>
+                                <td>
+                                    {% if contribution.sourceProductId %}
+                                        Produit #{{ contribution.sourceProductId[:8] }}...
+                                    {% else %}
+                                        <span class="text-secondary">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button
+                                        class="btn btn-ghost-danger btn-icon"
+                                        title="Supprimer la contribution"
+                                        data-action="live#remove"
+                                        data-live-string-value="{{ contribution.id }}"
+                                        data-live-action-param="contributionId"
+                                        data-confirm="Êtes-vous sûr de vouloir supprimer cette contribution ? Cette action est irréversible."
+                                    >
+                                        <twig:ux:icon name="tabler:trash" />
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <twig:ux:icon name="tabler:info-circle" class="me-2" />
+            Aucune contribution n'a été enregistrée pour ce poste de coût.
+        </div>
+    {% endif %}
+</div>

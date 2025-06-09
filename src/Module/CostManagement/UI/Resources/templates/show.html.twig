@@ -1,0 +1,143 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% set costItem = costItem is defined ? costItem : null %}
+
+{% block title %}
+    Détails : {{ costItem ? costItem.name : 'Poste de coût' }}
+{% endblock %}
+
+{% block page_pretitle %}Poste de Coût{% endblock %}
+{% block page_title %}{{ costItem ? costItem.name : 'Détails' }}{% endblock %}
+
+{% block page_title_actions %}
+    <a href="{{ path('cost_item_index') }}" class="btn btn-outline-secondary">
+        <twig:ux:icon name="tabler:list" class="icon" />
+        Retour à la liste
+    </a>
+{% endblock %}
+
+{% block content %}
+    {% if costItem %}
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Informations Financières</h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-5">Montant Cible :</dt>
+                            <dd class="col-7"><strong>{{ costItem.targetAmount|format_currency(costItem.currency) }}</strong></dd>
+
+                            <dt class="col-5">Montant Actuellement Couvert :</dt>
+                            <dd class="col-7">{{ costItem.currentAmount|format_currency(costItem.currency) }}</dd>
+
+                            <dt class="col-5">Montant Restant à Couvrir :</dt>
+                            <dd class="col-7 text-red">{{ (costItem.targetAmount - costItem.currentAmount)|format_currency(costItem.currency) }}</dd>
+
+                            <dt class="col-5">Progression :</dt>
+                            <dd class="col-7">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar {% if costItem.isCovered %}bg-success{% endif %}" style="width: {{ costItem.progressPercentage }}%" role="progressbar" aria-valuenow="{{ costItem.progressPercentage }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ costItem.progressPercentage|round(2) }}% Complete">
+                                        <span class="visually-hidden">{{ costItem.progressPercentage|round(2) }}% Complete</span>
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                {# Espace pour les futures règles de contribution #}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Règles de Contribution</h3>
+                        <div class="card-actions">
+                            <div class="my-4" data-turbo-permanent>
+                                <h5>Ajouter une contribution</h5>
+                                {{ component('AddContributionForm', {costItemId: costItem.id}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body text-secondary">
+                        <div
+                            data-controller="live"
+                            data-live-id="contribution-list-{{ costItem.id }}"
+                            data-action="contribution:added@window->live#reload contribution:removed@window->live#reload"
+                        >
+                            {{ component('CostContributionList', {costItemId: costItem.id}) }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">Statut & Période</h3>
+                        <div class="mb-3">
+                            <label class="form-label">Statut</label>
+                            <p>
+                                <span class="badge
+                                    {% if costItem.status == 'active' and costItem.isActiveNow %}bg-azure-lt
+                                    {% elseif costItem.status == 'active' and not costItem.isActiveNow %}bg-orange-lt
+                                    {% elseif costItem.status == 'fully_covered' %}bg-green-lt
+                                    {% elseif costItem.status == 'archived' %}bg-secondary-lt
+                                    {% else %}bg-dark-lt
+                                    {% endif %} fs-6">
+                                    {{ costItem.status|replace({_: ' '})|capitalize }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Période de couverture</label>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon me-1 text-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
+                                Du {{ costItem.startDate|date('d F Y') }} au {{ costItem.endDate|date('d F Y') }}
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                             <label class="form-label">Actif Actuellement</label>
+                             <p>
+                                {% if costItem.isActiveNow %}
+                                    <span class="text-success">
+                                        <twig:ux:icon name="tabler:circle-check" class="icon" />
+                                        Oui
+                                    </span>
+                                {% else %}
+                                    <span class="text-danger">
+                                        <twig:ux:icon name="tabler:circle-x" class="icon" />
+                                        Non
+                                    </span>
+                                {% endif %}
+                             </p>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="card-title">Actions</h4>
+                            <div class="d-grid gap-2 mx-auto">
+                                {% if costItem.status == 'archived' %}
+                                    <form class="form-block" action="{{ path('cost_item_reactivate', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('reactivate_' ~ costItem.id) }}">
+                                        <button type="submit" class="btn btn-outline-success w-100">
+                                            <twig:ux:icon name="tabler:archive-off" class="icon" /> Réactiver
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <form class="form-block" action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('archive_' ~ costItem.id) }}">
+                                        <button type="submit" class="btn btn-warning w-100">
+                                            <twig:ux:icon name="tabler:archive" class="icon" /> Archiver
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            Le poste de coût demandé n'a pas été trouvé.
+        </div>
+    {% endif %}
+{% endblock %}

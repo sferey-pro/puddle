@@ -1,0 +1,66 @@
+<div {{ attributes.defaults({class: 'card'}) }}>
+    {% if title %}
+        <div class="card-header">
+            <h3 class="card-title">{{ title }}</h3>
+        </div>
+    {% endif %}
+    {% if items is not empty %}
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table table-striped">
+                <thead>
+                    <tr>
+                        {% for column in columns %}
+                            <th>{{ column.label }}</th>
+                        {% endfor %}
+
+                        {% if actions is not empty %}
+                            <th class="w-1"></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in items %}
+                    <tr>
+                        {% for column in columns %}
+                            <td>
+                                {% set value = attribute(item, column.path) %}
+                                {% if column.format is defined and column.format == 'currency' and value is not null %}
+                                    {{ value|format_currency(item.currency) }}
+                                {% elseif column.format is defined and column.format == 'date' and value is not null %}
+                                    {{ value|date('d/m/Y') }}
+                                {% elseif column.format is defined and column.format == 'datetime' and value is not null %}
+                                    {{ value|date('d/m/Y H:i') }}
+                                {% elseif column.format is defined and column.format == 'badge' and value is not null %}
+                                    <twig:Badge
+                                        variant="solid"
+                                        value="{{ value }}"
+                                        enumType="{{ column.enum_class|default(null) }}"
+                                    />
+                                {% else %}
+                                    {{ value|default('N/A') }}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+
+                        {% if actions is not empty %}
+                            <td>
+                                <div class="btn-group">
+                                    {% for action in actions %}
+                                        <a href="{{ path(action.route, {id: item.id}) }}" class="btn btn-ghost-primary" title="{{ action.title }}">
+                                            <twig:ux:icon name="{{ action.icon }}" class="icon"/> {{ action.title }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card-body">
+            <p class="text-center text-secondary">Aucun élément trouvé.</p>
+        </div>
+    {% endif %}
+</div>

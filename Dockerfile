@@ -63,6 +63,9 @@ RUN install-php-extensions pdo_pgsql
 ###> doctrine/mongodb-odm-bundle ###
 RUN install-php-extensions mongodb
 ###< doctrine/mongodb-odm-bundle ###
+###> symfony/messenger-amqp ###
+RUN install-php-extensions amqp
+###< symfony/messenger-amqp ###
 ###< recipes ###
 
 COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/

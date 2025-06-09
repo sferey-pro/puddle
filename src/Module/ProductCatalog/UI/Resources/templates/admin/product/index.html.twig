@@ -5,7 +5,7 @@
 {% block body_id 'product_index' %}
 
 {% block main %}
-    <twig:Semantic:Title content="{{ 'product.index' | trans }}" >
+    <twig:Semantic:Title title="{{ 'product.index'|trans }}" >
         <div class="col-auto ms-auto d-print-none">
             <twig:Button:CreateNew routeName="admin_product_new" withIcon="tabler:plus" />
         </div>
@@ -15,7 +15,7 @@
             <div class="row row-cards">
                 <div class="col-12">
                     <div class="card">
-                        {% if products.paginator().hasToPaginate() %}
+                        {% if products.paginator().haveToPaginate() %}
                             <twig:Paginator:ItemsPerPageForm />
                         {% endif %}
                         <div class="table-responsive">
@@ -30,7 +30,7 @@
                                     <tbody>
                                         {% for product in products %}
                                             <tr id="product_{{ product.identifier }}">
-                                                {{ include('@ProductCatalog/admin/product/_item.html.twig', { product: product}) }}
+                                                {{ include('@ProductCatalog/admin/product/_item.html.twig', {product: product}) }}
                                             </tr>
                                         {% else %}
                                             <tr>
@@ -41,7 +41,7 @@
                                 </thead>
                             </table>
                         </div>
-                        {% if products.paginator().hasToPaginate() %}
+                        {% if products.paginator().haveToPaginate() %}
                             {% set paginator = products.paginator() %}
                             {% set start = (paginator.getCurrentPage - 1) * paginator.getItemsPerPage + 1 %}
                             {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
@@ -54,7 +54,7 @@
                                     <div class="col-auto">
                                         {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
                                             routeName: app.request.attributes.get('_route'),
-                                            routeParams: app.request.query.all|merge({'page': paginator.getPagerFanta().getCurrentPage()})
+                                            routeParams: app.request.query.all|merge({page: paginator.getPagerFanta().getCurrentPage()}),
                                         }) }}
                                     </div>
                                 </div>
@@ -67,4 +67,3 @@
 
     </div>
 {% endblock %}
-

@@ -1,26 +1,76 @@
-<!DOCTYPE html>
-<html data-bs-theme="auto">
-    <head>
-        {% include '@Tabler/includes/html_head.html.twig' %}
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
+<!doctype html>
+<html lang="{{ app.request.locale }}" {% if app.user and app.user.theme == 'dark' %}data-bs-theme="dark"{% else %}data-bs-theme="light"{% endif %}>
+<head>
+    {{ include('@Tabler/includes/meta.html.twig') }}
+    <title>{% block title %}Puddle Project{% endblock %}</title>
+    {{ include('@Tabler/includes/favicons.html.twig') }}
+    <style>
+        .sf-toolbar {
+            position:absolute;
+        }
+    </style>
+    {% block stylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+    <div class="page">
+        {% block sidebar %}
+            {{ include('@Tabler/partials/_sidebar.html.twig') }}
         {% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block navbar %}
+            {{ include('@Tabler/partials/_navbar.html.twig') }}
         {% endblock %}
-    </head>
-    <body id="{% block body_id %}{% endblock %}">
-        <div class="page">
-            {% block navbar %}
-                <header class="navbar navbar-expand-md d-print-none">
-                    {{ include('@Tabler/includes/_navigation.html.twig') }}
-                </header>
+
+        <div class="page-wrapper">
+            {% block page_header %}
+                <div class="page-header d-print-none" aria-label="Page header">
+                    <div class="container-xl">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                {% block page_title_super %}
+                                    {% if block('page_pretitle') is defined %}
+                                        <div class="page-pretitle">
+                                            {% block page_pretitle %}{% endblock %}
+                                        </div>
+                                    {% endif %}
+                                    <h2 class="page-title">
+                                        {% block page_title %}{% endblock %}
+                                    </h2>
+                                {% endblock %}
+                            </div>
+                            <!-- Page title actions -->
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list">
+                                    {% block page_title_actions %}{% endblock %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endblock %}
 
-            <div id="{% block page_wrapper_id %}{% endblock %}" class="page-wrapper">
-                {% block main %}{% endblock %}
+            <div class="page-body">
+                <div class="container-xl">
+                    {% block flash_messages %}
+                        {{ include('@Tabler/partials/_flash_messages.html.twig') }}
+                    {% endblock %}
+
+                    {% block content %}{% endblock %}
+                </div>
             </div>
+
+            {% block footer %}
+                {{ include('@Tabler/partials/_footer.html.twig') }}
+            {% endblock %}
         </div>
-    </body>
+    </div>
+
+    {# Modals #}
+    {% block modals %}{% endblock %}
+</body>
 </html>

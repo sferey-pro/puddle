@@ -8,6 +8,11 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+
+        types:
+            cost_item_status_enum: App\Module\CostManagement\Infrastructure\Doctrine\Types\CostItemStatusType
+            unit_of_measure_enum: App\Module\ProductCatalog\Infrastructure\Doctrine\Types\UnitOfMeasureType
+
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -33,6 +38,11 @@ doctrine:
                 is_bundle: false
                 dir: "%kernel.project_dir%/src/Module/ProductCatalog/Infrastructure/Doctrine/Mapping"
                 prefix: 'App\Module\ProductCatalog\Domain'
+            CostManagement:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Module\CostManagement\Domain'
             SharedContext:
                 type: xml
                 is_bundle: false

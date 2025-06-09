@@ -28,4 +28,18 @@ trait AggregateRootId
     {
         return (string) $this->value;
     }
+
+    /**
+     * Compare cet identifiant à un autre pour vérifier l'égalité.
+     *
+     * La comparaison se base sur la valeur de l'objet Uid sous-jacent.
+     *
+     * @param object|null $other L'objet à comparer
+     *
+     * @return bool vrai si les identifiants sont identiques, sinon faux
+     */
+    public function equals(?object $other): bool
+    {
+        return $other instanceof self && $this->value->equals($other->value);
+    }
 }
