@@ -7,6 +7,7 @@ namespace App\Module\CostManagement\Application\ReadModel;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Event\CostContributionReceived;
 use App\Module\CostManagement\Domain\Event\CostContributionRemoved;
+use App\Module\CostManagement\Domain\Event\CostContributionUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemAdded;
 use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\SharedContext\Domain\ValueObject\Money;
@@ -202,6 +203,26 @@ class CostItemView
     }
 
     /**
+     * Applique les changements de l'événement de mise à jour de contribution.
+     * Trouve la contribution existante dans la collection et met à jour ses champs.
+     */
+    public function applyCostContributionUpdated(CostContributionUpdated $event): void
+    {
+        // On parcourt la collection de contributions
+        $contributionViewToUpdate = $this->findContributionViewById((string) $event->costContributionId());
+
+        if ($contributionViewToUpdate) {
+            // On met à jour l'objet ContributionView trouvé
+            $contributionViewToUpdate->amount = $event->newContributionAmount()->toFloat();
+            $contributionViewToUpdate->sourceProductId = $event->newSourceProductId() ? (string) $event->newSourceProductId() : null;
+        }
+
+        // On met à jour le montant total couvert de l'ensemble du CostItem
+        $this->currentAmount = $event->newTotalCoveredAmount()->toFloat();
+        $this->updateCalculatedFields();
+    }
+
+    /**
      * Applique l'événement de suppression d'une contribution.
      */
     public function applyCostContributionRemoved(CostContributionRemoved $event): void
@@ -291,5 +312,22 @@ class CostItemView
     private static function convertMoneyToFloat(Money $money): float
     {
         return $money->toFloat();
+    }
+
+    /**
+     * Recherche et retourne une ContributionView à partir de son ID dans la collection.
+     *
+     * @param string $id L'identifiant de la contribution à trouver.
+     * @return ContributionView|null La vue de la contribution ou null si elle n'est pas trouvée.
+     */
+    private function findContributionViewById(string $id): ?ContributionView
+    {
+        foreach ($this->contributions as $contribution) {
+            if ($contribution->id === $id) {
+                return $contribution;
+            }
+        }
+
+        return null;
     }
 }

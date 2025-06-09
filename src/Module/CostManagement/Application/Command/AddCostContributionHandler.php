@@ -6,9 +6,10 @@ namespace App\Module\CostManagement\Application\Command;
 
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Module\ProductCatalog\Domain\ValueObject\ProductId;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Gère la commande d'ajout d'une contribution à un poste de coût.
@@ -18,6 +19,7 @@ final readonly class AddCostContributionHandler
 {
     public function __construct(
         private CostItemRepositoryInterface $costItemRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -29,10 +31,14 @@ final readonly class AddCostContributionHandler
         $costItem = $this->costItemRepository->findOrFail($costItemId);
 
         $amount = Money::fromFloat($dto->amount);
-        $sourceProductId = $dto->sourceProductId ? new ProductId($dto->sourceProductId) : null;
+        $sourceProductId = $dto->sourceProductId ? ProductId::fromString($dto->sourceProductId) : null;
 
         $costItem->addContribution($amount, $sourceProductId);
 
-        $this->costItemRepository->save($costItem);
+        $this->costItemRepository->save($costItem, true);
+
+        foreach ($costItem->pullDomainEvents() as $domainEvent) {
+            $this->eventDispatcher->dispatch($domainEvent);
+        }
     }
 }

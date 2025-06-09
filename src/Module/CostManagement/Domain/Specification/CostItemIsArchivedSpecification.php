@@ -10,10 +10,10 @@ use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 /**
  * Spécification qui vérifie si le statut d'un poste de coût est 'ARCHIVED'.
  */
-final class CostItemIsArchivedSpecification extends AbstractSpecification
+final class CostItemIsArchivedSpecification extends CostItemHasStatusSpecification
 {
-    public function isSatisfiedBy(mixed $candidate): bool
+    public function __construct()
     {
-        return $candidate->status()->equals(CostItemStatus::ARCHIVED);
+        parent::__construct(CostItemStatus::ARCHIVED);
     }
 }

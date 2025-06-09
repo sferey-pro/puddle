@@ -8,6 +8,7 @@ use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Gère la commande de suppression d'une contribution.
@@ -17,6 +18,7 @@ final readonly class RemoveCostContributionHandler
 {
     public function __construct(
         private CostItemRepositoryInterface $costItemRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -28,6 +30,10 @@ final readonly class RemoveCostContributionHandler
         $contributionId = CostContributionId::fromString($command->contributionId);
         $costItem->removeContribution($contributionId);
 
-        $this->costItemRepository->save($costItem);
+        $this->costItemRepository->save($costItem, true);
+
+        foreach ($costItem->pullDomainEvents() as $domainEvent) {
+            $this->eventDispatcher->dispatch($domainEvent);
+        }
     }
 }

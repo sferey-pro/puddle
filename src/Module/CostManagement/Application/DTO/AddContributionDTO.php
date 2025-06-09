@@ -7,12 +7,15 @@ namespace App\Module\CostManagement\Application\DTO;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * DTO pour la création d'une nouvelle contribution.
+ * DTO pour la création ou la mise à jour d'une contribution.
  */
 final class AddContributionDTO
 {
-    #[Assert\NotBlank]
-    public ?string $costItemId = '';
+    // L'ID du CostItem parent, toujours nécessaire
+    public ?string $costItemId = null;
+
+    // L'ID de la contribution, seulement pour la mise à jour
+    public ?string $contributionId = null;
 
     #[Assert\NotBlank]
     #[Assert\Positive]

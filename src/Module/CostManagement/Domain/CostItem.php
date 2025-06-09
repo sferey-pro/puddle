@@ -4,24 +4,33 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain;
 
+use App\Core\Specification\AbstractSpecification;
+use App\Core\Specification\AndSpecification;
+use App\Core\Specification\NotSpecification;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 use App\Module\CostManagement\Domain\Enum\CostItemType;
 use App\Module\CostManagement\Domain\Event\CostContributionCancelled;
 use App\Module\CostManagement\Domain\Event\CostContributionReceived;
 use App\Module\CostManagement\Domain\Event\CostContributionRemoved;
+use App\Module\CostManagement\Domain\Event\CostContributionUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemAdded;
 use App\Module\CostManagement\Domain\Event\CostItemArchived;
 use App\Module\CostManagement\Domain\Event\CostItemCovered;
 use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemReactivated;
+use App\Module\CostManagement\Domain\Event\CostItemReopened;
 use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemCanBeArchivedSpecification;
 use App\Module\CostManagement\Domain\Specification\Composite\CostItemCanBeReactivatedSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemCanReceiveContributionSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemHasStatusSpecification;
+use App\Module\CostManagement\Domain\Specification\Composite\CostItemIsActiveSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemIsArchivedSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
+use App\Module\CostManagement\Domain\Specification\Composite\CostItemIsFullyCoveredSpecification;
+use App\Module\CostManagement\Domain\Specification\Composite\ShouldBecomeActiveAgainSpecification;
+use App\Module\CostManagement\Domain\Specification\CostItemAmountIsSufficientSpecification;
 use App\Module\CostManagement\Domain\Specification\CostItemTargetCanBeSafelyUpdatedSpecification;
+use App\Module\CostManagement\Domain\Specification\CoveragePeriodIsActiveSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
@@ -159,8 +168,70 @@ class CostItem extends AggregateRoot
             $sourceProductId
         ));
 
-        if ((new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
+        // On vérifie si la création d'une contribution modifie le status du poste de coût
+        $this->updateStatusAfterContributionChange();
+    }
+
+    public function updateContribution(
+        CostContributionId $contributionId,
+        Money $newAmount,
+        ?ProductId $newSourceProductId
+    ): void {
+        $contribution = $this->findContributionOrFail($contributionId);
+
+        // On ne peut modifier une contribution que si le poste de coût n'est pas archivé
+        $canBeUpdatedSpec = new NotSpecification(new CostItemIsArchivedSpecification());
+
+        if (!$canBeUpdatedSpec->isSatisfiedBy($this)) {
+            throw CostItemException::detailsUpdateNotAllowed($this->id, $this->status());
+        }
+
+        // On appelle une méthode sur l'entité enfant pour qu'elle se mette à jour
+        $contribution->update($newAmount, $newSourceProductId);
+
+        // On enregistre un événement pour signaler le changement
+        $this->recordDomainEvent(new CostContributionUpdated(
+            $this->id,
+            $contribution->id(),
+            $contribution->amount(),
+            $this->currentAmountCovered(),
+            $contribution->sourceProductId()
+        ));
+
+        // On vérifie si le changement modifie le status du poste de coût
+        $this->updateStatusAfterContributionChange();
+    }
+
+    /**
+     * Met à jour le statut du CostItem après une modification de ses contributions.
+     * Cette méthode est le point central de décision pour les changements de statut.
+     */
+    private function updateStatusAfterContributionChange(): void
+    {
+        // Règle 1: Si le statut est archivé, on ne change rien. C'est un état terminal.
+        if ((new CostItemIsArchivedSpecification())->isSatisfiedBy($this)) {
+            return;
+        }
+
+        // Règle 2: Définition de la condition pour passer à "Entièrement Couvert".
+        // L'item doit avoir un montant suffisant ET ne doit pas déjà avoir le statut "FULLY_COVERED".
+        $shouldBecomeFullyCoveredSpec = new AndSpecification(
+            new CostItemAmountIsSufficientSpecification(),
+            new NotSpecification(new CostItemHasStatusSpecification(CostItemStatus::FULLY_COVERED))
+        );
+
+        if ($shouldBecomeFullyCoveredSpec->isSatisfiedBy($this)) {
             $this->markAsCovered();
+            return; // Le statut a changé, on arrête le traitement ici.
+        }
+
+        // Règle 3: Définition de la condition pour (re)passer à "Actif".
+        // L'item devait avoir le statut "FULLY_COVERED", son montant n'est plus suffisant,
+        // ET sa période de couverture est toujours active.
+        // Règle pour (re)passer à "Actif"
+        if ((new ShouldBecomeActiveAgainSpecification())->isSatisfiedBy($this)) {
+            $this->status = CostItemStatus::ACTIVE;
+            $this->recordDomainEvent(new CostItemReopened($this->id()));
         }
     }
 
@@ -269,10 +340,9 @@ class CostItem extends AggregateRoot
             $this->coveragePeriod, $oldCoveragePeriod, $this->description, $oldDescription
         ));
 
-        // Après mise à jour, l'item peut devenir couvert.
-        if (CostItemStatus::ACTIVE === $this->status && (new CostItemIsFullyCoveredSpecification())->isSatisfiedBy($this)) {
-            $this->markAsCovered();
-        }
+        // Après mise à jour,
+        // On vérifie si la modification modifie le status du poste de coût
+        $this->updateStatusAfterContributionChange();
     }
 
     /**
@@ -280,10 +350,8 @@ class CostItem extends AggregateRoot
      */
     private function markAsCovered(): void
     {
-        if ((new CostItemIsActiveSpecification())->isSatisfiedBy($this)) {
-            $this->status = CostItemStatus::FULLY_COVERED;
-            $this->recordDomainEvent(new CostItemCovered($this->id(), $this->currentAmountCovered()));
-        }
+        $this->status = CostItemStatus::FULLY_COVERED;
+        $this->recordDomainEvent(new CostItemCovered($this->id(), $this->currentAmountCovered()));
     }
 
     public function id(): CostItemId

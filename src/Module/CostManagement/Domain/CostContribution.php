@@ -6,8 +6,9 @@ namespace App\Module\CostManagement\Domain;
 
 use App\Module\CostManagement\Domain\Enum\ContributionStatus;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
-use App\Module\ProductCatalog\Domain\ValueObject\ProductId;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Shared\Domain\Service\SystemTime;
 
 /**
  * Représente une contribution financière unique à un poste de coût (CostItem).
@@ -16,20 +17,44 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  * qui vient réduire le montant restant à couvrir pour un CostItem. Elle contient
  * son propre identifiant, le montant, la date, et une référence optionnelle
  * à l'origine de la contribution (ex: un produit vendu).
+ * C'est une entité enfant de l'agrégat CostItem.
  */
 class CostContribution
 {
+    /**
+     * @var CostItem L'agrégat parent.
+     */
     private CostItem $costItem;
+
+    /**
+     * @var Money Le montant de la contribution.
+     */
     private Money $amount;
+
+    /**
+     * @var \DateTimeImmutable La date de création de la contribution.
+     */
     private \DateTimeImmutable $contributedAt;
+
+    /**
+     * @var ProductId|null Référence optionnelle au produit qui a généré ce coût/cette contribution.
+     */
     private ?ProductId $sourceProductId;
+
+    /**
+     * @var ContributionStatus Le statut de la contribution (active, annulée, etc.).
+     */
     private ContributionStatus $status;
 
     /**
      * Le constructeur est privé pour forcer l'utilisation de la factory method `create()`.
-     * Cela garantit que chaque nouvelle contribution est correctement initialisée.
+     * Cela garantit que chaque nouvelle contribution est correctement initialisée et que
+     * la logique de création est centralisée.
      */
     private function __construct(
+        /**
+         * @var CostContributionId L'identifiant unique de cette contribution.
+         */
         private CostContributionId $id,
         CostItem $costItem,
         Money $amount,
@@ -38,12 +63,18 @@ class CostContribution
         $this->costItem = $costItem;
         $this->amount = $amount;
         $this->sourceProductId = $sourceProductId;
-        $this->contributedAt = new \DateTimeImmutable();
+        $this->contributedAt = SystemTime::now();
         $this->status = ContributionStatus::ACTIVE;
     }
 
     /**
-     * Crée une nouvelle contribution.
+     * Factory method pour créer une nouvelle instance de CostContribution.
+     * C'est le point d'entrée contrôlé pour la création de contributions.
+     *
+     * @param CostItem $costItem L'agrégat parent.
+     * @param Money $amount Le montant de la contribution.
+     * @param ProductId|null $sourceProductId L'origine optionnelle de la contribution.
+     * @return self La nouvelle instance de la contribution.
      */
     public static function create(
         CostItem $costItem,
@@ -55,17 +86,25 @@ class CostContribution
         return new self($id, $costItem, $amount, $sourceProductId);
     }
 
+    public function update(Money $newAmount, ?ProductId $newSourceProductId): void
+    {
+        if ($this->amount->getCurrency() !== $newAmount->getCurrency()) {
+            throw new \InvalidArgumentException('Cannot change currency of a contribution.');
+        }
+
+        $this->amount = $newAmount;
+        $this->sourceProductId = $newSourceProductId;
+    }
+
     /**
      * Annule la contribution.
      *
      * Cette méthode implémente la logique métier pour l'annulation :
-     * elle change le statut de la contribution à 'CANCELLED'.
-     * Une garde empêche d'annuler une contribution déjà annulée.
+     *  - elle change le statut de la contribution à 'CANCELLED'.
      */
     public function cancel(): void
     {
         if (!$this->isActive()) {
-            // Déjà annulée, on ne fait rien pour rester idempotent.
             return;
         }
 

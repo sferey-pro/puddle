@@ -10,14 +10,12 @@ use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
- * Événement émis lorsqu'un poste de coût archivé est réactivé.
- * Nouveau Status possible Active ou Couvert
+ * Événement émis lorsqu'un poste de coût couvert est réactivé à la modification d'une contribution.
  */
-final class CostItemReactivated extends DomainEvent implements DomainEventInterface
+final class CostItemReopened extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private readonly CostItemId $costItemId,
-        private readonly CostItemStatus $newStatus = CostItemStatus::ACTIVE,
+        private readonly CostItemId $costItemId
     ) {
         parent::__construct();
     }
@@ -25,10 +23,5 @@ final class CostItemReactivated extends DomainEvent implements DomainEventInterf
     public function costItemId(): CostItemId
     {
         return $this->costItemId;
-    }
-
-    public function newStatus(): CostItemStatus
-    {
-        return $this->newStatus;
     }
 }

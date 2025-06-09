@@ -7,8 +7,6 @@ namespace App\Module\CostManagement\Domain\Specification\Composite;
 use App\Core\Specification\AndSpecification;
 use App\Core\Specification\NotSpecification;
 use App\Module\CostManagement\Domain\CostItem;
-use App\Module\CostManagement\Domain\Specification\CostItemIsActiveSpecification;
-use App\Module\CostManagement\Domain\Specification\CostItemIsFullyCoveredSpecification;
 
 /**
  * Spécification composite qui vérifie si un CostItem est à la fois actif ET non couvert.
@@ -33,13 +31,5 @@ final class CostItemIsActiveAndNotCoveredSpecification extends AndSpecification
             new CostItemIsActiveSpecification(),
             new NotSpecification(new CostItemIsFullyCoveredSpecification())
         );
-    }
-
-    /**
-     * @param CostItem $candidate
-     */
-    public function isSatisfiedBy($candidate): bool
-    {
-        return parent::isSatisfiedBy($candidate);
     }
 }

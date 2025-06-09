@@ -21,7 +21,7 @@ final class Version20250609073253 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE cost_contribution (contributed_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, id UUID NOT NULL, amount INT NOT NULL, currency VARCHAR(3) NOT NULL, source_product_id UUID NOT NULL, cost_item_id UUID NOT NULL, PRIMARY KEY(id, source_product_id))
+            CREATE TABLE cost_contribution (contributed_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, id UUID NOT NULL, amount INT NOT NULL, currency VARCHAR(3) NOT NULL, status VARCHAR(255) NOT NULL, source_product_id UUID NOT NULL, cost_item_id UUID NOT NULL, PRIMARY KEY(id, source_product_id))
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_5C3A13F5401DA61 ON cost_contribution (cost_item_id)

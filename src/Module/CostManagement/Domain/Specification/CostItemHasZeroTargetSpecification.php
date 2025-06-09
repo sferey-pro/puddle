@@ -13,9 +13,11 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
  */
 final class CostItemHasZeroTargetSpecification extends AbstractSpecification
 {
+    /**
+     * @param CostItem $candidate
+     */
     public function isSatisfiedBy(mixed $candidate): bool
     {
-        /** @var CostItem $candidate */
         return $candidate->targetAmount()->isEqualTo(Money::zero());
     }
 }
