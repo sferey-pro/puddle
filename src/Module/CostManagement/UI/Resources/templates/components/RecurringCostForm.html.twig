@@ -1,0 +1,57 @@
+<div {{ attributes }}>
+    {{ form_start(form, {attr: {
+        'data-action': 'live#action:prevent',
+        'data-live-action-param': 'save',
+        novalidate: true,
+        class: 'space-y',
+        }})
+    }}
+            <div class="">
+                <fieldset class="form-fieldset mt-4">
+                    <legend>Planification</legend>
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form_row(form.frequency) }}
+                        </div>
+                        <div class="col-md-8">
+                            {{ form_row(form.day, {attr: {
+                                disabled: this.formValues.frequency == 'daily'
+                            }}) }}
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset class="form-fieldset">
+                    <legend>Détails du Coût</legend>
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form_row(form.template.type) }}
+                        </div>
+                        <div class="col-md-8">
+                            {{ form_row(form.template.name) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            {{ form_row(form.template.targetAmount) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.template.currency) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_row(form.template.description) }}
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="form-footer text-end">
+                <a href="{{ path('recurring_cost_index') }}" class="btn btn-link">Annuler</a>
+                <button type="submit" class="btn btn-primary" data-action="live#save">
+                    <twig:ux:icon name="tabler:save" class="icon" />
+                    Enregistrer
+                </button>
+            </div>
+    {{ form_end(form) }}
+</div>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                  http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="App\Module\CostManagement\Application\ReadModel\CostItemInstanceView" collection="cost_item_view">
+        <id field-name="id" strategy="NONE" type="string" />
+        <field field-name="name" type="string" />
+        <field field-name="type" type="string" />
+        <field field-name="isTemplate" type="bool" />
+        <field field-name="targetAmount" type="float" />
+        <field field-name="currentAmount" type="float" />
+        <field field-name="currency" type="string" />
+        <field field-name="startDate" type="string" />
+        <field field-name="endDate" type="string" />
+        <field field-name="status" type="string" />
+        <field field-name="progressPercentage" type="float" />
+        <field field-name="isCovered" type="bool" />
+        <field field-name="isActiveNow" type="bool" />
+
+        <embed-many field="contributions" target-document="App\Module\CostManagement\Application\ReadModel\ContributionView" />
+
+        <indexes>
+            <index>
+                <key name="status" order="asc" />
+            </index>
+            <index>
+                <key name="endDate" order="desc" />
+            </index>
+        </indexes>
+    </document>
+</doctrine-mongo-mapping>

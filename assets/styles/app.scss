@@ -1,1 +1,29 @@
 @import 'components/marquee';
+
+/**
+ * Classe pour un "faux input" qui affiche une donnée statique
+ * mais avec le style d'un champ de formulaire désactivé.
+ * Assure la cohérence visuelle et l'alignement avec les vrais inputs.
+ */
+.form-control-static {
+  // On reprend les propriétés de base d'un input
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem; // Correspond à .form-control
+  font-size: 0.875rem;     // Correspond à .form-control
+  font-weight: 400;
+  line-height: 1.4285714; // Correspond à .form-control
+  color: var(--tblr-input-color, #667382);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-clip: padding-box;
+  border: 1px solid var(--tblr-border-color, #dadcde);
+  border-radius: var(--tblr-border-radius, 4px);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+  // On applique le style "désactivé"
+  background-color: var(--tblr-input-disabled-bg, #f8f9fa);
+  cursor: not-allowed;
+  opacity: 1;
+}

@@ -38,6 +38,7 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
+use App\Shared\Domain\Service\ClockInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -58,31 +59,42 @@ class CostItem extends AggregateRoot
     use DomainEventTrait;
 
     private CostItemName $name;
-    private Money $targetAmount;
-    private CoveragePeriod $coveragePeriod;
-    private CostItemStatus $status;
-    private ?string $description;
-    private CostItemType $type;
 
     /**
-     * @var Collection<int, CostContribution>
+     * @var bool Indique si ce poste de coût sert de modèle pour unee planification récurente.
      */
+    private bool $isTemplate;
+
+    private CostItemType $type;
+    private Money $targetAmount;
+
+    private ?CoveragePeriod $coveragePeriod;
+    private ?string $description;
+
+    private CostItemStatus $status;
+
+    /** @var Collection<int, CostContribution>  */
     private Collection $contributions;
+
 
     private function __construct(
         private CostItemId $id,
         CostItemName $name,
+        bool $isTemplate,
         CostItemType $type,
         Money $targetAmount,
-        CoveragePeriod $coveragePeriod,
+        ?CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ) {
         $this->name = $name;
+        $this->isTemplate = $isTemplate;
         $this->type = $type;
         $this->targetAmount = $targetAmount;
+
         $this->coveragePeriod = $coveragePeriod;
         $this->description = $description;
-        $this->status = CostItemStatus::ACTIVE;
+
+        $this->status = $isTemplate ? CostItemStatus::TEMPLATE : CostItemStatus::ACTIVE;
         $this->contributions = new ArrayCollection();
     }
 
@@ -92,25 +104,64 @@ class CostItem extends AggregateRoot
      */
     public static function create(
         CostItemName $name,
+        bool $isTemplate,
         CostItemType $type,
         Money $targetAmount,
-        CoveragePeriod $coveragePeriod,
+        ?CoveragePeriod $coveragePeriod,
         ?string $description = null,
     ): self {
         $id = CostItemId::generate();
 
-        $costItem = new self($id, $name, $type, $targetAmount, $coveragePeriod, $description);
+        $costItem = new self(
+            id : $id,
+            isTemplate: $isTemplate,
+            name: $name,
+            type: $type,
+            targetAmount: $targetAmount,
+            coveragePeriod: $isTemplate ? null : $coveragePeriod,
+            description: $description
+        );
 
         $costItem->recordDomainEvent(new CostItemAdded(
             $id,
             $costItem->name(),
+            $costItem->isTemplate(),
             $costItem->type(),
             $costItem->targetAmount(),
-            $costItem->coveragePeriod(),
-            $costItem->status()
+            $costItem->status(),
+            $costItem->coveragePeriod()
         ));
 
         return $costItem;
+    }
+
+    /**
+     * Crée une nouvelle instance de CostItem à partir du modèle actuel.
+     *
+     * @param ClockInterface $clock
+     * @return self
+     */
+    public function createInstanceFromTemplate(ClockInterface $clock, string $durationModifier): self
+    {
+        if (!$this->isTemplate) {
+            throw CostItemException::notTemplate($this->id);
+        }
+
+        $instanceName = sprintf(
+            '%s - %s',
+            $this->name,
+            $clock->now()->format('F Y')
+        );
+
+        // On utilise la factory pour créer la nouvelle instance
+        return self::create(
+            new CostItemName($instanceName),
+            false, // L'objet créé est une instance, pas un modèle
+            $this->type,
+            $this->targetAmount,
+            CoveragePeriod::fromClock($clock, $durationModifier),
+            $this->description
+        );
     }
 
     /**
@@ -393,7 +444,7 @@ class CostItem extends AggregateRoot
         return $total;
     }
 
-    public function coveragePeriod(): CoveragePeriod
+    public function coveragePeriod(): ?CoveragePeriod
     {
         return $this->coveragePeriod;
     }
@@ -406,5 +457,10 @@ class CostItem extends AggregateRoot
     public function contributions(): Collection
     {
         return $this->contributions;
+    }
+
+    public function isTemplate(): bool
+    {
+        return $this->isTemplate;
     }
 }

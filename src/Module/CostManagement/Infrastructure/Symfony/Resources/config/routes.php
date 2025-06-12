@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use App\Module\CostManagement\UI\Controller\CostItemController;
+use App\Module\CostManagement\UI\Controller\RecurringCostController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Requirement\Requirement;
 
 return static function (RoutingConfigurator $routes): void {
     $costItemRoutes = $routes->collection('cost_item_')
-        ->prefix('/cost-items/'); // Préfixe commun pour les routes d'administration des produits
+        ->prefix('/cost-items/'); // Préfixe commun pour les routes d'administration des postes de couts
 
     // 1. Lister les produits (Read)
     $costItemRoutes->add('index', '/')
@@ -50,4 +51,20 @@ return static function (RoutingConfigurator $routes): void {
         ->controller([CostItemController::class, 'reactivate'])
         ->requirements(['id' => Requirement::UUID_V7])
         ->methods([Request::METHOD_POST]);
+
+    $costRecurringRoutes = $routes->collection('recurring_cost_')
+        ->prefix('/recurring-cost/');
+
+    $costRecurringRoutes->add('index', '/')
+        ->controller([RecurringCostController::class, 'index'])
+        ->methods([Request::METHOD_GET]);
+
+    $costRecurringRoutes->add('new', '/new/{from_item?}')
+        ->controller([RecurringCostController::class, 'new'])
+        ->methods([Request::METHOD_GET]);
+
+    $costRecurringRoutes->add('show', '/{id}')
+        ->controller([RecurringCostController::class, 'show'])
+        ->requirements(['id' => Requirement::UUID_V7])
+        ->methods([Request::METHOD_GET]);
 };

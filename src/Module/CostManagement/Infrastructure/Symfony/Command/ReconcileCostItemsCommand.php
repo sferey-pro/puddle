@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\Symfony\Command;
 
-use App\Module\CostManagement\Application\ReadModel\CostItemView;
-use App\Module\CostManagement\Application\ReadModel\Repository\CostItemViewRepositoryInterface;
+use App\Module\CostManagement\Application\ReadModel\CostItemInstanceView;
+use App\Module\CostManagement\Application\ReadModel\Repository\CostItemInstanceViewRepositoryInterface;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Scheduler\Attribute\AsCronTask;
 
 /**
  * Commande pour réconcilier les Read Models des CostItems (MongoDB)
@@ -24,12 +25,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'puddle:cost-items:reconcile',
     description: 'Synchronise les vues des postes de coût avec le modèle de domaine.',
 )]
+#[AsCronTask('*/10 * * * *')]
 class ReconcileCostItemsCommand extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CostItemRepositoryInterface $costItemRepository,
-        private readonly CostItemViewRepositoryInterface $costItemViewRepository,
+        private readonly CostItemInstanceViewRepositoryInterface $costItemViewRepository,
         private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
@@ -52,13 +54,13 @@ class ReconcileCostItemsCommand extends Command
             if (!$costItemView) {
                 // Le Read Model n'existe pas, il faut le créer
                 $this->createViewFromAggregate($costItem);
-                $this->logger->warning('CostItemView manquant créé.', ['id' => (string) $costItem->id()]);
+                $this->logger->warning('CostItemInstanceView manquant créé.', ['id' => (string) $costItem->id()]);
                 ++$createdCount;
             } elseif ($costItemView->isDifferentFrom($costItem)) {
                 // Le Read Model existe mais est désynchronisé, on le met à jour
                 $costItemView->updateFromAggregate($costItem);
                 $this->costItemViewRepository->save($costItemView);
-                $this->logger->info('CostItemView réconcilié.', ['id' => (string) $costItem->id()]);
+                $this->logger->info('CostItemInstanceView réconcilié.', ['id' => (string) $costItem->id()]);
                 ++$reconciledCount;
             }
 
@@ -77,7 +79,7 @@ class ReconcileCostItemsCommand extends Command
 
     private function createViewFromAggregate(CostItem $costItem): void
     {
-        $costItemView = CostItemView::fromAggregate($costItem);
+        $costItemView = CostItemInstanceView::fromAggregate($costItem);
         $this->costItemViewRepository->save($costItemView);
     }
 }

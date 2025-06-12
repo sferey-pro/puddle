@@ -21,10 +21,11 @@ final class CostItemAdded extends DomainEvent implements DomainEventInterface
     public function __construct(
         private readonly CostItemId $costItemId,
         private readonly CostItemName $name,
+        private bool $isTemplate,
         private readonly CostItemType $type,
         private readonly Money $targetAmount,
-        private readonly CoveragePeriod $coveragePeriod,
         private readonly CostItemStatus $status,
+        private readonly ?CoveragePeriod $coveragePeriod = null,
     ) {
         parent::__construct();
     }
@@ -39,6 +40,11 @@ final class CostItemAdded extends DomainEvent implements DomainEventInterface
         return $this->name;
     }
 
+    public function isTemplate(): bool
+    {
+        return $this->isTemplate;
+    }
+
     public function type(): CostItemType
     {
         return $this->type;
@@ -49,7 +55,7 @@ final class CostItemAdded extends DomainEvent implements DomainEventInterface
         return $this->targetAmount;
     }
 
-    public function coveragePeriod(): CoveragePeriod
+    public function coveragePeriod(): ?CoveragePeriod
     {
         return $this->coveragePeriod;
     }

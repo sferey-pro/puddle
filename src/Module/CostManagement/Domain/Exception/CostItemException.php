@@ -26,6 +26,8 @@ final class CostItemException extends \DomainException
     private const DETAILS_UPDATE_NOT_ALLOWED = 'CM-009';
     private const TARGET_AMOUNT_CONFLICT = 'CM-010';
 
+    private const NOT_TEMPLATE = 'CM-011';
+
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.
      */
@@ -37,6 +39,11 @@ final class CostItemException extends \DomainException
     public static function notFoundWithId(CostItemId $id): self
     {
         return new self(\sprintf('CostItem with ID "%s" was not found.', $id), self::NOT_FOUND);
+    }
+
+    public static function notTemplate(CostItemId $id): self
+    {
+        return new self(\sprintf('CostItem with ID "%s" was not template.', $id), self::NOT_TEMPLATE);
     }
 
     public static function contributionNotFound(CostContributionId $id): self

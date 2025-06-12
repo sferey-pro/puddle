@@ -20,10 +20,11 @@ use Doctrine\Common\Collections\Collection;
  * Cette classe est intentionnellement mutable et contient la logique pour se construire et se mettre à jour
  * à partir des événements de domaine, la rendant autonome.
  */
-class CostItemView
+class CostItemInstanceView
 {
     public string $id;
     public string $name;
+    public bool $isTemplate;
     public ?string $type = null;
     public float $targetAmount = 0.0;
     public float $currentAmount = 0.0;
@@ -48,6 +49,7 @@ class CostItemView
     private function __construct(
         string $id,
         string $name,
+        bool $isTemplate,
         ?string $type,
         float $targetAmount,
         float $currentAmount,
@@ -58,6 +60,7 @@ class CostItemView
     ) {
         $this->id = $id;
         $this->name = $name;
+        $this->isTemplate = $isTemplate;
         $this->type = $type;
         $this->targetAmount = $targetAmount;
         $this->currentAmount = $currentAmount;
@@ -78,6 +81,7 @@ class CostItemView
         return new self(
             id: (string) $event->costItemId(),
             name: (string) $event->name(),
+            isTemplate: $event->isTemplate(),
             type: $event->type()->value,
             targetAmount: self::convertMoneyToFloat($event->targetAmount()),
             currentAmount: 0.0,
@@ -96,6 +100,7 @@ class CostItemView
         $view = new self(
             id: (string) $item->id(),
             name: (string) $item->name(),
+            isTemplate: $item->isTemplate(),
             type: $item->type()->value,
             targetAmount: self::convertMoneyToFloat($item->targetAmount()),
             currentAmount: self::convertMoneyToFloat($item->currentAmountCovered()),

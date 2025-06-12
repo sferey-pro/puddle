@@ -8,7 +8,7 @@ use App\Shared\Application\Query\QueryInterface;
 
 /**
  * Query to list CostItems with pagination, filtering, and sorting.
- * Expected to return a PaginatorInterface of CostItemView objects.
+ * Expected to return a PaginatorInterface of CostItemInstanceView objects.
  */
 final readonly class ListCostItemsQuery implements QueryInterface
 {

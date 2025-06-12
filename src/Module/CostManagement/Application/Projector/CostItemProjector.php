@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Projector;
 
-use App\Module\CostManagement\Application\ReadModel\CostItemView;
-use App\Module\CostManagement\Application\ReadModel\Repository\CostItemViewRepositoryInterface;
+use App\Module\CostManagement\Application\ReadModel\CostItemInstanceView;
+use App\Module\CostManagement\Application\ReadModel\CostItemTemplateView;
+use App\Module\CostManagement\Application\ReadModel\Repository\CostItemInstanceViewRepositoryInterface;
+use App\Module\CostManagement\Application\ReadModel\Repository\CostItemTemplateViewRepositoryInterface;
+use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
 use App\Module\CostManagement\Domain\Event\CostContributionReceived;
 use App\Module\CostManagement\Domain\Event\CostContributionRemoved;
@@ -21,13 +24,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Le CostItemProjector écoute les événements de domaine du CostItem
- * et met à jour le ReadModel (CostItemView). Son rôle est d'orchestrer
+ * et met à jour le ReadModel (CostItemInstanceView & CostItemTemplateView). Son rôle est d'orchestrer
  * la mise à jour en déléguant toute la logique au ReadModel lui-même.
  */
 final class CostItemProjector implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly CostItemViewRepositoryInterface $repository,
+        private readonly CostItemInstanceViewRepositoryInterface $instanceRepository,
+        private readonly CostItemTemplateViewRepositoryInterface $templateRepository,
     ) {
     }
 
@@ -46,10 +50,20 @@ final class CostItemProjector implements EventSubscriberInterface
         ];
     }
 
+    private function save(CostItemInstanceView|CostItemTemplateView $view,  bool $flush = false): void
+    {
+        $view instanceof CostItemTemplateView ?
+            $this->templateRepository->save($view, $flush) :
+            $this->instanceRepository->save($view, $flush);
+    }
+
     public function onCostItemAdded(CostItemAdded $event): void
     {
-        $view = CostItemView::fromCostItemAdded($event);
-        $this->repository->save($view, true);
+        $view = $event->isTemplate() ?
+            CostItemTemplateView::fromCostItemAdded($event) :
+            CostItemInstanceView::fromCostItemAdded($event);
+
+        $this->save($view, true);
     }
 
     public function onCostItemDetailsUpdated(CostItemDetailsUpdated $event): void
@@ -60,7 +74,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->updateFromDetails($event);
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     public function onCostContributionReceived(CostContributionReceived $event): void
@@ -71,7 +85,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->applyCostContributionReceived($event);
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     /**
@@ -85,7 +99,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->applyCostContributionUpdated($event);
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     public function onCostContributionRemoved(CostContributionRemoved $event): void
@@ -96,7 +110,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->applyCostContributionRemoved($event);
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     public function onCostItemCovered(CostItemCovered $event): void
@@ -107,7 +121,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->updateStatus('fully_covered');
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     public function onCostItemArchived(CostItemArchived $event): void
@@ -118,7 +132,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->updateStatus('archived');
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     public function onCostItemReactivated(CostItemReactivated $event): void
@@ -129,7 +143,7 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->updateStatus($event->newStatus()->value);
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
     public function onCostItemReopened(CostItemReopened $event): void
@@ -140,13 +154,13 @@ final class CostItemProjector implements EventSubscriberInterface
         }
 
         $view->updateStatus(CostItemStatus::ACTIVE->value);
-        $this->repository->save($view, true);
+        $this->save($view, true);
     }
 
-    private function findView(CostItemId $costItemId): ?CostItemView
+    private function findView(CostItemId $costItemId): ?CostItemInstanceView
     {
         // Utilisation de `findById` au lieu de `findOrFail` pour éviter une exception
         // si un événement arrive avant que la vue ne soit créée (cas rare mais possible).
-        return $this->repository->findById($costItemId);
+        return $this->instanceRepository->findById($costItemId);
     }
 }

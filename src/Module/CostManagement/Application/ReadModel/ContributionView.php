@@ -8,7 +8,7 @@ use App\Module\CostManagement\Domain\CostContribution;
 
 /**
  * Représentation simplifiée d'une contribution pour le Read Model.
- * Ce DTO n'est pas persisté directement mais embarqué dans CostItemView.
+ * Ce DTO n'est pas persisté directement mais embarqué dans CostItemInstanceView.
  */
 class ContributionView
 {

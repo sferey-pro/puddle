@@ -1,0 +1,72 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% block title %}Planifications des Coûts Récurrents{% endblock %}
+
+{% block page_title %}Planifications des Coûts Récurrents{% endblock %}
+
+{% block page_title_actions %}
+    {% if recurringCosts is not empty %}
+        <a href="{{ path('recurring_cost_new') }}" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+            <twig:ux:icon name="tabler:plus" class="icon" />
+            Nouveau coût récurrent
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if recurringCosts is empty %}
+        {% embed  "@Tabler/partials/_blank.html.twig" %}
+            {% block empty_action %}
+                <a href="{{ path('recurring_cost_new') }}" class="btn btn-primary btn-4">
+                    <twig:ux:icon name="tabler:plus" class="icon" />
+                    Ajouter votre premier coût récurrent
+                </a>
+            {% endblock %}
+        {% endembed %}
+    {% else %}
+        <div class="row row-cards">
+            <div class="col-12">
+                {% if recurringCosts.paginator is defined and recurringCosts.paginator().haveToPaginate() %}
+                    <twig:Paginator:ItemsPerPageForm />
+                {% endif %}
+                    {{ component('Table', {
+                        title: 'Liste des Coûts Récurrents',
+                        items: recurringCosts,
+                        columns: [
+                            {label: 'Modèle de coût', path: 'templateName'},
+                            {label: 'Fréquence', path: 'recurrenceRule'},
+                            {label: 'Prochaine génération', path: 'nextGenerationDate', format: 'date'},
+                            {label: 'Dernière génération', path: 'lastGeneratedAt', format: 'date'},
+                            {label: 'Statut', path: 'status', format: 'badge'},
+                        ],
+                        actions: [
+                            {route: 'recurring_cost_show', icon: 'tabler:eye', title: 'Voir'},
+                        ],
+                    }) }}
+                {# Pagination #}
+                {% if recurringCosts.paginator is defined and recurringCosts.paginator().haveToPaginate() %}
+                    {% set paginator = recurringCosts.paginator() %}
+                    {% set start = (paginator.getCurrentPage - 1) * paginator.getItemsPerPage + 1 %}
+                    {% set end = (paginator.currentPage * paginator.getItemsPerPage) > paginator.getTotalItems ? paginator.getTotalItems : (paginator.currentPage * paginator.getItemsPerPage) %}
+
+                    <div class="card-footer">
+                        <div class="row g-2 justify-content-center justify-content-sm-between">
+                            <div class="col-auto d-flex align-items-center">
+                                <p class="m-0 text-secondary">Showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong> of <strong>{{ paginator.getTotalItems }} entries</strong></p>
+                            </div>
+                            <div class="col-auto">
+                                {{ pagerfanta(paginator.getPagerFanta(), 'twig', {
+                                    routeName: app.request.attributes.get('_route'),
+                                    routeParams: app.request.query.all|merge({page: paginator.getPagerFanta().getCurrentPage()}),
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}

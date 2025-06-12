@@ -32,13 +32,17 @@
                         <span class="nav-link-title"> Home </span>
                     </a>
                 </li>
-                <li class="nav-item {% if app.request.attributes.get('_route') starts with 'cost_item_' %}active{% endif %}">
-                    <a class="nav-link" href="{{ path('cost_item_index') }}">
+                <li class="nav-item dropdown {% if 'cost' in app.request.attributes.get('_route') %}active show{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#navbar-form" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="true">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                             <twig:ux:icon name="tabler:coins" class="icon icon-1" />
                         </span>
                         <span class="nav-link-title"> Postes de Coûts </span>
                     </a>
+                    <div class="dropdown-menu {% if 'cost' in app.request.attributes.get('_route') %}show{% endif %}" data-bs-popper="static">
+                        <a class="dropdown-item {% if app.request.attributes.get('_route') == 'cost_item_index' %}active{% endif %}" href="{{ path('cost_item_index') }}"> Suivi des Coûts </a>
+                        <a class="dropdown-item {% if app.request.attributes.get('_route') == 'recurring_cost_index' %}active{% endif %}" href="{{ path('recurring_cost_index') }}">Planifications </a>
+                    </div>
                 </li>
                 <li class="nav-item {% if app.request.attributes.get('_route') starts with 'product_' %}active{% endif %}">
                     <a class="nav-link" href="{{ path('admin_product_index') }}">

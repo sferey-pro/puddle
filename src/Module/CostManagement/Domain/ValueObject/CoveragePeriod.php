@@ -6,6 +6,7 @@ namespace App\Module\CostManagement\Domain\ValueObject;
 
 use App\Module\CostManagement\Domain\Specification\CoveragePeriodHasEndedSpecification;
 use App\Module\CostManagement\Domain\Specification\CoveragePeriodIsActiveSpecification;
+use App\Shared\Domain\Service\ClockInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -25,6 +26,22 @@ final readonly class CoveragePeriod
 
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+    }
+
+    /**
+     * Crée une nouvelle période de couverture à partir de l'horloge système et d'une durée.
+     * C'est une "factory" qui simplifie la création de l'objet.
+     *
+     * @param ClockInterface $clock Le service d'horloge pour obtenir la date de début (maintenant).
+     * @param string $durationModifier Une chaîne de modification de date valide pour DateTime::modify (ex: '+1 month').
+     * @return self
+     */
+    public static function fromClock(ClockInterface $clock, string $durationModifier): self
+    {
+        $startDate = $clock->now();
+        $endDate = $startDate->modify($durationModifier);
+
+        return new self($startDate, $endDate);
     }
 
     public static function create(\DateTimeImmutable $startDate, ?\DateTimeImmutable $endDate = null): static

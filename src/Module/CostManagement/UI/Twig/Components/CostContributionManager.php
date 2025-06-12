@@ -8,9 +8,9 @@ use App\Module\CostManagement\Application\Command\AddCostContribution;
 use App\Module\CostManagement\Application\Command\RemoveCostContribution;
 use App\Module\CostManagement\Application\Command\UpdateCostContribution;
 use App\Module\CostManagement\Application\DTO\AddContributionDTO;
-use App\Module\CostManagement\Application\Query\FindCostItemQuery;
+use App\Module\CostManagement\Application\Query\FindCostItemInstanceQuery;
 use App\Module\CostManagement\Application\ReadModel\ContributionView;
-use App\Module\CostManagement\Application\ReadModel\CostItemView;
+use App\Module\CostManagement\Application\ReadModel\CostItemInstanceView;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\UI\Form\ContributionItemFormType;
 use App\Shared\Application\Command\CommandBusInterface;
@@ -82,9 +82,9 @@ class CostContributionManager extends AbstractController
     /**
      * Fournit la vue du CostItem au template.
      */
-    public function getCostItem(): CostItemView
+    public function getCostItem(): CostItemInstanceView
     {
-        return $this->queryBus->ask(new FindCostItemQuery(CostItemId::fromString($this->costItemId)));
+        return $this->queryBus->ask(new FindCostItemInstanceQuery(CostItemId::fromString($this->costItemId)));
     }
 
     /**

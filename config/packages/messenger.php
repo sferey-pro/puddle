@@ -14,11 +14,16 @@ return static function (FrameworkConfig $framework): void {
     $messenger = $framework->messenger();
 
     $messenger->defaultBus('command.bus');
-    $commandBus = $messenger->bus('command.bus');
-    $queryBus = $messenger->bus('query.bus');
-    $eventBus = $messenger->bus('event.bus');
+    $messenger->bus('command.bus')
+        ->middleware()
+        ->id('validation');
+        
+    $messenger->bus('query.bus')
+        ->middleware()
+        ->id('validation');
 
-    $eventBus->defaultMiddleware()
+    $messenger->bus('event.bus')
+        ->defaultMiddleware()
         ->enabled(true)
         ->allowNoHandlers(false)
         ->allowNoSenders(true)

@@ -1,0 +1,17 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% block title %}Créer un Poste de Coût {% endblock %}
+
+{% block page_title %}Créer un nouveau Poste de Coût {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <twig:CostItemForm :data="formDto" />
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

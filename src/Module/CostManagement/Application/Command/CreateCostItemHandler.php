@@ -29,6 +29,7 @@ final class CreateCostItemHandler
         // Création de l'agrégat à partir des données du DTO
         $costItem = CostItem::create(
             name: new CostItemName($dto->name),
+            isTemplate: false,
             type: CostItemType::from($dto->type),
             targetAmount: new Money($dto->targetAmount, $dto->currency),
             coveragePeriod: CoveragePeriod::create(

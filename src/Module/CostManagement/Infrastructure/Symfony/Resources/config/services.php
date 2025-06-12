@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use App\Module\CostManagement\Application\ReadModel\Repository\CostItemViewRepositoryInterface;
+use App\Module\CostManagement\Application\ReadModel\Repository\CostItemInstanceViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
+use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface;
 use App\Module\CostManagement\Infrastructure\Doctrine\Repository\DoctrineCostItemRepository;
-use App\Module\CostManagement\Infrastructure\ReadModel\Repository\DoctrineCostItemViewRepository;
+use App\Module\CostManagement\Infrastructure\Doctrine\Repository\DoctrineRecurringCostRepository;
+use App\Module\CostManagement\Infrastructure\ReadModel\Repository\DoctrineCostItemInstanceViewRepository;
 
 return function (ContainerConfigurator $container): void {
     $services = $container->services()
@@ -25,6 +27,12 @@ return function (ContainerConfigurator $container): void {
     $services->set(CostItemRepositoryInterface::class)
         ->class(DoctrineCostItemRepository::class);
 
-    $services->set(CostItemViewRepositoryInterface::class)
-        ->class(DoctrineCostItemViewRepository::class);
+    $services->set(CostItemInstanceViewRepositoryInterface::class)
+        ->class(DoctrineCostItemInstanceViewRepository::class);
+
+    $services->set(RecurringCostViewRepositoryInterface::class)
+        ->class(DoctrineRecurringCostViewRepository::class);
+
+    $services->set(RecurringCostRepositoryInterface::class)
+        ->class(DoctrineRecurringCostRepository::class);
 };
