@@ -17,7 +17,7 @@ use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
  * Tâche planifiée pour générer les instances de CostItem à partir des modèles récurrents.
  * et est configurée pour s'exécuter quotidiennement.
  */
-#[AsPeriodicTask(frequency: '1 day', jitter: 6, from: "08:00:00", until: "22:00:00")]
+#[AsPeriodicTask(frequency: '1 day', jitter: 6, from: '08:00:00', until: '22:00:00')]
 final class GenerateRecurringCostInstancesTask
 {
     public function __construct(
@@ -25,7 +25,7 @@ final class GenerateRecurringCostInstancesTask
         private readonly CostItemRepositoryInterface $costItemRepository,
         private readonly CommandBusInterface $commandBus,
         private readonly ClockInterface $clock,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -36,12 +36,13 @@ final class GenerateRecurringCostInstancesTask
 
         $dueRecurringCosts = $this->recurringCostRepository->findDueForGeneration($now);
 
-        if (count($dueRecurringCosts) === 0) {
+        if (0 === \count($dueRecurringCosts)) {
             $this->logger->info('No recurring cost items are due for generation today.');
+
             return;
         }
 
-        $this->logger->info(sprintf('Found %d recurring cost(s) to generate.', count($dueRecurringCosts)));
+        $this->logger->info(\sprintf('Found %d recurring cost(s) to generate.', \count($dueRecurringCosts)));
 
         foreach ($dueRecurringCosts as $recurringCost) {
             // 1. Charger le CostItem qui sert de modèle
@@ -56,7 +57,7 @@ final class GenerateRecurringCostInstancesTask
             }
 
             // 2. Préparer les données pour la nouvelle instance
-            $instanceName = sprintf('%s - %s', $templateCostItem->name(), $now->format('F Y'));
+            $instanceName = \sprintf('%s - %s', $templateCostItem->name(), $now->format('F Y'));
 
             // 3. Calculer dynamiquement la période de couverture
             $recurrenceRule = $recurringCost->recurrenceRule();
@@ -76,7 +77,7 @@ final class GenerateRecurringCostInstancesTask
             $this->logger->info('Dispatching CreateCostItem command for new instance.', [
                 'recurringCostId' => (string) $recurringCost->id(),
                 'templateId' => (string) $templateCostItem->id(),
-                'coveragePeriod' => sprintf('From %s to %s', $startDate->format('Y-m-d'), $endDate->format('Y-m-d')),
+                'coveragePeriod' => \sprintf('From %s to %s', $startDate->format('Y-m-d'), $endDate->format('Y-m-d')),
             ]);
 
             // 5. Envoyer la commande de création

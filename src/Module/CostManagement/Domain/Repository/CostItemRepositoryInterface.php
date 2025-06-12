@@ -57,7 +57,6 @@ interface CostItemRepositoryInterface extends RepositoryInterface
      */
     public function findOrFail(CostItemId $id): CostItem;
 
-
     /**
      * Trouve tous les postes de coûts.
      *

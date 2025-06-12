@@ -32,9 +32,8 @@ final readonly class CoveragePeriod
      * Crée une nouvelle période de couverture à partir de l'horloge système et d'une durée.
      * C'est une "factory" qui simplifie la création de l'objet.
      *
-     * @param ClockInterface $clock Le service d'horloge pour obtenir la date de début (maintenant).
-     * @param string $durationModifier Une chaîne de modification de date valide pour DateTime::modify (ex: '+1 month').
-     * @return self
+     * @param ClockInterface $clock            le service d'horloge pour obtenir la date de début (maintenant)
+     * @param string         $durationModifier une chaîne de modification de date valide pour DateTime::modify (ex: '+1 month')
      */
     public static function fromClock(ClockInterface $clock, string $durationModifier): self
     {

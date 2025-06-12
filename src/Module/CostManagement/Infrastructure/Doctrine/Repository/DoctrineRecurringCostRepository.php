@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\Doctrine\Repository;
 
-use App\Module\CostManagement\Domain\RecurringCost;
 use App\Module\CostManagement\Domain\Enum\RecurringCostStatus;
+use App\Module\CostManagement\Domain\RecurringCost;
 use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
 use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
-use DateTimeInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -35,7 +34,7 @@ class DoctrineRecurringCostRepository extends ORMAbstractRepository implements R
         return $this->findOneBy(['id.value' => $id->value]);
     }
 
-    public function findDueForGeneration(DateTimeInterface $dateTime): array
+    public function findDueForGeneration(\DateTimeInterface $dateTime): array
     {
         // Cette logique sélectionne les coûts récurrents actifs qui n'ont pas encore été générés ce mois-ci.
         $qb = $this->getRepository()->createQueryBuilder('rc');

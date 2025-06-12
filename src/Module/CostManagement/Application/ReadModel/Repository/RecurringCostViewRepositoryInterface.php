@@ -30,8 +30,7 @@ interface RecurringCostViewRepositoryInterface extends RepositoryInterface
     /**
      * Sauvegarde (crée ou met à jour) une vue de coût récurrent.
      *
-     * @param RecurringCostView $recurringCostView La vue à sauvegarder.
-     * @param bool         $flush    si true, les changements sont immédiatement envoyés en base de données
+     * @param bool $flush si true, les changements sont immédiatement envoyés en base de données
      */
     public function save(RecurringCostView $recurringCost, bool $flush = false): void;
 
@@ -46,8 +45,6 @@ interface RecurringCostViewRepositoryInterface extends RepositoryInterface
      * Trouve une entité CostItem par son ID ou lève une exception si elle n'est pas trouvée.
      *
      * @throws RecurringCostException
-     *
-     * @return RecurringCostView
      */
     public function findOrFail(RecurringCostId $id): RecurringCostView;
 }

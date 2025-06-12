@@ -61,7 +61,7 @@ class CostItem extends AggregateRoot
     private CostItemName $name;
 
     /**
-     * @var bool Indique si ce poste de coût sert de modèle pour unee planification récurente.
+     * @var bool indique si ce poste de coût sert de modèle pour unee planification récurente
      */
     private bool $isTemplate;
 
@@ -73,9 +73,8 @@ class CostItem extends AggregateRoot
 
     private CostItemStatus $status;
 
-    /** @var Collection<int, CostContribution>  */
+    /** @var Collection<int, CostContribution> */
     private Collection $contributions;
-
 
     private function __construct(
         private CostItemId $id,
@@ -137,9 +136,6 @@ class CostItem extends AggregateRoot
 
     /**
      * Crée une nouvelle instance de CostItem à partir du modèle actuel.
-     *
-     * @param ClockInterface $clock
-     * @return self
      */
     public function createInstanceFromTemplate(ClockInterface $clock, string $durationModifier): self
     {
@@ -147,7 +143,7 @@ class CostItem extends AggregateRoot
             throw CostItemException::notTemplate($this->id);
         }
 
-        $instanceName = sprintf(
+        $instanceName = \sprintf(
             '%s - %s',
             $this->name,
             $clock->now()->format('F Y')

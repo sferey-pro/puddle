@@ -22,22 +22,23 @@ enum RecurrenceFrequency: string
         return match ($this) {
             self::DAILY => 'Quotidien',
             self::WEEKLY => 'Hebdomadaire',
-            self::MONTHLY => 'Mensuel'
+            self::MONTHLY => 'Mensuel',
         };
     }
 
     /**
      * Convertit le cas de l'énumération en une chaîne de caractères lisible.
      *
-     * @param int|null $day Le jour du mois ou de la semaine, si applicable.
-     * @return string La description formatée.
+     * @param int|null $day le jour du mois ou de la semaine, si applicable
+     *
+     * @return string la description formatée
      */
     public function toHumanReadable(?int $day): string
     {
         return match ($this) {
             self::DAILY => 'Quotidien',
-            self::WEEKLY => 'Hebdomadaire, chaque ' . $this->getDayOfWeekName($day),
-            self::MONTHLY => 'Mensuel, le ' . $day . ' du mois',
+            self::WEEKLY => 'Hebdomadaire, chaque '.$this->getDayOfWeekName($day),
+            self::MONTHLY => 'Mensuel, le '.$day.' du mois',
         };
     }
 
@@ -48,10 +49,9 @@ enum RecurrenceFrequency: string
     {
         $dayMap = [
             1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi',
-            5 => 'Vendredi', 6 => 'Samedi', 7 => 'Dimanche'
+            5 => 'Vendredi', 6 => 'Samedi', 7 => 'Dimanche',
         ];
 
-        return $dayMap[$day] ?? 'jour ' . $day;
+        return $dayMap[$day] ?? 'jour '.$day;
     }
-
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\ReadModel\Repository;
 
-use App\Module\CostManagement\Application\ReadModel\CostItemTemplateView;
 use App\Module\CostManagement\Application\ReadModel\CostItemInstanceView;
+use App\Module\CostManagement\Application\ReadModel\CostItemTemplateView;
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemInstanceViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;

@@ -43,7 +43,6 @@ final class CostItemController extends AbstractController
             $groupedCostItems[$type->value] = [];
         }
 
-
         foreach ($costItems as $costItem) {
             $typeValue = $costItem->type ?: null;
 

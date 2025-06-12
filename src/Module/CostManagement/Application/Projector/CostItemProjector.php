@@ -50,7 +50,7 @@ final class CostItemProjector implements EventSubscriberInterface
         ];
     }
 
-    private function save(CostItemInstanceView|CostItemTemplateView $view,  bool $flush = false): void
+    private function save(CostItemInstanceView|CostItemTemplateView $view, bool $flush = false): void
     {
         $view instanceof CostItemTemplateView ?
             $this->templateRepository->save($view, $flush) :

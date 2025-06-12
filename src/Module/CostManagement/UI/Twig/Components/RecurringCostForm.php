@@ -17,7 +17,6 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * LiveComponent pour le formulaire de création d'un coût récurrent.
@@ -59,8 +58,8 @@ final class RecurringCostForm extends AbstractController
      */
     public function needsDayField(): bool
     {
-        return isset($this->data->frequency) &&
-            in_array($this->data->frequency, [RecurrenceFrequency::WEEKLY, RecurrenceFrequency::MONTHLY], true);
+        return isset($this->data->frequency)
+            && \in_array($this->data->frequency, [RecurrenceFrequency::WEEKLY, RecurrenceFrequency::MONTHLY], true);
     }
 
     /**

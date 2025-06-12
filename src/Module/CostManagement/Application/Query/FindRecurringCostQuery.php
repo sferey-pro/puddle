@@ -10,7 +10,7 @@ use App\Shared\Application\Query\QueryInterface;
 final readonly class FindRecurringCostQuery implements QueryInterface
 {
     public function __construct(
-        public RecurringCostId $id
+        public RecurringCostId $id,
     ) {
     }
 }

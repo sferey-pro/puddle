@@ -11,7 +11,7 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class RecurringCostCreated extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private readonly RecurringCostId $recurringCostId
+        private readonly RecurringCostId $recurringCostId,
     ) {
         parent::__construct();
     }

@@ -22,7 +22,7 @@ final class RecurringCostProjector implements EventSubscriberInterface
         private readonly RecurringCostViewRepositoryInterface $viewRepository,
         private readonly RecurringCostRepositoryInterface $recurringCostRepository,
         private readonly CostItemRepositoryInterface $costItemRepository,
-        private readonly ClockInterface $clock
+        private readonly ClockInterface $clock,
     ) {
     }
 
@@ -38,7 +38,6 @@ final class RecurringCostProjector implements EventSubscriberInterface
      */
     public function onRecurringCostCreated(RecurringCostCreated $event): void
     {
-
         $recurringCost = $this->recurringCostRepository->ofId($event->recurringCostId());
         if (!$recurringCost) {
             return;

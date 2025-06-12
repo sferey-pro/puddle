@@ -5,12 +5,7 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\UI\Form;
 
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
-use App\Module\CostManagement\Domain\Enum\CostItemType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

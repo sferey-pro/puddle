@@ -26,7 +26,7 @@ final class CreateRecurringCostHandler
         private readonly RecurringCostRepositoryInterface $recurringCostRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly ClockInterface $clock
+        private readonly ClockInterface $clock,
     ) {
     }
 

@@ -8,5 +8,4 @@ use App\Shared\Application\Query\QueryInterface;
 
 final class ListRecurringCostsQuery implements QueryInterface
 {
-
 }

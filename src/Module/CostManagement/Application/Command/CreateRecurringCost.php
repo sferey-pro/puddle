@@ -10,8 +10,7 @@ use App\Shared\Application\Command\CommandInterface;
 final readonly class CreateRecurringCost implements CommandInterface
 {
     public function __construct(
-        public CreateRecurringCostDTO $dto
+        public CreateRecurringCostDTO $dto,
     ) {
-
     }
 }

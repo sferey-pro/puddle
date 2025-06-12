@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Application\Query;
 
 use App\Module\CostManagement\Application\ReadModel\RecurringCostView;
-use App\Shared\Application\Query\QueryHandlerInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
@@ -13,7 +12,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 final class ListRecurringCostsQueryHandler
 {
     public function __construct(
-        private readonly DocumentManager $documentManager
+        private readonly DocumentManager $documentManager,
     ) {
     }
 

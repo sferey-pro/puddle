@@ -22,7 +22,7 @@ final class GenerateRecurringCostInstancesService
         private readonly RecurringCostRepositoryInterface $repository,
         private readonly CommandBusInterface $commandBus,
         private readonly ClockInterface $clock,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -37,16 +37,17 @@ final class GenerateRecurringCostInstancesService
 
         $dueItems = $this->repository->findDueForGeneration($now);
 
-        if (count($dueItems) === 0) {
+        if (0 === \count($dueItems)) {
             $this->logger->info('No recurring cost items are due for generation today.');
+
             return;
         }
 
-        $this->logger->info(sprintf('Found %d recurring cost(s) to generate.', count($dueItems)));
+        $this->logger->info(\sprintf('Found %d recurring cost(s) to generate.', \count($dueItems)));
 
         foreach ($dueItems as $dueItem) {
             // Prépare le nom du CostItem, par exemple "Loyer - Juin 2025"
-            $instanceName = sprintf(
+            $instanceName = \sprintf(
                 '%s - %s',
                 $dueItem->name(),
                 $now->format('F Y')

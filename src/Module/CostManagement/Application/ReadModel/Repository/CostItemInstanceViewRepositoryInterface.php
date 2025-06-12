@@ -33,7 +33,7 @@ interface CostItemInstanceViewRepositoryInterface extends RepositoryInterface
      * Gère à la fois la création (persist) et la mise à jour.
      *
      * @param CostItemInstanceView $costItem la vue à sauvegarder
-     * @param bool         $flush    si true, les changements sont immédiatement envoyés en base de données
+     * @param bool                 $flush    si true, les changements sont immédiatement envoyés en base de données
      */
     public function save(CostItemInstanceView $costItem, bool $flush = false): void;
 
@@ -41,7 +41,7 @@ interface CostItemInstanceViewRepositoryInterface extends RepositoryInterface
      * Supprime une vue de poste de coût.
      *
      * @param CostItemInstanceView $costItem la vue à supprimer
-     * @param bool         $flush    si true, la suppression est immédiatement envoyée en base de données
+     * @param bool                 $flush    si true, la suppression est immédiatement envoyée en base de données
      */
     public function delete(CostItemInstanceView $costItem, bool $flush = false): void;
 
@@ -49,8 +49,6 @@ interface CostItemInstanceViewRepositoryInterface extends RepositoryInterface
      * Trouve une entité CostItemInstanceView par son ID ou lève une exception si elle n'est pas trouvée.
      *
      * @throws CostItemException
-     *
-     * @return CostItemInstanceView
      */
     public function findOrFail(CostItemId $id): CostItemInstanceView;
 }

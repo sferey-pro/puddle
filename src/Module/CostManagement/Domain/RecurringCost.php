@@ -12,7 +12,6 @@ use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
 use App\Shared\Domain\Service\ClockInterface;
-use DateTimeImmutable;
 
 /**
  * Représente la planification d'un coût récurrent.
@@ -23,31 +22,28 @@ class RecurringCost extends AggregateRoot
 {
     use DomainEventTrait;
 
-    private DateTimeImmutable $updatedAt;
-    private ?DateTimeImmutable $lastGeneratedAt = null;
+    private \DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $lastGeneratedAt = null;
 
     private function __construct(
         private RecurringCostId $id,
         private CostItemId $templateCostItemId, // Référence vers le modèle
         private RecurrenceRule $recurrenceRule,
         private RecurringCostStatus $status,
-        private DateTimeImmutable $createdAt
+        private \DateTimeImmutable $createdAt,
     ) {
     }
 
     /**
      * Crée une nouvelle planification de coût récurrent.
      *
-     * @param RecurringCostId $id L'ID de la planification.
-     * @param CostItemId $templateCostItemId L'ID du CostItem servant de modèle.
-     * @param RecurrenceRule $recurrenceRule La règle de périodicité.
-     * @param ClockInterface $clock
-     * @return self
+     * @param CostItemId     $templateCostItemId L'ID du CostItem servant de modèle
+     * @param RecurrenceRule $recurrenceRule     la règle de périodicité
      */
     public static function create(
         CostItemId $templateCostItemId,
         RecurrenceRule $recurrenceRule,
-        ClockInterface $clock
+        ClockInterface $clock,
     ): self {
         $id = RecurringCostId::generate();
 
@@ -91,7 +87,7 @@ class RecurringCost extends AggregateRoot
         return $this->status;
     }
 
-    public function lastGeneratedAt(): ?DateTimeImmutable
+    public function lastGeneratedAt(): ?\DateTimeImmutable
     {
         return $this->lastGeneratedAt;
     }

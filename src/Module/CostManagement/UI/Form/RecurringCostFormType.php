@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\UI\Form;
 
 use App\Module\CostManagement\Application\DTO\CreateRecurringCostDTO;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Module\CostManagement\Domain\Enum\RecurrenceFrequency;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RecurringCostFormType extends AbstractType
 {
@@ -30,7 +30,7 @@ class RecurringCostFormType extends AbstractType
             ])
             ->add('day', IntegerType::class, [
                 'label' => 'Jour (du mois ou de la semaine)',
-                'help' => 'Ex: 15 pour le 15 du mois, ou 1 pour Lundi.'
+                'help' => 'Ex: 15 pour le 15 du mois, ou 1 pour Lundi.',
             ]);
     }
 
@@ -39,7 +39,7 @@ class RecurringCostFormType extends AbstractType
         $resolver->setDefaults([
             'csrf_protection' => true,
             'csrf_token_id' => 'recurring_cost_form_token',
-            'data_class' => CreateRecurringCostDTO::class
+            'data_class' => CreateRecurringCostDTO::class,
         ]);
     }
 }

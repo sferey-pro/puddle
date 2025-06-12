@@ -22,7 +22,7 @@ class RecurringCostController extends AbstractController
     public function __construct(
         private readonly CommandBusInterface $commandBus,
         private readonly QueryBusInterface $queryBus,
-        private readonly CostItemRepositoryInterface $repository
+        private readonly CostItemRepositoryInterface $repository,
     ) {
     }
 

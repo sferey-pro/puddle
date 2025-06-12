@@ -7,7 +7,6 @@ namespace App\Module\CostManagement\Application\DTO;
 use App\Module\CostManagement\Domain\Enum\RecurrenceFrequency;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Sequentially;
-use Symfony\Component\Validator\Constraints\When;
 
 /**
  * DTO pour le formulaire unifié. Il contient les informations de la planification
@@ -16,7 +15,7 @@ use Symfony\Component\Validator\Constraints\When;
 final class CreateRecurringCostDTO
 {
     /**
-     * @var CreateCostItemDTO Contient les données du sous-formulaire pour le modèle.
+     * @var CreateCostItemDTO contient les données du sous-formulaire pour le modèle
      */
     #[Assert\Valid]
     public CreateCostItemDTO $template;
@@ -28,7 +27,6 @@ final class CreateRecurringCostDTO
         ]
     )]
     public ?string $frequency = '';
-
 
     public ?int $day = null;
 

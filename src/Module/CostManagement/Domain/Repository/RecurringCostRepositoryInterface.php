@@ -6,7 +6,6 @@ namespace App\Module\CostManagement\Domain\Repository;
 
 use App\Module\CostManagement\Domain\RecurringCost;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
-use DateTimeInterface;
 
 interface RecurringCostRepositoryInterface
 {
@@ -17,5 +16,5 @@ interface RecurringCostRepositoryInterface
     /**
      * @return RecurringCost[]
      */
-    public function findDueForGeneration(DateTimeInterface $dateTime): array;
+    public function findDueForGeneration(\DateTimeInterface $dateTime): array;
 }

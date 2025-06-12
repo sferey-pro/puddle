@@ -70,7 +70,6 @@ class CostItemTemplateView
             status: $item->status()->value
         );
 
-
         return $view;
     }
 
