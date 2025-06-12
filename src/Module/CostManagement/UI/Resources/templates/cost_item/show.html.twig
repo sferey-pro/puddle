@@ -12,7 +12,7 @@
 
 {% block page_title_actions %}
     <a href="{{ path('cost_item_index') }}" class="btn btn-outline-secondary">
-        <twig:ux:icon name="tabler:list" class="icon" />
+        <twig:ux:icon name="tabler:list"  />
         Retour à la liste
     </a>
     {% if not isTemplate %}
@@ -20,19 +20,19 @@
             <form class="form-block" action="{{ path('cost_item_reactivate', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('reactivate_' ~ costItem.id) }}">
                 <button type="submit" class="btn btn-outline-success w-100">
-                    <twig:ux:icon name="tabler:archive-off" class="icon" /> Réactiver
+                    <twig:ux:icon name="tabler:archive-off"  /> Réactiver
                 </button>
             </form>
         {% else %}
             <form class="form-block" action="{{ path('cost_item_archive', {id: costItem.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cet élément ?');" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('archive_' ~ costItem.id) }}">
                 <button type="submit" class="btn btn-warning w-100">
-                    <twig:ux:icon name="tabler:archive" class="icon" /> Archiver
+                    <twig:ux:icon name="tabler:archive"  /> Archiver
                 </button>
             </form>
         {% endif %}
         <a href="{{ path('recurring_cost_new', {'from_item': costItem.id}) }}" class="btn btn-outline-secondary">
-            <twig:ux:icon name="tabler:copy" class="icon" />
+            <twig:ux:icon name="tabler:copy"  />
             Utiliser comme modèle
         </a>
     {% endif %}

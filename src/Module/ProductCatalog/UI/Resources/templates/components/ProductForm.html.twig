@@ -23,7 +23,7 @@
                                 aria-label="Supprimer le composant"
                                 data-bs-original-title="Supprimer le composant"
                             >
-                                <twig:ux:icon name="tabler:trash" class="icon icon-1" />
+                                <twig:ux:icon name="tabler:trash"  />
                             </div> #}
                         </div>
                     </h4>
@@ -60,12 +60,12 @@
         </div>
 
         {{ form_widget(form.costComponents.vars.button_add, {label: '+ Ajouter un composant de coût', attr: {class: 'btn btn-outline-primary btn-5 d-none d-sm-inline-block'}}) }}
-        {# <twig:ux:icon name="tabler:plus" class="icon icon-2" /> Ajouter un composant de coût #}
+        {# <twig:ux:icon name="tabler:plus"  /> Ajouter un composant de coût #}
 
         <div class="text-end">
             <a href="{{ path('admin_product_index') }}" class="btn btn-1">Annuler</a>
             <button type="submit" class="btn btn-primary btn-2 d-none d-sm-inline-block">
-                <twig:ux:icon name="tabler:save-changes" class="icon icon-2" /> Enregistrer le Produit
+                <twig:ux:icon name="tabler:save-changes"  /> Enregistrer le Produit
             </button>
         </div>
         {{ form_rest(form) }}

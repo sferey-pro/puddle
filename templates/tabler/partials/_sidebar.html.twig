@@ -27,7 +27,7 @@
                 <li class="nav-item {% if app.request.attributes.get('_route') == 'homepage' %}active{% endif %}">
                     <a class="nav-link" href="{{ path('homepage') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <twig:ux:icon name="tabler:home" class="icon icon-1" />
+                            <twig:ux:icon name="tabler:home"  />
                         </span>
                         <span class="nav-link-title"> Home </span>
                     </a>
@@ -35,7 +35,7 @@
                 <li class="nav-item dropdown {% if 'cost' in app.request.attributes.get('_route') %}active show{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#navbar-form" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="true">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <twig:ux:icon name="tabler:coins" class="icon icon-1" />
+                            <twig:ux:icon name="tabler:coins"  />
                         </span>
                         <span class="nav-link-title"> Postes de Coûts </span>
                     </a>
@@ -47,7 +47,7 @@
                 <li class="nav-item {% if app.request.attributes.get('_route') starts with 'product_' %}active{% endif %}">
                     <a class="nav-link" href="{{ path('admin_product_index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <twig:ux:icon name="tabler:coffee" class="icon icon-1" />
+                            <twig:ux:icon name="tabler:coffee"  />
                         </span>
                         <span class="nav-link-title"> Catalogue Produits </span>
                     </a>
@@ -55,7 +55,7 @@
                 <li class="nav-item {% if app.request.attributes.get('_route') == 'user_index' %}active{% endif %}">
                      <a class="nav-link" href="{{ path('user_index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                            <twig:ux:icon name="tabler:users" class="icon icon-1" />
+                            <twig:ux:icon name="tabler:users"  />
                         </span>
                         <span class="nav-link-title"> Utilisateurs </span>
                     </a>

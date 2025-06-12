@@ -1,6 +1,6 @@
 <a href="{{ path(routeName) }}" class="btn btn-primary btn-3">
     {% if withIcon is defined %}
-        <twig:ux:icon class="icon icon-2" name="{{ withIcon }}" />
+        <twig:ux:icon  name="{{ withIcon }}" />
     {% endif %}
     {{ label|default('label.button.create'|trans) }}
 </a>

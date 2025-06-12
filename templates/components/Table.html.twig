@@ -47,7 +47,7 @@
                                 <div class="btn-group">
                                     {% for action in actions %}
                                         <a href="{{ path(action.route, {id: item.id}) }}" class="btn btn-ghost-primary" title="{{ action.title }}">
-                                            <twig:ux:icon name="{{ action.icon }}" class="icon"/> {{ action.title }}
+                                            <twig:ux:icon name="{{ action.icon }}" /> {{ action.title }}
                                         </a>
                                     {% endfor %}
                                 </div>

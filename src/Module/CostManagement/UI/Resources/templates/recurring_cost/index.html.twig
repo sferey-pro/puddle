@@ -7,7 +7,7 @@
 {% block page_title_actions %}
     {% if recurringCosts is not empty %}
         <a href="{{ path('recurring_cost_new') }}" class="btn btn-primary btn-5 d-none d-sm-inline-block">
-            <twig:ux:icon name="tabler:plus" class="icon" />
+            <twig:ux:icon name="tabler:plus"  />
             Nouveau coût récurrent
         </a>
     {% endif %}
@@ -18,7 +18,7 @@
         {% embed  "@Tabler/partials/_blank.html.twig" %}
             {% block empty_action %}
                 <a href="{{ path('recurring_cost_new') }}" class="btn btn-primary btn-4">
-                    <twig:ux:icon name="tabler:plus" class="icon" />
+                    <twig:ux:icon name="tabler:plus"  />
                     Ajouter votre premier coût récurrent
                 </a>
             {% endblock %}
