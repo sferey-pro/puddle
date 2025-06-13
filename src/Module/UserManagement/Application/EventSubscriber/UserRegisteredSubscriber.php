@@ -29,7 +29,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
 
     public function onUserRegistered(UserRegistered $event): void
     {
-        $userExists = $this->queryBus->ask(new UserExistsQuery(identifier: $event->identifier()));
+        $userExists = $this->queryBus->ask(new UserExistsQuery(id: $event->id()));
 
         if (false === $userExists) {
             // Génération du username à partir de l'email
@@ -45,7 +45,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
             // Fallback si le username est vide après nettoyage
             if (empty($username)) {
                 // Utilise une partie de l'identifiant unique de l'utilisateur
-                $username = 'user_'.mb_substr(str_replace('-', '', (string) $event->identifier()), 0, 8);
+                $username = 'user_'.mb_substr(str_replace('-', '', (string) $event->id()), 0, 8);
             }
 
             $userCreate = new CreateUser(
@@ -53,7 +53,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
                     email: $event->email()->value,
                     username: $username
                 ),
-                identifier: $event->identifier()
+                id: $event->id()
             );
 
             $this->commandBus->dispatch($userCreate);

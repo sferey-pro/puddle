@@ -20,7 +20,7 @@ final class LogoutUserHandler
 
     public function __invoke(LogoutUser $command): void
     {
-        $user = UserAccount::logout($command->identifier());
+        $user = UserAccount::logout($command->id());
 
         foreach ($user->pullDomainEvents() as $domainEvent) {
             $this->eventDispatcher->dispatch($domainEvent);

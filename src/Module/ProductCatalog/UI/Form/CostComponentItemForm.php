@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\ProductCatalog\UI\Form;
 
 use App\Module\ProductCatalog\Application\DTO\CostComponentLineDTO;
-use App\Module\ProductCatalog\Domain\ValueObject\CostComponentType;
-use App\Module\ProductCatalog\Domain\ValueObject\UnitOfMeasure;
+use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
+use App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;

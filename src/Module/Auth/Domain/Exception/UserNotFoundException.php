@@ -15,10 +15,10 @@ final class UserNotFoundException extends \Exception
         );
     }
 
-    public static function withUserId(UserId $identifier): self
+    public static function withUserId(UserId $id): self
     {
         return new self(
-            \sprintf('Utilisateur non trouvé avec l\'identifiant : %s', [$identifier->value])
+            \sprintf('Utilisateur non trouvé avec l\'identifiant : %s', [$id->value])
         );
     }
 }

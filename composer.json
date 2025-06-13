@@ -88,7 +88,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/",
+            "Tests\\": "tests/",
             "DataFixtures\\": "fixtures/"
         }
     },
@@ -128,11 +128,12 @@
     "require-dev": {
         "dama/doctrine-test-bundle": "^8.2",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
-        "phpunit/phpunit": "^12.1",
+        "phpunit/phpunit": "^12",
         "symfony/maker-bundle": "^1.63",
         "symfony/panther": "^2.2",
         "symfony/stopwatch": "^7",
         "symfony/web-profiler-bundle": "^7",
+        "zenstruck/browser": "^1.9",
         "zenstruck/foundry": "^2"
     }
 }

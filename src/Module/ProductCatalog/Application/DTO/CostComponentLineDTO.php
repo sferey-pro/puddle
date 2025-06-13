@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\DTO;
 
-use App\Module\ProductCatalog\Domain\ValueObject\CostComponentType;
-use App\Module\ProductCatalog\Domain\ValueObject\UnitOfMeasure;
+use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
+use App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Sequentially;
 

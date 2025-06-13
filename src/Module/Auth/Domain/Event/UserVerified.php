@@ -11,15 +11,15 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class UserVerified extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private UserId $identifier,
+        private UserId $id,
         private bool $verified,
     ) {
         parent::__construct();
     }
 
-    public function identifier(): UserId
+    public function id(): UserId
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     public function verified(): bool

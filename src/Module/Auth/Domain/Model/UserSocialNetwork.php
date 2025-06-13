@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class UserSocialNetwork
 {
     #[ORM\Embedded(columnPrefix: false)]
-    private readonly UserSocialNetworkId $identifier;
+    private readonly UserSocialNetworkId $id;
 
     public function __construct(
         #[ORM\Column(type: Types::STRING, length: 255)]
@@ -30,8 +30,8 @@ class UserSocialNetwork
     ) {
     }
 
-    public function identifier(): UserSocialNetworkId
+    public function id(): UserSocialNetworkId
     {
-        return $this->identifier;
+        return $this->id;
     }
 }

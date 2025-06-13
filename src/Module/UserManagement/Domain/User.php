@@ -16,29 +16,29 @@ class User extends AggregateRoot
     use DomainEventTrait;
 
     private function __construct(
-        private UserId $identifier,
+        private UserId $id,
         private Email $email,
         private ?Name $username = null,
     ) {
     }
 
     public static function create(
-        UserId $identifier,
+        UserId $id,
         Email $email,
         ?Name $username = null,
     ) {
-        $user = new self($identifier, $email, $username);
+        $user = new self($id, $email, $username);
 
         $user->recordDomainEvent(
-            new UserCreated(identifier: $user->identifier(), email: $user->email())
+            new UserCreated(id: $user->id(), email: $user->email())
         );
 
         return $user;
     }
 
-    public function identifier(): UserId
+    public function id(): UserId
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     public function email(): Email

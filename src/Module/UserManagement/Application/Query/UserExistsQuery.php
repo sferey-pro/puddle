@@ -13,7 +13,7 @@ use App\Shared\Application\Query\QueryInterface;
 final readonly class UserExistsQuery implements QueryInterface
 {
     public function __construct(
-        public ?UserId $identifier = null,
+        public ?UserId $id = null,
     ) {
     }
 }

@@ -20,12 +20,12 @@ final readonly class FindUserQueryHandler
     {
         $user = null;
 
-        if (null !== $query->identifier) {
-            $user = $this->repository->ofIdentifier($query->identifier);
+        if (null !== $query->id) {
+            $user = $this->repository->ofId($query->id);
         }
 
         if (null === $user) {
-            throw UserNotFoundException::withUserId($query->identifier);
+            throw UserNotFoundException::withUserId($query->id);
         }
 
         return $user;

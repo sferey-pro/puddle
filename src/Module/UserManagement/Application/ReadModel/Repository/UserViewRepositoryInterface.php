@@ -9,7 +9,7 @@ use App\Module\UserManagement\Application\ReadModel\UserView;
 
 interface UserViewRepositoryInterface
 {
-    public function findById(UserId $identifier): ?UserView;
+    public function findById(UserId $id): ?UserView;
 
     public function findAll(): array; // Retourne un tableau de UserView
 

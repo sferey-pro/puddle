@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250603100227 extends AbstractMigration
+final class Version20250613221820_ProductCatalog extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,18 +23,6 @@ final class Version20250603100227 extends AbstractMigration
         $this->addSql(<<<'SQL'
             CREATE TABLE catalog_products (is_active BOOLEAN NOT NULL, identifier UUID NOT NULL, name VARCHAR(100) NOT NULL, base_cost_components JSON NOT NULL, total_base_cost_amount INT NOT NULL, total_base_cost_currency VARCHAR(3) NOT NULL, PRIMARY KEY(identifier))
         SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE auth_users ALTER identifier TYPE UUID
-        SQL);
-        $this->addSql(<<<'SQL'
-            COMMENT ON COLUMN auth_users.identifier IS ''
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE users ALTER identifier TYPE UUID
-        SQL);
-        $this->addSql(<<<'SQL'
-            COMMENT ON COLUMN users.identifier IS ''
-        SQL);
     }
 
     public function down(Schema $schema): void
@@ -42,18 +30,6 @@ final class Version20250603100227 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
             DROP TABLE catalog_products
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE users ALTER identifier TYPE UUID
-        SQL);
-        $this->addSql(<<<'SQL'
-            COMMENT ON COLUMN users.identifier IS '(DC2Type:uuid)'
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE auth_users ALTER identifier TYPE UUID
-        SQL);
-        $this->addSql(<<<'SQL'
-            COMMENT ON COLUMN auth_users.identifier IS '(DC2Type:uuid)'
         SQL);
     }
 }

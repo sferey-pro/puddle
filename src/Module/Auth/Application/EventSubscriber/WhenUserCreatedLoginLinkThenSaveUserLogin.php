@@ -26,7 +26,7 @@ class WhenUserCreatedLoginLinkThenSaveUserLogin
         $request = Request::create($loginLinkDetails->getUrl());
 
         $userLogin = new UserLogin(
-            identifier: $event->identifier,
+            id: $event->id,
             expiresAt: $loginLinkDetails->getExpiresAt(),
             user: $event->user,
             hash: $request->get('hash'),

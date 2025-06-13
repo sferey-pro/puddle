@@ -31,7 +31,7 @@ final class RegisterUserHandler
         $email = $command->dto->email;
 
         $user = UserAccount::register(
-            identifier: $command->identifier ?? UserId::generate(),
+            id: $command->id ?? UserId::generate(),
             email: new Email($email),
         );
 

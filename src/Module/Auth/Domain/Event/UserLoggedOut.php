@@ -11,13 +11,13 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class UserLoggedOut extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private UserId $identifier,
+        private UserId $id,
     ) {
         parent::__construct();
     }
 
-    public function identifier(): UserId
+    public function id(): UserId
     {
-        return $this->identifier;
+        return $this->id;
     }
 }

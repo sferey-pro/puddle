@@ -19,5 +19,5 @@ interface UserRepositoryInterface extends RepositoryInterface
 
     public function remove(User $model): void;
 
-    public function ofIdentifier(UserId $identifier): ?User;
+    public function ofId(UserId $id): ?User;
 }

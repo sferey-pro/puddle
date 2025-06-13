@@ -12,7 +12,7 @@ final class RegisterUser implements CommandInterface
 {
     public function __construct(
         public RegisterUserDTO $dto,
-        public ?UserId $identifier = null,
+        public ?UserId $id = null,
     ) {
     }
 }

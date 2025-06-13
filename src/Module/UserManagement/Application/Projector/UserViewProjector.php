@@ -45,13 +45,13 @@ class UserViewProjector implements EventSubscriberInterface
 
     public function onUserRegistered(UserRegistered $event): void
     {
-        $existingView = $this->userViewRepository->findById($event->identifier());
+        $existingView = $this->userViewRepository->findById($event->id());
         if ($existingView) {
             return;
         }
 
         $userView = new UserView(
-            userId: (string) $event->identifier(),
+            userId: (string) $event->id(),
         );
 
         $userView->setEmail((string) $event->email());
@@ -61,13 +61,13 @@ class UserViewProjector implements EventSubscriberInterface
 
     public function onUserCreated(UserCreated $event): void
     {
-        $existingView = $this->userViewRepository->findById($event->identifier());
+        $existingView = $this->userViewRepository->findById($event->id());
         if ($existingView) {
             return;
         }
 
         $userView = new UserView(
-            userId: (string) $event->identifier(),
+            userId: (string) $event->id(),
         );
 
         $userView->setEmail((string) $event->email());
@@ -77,14 +77,14 @@ class UserViewProjector implements EventSubscriberInterface
 
     public function onUserDeleted(UserDeleted $event): void
     {
-        $existingView = $this->userViewRepository->findById($event->identifier());
+        $existingView = $this->userViewRepository->findById($event->id());
 
         if (null === $existingView) {
             return;
         }
 
         $userView = new UserView(
-            userId: (string) $event->identifier(),
+            userId: (string) $event->id(),
         );
 
         $this->userViewRepository->delete($userView, true);
@@ -92,7 +92,7 @@ class UserViewProjector implements EventSubscriberInterface
 
     public function onUserEmailChanged(UserEmailChanged $event): void
     {
-        $existingView = $this->userViewRepository->findById($event->identifier());
+        $existingView = $this->userViewRepository->findById($event->id());
 
         if (null === $existingView) {
             return;
@@ -105,7 +105,7 @@ class UserViewProjector implements EventSubscriberInterface
 
     public function onUserVerified(UserVerified $event): void
     {
-        $existingView = $this->userViewRepository->findById($event->identifier());
+        $existingView = $this->userViewRepository->findById($event->id());
 
         if (null === $existingView) {
             return;

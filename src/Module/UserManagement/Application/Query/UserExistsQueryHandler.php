@@ -18,8 +18,8 @@ final readonly class UserExistsQueryHandler
     {
         $user = null;
 
-        if (null !== $query->identifier) {
-            $user = $this->repository->ofIdentifier($query->identifier);
+        if (null !== $query->id) {
+            $user = $this->repository->ofId($query->id);
         }
 
         return null !== $user;

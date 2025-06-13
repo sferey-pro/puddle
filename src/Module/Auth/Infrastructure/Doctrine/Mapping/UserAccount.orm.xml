@@ -9,7 +9,7 @@
             <unique-constraint columns="email" name="UNIQ_IDENTIFIER_AUTH_USERS_EMAIL" />
         </unique-constraints>
 
-        <embedded name="identifier" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
+        <embedded name="id" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
         <embedded name="password" class="App\Module\Auth\Domain\ValueObject\Password" use-column-prefix="false" />
         <embedded name="email" class="App\Module\SharedContext\Domain\ValueObject\Email" use-column-prefix="false" />
         <field name="roles" type="json" />

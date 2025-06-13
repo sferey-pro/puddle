@@ -14,8 +14,7 @@ use App\Shared\Application\Query\QueryInterface;
 final readonly class FindUserQuery implements QueryInterface
 {
     public function __construct(
-        public ?int $id = null,
-        public ?UserId $identifier = null,
+        public ?UserId $id = null,
     ) {
     }
 }

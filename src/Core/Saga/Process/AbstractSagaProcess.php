@@ -39,5 +39,5 @@ abstract class AbstractSagaProcess
         return $this->currentState;
     }
 
-    abstract public static function getSagaTypeIdentifier(): string;
+    abstract public static function getSagaTypeid(): string;
 }

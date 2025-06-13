@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\ValueObject;
 
+use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use Webmozart\Assert\Assert;
 

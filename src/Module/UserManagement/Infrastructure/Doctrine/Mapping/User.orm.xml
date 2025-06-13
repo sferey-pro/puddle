@@ -9,7 +9,8 @@
             <unique-constraint columns="email" name="UNIQ_IDENTIFIER_USERS_EMAIL" />
         </unique-constraints>
 
-        <embedded name="identifier" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
+        <embedded name="id" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
+
         <embedded name="email" class="App\Module\SharedContext\Domain\ValueObject\Email" use-column-prefix="false" />
         <embedded name="username" class="App\Module\UserManagement\Domain\ValueObject\Name" use-column-prefix="false" />
     </entity>

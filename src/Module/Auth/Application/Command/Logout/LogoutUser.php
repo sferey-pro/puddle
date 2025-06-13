@@ -10,12 +10,12 @@ use App\Shared\Application\Command\CommandInterface;
 final class LogoutUser implements CommandInterface
 {
     public function __construct(
-        private(set) UserId $identifier,
+        private(set) UserId $id,
     ) {
     }
 
-    public function identifier(): UserId
+    public function id(): UserId
     {
-        return $this->identifier;
+        return $this->id;
     }
 }

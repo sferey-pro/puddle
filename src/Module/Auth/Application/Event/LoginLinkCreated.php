@@ -12,7 +12,7 @@ final class LoginLinkCreated
 {
     public function __construct(
         public UserAccount $user,
-        public UserLoginId $identifier,
+        public UserLoginId $id,
         public LoginLinkDetails $loginLinkDetails,
         public string $ipAddressClient,
     ) {

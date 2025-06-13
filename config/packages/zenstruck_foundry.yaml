@@ -13,3 +13,6 @@ when@test:
         orm:
             reset:
                 mode: schema
+        mongo:
+            reset:
+                document_managers:

@@ -50,7 +50,7 @@ final class CreateLoginLinkHandler
 
         $event = new LoginLinkCreated(
             user: $user,
-            identifier: $command->identifier,
+            id: $command->id,
             loginLinkDetails: $loginLinkDetails,
             ipAddressClient: $request->getClientIp()
         );

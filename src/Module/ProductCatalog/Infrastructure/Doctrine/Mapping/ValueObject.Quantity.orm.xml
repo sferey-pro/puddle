@@ -6,7 +6,7 @@
 
     <embeddable name="App\Module\ProductCatalog\Domain\ValueObject\Quantity">
         <field name="value" type="float" column="quantity_value" />
-        <field name="unit" type="unit_of_measure_enum" column="quantity_unit" length="10" />
+        <field name="unit" type="string" enum-type="App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure" />
     </embeddable>
 
 </doctrine-mapping>

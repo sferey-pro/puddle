@@ -16,5 +16,5 @@ interface UserRepositoryInterface
 
     public function ofEmail(Email $email): ?UserAccount;
 
-    public function ofIdentifier(UserId $identifier): ?UserAccount;
+    public function ofId(UserId $id): ?UserAccount;
 }

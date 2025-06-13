@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250611140344 extends AbstractMigration
+final class Version20250613221710_Auth extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,10 @@ final class Version20250611140344 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE cost_management_recurring_cost (template_cost_item_id VARCHAR(255) NOT NULL, status VARCHAR(255) NOT NULL, last_generated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, id UUID NOT NULL, recurrence_frequency VARCHAR(255) NOT NULL, recurrence_day INT DEFAULT NULL, recurrence_rule VARCHAR(100) NOT NULL, PRIMARY KEY(id))
+            CREATE TABLE auth_users (roles JSON NOT NULL, is_verified BOOLEAN NOT NULL, identifier UUID NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(identifier))
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE UNIQUE INDEX UNIQ_IDENTIFIER_AUTH_USERS_EMAIL ON auth_users (email)
         SQL);
     }
 
@@ -29,7 +32,7 @@ final class Version20250611140344 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            DROP TABLE cost_management_recurring_cost
+            DROP TABLE auth_users
         SQL);
     }
 }

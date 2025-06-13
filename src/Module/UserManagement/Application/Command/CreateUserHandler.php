@@ -25,12 +25,12 @@ final class CreateUserHandler
 
     public function __invoke(CreateUser $command): void
     {
-        $identifier = $command->identifier ?? UserId::generate();
+        $id = $command->id ?? UserId::generate();
         $username = $command->dto->username;
         $email = $command->dto->email;
 
         $user = User::create(
-            identifier: $identifier,
+            id: $id,
             email: new Email($email),
             username: new Name($username),
         );

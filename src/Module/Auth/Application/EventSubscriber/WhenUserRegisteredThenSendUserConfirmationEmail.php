@@ -22,7 +22,7 @@ class WhenUserRegisteredThenSendUserConfirmationEmail
 
     public function __invoke(UserRegistered $event): void
     {
-        $user = $this->userRepository->ofIdentifier($event->identifier());
+        $user = $this->userRepository->ofId($event->id());
 
         // generate a signed url and email it to the user
         $this->emailVerifier->sendEmailConfirmation('verify_email', $user,

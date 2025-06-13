@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\ProductCatalog\Domain\ValueObject;
+namespace App\Module\ProductCatalog\Domain\Enum;
 
 use App\Core\Enum\EnumJsonSerializableTrait;
 

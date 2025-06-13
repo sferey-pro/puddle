@@ -43,14 +43,14 @@ final class LoginLinkController extends AbstractController
 
             $this->commandBus->dispatch(
                 new CreateLoginLink(
-                    identifier: UserLoginId::generate(),
+                    id: UserLoginId::generate(),
                     user: $user,
                 )
             );
 
             // render a "Login link is sent!" page
             return $this->render('security/login_link_sent.html.twig', [
-                'identifier' => $uuid,
+                'id' => $uuid,
                 'email' => $email,
             ]);
         }

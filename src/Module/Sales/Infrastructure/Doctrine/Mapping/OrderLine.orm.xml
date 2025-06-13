@@ -6,13 +6,13 @@
     <entity name="App\Module\Sales\Domain\OrderLine" table="sales_order_line">
         <embedded name="id" class="App\Module\Sales\Domain\ValueObject\OrderLineId" use-column-prefix="false"/>
 
+        <field name="productId" type="product_id" column="product_id" />
+        <field name="quantity" type="integer"/>
+        <embedded name="unitPrice" class="App\Module\SharedContext\Domain\ValueObject\Money" column-prefix="unit_price_"/>
+
         <many-to-one field="order" target-entity="App\Module\Sales\Domain\Order" inversed-by="orderLines">
             <join-column name="order_id" referenced-column-name="id"/>
         </many-to-one>
-
-        <embedded name="productId" class="App\Module\SharedContext\Domain\ValueObject\ProductId" column-prefix="product_" />
-        <field name="quantity" type="integer"/>
-        <embedded name="unitPrice" class="App\Module\SharedContext\Domain\ValueObject\Money" column-prefix="unit_price_"/>
     </entity>
 
 </doctrine-mapping>

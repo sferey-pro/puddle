@@ -12,15 +12,15 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class UserEmailChanged extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private(set) UserId $identifier,
+        private(set) UserId $id,
         private(set) Email $email,
     ) {
         parent::__construct();
     }
 
-    public function identifier(): UserId
+    public function id(): UserId
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     public function email(): Email

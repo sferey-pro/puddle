@@ -10,7 +10,7 @@ use App\Shared\Application\Query\QueryInterface;
 final readonly class FindProductQuery implements QueryInterface
 {
     public function __construct(
-        public ?ProductId $identifier = null,
+        public ?ProductId $id = null,
     ) {
     }
 }

@@ -21,12 +21,12 @@ final readonly class FindProductQueryHandler
     {
         $product = null;
 
-        if (null !== $query->identifier) {
-            $product = $this->repository->ofIdentifier($query->identifier);
+        if (null !== $query->id) {
+            $product = $this->repository->ofId($query->id);
         }
 
         if (null === $product) {
-            throw ProductException::notFoundWithId($query->identifier);
+            throw ProductException::notFoundWithId($query->id);
         }
 
         return $product;

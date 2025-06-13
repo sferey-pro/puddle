@@ -10,8 +10,9 @@ doctrine:
         use_savepoints: true
 
         types:
-            cost_item_status_enum: App\Module\CostManagement\Infrastructure\Doctrine\Types\CostItemStatusType
-            unit_of_measure_enum: App\Module\ProductCatalog\Infrastructure\Doctrine\Types\UnitOfMeasureType
+            user_id: App\Module\SharedContext\Infrastructure\Doctrine\Types\UserIdType
+            product_id: App\Module\SharedContext\Infrastructure\Doctrine\Types\ProductIdType
+            cost_item_id: App\Module\CostManagement\Infrastructure\Doctrine\Types\CostItemIdType
 
     orm:
         auto_generate_proxy_classes: true

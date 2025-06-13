@@ -19,5 +19,5 @@ interface ProductRepositoryInterface extends RepositoryInterface
 
     public function remove(Product $model): void;
 
-    public function ofIdentifier(ProductId $identifier): ?Product;
+    public function ofId(ProductId $id): ?Product;
 }

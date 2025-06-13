@@ -44,9 +44,9 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
         $this->getEntityManager()->remove($user);
     }
 
-    public function ofIdentifier(UserId $identifier): ?User
+    public function ofId(UserId $id): ?User
     {
-        return $this->findOneBy(['identifier.value' => $identifier->value]);
+        return $this->findOneBy(['id.value' => $id->value]);
     }
 
     public function withEmail(Email $email): ?self
@@ -72,6 +72,6 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
             ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY)
         ;
 
-        return $userId['identifier'] ?? null;
+        return $userId['id'] ?? null;
     }
 }

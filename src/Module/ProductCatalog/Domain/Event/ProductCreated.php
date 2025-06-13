@@ -11,13 +11,13 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class ProductCreated extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private(set) ProductId $identifier,
+        private(set) ProductId $id,
     ) {
         parent::__construct();
     }
 
-    public function identifier(): ProductId
+    public function id(): ProductId
     {
-        return $this->identifier;
+        return $this->id;
     }
 }

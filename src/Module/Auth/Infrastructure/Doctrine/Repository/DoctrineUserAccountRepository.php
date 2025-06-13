@@ -55,9 +55,9 @@ class DoctrineUserAccountRepository extends ServiceEntityRepository implements U
         $this->getEntityManager()->persist($user);
     }
 
-    public function ofIdentifier(UserId $identifier): ?UserAccount
+    public function ofId(UserId $id): ?UserAccount
     {
-        return $this->findOneBy(['identifier.value' => $identifier->value]);
+        return $this->findOneBy(['id.value' => $id->value]);
     }
 
     public function ofEmail(Email $email): ?UserAccount

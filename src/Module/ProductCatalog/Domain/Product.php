@@ -21,7 +21,7 @@ class Product extends AggregateRoot
     private bool $isActive = true;
 
     private function __construct(
-        private ProductId $identifier,
+        private ProductId $id,
         ProductName $name,
         BaseCostStructure $baseCostStructure,
     ) {
@@ -30,15 +30,15 @@ class Product extends AggregateRoot
     }
 
     public static function create(
-        ProductId $identifier,
+        ProductId $id,
         ProductName $name,
         BaseCostStructure $baseCostStructure,
     ): self {
-        $product = new self($identifier, $name, $baseCostStructure);
+        $product = new self($id, $name, $baseCostStructure);
 
         $product->recordDomainEvent(
             new ProductCreated(
-                identifier: $product->identifier(),
+                id: $product->id(),
             )
         );
 
@@ -47,12 +47,7 @@ class Product extends AggregateRoot
 
     public function id(): ProductId
     {
-        return $this->identifier;
-    }
-
-    public function identifier(): ProductId
-    {
-        return $this->identifier;
+        return $this->id;
     }
 
     public function name(): ProductName

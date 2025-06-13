@@ -44,7 +44,7 @@ final class ProductController extends AbstractController
     public function show(Request $request): array
     {
         $product = $this->queryBus->ask(new FindProductQuery(
-            identifier: ProductId::fromString($request->get('id'))
+            id: ProductId::fromString($request->get('id'))
         ));
 
         return [
@@ -82,7 +82,7 @@ final class ProductController extends AbstractController
     public function edit(Request $request): array|RedirectResponse
     {
         $product = $this->queryBus->ask(new FindProductQuery(
-            identifier: ProductId::fromString($request->get('id'))
+            id: ProductId::fromString($request->get('id'))
         ));
 
         $form = $this->createForm(ProductFormType::class, $product);

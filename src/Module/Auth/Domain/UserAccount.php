@@ -23,7 +23,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     use DomainEventTrait;
 
     private function __construct(
-        private UserId $identifier,
+        private UserId $id,
         private ?Password $password = null,
         private ?Email $email = null,
         private array $roles = [],
@@ -38,19 +38,19 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      * Un mot de passe aléatoire est généré si aucun n'est fourni.
      * Enregistre un événement UserRegistered.
      *
-     * @param UserId        $identifier L'identifiant unique de l'utilisateur
+     * @param UserId        $id L'identifiant unique de l'utilisateur
      * @param Email         $email      L'adresse e-mail de l'utilisateur
      * @param Password|null $password   le mot de passe de l'utilisateur (optionnel, sera généré si null)
      *
      * @return self la nouvelle instance de UserAccount
      */
     public static function register(
-        UserId $identifier,
+        UserId $id,
         Email $email,
         ?Password $password = null,
     ): self {
         $user = new self(
-            identifier: $identifier,
+            id: $id,
             password: $password ?? new Password(md5(random_bytes(10))),
             email: $email,
             roles: [Role::USER],
@@ -58,7 +58,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         );
 
         $user->recordDomainEvent(
-            new UserRegistered(identifier: $user->identifier(), email: $user->email())
+            new UserRegistered($user->id(), $user->email())
         );
 
         return $user;
@@ -68,10 +68,10 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      * Enregistre le fait que l'utilisateur s'est connecté.
      * Cet événement est généralement déclenché après une authentification réussie.
      */
-    public static function login(UserId $identifier): self
+    public static function login(UserId $id): self
     {
-        $user = new self($identifier);
-        $user->recordDomainEvent(new UserLoggedIn(identifier: $user->identifier()));
+        $user = new self($id);
+        $user->recordDomainEvent(new UserLoggedIn($user->id()));
 
         return $user;
     }
@@ -79,10 +79,10 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     /**
      * Enregistre le fait que l'utilisateur s'est déconnecté.
      */
-    public static function logout(UserId $identifier): self
+    public static function logout(UserId $id): self
     {
-        $user = new self($identifier);
-        $user->recordDomainEvent(new UserLoggedOut(identifier: $user->identifier()));
+        $user = new self($id);
+        $user->recordDomainEvent(new UserLoggedOut($user->id()));
 
         return $user;
     }
@@ -97,7 +97,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     {
         $this->password = $password;
 
-        $this->recordDomainEvent(new UserPasswordChanged(identifier: $this->identifier));
+        $this->recordDomainEvent(new UserPasswordChanged(id: $this->id));
     }
 
     /**
@@ -109,12 +109,12 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     {
         $this->isVerified = true;
 
-        $this->recordDomainEvent(new UserVerified(identifier: $this->identifier));
+        $this->recordDomainEvent(new UserVerified($this->id, true));
     }
 
-    public function identifier(): UserId
+    public function id(): UserId
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     public function email(): Email
@@ -123,7 +123,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     }
 
     /**
-     * A visual identifier that represents this user.
+     * A visual id that represents this user.
      *
      * @see UserInterface
      */

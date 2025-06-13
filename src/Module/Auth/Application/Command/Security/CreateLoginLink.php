@@ -11,7 +11,7 @@ use App\Shared\Application\Command\CommandInterface;
 final class CreateLoginLink implements CommandInterface
 {
     public function __construct(
-        public UserLoginId $identifier,
+        public UserLoginId $id,
         public UserAccount $user,
     ) {
     }

@@ -39,8 +39,8 @@ class DoctrineProductRepository extends ORMAbstractRepository implements Product
         $this->getEntityManager()->remove($product);
     }
 
-    public function ofIdentifier(ProductId $identifier): ?Product
+    public function ofId(ProductId $id): ?Product
     {
-        return $this->findOneBy(['identifier.value' => $identifier->value]);
+        return $this->findOneBy(['id.value' => $id->value]);
     }
 }

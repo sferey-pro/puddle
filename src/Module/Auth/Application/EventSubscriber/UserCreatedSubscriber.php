@@ -29,7 +29,7 @@ class UserCreatedSubscriber implements EventSubscriberInterface
 
     public function onUserCreated(UserCreated $event): void
     {
-        $userExists = $this->queryBus->ask(new UserExistsQuery(identifier: $event->identifier()));
+        $userExists = $this->queryBus->ask(new UserExistsQuery(id: $event->id()));
 
         if (false === $userExists) {
             $userRegister = new RegisterUser(
@@ -38,7 +38,7 @@ class UserCreatedSubscriber implements EventSubscriberInterface
                     plainPassword: md5(random_bytes(10)),
                     agreeTerms: false
                 ),
-                identifier: $event->identifier()
+                id: $event->id()
             );
 
             $this->commandBus->dispatch($userRegister);

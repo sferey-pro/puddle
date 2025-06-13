@@ -6,9 +6,9 @@
 
     <entity name="App\Module\CostManagement\Domain\CostItem" table="cost_item" repository-class="App\Module\CostManagement\Infrastructure\Doctrine\Repository\DoctrineCostItemRepository">
         <embedded name="id" class="App\Module\CostManagement\Domain\ValueObject\CostItemId" use-column-prefix="false" />
+
         <embedded name="name" class="App\Module\CostManagement\Domain\ValueObject\CostItemName" use-column-prefix="false" />
         <field name="isTemplate" column="is_template" type="boolean" />
-
         <field name="type" type="string" enum-type="App\Module\CostManagement\Domain\Enum\CostItemType" />
         <embedded name="targetAmount" class="App\Module\SharedContext\Domain\ValueObject\Money" column-prefix="target_" />
         <embedded name="coveragePeriod" class="App\Module\CostManagement\Domain\ValueObject\CoveragePeriod" use-column-prefix="false" />

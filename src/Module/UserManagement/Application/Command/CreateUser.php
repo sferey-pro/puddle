@@ -12,7 +12,7 @@ final readonly class CreateUser implements CommandInterface
 {
     public function __construct(
         public CreateUserDTO $dto,
-        public ?UserId $identifier = null,
+        public ?UserId $id = null,
     ) {
     }
 }

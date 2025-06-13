@@ -5,8 +5,8 @@
 
     <entity name="App\Module\Sales\Domain\Order" table="sales_order">
         <embedded name="id" class="App\Module\Sales\Domain\ValueObject\OrderId" use-column-prefix="false"/>
-        <embedded name="userId" class="App\Module\SharedContext\Domain\ValueObject\UserId" column-prefix="user_" />
 
+        <field name="userId" type="user_id" column="user_id" />
         <field name="status" type="string" enum-type="App\Module\Sales\Domain\Enum\OrderStatus"/>
         <field name="createdAt" type="datetime_immutable"/>
 

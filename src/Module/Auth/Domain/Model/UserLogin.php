@@ -19,7 +19,7 @@ class UserLogin
 
     public function __construct(
         #[ORM\Embedded(columnPrefix: false)]
-        private readonly UserLoginId $identifier,
+        private readonly UserLoginId $id,
         #[ORM\Column]
         private ?\DateTimeImmutable $expiresAt = null,
         #[ORM\ManyToOne(inversedBy: 'userLogins')]
@@ -34,9 +34,9 @@ class UserLogin
     ) {
     }
 
-    public function identifier(): UserLoginId
+    public function id(): UserLoginId
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     public function expiresAt(): ?\DateTimeImmutable
