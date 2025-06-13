@@ -8,11 +8,11 @@ use App\Module\ProductCatalog\Domain\Product;
 use App\Module\ProductCatalog\Domain\ValueObject\BaseCostStructure;
 use App\Module\ProductCatalog\Domain\ValueObject\CostComponentLine;
 use App\Module\ProductCatalog\Domain\ValueObject\CostComponentType;
-use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
 use App\Module\ProductCatalog\Domain\ValueObject\Quantity;
 use App\Module\ProductCatalog\Domain\ValueObject\UnitOfMeasure;
 use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use function Zenstruck\Foundry\faker;
 

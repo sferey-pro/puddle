@@ -8,6 +8,7 @@ use App\Shared\Application\Query\QueryInterface;
 
 final class ListOrdersQuery implements QueryInterface
 {
-    public function __construct() {
+    public function __construct()
+    {
     }
 }

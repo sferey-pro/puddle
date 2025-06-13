@@ -21,7 +21,7 @@ class OrderFormType extends AbstractType
             ->add('userId', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'name.fullName',
-                'choice_value' => fn($user) => $user?->getId()->toString(),
+                'choice_value' => fn ($user) => $user?->getId()->toString(),
                 'label' => 'Client',
                 'placeholder' => 'Sélectionner un client',
             ])

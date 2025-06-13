@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Infrastructure\ApiPlatform\State;
 
-use App\Module\Sales\Application\Command\CreateOrder;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use ApiPlatform\Symfony\Action\NotFoundAction;
+use App\Module\Sales\Application\Command\CreateOrder;
 use App\Shared\Application\Command\CommandBusInterface;
 
 class OrderProcessor implements ProcessorInterface

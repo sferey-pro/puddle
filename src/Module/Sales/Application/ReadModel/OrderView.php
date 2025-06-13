@@ -15,7 +15,7 @@ class OrderView
         public readonly string $status,
         public readonly float $totalAmount,
         public readonly string $currency,
-        public readonly \DateTimeImmutable $createdAt
+        public readonly \DateTimeImmutable $createdAt,
     ) {
     }
 }

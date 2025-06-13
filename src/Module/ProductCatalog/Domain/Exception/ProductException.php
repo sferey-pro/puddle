@@ -13,14 +13,15 @@ final class ProductException extends \DomainException
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.
      */
-    private function __construct(string $message, private string $errorCode, private mixed $payload = null,  \Throwable|null $previous = null)
+    private function __construct(string $message, private string $errorCode, private mixed $payload = null, ?\Throwable $previous = null)
     {
         parent::__construct(message: $message, previous: $previous);
     }
 
-    public static function notFoundWithId(ProductId $id, \Throwable|null $previous = null): self
+    public static function notFoundWithId(ProductId $id, ?\Throwable $previous = null): self
     {
         $message = \sprintf('Product with ID "%s" was not found.', $id);
+
         return new self($message, self::NOT_FOUND, ['id' => $id], $previous);
     }
 

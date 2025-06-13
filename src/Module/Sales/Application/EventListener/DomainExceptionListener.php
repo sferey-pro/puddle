@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 final class DomainExceptionListener
 {
-
     public function __invoke(ExceptionEvent $event): void
     {
         $request = $event->getRequest();
@@ -21,7 +20,6 @@ final class DomainExceptionListener
         if (!$this->isApiRequest($request)) {
             return;
         }
-
 
         if ($exception instanceof OrderException) {
             $response = match ($exception->errorCode()) {
@@ -54,5 +52,4 @@ final class DomainExceptionListener
 
         return new JsonResponse($data, $statusCode);
     }
-
 }

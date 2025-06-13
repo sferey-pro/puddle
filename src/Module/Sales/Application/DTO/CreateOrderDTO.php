@@ -11,14 +11,14 @@ class CreateOrderDTO
 {
     #[Sequentially(
         constraints: [
-            new Assert\NotBlank,
-            new Assert\Uuid,
+            new Assert\NotBlank(),
+            new Assert\Uuid(),
         ]
     )]
     public string $userId;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1)]
-    /** @var OrderLineDTO[] $orderLines */
+    /** @var OrderLineDTO[] */
     public array $orderLines = [];
 }

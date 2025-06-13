@@ -1,7 +1,7 @@
 {% extends 'bootstrap_5_layout.html.twig' %}
 
 {% block live_collection_button_add_widget %}
-    {% set attr = attr|merge({'class': attr.class|default('btn btn-outline-primary')}) %}
+    {% set attr = attr|merge({class: attr.class|default('btn btn-outline-primary')}) %}
     {% set translation_domain = false %}
     {% set label_html = true %}
     {%- set label -%}
@@ -11,9 +11,8 @@
     {{ block('button_widget') }}
 {% endblock live_collection_button_add_widget %}
 
-
 {% block live_collection_button_delete_widget %}
-    {% set attr = attr|merge({'class': attr.class|default('btn btn-danger btn-icon')}) %}
+    {% set attr = attr|merge({class: attr.class|default('btn btn-danger btn-icon')}) %}
     {% set label_html = true %}
     {%- set label -%}
         <twig:ux:icon name="tabler:trash" />

@@ -21,7 +21,7 @@ final class OrderException extends \DomainException
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.
      */
-    private function __construct(string $message, private string $errorCode, private mixed $payload = null,  \Throwable|null $previous = null)
+    private function __construct(string $message, private string $errorCode, private mixed $payload = null, ?\Throwable $previous = null)
     {
         parent::__construct(message: $message, previous: $previous);
     }
@@ -31,15 +31,17 @@ final class OrderException extends \DomainException
         return new self(\sprintf('CostItem with ID "%s" was not found.', $id), self::NOT_FOUND);
     }
 
-    public static function productNotFound(ProductId $id, \Throwable|null $previous = null): self
+    public static function productNotFound(ProductId $id, ?\Throwable $previous = null): self
     {
-        $message =  \sprintf('Product with ID "%s" was not found in this aggregate.', $id);
+        $message = \sprintf('Product with ID "%s" was not found in this aggregate.', $id);
+
         return new self($message, self::NOT_FOUND, ['id' => $id], $previous);
     }
 
-    public static function invalidProduct(ProductId $id, \Throwable|null $previous): self
+    public static function invalidProduct(ProductId $id, ?\Throwable $previous): self
     {
-        $message =  \sprintf('Product with ID "%s" is invalid.', $id);
+        $message = \sprintf('Product with ID "%s" is invalid.', $id);
+
         return new self($message, self::PRODUCT_INVALID, ['id' => $id], $previous);
     }
 

@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class OrderLineFormType extends AbstractType
 {
     public function __construct(
-        private readonly ProductRepositoryInterface $productRepository
+        private readonly ProductRepositoryInterface $productRepository,
     ) {
     }
 
@@ -25,8 +25,8 @@ class OrderLineFormType extends AbstractType
         $builder
             ->add('productId', EntityType::class, [
                 'class' => Product::class,
-                'choice_label' => fn($product) => $product->getName()->toString(),
-                'choice_value' => fn($product) => $product?->getId()->toString(),
+                'choice_label' => fn ($product) => $product->getName()->toString(),
+                'choice_value' => fn ($product) => $product?->getId()->toString(),
                 'label' => 'Produit',
                 'placeholder' => 'Sélectionner un produit',
             ])

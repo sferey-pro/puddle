@@ -9,11 +9,10 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 
 class OrderLineDTO
 {
-
     #[Sequentially(
         constraints: [
             new Assert\NotBlank(),
-            new Assert\Uuid,
+            new Assert\Uuid(),
         ]
     )]
     public string $productId;
@@ -21,7 +20,7 @@ class OrderLineDTO
     #[Sequentially(
         constraints: [
             new Assert\NotBlank(),
-            new Assert\Positive,
+            new Assert\Positive(),
         ]
     )]
     public int $quantity;

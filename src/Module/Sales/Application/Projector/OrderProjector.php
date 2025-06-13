@@ -15,7 +15,7 @@ use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsProjector;
 class OrderProjector
 {
     public function __construct(
-        private readonly OrderViewRepositoryInterface $orderViewRepository
+        private readonly OrderViewRepositoryInterface $orderViewRepository,
     ) {
     }
 

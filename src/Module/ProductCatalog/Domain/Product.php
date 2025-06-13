@@ -6,9 +6,9 @@ namespace App\Module\ProductCatalog\Domain;
 
 use App\Module\ProductCatalog\Domain\Event\ProductCreated;
 use App\Module\ProductCatalog\Domain\ValueObject\BaseCostStructure;
-use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
 use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
 

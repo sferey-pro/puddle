@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Module\Sales\UI\Controller\OrderController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;

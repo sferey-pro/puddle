@@ -11,7 +11,7 @@ class OrderLineView
         public readonly int $quantity,
         public readonly int $unitPriceAmount,
         public readonly string $currency,
-        public readonly int $totalAmount
+        public readonly int $totalAmount,
     ) {
     }
 }

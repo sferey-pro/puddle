@@ -50,7 +50,7 @@
                 </div>
             {% endfor %}
         </div>
-        {{ form_widget(form.costComponents.vars.button_add, {'label': 'Ajouter un composant de coût'}) }}
+        {{ form_widget(form.costComponents.vars.button_add, {label: 'Ajouter un composant de coût'}) }}
         <div class="text-end">
             <a href="{{ path('product_index') }}" class="btn btn-1">Annuler</a>
             <button type="submit" class="btn btn-primary btn-2 d-none d-sm-inline-block">

@@ -9,8 +9,8 @@ use App\Module\ProductCatalog\Application\DTO\CostComponentLineDTO;
 use App\Module\ProductCatalog\Application\DTO\CreateProductDTO;
 use App\Module\ProductCatalog\Application\Query\FindProductQuery;
 use App\Module\ProductCatalog\Application\Query\ListProductsQuery;
-use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\ProductCatalog\UI\Form\ProductFormType;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
 use App\Shared\Infrastructure\Doctrine\Paginator;
@@ -75,7 +75,7 @@ final class ProductController extends AbstractController
 
         return [
             'form' => $form,
-            'formDto' => $dto
+            'formDto' => $dto,
         ];
     }
 
@@ -89,12 +89,11 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
         }
 
         return [
             'form' => $form,
-            'formDto' => $product
+            'formDto' => $product,
         ];
     }
 }

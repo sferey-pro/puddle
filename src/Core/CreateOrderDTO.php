@@ -11,8 +11,8 @@ class CreateOrderDTO
 {
     #[Sequentially(
         constraints: [
-            new Assert\NotBlank,
-            new Assert\Uuid,
+            new Assert\NotBlank(),
+            new Assert\Uuid(),
         ]
     )]
     public string $userId;

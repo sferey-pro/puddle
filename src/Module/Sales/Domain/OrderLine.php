@@ -19,7 +19,7 @@ final class OrderLine
 
     public function __construct(
         private OrderLineId $id,
-        ProductId  $productId,
+        ProductId $productId,
         int $quantity,
         Money $unitPrice,
     ) {

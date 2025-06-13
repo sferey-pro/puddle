@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\Sales\Domain\Enum;
 
 use App\Core\Enum\EnumArraySerializableTrait;
-use App\Core\Enum\EnumJsonSerializableTrait;
 
 enum OrderStatus: string
 {

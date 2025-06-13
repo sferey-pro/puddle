@@ -10,11 +10,11 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class OrderCreated extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private readonly string  $orderId,
+        private readonly string $orderId,
         private readonly string $userId,
         private readonly array $orderLines,
         private readonly float $totalAmount,
-        private readonly string $currency
+        private readonly string $currency,
     ) {
         parent::__construct();
     }
