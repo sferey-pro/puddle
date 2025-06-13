@@ -17,7 +17,7 @@ return static function (FrameworkConfig $framework): void {
     $messenger->bus('command.bus')
         ->middleware()
         ->id('validation');
-        
+
     $messenger->bus('query.bus')
         ->middleware()
         ->id('validation');
@@ -35,21 +35,11 @@ return static function (FrameworkConfig $framework): void {
     $messenger->failureTransport('failed_default');
 
     $messenger->transport('async_priority_high')
-        ->dsn(env('MESSENGER_TRANSPORT_DSN'))
-        ->options([
-            'queues' => [
-                'hight' => [],
-            ],
-        ])
+        ->dsn('doctrine://default?queue_name=async_priority_high')
         ->failureTransport('failed_high_priority');
 
     $messenger->transport('async_events')
-        ->dsn(env('MESSENGER_TRANSPORT_DSN'))
-        ->options([
-            'queues' => [
-                'events' => [],
-            ],
-        ])
+        ->dsn('doctrine://default?queue_name=async_events')
         ->retryStrategy()
             ->maxRetries(3)
             ->delay(1000)

@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemInstanceViewRepositoryInterface;
+use App\Module\CostManagement\Application\ReadModel\Repository\RecurringCostViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface;
 use App\Module\CostManagement\Infrastructure\Doctrine\Repository\DoctrineCostItemRepository;
 use App\Module\CostManagement\Infrastructure\Doctrine\Repository\DoctrineRecurringCostRepository;
 use App\Module\CostManagement\Infrastructure\ReadModel\Repository\DoctrineCostItemInstanceViewRepository;
+use App\Module\CostManagement\Infrastructure\ReadModel\Repository\DoctrineRecurringCostViewRepository;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return function (ContainerConfigurator $container): void {
     $services = $container->services()

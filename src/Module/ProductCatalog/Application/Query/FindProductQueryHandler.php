@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\Query;
 
-use App\Module\ProductCatalog\Domain\Exception\ProductNotFoundException;
+use App\Module\ProductCatalog\Domain\Exception\ProductException;
 use App\Module\ProductCatalog\Domain\Product;
 use App\Module\ProductCatalog\Domain\Repository\ProductRepositoryInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
@@ -26,7 +26,7 @@ final readonly class FindProductQueryHandler
         }
 
         if (null === $product) {
-            throw ProductNotFoundException::withProductId($query->identifier);
+            throw ProductException::notFoundWithId($query->identifier);
         }
 
         return $product;

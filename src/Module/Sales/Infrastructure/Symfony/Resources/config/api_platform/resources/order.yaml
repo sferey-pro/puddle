@@ -1,0 +1,9 @@
+resources:
+    App\Module\Sales\Domain\Order:
+        shortName: 'Order'
+        description: 'Crée une nouvelle commande.'
+        operations:
+            ApiPlatform\Metadata\Post:
+                input: App\Module\Sales\Application\DTO\CreateOrderDTO
+                processor: App\Module\Sales\Infrastructure\ApiPlatform\State\OrderProcessor
+                output: false

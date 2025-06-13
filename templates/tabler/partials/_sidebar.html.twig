@@ -32,6 +32,14 @@
                         <span class="nav-link-title"> Home </span>
                     </a>
                 </li>
+                <li class="nav-item {% if app.request.attributes.get('_route') == 'user_index' %}active{% endif %}">
+                     <a class="nav-link" href="{{ path('sales_order_index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <twig:ux:icon name="tabler:invoice"  />
+                        </span>
+                        <span class="nav-link-title"> Commandes </span>
+                    </a>
+                </li>
                 <li class="nav-item dropdown {% if 'cost' in app.request.attributes.get('_route') %}active show{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#navbar-form" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="true">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -45,7 +53,7 @@
                     </div>
                 </li>
                 <li class="nav-item {% if app.request.attributes.get('_route') starts with 'product_' %}active{% endif %}">
-                    <a class="nav-link" href="{{ path('admin_product_index') }}">
+                    <a class="nav-link" href="{{ path('product_index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                             <twig:ux:icon name="tabler:coffee"  />
                         </span>

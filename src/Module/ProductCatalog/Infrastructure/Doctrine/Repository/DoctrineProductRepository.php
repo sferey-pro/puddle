@@ -6,7 +6,7 @@ namespace App\Module\ProductCatalog\Infrastructure\Doctrine\Repository;
 
 use App\Module\ProductCatalog\Domain\Product;
 use App\Module\ProductCatalog\Domain\Repository\ProductRepositoryInterface;
-use App\Module\ProductCatalog\Domain\ValueObject\ProductId;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

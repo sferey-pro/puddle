@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Module\Static\UI\Controller\AdminController;
 use App\Module\Static\UI\Controller\HomepageController;
 use App\Module\Static\UI\Controller\UnderConstructionController;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
@@ -22,6 +23,11 @@ return function (RoutingConfigurator $routes): void {
 
     $routes->add('settings', '/settings')
         ->controller(UnderConstructionController::class)
+        ->methods([Request::METHOD_GET])
+    ;
+
+    $routes->add('admin', '/admin/')
+        ->controller(AdminController::class)
         ->methods([Request::METHOD_GET])
     ;
 };

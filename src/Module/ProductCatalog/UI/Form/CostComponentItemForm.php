@@ -67,6 +67,8 @@ class CostComponentItemForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CostComponentLineDTO::class,
+            'csrf_protection' => true,
+            'csrf_token_id' => 'cost_component_form_token',
         ]);
     }
 }

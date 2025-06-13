@@ -1,0 +1,22 @@
+@baseUrl = http://127.0.0.1:8000/api/v1
+
+###
+POST {{baseUrl}}/orders HTTP/2
+Content-Type: application/ld+json
+
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "orderLines": [
+    {
+      "productId": "019769f2-d9e9-7a84-a1f6-38b65e999679",
+      "quantity": 1
+    }
+  ]
+}
+###
+
+
+###
+
+
+

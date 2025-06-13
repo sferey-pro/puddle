@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\Event;
 
-use App\Module\ProductCatalog\Domain\ValueObject\ProductId;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Event\DomainEventInterface;
 

@@ -11,59 +11,48 @@
         </div>
         <div>
             {% for componentForm in form.costComponents %}
-            <div class="card card-sm mb-2">
-                <div class="card-header">
-                    <h4 class="card-title mb-2">
-                        Composant #{{ loop.index }}
-                        <div class="position-absolute top-0 end-0 p-3">
-                            {{ form_row(componentForm.vars.button_delete, {label: 'X', attr: {class: 'btn btn-icon'}}) }}
-                            {# <div
-                                class="btn btn-icon"
-                                data-bs-toggle="tooltip"
-                                aria-label="Supprimer le composant"
-                                data-bs-original-title="Supprimer le composant"
-                            >
-                                <twig:ux:icon name="tabler:trash"  />
-                            </div> #}
-                        </div>
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            {{ form_row(componentForm.name) }}
-                        </div>
-                        <div class="col-6">
-                            {{ form_row(componentForm.type) }}
-                        </div>
+                <div class="card card-sm mb-2">
+                    <div class="card-header">
+                        <h4 class="card-title mb-2">
+                            Composant #{{ loop.index }}
+                            <div class="position-absolute top-0 end-0 p-3">
+                                {{ form_widget(componentForm.vars.button_delete) }}
+                            </div>
+                        </h4>
                     </div>
-                    <div class="row">
-                        <div class="col-6">
-                            {{ form_row(componentForm.costAmount) }}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                {{ form_row(componentForm.name) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_row(componentForm.type) }}
+                            </div>
                         </div>
-                        <div class="col-6">
-                            {{ form_row(componentForm.costCurrency) }}
+                        <div class="row">
+                            <div class="col-6">
+                                {{ form_row(componentForm.costAmount) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_row(componentForm.costCurrency) }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            {{ form_row(componentForm.quantityValue) }}
+                        <div class="row">
+                            <div class="col-6">
+                                {{ form_row(componentForm.quantityValue) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_row(componentForm.quantityUnit) }}
+                            </div>
                         </div>
-                        <div class="col-6">
-                            {{ form_row(componentForm.quantityUnit) }}
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
-
-        {{ form_widget(form.costComponents.vars.button_add, {label: '+ Ajouter un composant de coût', attr: {class: 'btn btn-outline-primary btn-5 d-none d-sm-inline-block'}}) }}
-        {# <twig:ux:icon name="tabler:plus"  /> Ajouter un composant de coût #}
-
+        {{ form_widget(form.costComponents.vars.button_add, {'label': 'Ajouter un composant de coût'}) }}
         <div class="text-end">
-            <a href="{{ path('admin_product_index') }}" class="btn btn-1">Annuler</a>
+            <a href="{{ path('product_index') }}" class="btn btn-1">Annuler</a>
             <button type="submit" class="btn btn-primary btn-2 d-none d-sm-inline-block">
                 <twig:ux:icon name="tabler:save-changes"  /> Enregistrer le Produit
             </button>

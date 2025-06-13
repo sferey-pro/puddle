@@ -1,0 +1,23 @@
+{% extends '@Tabler/layout.html.twig' %}
+
+{% block title %}Modifier le produit #{{ product.id|slice(0, 8) }}{% endblock %}
+
+{% block page_pretitle %}Modifier le produit{% endblock %}
+{% block page_title %}ID: {{ product.id }}{% endblock %}
+
+{% block page_title_actions %}
+    <twig:Button:BackToList routeName="product_index" />
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <twig:ProductForm :form="form" :dto="formDto" />
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
