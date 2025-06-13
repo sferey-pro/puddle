@@ -48,6 +48,7 @@ ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 ENV PANTHER_NO_SANDBOX=1
 # Not mandatory, but recommended
 ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends chromium chromium-driver && rm -rf /var/lib/apt/lists/*
 
 # Firefox and geckodriver
@@ -57,15 +58,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends chromium chromi
 #	tar -zxf geckodriver-v$GECKODRIVER_VERSION-aarch64.tar.gz -C /usr/bin; \
 #	rm geckodriver-v$GECKODRIVER_VERSION-aarch64.tar.gz
 ###< symfony/panther ###
-###> doctrine/doctrine-bundle ###
-RUN install-php-extensions pdo_pgsql
-###< doctrine/doctrine-bundle ###
-###> doctrine/mongodb-odm-bundle ###
-RUN install-php-extensions mongodb
-###< doctrine/mongodb-odm-bundle ###
-###> symfony/messenger-amqp ###
-RUN install-php-extensions amqp
-###< symfony/messenger-amqp ###
+###> doctrine/doctrine-bundle & doctrine/mongodb-odm-bundle & symfony/messenger-amqp ###
+RUN set -eux; \
+	install-php-extensions \
+		pdo_pgsql \
+		mongodb \
+		amqp \
+	;
+###< doctrine/doctrine-bundle & doctrine/mongodb-odm-bundle & symfony/messenger-amqp ###
 ###< recipes ###
 
 COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
