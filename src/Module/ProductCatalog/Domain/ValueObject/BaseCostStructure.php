@@ -28,12 +28,12 @@ final class BaseCostStructure
     /**
      * @return CostComponentLine[]
      */
-    public function getCostComponentLines(): array
+    public function costComponentLines(): array
     {
         return $this->costComponentLines;
     }
 
-    public function getTotalBaseCost(): Money
+    public function totalBaseCost(): Money
     {
         return $this->totalBaseCost;
     }

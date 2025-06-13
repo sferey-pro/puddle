@@ -43,6 +43,11 @@ doctrine:
                 type: xml
                 dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/Doctrine/Mapping'
                 prefix: 'App\Module\CostManagement\Domain'
+            Sales:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Module/Sales/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Module\Sales\Domain'
             SharedContext:
                 type: xml
                 is_bundle: false

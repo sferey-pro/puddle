@@ -6,8 +6,9 @@ namespace App\Module\ProductCatalog\Domain;
 
 use App\Module\ProductCatalog\Domain\Event\ProductCreated;
 use App\Module\ProductCatalog\Domain\ValueObject\BaseCostStructure;
-use App\Module\ProductCatalog\Domain\ValueObject\ProductId;
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
+use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
 
@@ -42,6 +43,11 @@ class Product extends AggregateRoot
         );
 
         return $product;
+    }
+
+    public function id(): ProductId
+    {
+        return $this->identifier;
     }
 
     public function identifier(): ProductId
@@ -84,5 +90,10 @@ class Product extends AggregateRoot
     public function deactivate(): void
     {
         $this->isActive = false;
+    }
+
+    public function totalBaseCost(): Money
+    {
+        return $this->baseCostStructure->totalBaseCost();
     }
 }

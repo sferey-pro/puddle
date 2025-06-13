@@ -21,7 +21,7 @@ final class CostContributionUpdated extends DomainEvent implements DomainEventIn
         private readonly CostContributionId $costContributionId,
         private readonly Money $newContributionAmount,
         private readonly Money $newTotalCoveredAmount,
-        public readonly ?ProductId $newSourceProductId = null,
+        private readonly ?ProductId $newSourceProductId = null,
     ) {
         parent::__construct();
     }

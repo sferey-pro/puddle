@@ -40,6 +40,8 @@ class ProductFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CreateProductDTO::class,
+            'csrf_protection' => true,
+            'csrf_token_id' => 'product_form_token',
         ]);
     }
 }

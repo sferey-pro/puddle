@@ -32,4 +32,24 @@ enum CostComponentType: string
             self::SALARY_ALLOCATED => 'Part du salaire allouée',
         };
     }
+
+    /**
+     * @return array{label: string, color: string, dot: bool}
+     */
+    public function getBadgeConfiguration(): array
+    {
+        return [
+            'label' => $this->getLabel(),
+            'color' => match ($this) {
+                self::RAW_MATERIAL => 'blue',
+                self::DIRECT_LABOR => 'orange',
+                self::PACKAGING => 'green',
+                self::OPERATIONAL_FIXED_ALLOCATED => 'yellow',
+                self::OPERATIONAL_VARIABLE_ALLOCATED => 'purple',
+                self::TAX_FEE => 'red',
+                self::MARGIN_CONTINGENCY => 'gray',
+                self::SALARY_ALLOCATED => 'pink',
+            },
+        ];
+    }
 }

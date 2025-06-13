@@ -20,6 +20,12 @@ doctrine_mongodb:
                     type: xml
                     dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/ReadModel/Mapping'
                     prefix: 'App\Module\CostManagement\Application\ReadModel'
+                SalesReadModel:
+                    is_bundle: false
+                    type: xml
+                    dir: '%kernel.project_dir%/src/Module/Sales/Infrastructure/ReadModel/Mapping'
+                    prefix: 'App\Module\Sales\Application\ReadModel'
+                    alias: SalesReadModel
 
 when@prod:
     doctrine_mongodb:

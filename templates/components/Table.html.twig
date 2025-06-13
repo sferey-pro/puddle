@@ -23,7 +23,18 @@
                     <tr>
                         {% for column in columns %}
                             <td>
-                                {% set value = attribute(item, column.path) %}
+                                {% set value = item %}
+                                {% set keep_going = true %}
+                                {% for part in column.path|split('.') %}
+                                    {% if keep_going %}
+                                        {% if value is not null and attribute(value, part) is defined %}
+                                            {% set value = attribute(value, part) %}
+                                        {% else %}
+                                            {% set value = null %}
+                                            {% set keep_going = false %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
                                 {% if column.format is defined and column.format == 'currency' and value is not null %}
                                     {{ value|format_currency(item.currency) }}
                                 {% elseif column.format is defined and column.format == 'date' and value is not null %}
