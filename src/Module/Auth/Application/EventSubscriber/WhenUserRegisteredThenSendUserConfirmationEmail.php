@@ -30,7 +30,7 @@ class WhenUserRegisteredThenSendUserConfirmationEmail
                 ->from(new Address('no-reply@puddle.com', 'Puddle Mail Bot'))
                 ->to((string) $event->email())
                 ->subject('Please Confirm your Email')
-                ->htmlTemplate('emails/registration/confirmation_email.html.twig')
+                ->htmlTemplate('@Auth/emails/registration/confirmation_email.html.twig')
         );
     }
 }

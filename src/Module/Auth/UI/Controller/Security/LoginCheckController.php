@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class LoginCheckController extends AbstractController
 {
-    #[Template('security/process_login_link.html.twig')]
+    #[Template('@Auth/security/process_login_link.html.twig')]
     public function __invoke(
         Request $request,
     ): array {

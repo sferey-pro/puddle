@@ -7,5 +7,5 @@
 {% block main %}
     <twig:Semantic:Title title="{{ 'user.edit'|trans }}" />
 
-    {{ include('user/_form.html.twig', {button_label: 'label.update_user'|trans}) }}
+    {{ include('@UserManagement/user/_form.html.twig', {button_label: 'label.update_user'|trans}) }}
 {% endblock %}

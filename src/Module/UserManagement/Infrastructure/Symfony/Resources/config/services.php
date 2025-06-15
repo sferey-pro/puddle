@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Infrastructure\Doctrine\Repository\DoctrineUserRepository;
 use App\Module\UserManagement\Infrastructure\ReadModel\Repository\DoctrineUserViewRepository;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return function(ContainerConfigurator $container): void {
-
+return function (ContainerConfigurator $container): void {
+    // default configuration for services in *this* file
     $services = $container->services()
         ->defaults()
-        ->autowire()
-        ->autoconfigure()
+            ->autowire()      // Automatically injects dependencies in your services.
+            ->autoconfigure() // Automatically registers your services as commands, event subscribers, etc.
     ;
 
-    $services->load('App\\Module\\UserManagement\\', dirname(__DIR__, 2).'/src/Module/UserManagement')
+    $services->load('App\\Module\\UserManagement\\', '%kernel.project_dir%/src/Module/UserManagement/')
         ->exclude([
-            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain',
-            dirname(__DIR__, 2).'/src/Module/UserManagement/Domain/ValueObject',
+            '%kernel.project_dir%/src/Module/UserManagement/Domain',
+            '%kernel.project_dir%/src/Module/UserManagement/Infrastructure/Symfony/Resources',
         ]);
 
+    // repositories
     $services->set(UserRepositoryInterface::class)
         ->class(DoctrineUserRepository::class);
 

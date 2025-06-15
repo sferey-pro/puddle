@@ -33,7 +33,7 @@ final class LoginController extends AbstractController
      *
      * @return array les données à transmettre au template Twig
      */
-    #[Template('security/login.html.twig')]
+    #[Template('@Auth/security/login.html.twig')]
     public function __invoke(): array
     {
         // get the login error if there is one

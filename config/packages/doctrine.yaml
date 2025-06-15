@@ -24,31 +24,6 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            Auth:
-                type: xml
-                is_bundle: false
-                dir: "%kernel.project_dir%/src/Module/Auth/Infrastructure/Doctrine/Mapping"
-                prefix: 'App\Module\Auth\Domain'
-            UserManagement:
-                type: xml
-                is_bundle: false
-                dir: "%kernel.project_dir%/src/Module/UserManagement/Infrastructure/Doctrine/Mapping"
-                prefix: 'App\Module\UserManagement\Domain'
-            ProductCatalog:
-                type: xml
-                is_bundle: false
-                dir: "%kernel.project_dir%/src/Module/ProductCatalog/Infrastructure/Doctrine/Mapping"
-                prefix: 'App\Module\ProductCatalog\Domain'
-            CostManagement:
-                is_bundle: false
-                type: xml
-                dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/Doctrine/Mapping'
-                prefix: 'App\Module\CostManagement\Domain'
-            Sales:
-                is_bundle: false
-                type: xml
-                dir: '%kernel.project_dir%/src/Module/Sales/Infrastructure/Doctrine/Mapping'
-                prefix: 'App\Module\Sales\Domain'
             SharedContext:
                 type: xml
                 is_bundle: false

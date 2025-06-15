@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\Command;
 
+use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
+use App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure;
 use App\Module\ProductCatalog\Domain\Product;
 use App\Module\ProductCatalog\Domain\Repository\ProductRepositoryInterface;
 use App\Module\ProductCatalog\Domain\ValueObject\BaseCostStructure;
 use App\Module\ProductCatalog\Domain\ValueObject\CostComponentLine;
-use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
 use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
 use App\Module\ProductCatalog\Domain\ValueObject\Quantity;
-use App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Application\Event\EventBusInterface;

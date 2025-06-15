@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\SharedContext\Infrastructure\Doctrine\Types;
 
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use Symfony\Bridge\Doctrine\Types\AbstractUidType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Symfony\Bridge\Doctrine\Types\AbstractUidType;
 
 /**
  * Classe de type Doctrine pour le ValueObject UserId.

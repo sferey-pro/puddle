@@ -16,7 +16,6 @@ return function (ContainerConfigurator $container): void {
     $services->load('App\\Module\\ProductCatalog\\', '%kernel.project_dir%/src/Module/ProductCatalog')
         ->exclude([
             '%kernel.project_dir%/src/Module/ProductCatalog/Domain',
-            '%kernel.project_dir%/src/Module/ProductCatalog/Domain/ValueObject',
             '%kernel.project_dir%/src/Module/ProductCatalog/Infrastructure/Symfony/Resources',
         ])
     ;

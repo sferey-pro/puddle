@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
-use App\Module\Auth\UI\Controller\ForgotPasswordController;
 use App\Module\Auth\UI\Controller\RegistrationController;
-use App\Module\Auth\UI\Controller\ResetPasswordController;
 use App\Module\Auth\UI\Controller\Security\LoginCheckController;
 use App\Module\Auth\UI\Controller\Security\LoginController;
 use App\Module\Auth\UI\Controller\Security\LoginLinkController;
@@ -14,11 +12,11 @@ use App\Module\Auth\UI\Controller\Security\OAuth\CheckController;
 use App\Module\Auth\UI\Controller\Security\OAuth\ConnectController;
 use App\Module\Auth\UI\Controller\VerifyEmailController;
 use App\Module\Static\UI\Controller\UnderConstructionController;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Requirement\EnumRequirement;
 
-return function (RoutingConfigurator $routes): void {
+return static function (RoutingConfigurator $routes): void {
     $routes->add('register', '/register')
         ->controller(RegistrationController::class)
         ->methods([Request::METHOD_GET, Request::METHOD_POST])
@@ -39,23 +37,27 @@ return function (RoutingConfigurator $routes): void {
         ->methods([Request::METHOD_GET, Request::METHOD_POST])
     ;
 
+    /** @todo à retravailler */
     $routes->add('reset_password', '/reset-password')
         ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET, Request::METHOD_POST])
     ;
 
+    /** @todo à retravailler */
     $routes->add('forget_password', '/forget-password')
         ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET, Request::METHOD_POST])
     ;
 
+    /** @todo à retravailler */
     $routes->add('login_link', '/login/link')
-        ->controller(LoginLinkController::class)
+        ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET, Request::METHOD_POST])
     ;
 
+    /** @todo à retravailler */
     $routes->add('login_check', '/login/check')
-        ->controller(LoginCheckController::class)
+        ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET])
     ;
 
@@ -74,5 +76,4 @@ return function (RoutingConfigurator $routes): void {
         ->controller(ConnectController::class)
         ->methods([Request::METHOD_GET])
     ;
-
 };

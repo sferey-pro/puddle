@@ -1,4 +1,4 @@
-{% extends 'security/base.html.twig' %}
+{% extends '@Auth/security/base.html.twig' %}
 
 {% block title %}Process Login{% endblock %}
 
@@ -11,7 +11,7 @@
             <h1 class="display-4 fw-bold lh-1 text-body-emphasis">Bonjour ! </h1>
             <p class="lead">Vous êtes sur le point de vous connecter à Puddle</p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-                <form action="{{ path('app_login_check') }}" method="POST">
+                <form action="{{ path('login_check') }}" method="POST">
                     <input type="hidden" name="expires" value="{{ expires }}">
                     <input type="hidden" name="user" value="{{ user }}">
                     <input type="hidden" name="hash" value="{{ hash }}">

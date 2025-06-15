@@ -23,8 +23,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->load('App\\Module\\SharedContext\\', dirname(__DIR__, 2).'/src/Module/SharedContext')
         ->exclude([
-            dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/Model',
-            dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/ValueObjects',
+            dirname(__DIR__, 2).'/src/Module/SharedContext/Domain/',
         ]);
 
     $services->set(ClockInterface::class, SystemClock::class);

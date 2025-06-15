@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\CostManagement\Infrastructure\Doctrine\Types;
 
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use Symfony\Bridge\Doctrine\Types\AbstractUidType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Symfony\Bridge\Doctrine\Types\AbstractUidType;
 
 /**
  * Classe de type Doctrine pour le ValueObject CostItemId.

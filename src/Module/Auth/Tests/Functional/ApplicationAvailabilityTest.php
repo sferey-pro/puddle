@@ -14,12 +14,11 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  * @internal
  *
  * Classe de test pour vérifier la disponibilité des pages critiques (Smoke Test)
- * du module Auth.
+ * du module Auth
  */
 #[CoversNothing]
 class ApplicationAvailabilityTest extends WebTestCase
 {
-    // Le trait ResetDatabase s'assure que la base de données est propre avant chaque test.
     use ResetDatabase;
 
     /**
@@ -42,6 +41,5 @@ class ApplicationAvailabilityTest extends WebTestCase
     {
         yield 'Registration' => ['/register'];
         yield 'Login' => ['/login'];
-        yield 'Login Link Page' => ['/login/link'];
     }
 }

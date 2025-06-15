@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\CostManagement\Infrastructure\Symfony\DependencyInjection;
+namespace App\Module\UserManagement\Infrastructure\Symfony\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -10,11 +10,11 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-class CostManagementExtension extends Extension implements PrependExtensionInterface
+class UserManagementExtension extends Extension implements PrependExtensionInterface
 {
     public function getAlias(): string
     {
-        return 'cost_management';
+        return 'user_management';
     }
 
     public function load(array $configs, ContainerBuilder $container)
@@ -36,7 +36,7 @@ class CostManagementExtension extends Extension implements PrependExtensionInter
             return;
         }
 
-        $container->prependExtensionConfig('twig', ['paths' => [$path => 'CostManagement']]);
+        $container->prependExtensionConfig('twig', ['paths' => [$path => 'UserManagement']]);
 
         if(!$container->hasExtension('twig_component')) {
             return;
@@ -44,7 +44,7 @@ class CostManagementExtension extends Extension implements PrependExtensionInter
 
         $container->prependExtensionConfig('twig_component', [
             'defaults' => [
-                'App\\Module\\CostManagement\\UI\\Twig\\Components\\' => '@CostManagement/components/'
+                'App\\Module\\UserManagement\\UI\\Twig\\Components\\' => '@UserManagement/components/'
             ]
         ]);
     }
@@ -54,12 +54,12 @@ class CostManagementExtension extends Extension implements PrependExtensionInter
         $doctrineConfig = [
             'orm' => [
                 'mappings' => [
-                    'CostManagementBundle' => [
+                    'UserManagementBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
                         'dir' => "../Doctrine/Mapping",
-                        'prefix' => 'App\\Module\\CostManagement\\Domain',
-                        'alias' => 'CostManagementBundle',
+                        'prefix' => 'App\\Module\\UserManagement\\Domain',
+                        'alias' => 'UserManagementBundle',
                     ],
                 ],
             ],

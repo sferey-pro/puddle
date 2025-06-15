@@ -38,9 +38,9 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      * Un mot de passe aléatoire est généré si aucun n'est fourni.
      * Enregistre un événement UserRegistered.
      *
-     * @param UserId        $id L'identifiant unique de l'utilisateur
-     * @param Email         $email      L'adresse e-mail de l'utilisateur
-     * @param Password|null $password   le mot de passe de l'utilisateur (optionnel, sera généré si null)
+     * @param UserId        $id       L'identifiant unique de l'utilisateur
+     * @param Email         $email    L'adresse e-mail de l'utilisateur
+     * @param Password|null $password le mot de passe de l'utilisateur (optionnel, sera généré si null)
      *
      * @return self la nouvelle instance de UserAccount
      */

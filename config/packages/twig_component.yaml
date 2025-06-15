@@ -2,9 +2,5 @@ twig_component:
     anonymous_template_directory: 'components/'
     defaults:
         # Namespace & directory for components
-        App\Module\Auth\UI\Twig\Components\: 'components/'
-        App\Module\UserManagement\UI\Twig\Components\: 'components/'
         App\Shared\UI\Twig\Components\: 'components/'
         App\Module\Music\UI\Twig\Components\: '@MusicUI/components/'
-        App\Module\ProductCatalog\UI\Twig\Components\: '@ProductCatalog/components/'
-        App\Module\CostManagement\UI\Twig\Components\: '@CostManagement/components/'

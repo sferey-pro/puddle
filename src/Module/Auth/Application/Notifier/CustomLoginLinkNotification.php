@@ -16,7 +16,7 @@ class CustomLoginLinkNotification extends LoginLinkNotification
 
         // get the NotificationEmail object and override the template
         $email = $emailMessage->getMessage();
-        $email->htmlTemplate('emails/security/custom_login_link_email.html.twig');
+        $email->htmlTemplate('@Auth/emails/security/custom_login_link_email.html.twig');
 
         return $emailMessage;
     }

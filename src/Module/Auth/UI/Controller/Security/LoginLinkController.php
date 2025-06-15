@@ -49,13 +49,13 @@ final class LoginLinkController extends AbstractController
             );
 
             // render a "Login link is sent!" page
-            return $this->render('security/login_link_sent.html.twig', [
+            return $this->render('@Auth/security/login_link_sent.html.twig', [
                 'id' => $uuid,
                 'email' => $email,
             ]);
         }
 
         // if it's not submitted, render the form to request the "login link"
-        return $this->render('security/request_login_link.html.twig');
+        return $this->render('@Auth/security/request_login_link.html.twig');
     }
 }

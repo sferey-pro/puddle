@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\CostManagement\Infrastructure\Symfony\DependencyInjection;
+namespace App\Module\Auth\Infrastructure\Symfony\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -10,14 +10,14 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-class CostManagementExtension extends Extension implements PrependExtensionInterface
+class AuthExtension extends Extension implements PrependExtensionInterface
 {
     public function getAlias(): string
     {
-        return 'cost_management';
+        return 'auth';
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config'));
         $loader->load('services.php');
@@ -36,7 +36,7 @@ class CostManagementExtension extends Extension implements PrependExtensionInter
             return;
         }
 
-        $container->prependExtensionConfig('twig', ['paths' => [$path => 'CostManagement']]);
+        $container->prependExtensionConfig('twig', ['paths' => [$path => 'Auth']]);
 
         if(!$container->hasExtension('twig_component')) {
             return;
@@ -44,7 +44,7 @@ class CostManagementExtension extends Extension implements PrependExtensionInter
 
         $container->prependExtensionConfig('twig_component', [
             'defaults' => [
-                'App\\Module\\CostManagement\\UI\\Twig\\Components\\' => '@CostManagement/components/'
+                'App\\Module\\Auth\\UI\\Twig\\Components\\' => '@Auth/components/'
             ]
         ]);
     }
@@ -54,12 +54,12 @@ class CostManagementExtension extends Extension implements PrependExtensionInter
         $doctrineConfig = [
             'orm' => [
                 'mappings' => [
-                    'CostManagementBundle' => [
+                    'AuthBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
                         'dir' => "../Doctrine/Mapping",
-                        'prefix' => 'App\\Module\\CostManagement\\Domain',
-                        'alias' => 'CostManagementBundle',
+                        'prefix' => 'App\\Module\\Auth\\Domain',
+                        'alias' => 'AuthBundle',
                     ],
                 ],
             ],

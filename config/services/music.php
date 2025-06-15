@@ -19,6 +19,5 @@ return static function (ContainerConfigurator $containerConfigurator, ContainerB
     $services->load('App\\Module\\Music\\', dirname(__DIR__, 2).'/src/Module/Music/')
         ->exclude([
             dirname(__DIR__, 2).'/src/Module/Music/Domain/Model',
-            dirname(__DIR__, 2).'/src/Module/Music/Domain/ValueObjects',
         ]);
 };

@@ -2,20 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Sales\Infrastructure\Symfony;
+namespace App\Module\Auth\Infrastructure\Symfony;
 
-use App\Module\Sales\Infrastructure\Symfony\DependencyInjection\SalesExtension;
+use App\Module\Auth\Infrastructure\Symfony\DependencyInjection\AuthExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Routing\DependencyInjection\AddRoutingResourcesPass;
 
-/**
- * La classe Bundle pour le module Sales.
- * Son rôle est d'intégrer le module dans l'écosystème Symfony,
- * notamment en exposant sa configuration de manière autonome.
- */
-class SalesBundle extends Bundle
+class AuthBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {
@@ -25,9 +19,10 @@ class SalesBundle extends Bundle
     public function getContainerExtension(): ?ExtensionInterface
     {
         if (!isset($this->extension)) {
-            $this->extension = new SalesExtension();
+            $this->extension = new AuthExtension();
         }
 
         return $this->extension ?: null;
     }
+
 }

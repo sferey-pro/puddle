@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\UserManagement\Tests\Functional;
+namespace App\Module\CostManagement\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -13,17 +14,17 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 /**
  * @internal
  *
- * @coversNothing
- *
  * Classe de test pour vérifier la disponibilité des pages critiques (Smoke Test)
- * du module UserManagement.
+ * du module CostManagement
  */
-final class ApplicationAvailabilityTest extends WebTestCase
+#[CoversNothing]
+class ApplicationAvailabilityTest extends WebTestCase
 {
+    // Le trait ResetDatabase s'assure que la base de données est propre avant chaque test.
     use ResetDatabase;
 
     /**
-     * Ce test vérifie que les pages de gestion des utilisateurs, qui nécessitent une authentification,
+     * Ce test vérifie que les pages du gestionnaire de coûts, qui nécessitent une authentification,
      * sont bien accessibles une fois qu'un utilisateur est connecté.
      */
     #[DataProvider('authenticatedUrlProvider')]
@@ -32,11 +33,11 @@ final class ApplicationAvailabilityTest extends WebTestCase
     {
         $client = self::createClient();
 
-        // // Création d'un utilisateur de test avec le rôle administrateur.
-        // $user = UserAccountFactory::createOne(['roles' => ['ROLE_ADMIN']]);
+        // Création d'un utilisateur de test avec le rôle administrateur.
+        $user = UserAccountFactory::new()->create(['roles' => ['ROLE_ADMIN']]);
 
-        // // Connexion en tant que cet utilisateur.
-        // $client->loginUser($user);
+        // Connexion en tant que cet utilisateur.
+        $client->loginUser($user);
 
         // Requête sur l'URL à tester.
         $client->request('GET', $url);
@@ -50,6 +51,10 @@ final class ApplicationAvailabilityTest extends WebTestCase
      */
     public static function authenticatedUrlProvider(): \Generator
     {
-        yield 'Création d’un nouvel utilisateurs' => ['/user/new'];
+        yield 'Cost Management - List' => ['/admin/cost-items/'];
+        yield 'Cost Management - New' => ['/admin/cost-items/new'];
+
+        yield 'Recurring Cost - List' => ['/admin/recurring-cost/'];
+        yield 'Recurring Cost - New' => ['/admin/recurring-cost/new'];
     }
 }
