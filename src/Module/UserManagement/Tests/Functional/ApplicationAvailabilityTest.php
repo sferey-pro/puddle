@@ -32,11 +32,15 @@ final class ApplicationAvailabilityTest extends WebTestCase
     {
         $client = self::createClient();
 
-        // // Création d'un utilisateur de test avec le rôle administrateur.
-        // $user = UserAccountFactory::createOne(['roles' => ['ROLE_ADMIN']]);
+        // Création d'un utilisateur de test avec le rôle administrateur.
+        /** @var Proxy $userAccount */
+        $userAccount = UserAccountFactory::createOne([
+            'email' => 'admin@puddle.com',
+            'roles' => ['ROLE_ADMIN'],
+        ]);
 
-        // // Connexion en tant que cet utilisateur.
-        // $client->loginUser($user);
+        // Connexion en tant que cet utilisateur.
+        $client->loginUser($userAccount->_real());
 
         // Requête sur l'URL à tester.
         $client->request('GET', $url);

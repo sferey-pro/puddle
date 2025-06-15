@@ -6,7 +6,6 @@ namespace Tests\Factory;
 
 use App\Module\Auth\Domain\Enum\Role;
 use App\Module\Auth\Domain\UserAccount;
-use App\Module\Auth\Domain\ValueObject\Password;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use Symfony\Component\Uid\Uuid;

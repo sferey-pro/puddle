@@ -21,7 +21,7 @@
         <server name="BROWSER_ALWAYS_START_WEBSERVER" value="1"/>
 
         <env name="MONGO_DB" value="puddle_test" force="true"/>
-        <env name="MONGO_URL" value="mongodb://root:example@view:27017" force="true"/>
+        <env name="MONGO_URL" value="mongodb://root:example@dataview:27017" force="true"/>
 
         <env name="MESSENGER_TRANSPORT_DSN" value="doctrine://default?auto_setup=0" />
     </php>

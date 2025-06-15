@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Factory\UserAccountFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
@@ -34,10 +35,14 @@ class ApplicationAvailabilityTest extends WebTestCase
         $client = self::createClient();
 
         // Création d'un utilisateur de test avec le rôle administrateur.
-        $user = UserAccountFactory::new()->create(['roles' => ['ROLE_ADMIN']]);
+        /** @var Proxy $userAccount */
+        $userAccount = UserAccountFactory::createOne([
+            'email' => 'admin@puddle.com',
+            'roles' => ['ROLE_ADMIN'],
+        ]);
 
         // Connexion en tant que cet utilisateur.
-        $client->loginUser($user);
+        $client->loginUser($userAccount->_real());
 
         // Requête sur l'URL à tester.
         $client->request('GET', $url);

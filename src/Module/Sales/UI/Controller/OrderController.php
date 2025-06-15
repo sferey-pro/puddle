@@ -23,7 +23,7 @@ class OrderController extends AbstractController
     ) {
     }
 
-    #[Template('@SalesModule/order/index.html.twig')]
+    #[Template('@Sales/order/index.html.twig')]
     public function index(): array
     {
         $orderItems = $this->queryBus->ask(new ListOrdersQuery());
@@ -33,7 +33,7 @@ class OrderController extends AbstractController
         ];
     }
 
-    #[Template('@SalesModule/order/new.html.twig')]
+    #[Template('@Sales/order/new.html.twig')]
     public function new(Request $request): array|RedirectResponse
     {
         $dto = new CreateOrderDTO();
