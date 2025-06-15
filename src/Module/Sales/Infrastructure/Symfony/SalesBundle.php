@@ -8,7 +8,6 @@ use App\Module\Sales\Infrastructure\Symfony\DependencyInjection\SalesExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Routing\DependencyInjection\AddRoutingResourcesPass;
 
 /**
  * La classe Bundle pour le module Sales.

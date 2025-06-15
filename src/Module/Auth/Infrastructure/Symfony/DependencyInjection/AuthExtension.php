@@ -29,7 +29,8 @@ class AuthExtension extends Extension implements PrependExtensionInterface
         $this->configDoctrine($container);
     }
 
-    private function configTwig(ContainerBuilder $container) {
+    private function configTwig(ContainerBuilder $container)
+    {
         $path = \dirname(__DIR__, 3).'/UI/Resources/templates/';
 
         if (!$container->hasExtension('twig')) {
@@ -38,26 +39,26 @@ class AuthExtension extends Extension implements PrependExtensionInterface
 
         $container->prependExtensionConfig('twig', ['paths' => [$path => 'Auth']]);
 
-        if(!$container->hasExtension('twig_component')) {
+        if (!$container->hasExtension('twig_component')) {
             return;
         }
 
         $container->prependExtensionConfig('twig_component', [
             'defaults' => [
-                'App\\Module\\Auth\\UI\\Twig\\Components\\' => '@Auth/components/'
-            ]
+                'App\\Module\\Auth\\UI\\Twig\\Components\\' => '@Auth/components/',
+            ],
         ]);
     }
 
-    private function configDoctrine(ContainerBuilder $container) {
-
+    private function configDoctrine(ContainerBuilder $container)
+    {
         $doctrineConfig = [
             'orm' => [
                 'mappings' => [
                     'AuthBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
-                        'dir' => "../Doctrine/Mapping",
+                        'dir' => '../Doctrine/Mapping',
                         'prefix' => 'App\\Module\\Auth\\Domain',
                         'alias' => 'AuthBundle',
                     ],

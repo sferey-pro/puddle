@@ -29,7 +29,8 @@ class UserManagementExtension extends Extension implements PrependExtensionInter
         $this->configDoctrine($container);
     }
 
-    private function configTwig(ContainerBuilder $container) {
+    private function configTwig(ContainerBuilder $container)
+    {
         $path = \dirname(__DIR__, 3).'/UI/Resources/templates/';
 
         if (!$container->hasExtension('twig')) {
@@ -38,26 +39,26 @@ class UserManagementExtension extends Extension implements PrependExtensionInter
 
         $container->prependExtensionConfig('twig', ['paths' => [$path => 'UserManagement']]);
 
-        if(!$container->hasExtension('twig_component')) {
+        if (!$container->hasExtension('twig_component')) {
             return;
         }
 
         $container->prependExtensionConfig('twig_component', [
             'defaults' => [
-                'App\\Module\\UserManagement\\UI\\Twig\\Components\\' => '@UserManagement/components/'
-            ]
+                'App\\Module\\UserManagement\\UI\\Twig\\Components\\' => '@UserManagement/components/',
+            ],
         ]);
     }
 
-    private function configDoctrine(ContainerBuilder $container) {
-
+    private function configDoctrine(ContainerBuilder $container)
+    {
         $doctrineConfig = [
             'orm' => [
                 'mappings' => [
                     'UserManagementBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
-                        'dir' => "../Doctrine/Mapping",
+                        'dir' => '../Doctrine/Mapping',
                         'prefix' => 'App\\Module\\UserManagement\\Domain',
                         'alias' => 'UserManagementBundle',
                     ],

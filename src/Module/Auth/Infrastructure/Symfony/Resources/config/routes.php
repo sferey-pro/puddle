@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
 use App\Module\Auth\UI\Controller\RegistrationController;
-use App\Module\Auth\UI\Controller\Security\LoginCheckController;
 use App\Module\Auth\UI\Controller\Security\LoginController;
-use App\Module\Auth\UI\Controller\Security\LoginLinkController;
 use App\Module\Auth\UI\Controller\Security\LogoutController;
 use App\Module\Auth\UI\Controller\Security\OAuth\CheckController;
 use App\Module\Auth\UI\Controller\Security\OAuth\ConnectController;

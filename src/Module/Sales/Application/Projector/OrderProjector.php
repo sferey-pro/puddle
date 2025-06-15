@@ -9,14 +9,20 @@ use App\Module\Sales\Application\ReadModel\OrderView;
 use App\Module\Sales\Application\ReadModel\Repository\OrderViewRepositoryInterface;
 use App\Module\Sales\Domain\Enum\OrderStatus;
 use App\Module\Sales\Domain\Event\OrderCreated;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsProjector;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-#[AsProjector]
-class OrderProjector
+class OrderProjector implements EventSubscriberInterface
 {
     public function __construct(
         private readonly OrderViewRepositoryInterface $orderViewRepository,
     ) {
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            OrderCreated::class => 'onOrderCreated',
+        ];
     }
 
     public function onOrderCreated(OrderCreated $event): void

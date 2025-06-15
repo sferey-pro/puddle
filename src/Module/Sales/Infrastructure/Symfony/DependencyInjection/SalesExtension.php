@@ -29,7 +29,8 @@ class SalesExtension extends Extension implements PrependExtensionInterface
         $this->configDoctrine($container);
     }
 
-    private function configTwig(ContainerBuilder $container) {
+    private function configTwig(ContainerBuilder $container)
+    {
         $path = \dirname(__DIR__, 3).'/UI/Resources/templates/';
 
         if (!$container->hasExtension('twig')) {
@@ -38,26 +39,26 @@ class SalesExtension extends Extension implements PrependExtensionInterface
 
         $container->prependExtensionConfig('twig', ['paths' => [$path => 'Sales']]);
 
-        if(!$container->hasExtension('twig_component')) {
+        if (!$container->hasExtension('twig_component')) {
             return;
         }
 
         $container->prependExtensionConfig('twig_component', [
             'defaults' => [
-                'App\\Module\\Sales\\UI\\Twig\\Components\\' => '@Sales/components/'
-            ]
+                'App\\Module\\Sales\\UI\\Twig\\Components\\' => '@Sales/components/',
+            ],
         ]);
     }
 
-    private function configDoctrine(ContainerBuilder $container) {
-
+    private function configDoctrine(ContainerBuilder $container)
+    {
         $doctrineConfig = [
             'orm' => [
                 'mappings' => [
                     'SalesBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
-                        'dir' => "../Doctrine/Mapping",
+                        'dir' => '../Doctrine/Mapping',
                         'prefix' => 'App\\Module\\Sales\\Domain',
                         'alias' => 'SalesBundle',
                     ],

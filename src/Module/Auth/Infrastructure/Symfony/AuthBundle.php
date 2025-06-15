@@ -24,5 +24,4 @@ class AuthBundle extends Bundle
 
         return $this->extension ?: null;
     }
-
 }
