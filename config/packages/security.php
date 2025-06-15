@@ -20,7 +20,7 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
     $security->provider('app_user_provider')
         ->entity()
             ->class(UserAccount::class)
-            ->property('email')
+            ->property('email.value')
     ;
 
     $security->firewall('dev')

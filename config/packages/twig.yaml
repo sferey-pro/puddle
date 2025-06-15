@@ -13,3 +13,4 @@ babdev_pagerfanta:
 when@test:
     twig:
         strict_variables: true
+        exception_controller: null

@@ -9,22 +9,15 @@
     }) }}
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Create new account</h2>
-
-            <div class="mb-3">
-                {{ form_row(form.email) }}
-            </div>
-            <div class="mb-3">
-                {{ form_row(form.plainPassword, {
-                    label: 'Password',
-                }) }}
-            </div>
-            <div class="mb-3">
-                {{ form_widget(form.agreeTerms, {
-                    label: 'Agree the <a href="" tabindex="-1">terms and policy</a>.',
-                    label_html: true,
-                    })
-                }}
-            </div>
+            {{ form_row(form.email) }}
+            {{ form_row(form.plainPassword, {
+                label: 'Password',
+            }) }}
+            {{ form_widget(form.agreeTerms, {
+                label: 'Agree the <a href="" tabindex="-1">terms and policy</a>.',
+                label_html: true,
+                })
+            }}
             <div class="form-footer">
                 <button type="submit" class="btn btn-primary w-100 {{ this.hasValidationErrors ? 'disabled' : '' }}">Create new account</button>
             </div>

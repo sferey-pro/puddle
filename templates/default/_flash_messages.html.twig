@@ -1,12 +1,14 @@
 {% if app.request.hasPreviousSession %}
-    <div class="messages">
-        {% for type, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-dismissible alert-{{ type }} fade show">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'action.close'|trans }}"></button>
-                    <p class="mb-0">{{ message|trans }}</p>
-                  </div>
+    {% if app.flashes %}
+        <div class="messages">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-dismissible alert-{{ type }} fade show">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'action.close'|trans }}"></button>
+                        <p class="mb-0">{{ message|trans }}</p>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    </div>
+        </div>
+    {% endif %}
 {% endif %}

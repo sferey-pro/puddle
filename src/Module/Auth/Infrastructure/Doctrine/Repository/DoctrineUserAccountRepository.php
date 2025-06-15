@@ -62,7 +62,7 @@ class DoctrineUserAccountRepository extends ServiceEntityRepository implements U
 
     public function ofEmail(Email $email): ?UserAccount
     {
-        return $this->findOneBy(['email.value' => $email]);
+        return $this->findOneBy(['email.value' => $email->value]);
     }
 
     public function ofNativeEmail(array $fieldName): array

@@ -33,13 +33,28 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5433:5432"
+      - target: 5432
+        published: 5432
+        protocol: tcp
 ###< doctrine/doctrine-bundle ###
 
-###> doctrine/mongodb-odm-bundle ###
-  view:
+###> symfony/messenger-amqp ###
+  queue:
     ports:
-      - "27018:27017"
+      - target: 5672
+        published: 5672
+        protocol: tcp
+      - target: 15672
+        published: 15672
+        protocol: tcp
+###< symfony/messenger-amqp ###
+
+###> doctrine/mongodb-odm-bundle ###
+  dataview:
+    ports:
+      - target: 27017
+        published: 27017
+        protocol: tcp
   
   mongo-express:
     image: mongo-express
@@ -49,7 +64,7 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@view:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@dataview:27017
       ME_CONFIG_BASICAUTH: false
 ###< doctrine/mongodb-odm-bundle ###
 

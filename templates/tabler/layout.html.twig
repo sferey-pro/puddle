@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ app.request.locale }}" {% if app.user and app.user.theme == 'dark' %}data-bs-theme="dark"{% else %}data-bs-theme="light"{% endif %}>
+<html lang="{{ app.request.locale }}" data-bs-theme="light">
 <head>
     {{ include('@Tabler/includes/meta.html.twig') }}
     <title>{% block title %}Puddle Project{% endblock %}</title>

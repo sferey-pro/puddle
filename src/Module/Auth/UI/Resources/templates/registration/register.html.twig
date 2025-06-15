@@ -1,12 +1,10 @@
-{% extends '@Auth/registration/base.html.twig' %}
+{% extends '@Auth/base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
 {% block body_id 'register' %}
 
-{% block main %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+{% block content %}
     <twig:RegistrationForm :form="registrationForm" />
+    <div class="text-center text-secondary mt-3">Already have account? <a href="{{ path('login') }}" tabindex="-1">Sign in</a></div>
 {% endblock %}

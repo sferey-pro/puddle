@@ -35,18 +35,18 @@ return static function (FrameworkConfig $framework): void {
     $messenger->failureTransport('failed_default');
 
     $messenger->transport('async_priority_high')
-        ->dsn('doctrine://default?queue_name=async_priority_high')
+        ->dsn(env('MESSENGER_TRANSPORT_DSN'))
         ->failureTransport('failed_high_priority');
 
     $messenger->transport('async_events')
-        ->dsn('doctrine://default?queue_name=async_events')
+        ->dsn(env('MESSENGER_TRANSPORT_DSN'))
         ->retryStrategy()
             ->maxRetries(3)
             ->delay(1000)
             ->multiplier(2);
 
     $messenger->transport('async_priority_low')
-        ->dsn('doctrine://default?queue_name=async_priority_low');
+        ->dsn(env('MESSENGER_TRANSPORT_DSN'));
 
     $messenger->transport('failed_default')
         ->dsn('doctrine://default?queue_name=failed_default');

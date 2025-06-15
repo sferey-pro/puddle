@@ -50,7 +50,7 @@ final class ApplicationAvailabilityTest extends WebTestCase
      */
     public static function authenticatedUrlProvider(): \Generator
     {
-        yield 'Liste des produits' => ['/admin/products/'];
-        yield 'Création d’un produit' => ['/admin/products/new'];
+        yield 'Product Catalog - List' => ['/admin/products/'];
+        yield 'Product Catalog - New' => ['/admin/products/new'];
     }
 }

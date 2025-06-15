@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\UserManagement\Tests\Functional;
+namespace App\Module\Sales\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -13,17 +14,16 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 /**
  * @internal
  *
- * @coversNothing
- *
  * Classe de test pour vérifier la disponibilité des pages critiques (Smoke Test)
- * du module UserManagement.
+ * du module Sales.
  */
+#[CoversNothing]
 final class ApplicationAvailabilityTest extends WebTestCase
 {
     use ResetDatabase;
 
     /**
-     * Ce test vérifie que les pages de gestion des utilisateurs, qui nécessitent une authentification,
+     * Ce test vérifie que les pages du catalogue produit, qui nécessitent une authentification,
      * sont bien accessibles une fois qu'un utilisateur est connecté.
      */
     #[DataProvider('authenticatedUrlProvider')]
@@ -32,11 +32,11 @@ final class ApplicationAvailabilityTest extends WebTestCase
     {
         $client = self::createClient();
 
-        // // Création d'un utilisateur de test avec le rôle administrateur.
-        // $user = UserAccountFactory::createOne(['roles' => ['ROLE_ADMIN']]);
+        // Création d'un utilisateur de test avec le rôle administrateur.
+        $user = UserAccountFactory::new()->create(['roles' => ['ROLE_ADMIN']]);
 
-        // // Connexion en tant que cet utilisateur.
-        // $client->loginUser($user);
+        // Connexion en tant que cet utilisateur.
+        $client->loginUser($user);
 
         // Requête sur l'URL à tester.
         $client->request('GET', $url);
@@ -50,7 +50,7 @@ final class ApplicationAvailabilityTest extends WebTestCase
      */
     public static function authenticatedUrlProvider(): \Generator
     {
-        yield 'User Management - List' => ['/admin/users/'];
-        yield 'User Management - New' => ['/admin/users/new'];
+        yield 'Sales - List' => ['/admin/sales/orders/'];
+        yield 'Sales - New' => ['/admin/sales/orders/new'];
     }
 }

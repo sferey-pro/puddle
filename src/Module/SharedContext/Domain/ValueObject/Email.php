@@ -19,6 +19,11 @@ final class Email implements \Stringable
         $this->value = $value;
     }
 
+    public static function fromString(string $email)
+    {
+        return new self($email);
+    }
+
     public function isEqualTo(self $email): bool
     {
         return $email->value === $this->value;

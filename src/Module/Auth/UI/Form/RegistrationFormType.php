@@ -31,6 +31,8 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => RegisterUserDTO::class,
+            'csrf_protection' => true,
+            'csrf_token_id' => 'registration_form_token',
         ]);
     }
 }

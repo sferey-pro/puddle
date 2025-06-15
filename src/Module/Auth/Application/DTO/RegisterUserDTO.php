@@ -30,7 +30,7 @@ class RegisterUserDTO
             message: 'Please enter a password',
         ),
         new Length(
-            min: 6,
+            min: 4,
             max: 4096,
             // max length allowed by Symfony for security reasons
             minMessage: 'Your password should be at least {{ limit }} characters',

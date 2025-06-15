@@ -21,7 +21,7 @@ final class Version20250613221820_ProductCatalog extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE catalog_products (is_active BOOLEAN NOT NULL, identifier UUID NOT NULL, name VARCHAR(100) NOT NULL, base_cost_components JSON NOT NULL, total_base_cost_amount INT NOT NULL, total_base_cost_currency VARCHAR(3) NOT NULL, PRIMARY KEY(identifier))
+            CREATE TABLE catalog_products (is_active BOOLEAN NOT NULL, id UUID NOT NULL, name VARCHAR(100) NOT NULL, base_cost_components JSON NOT NULL, total_base_cost_amount INT NOT NULL, total_base_cost_currency VARCHAR(3) NOT NULL, PRIMARY KEY(id))
         SQL);
     }
 

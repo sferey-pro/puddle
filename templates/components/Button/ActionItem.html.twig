@@ -1,12 +1,12 @@
 <div class="btn-group gap-2">
     {% if (withShow is defined) %}
-        <a href="{{ path(withShow, {id: item.identifier}) }}" class="btn btn-block btn-light">
+        <a href="{{ path(withShow, {id: item.id}) }}" class="btn btn-block btn-light">
             <twig:ux:icon name="tabler:eye"/> {{ 'action.show'|trans }}
         </a>
     {% endif %}
 
     {% if (withEdit is defined) %}
-        <a href="{{ path(withEdit, {id: item.identifier}) }}" class="btn btn-block btn-primary">
+        <a href="{{ path(withEdit, {id: item.id}) }}" class="btn btn-block btn-primary">
             <twig:ux:icon name="tabler:pencil"/> {{ 'action.edit'|trans }}
         </a>
     {% endif %}

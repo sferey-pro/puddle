@@ -53,22 +53,22 @@ services:
 ###< doctrine/doctrine-bundle ###
 
 ###> doctrine/mongodb-odm-bundle ###
-  view:
+  dataview:
     image: mongo:latest
     restart: always
     environment:
-      MONGO_INITDB_DATABASE: ${MONGO_DB:-symfony}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-app}
       # You should definitely set a root username and password in production
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-example}
     volumes:
-      - view_data:/data/db:rw
+      - dataview_data:/data/db:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/mongodb/data:/data/db:rw
 ###< doctrine/mongodb-odm-bundle ###
 
 ###> symfony/messenger-amqp ###
-  rabbitmq:
+  queue:
     image: rabbitmq:4-management
     ports: [5672, 15672]
 ###< symfony/messenger-amqp ###
@@ -84,5 +84,5 @@ volumes:
 ###< doctrine/doctrine-bundle ###
 
 ###> doctrine/mongodb-odm-bundle ###
-  view_data:
+  dataview_data:
 ###< doctrine/mongodb-odm-bundle ###

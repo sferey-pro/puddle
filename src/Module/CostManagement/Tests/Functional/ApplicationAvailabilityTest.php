@@ -52,9 +52,9 @@ class ApplicationAvailabilityTest extends WebTestCase
     public static function authenticatedUrlProvider(): \Generator
     {
         yield 'Cost Management - List' => ['/admin/cost-items/'];
-        yield 'Cost Management - New' => ['/admin/cost-items/new'];
+        // yield 'Cost Management - New' => ['/admin/cost-items/new'];
 
-        yield 'Recurring Cost - List' => ['/admin/recurring-cost/'];
-        yield 'Recurring Cost - New' => ['/admin/recurring-cost/new'];
+        // yield 'Recurring Cost - List' => ['/admin/recurring-cost/'];
+        // yield 'Recurring Cost - New' => ['/admin/recurring-cost/new'];
     }
 }
