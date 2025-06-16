@@ -7,6 +7,9 @@ namespace App\Module\UserManagement\Domain;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Event\UserCreated;
+use App\Module\UserManagement\Domain\Event\UserDeactivated;
+use App\Module\UserManagement\Domain\Event\UserProfileUpdated;
+use App\Module\UserManagement\Domain\Event\UserReactivated;
 use App\Module\UserManagement\Domain\ValueObject\Name;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Model\DomainEventTrait;
@@ -16,21 +19,22 @@ class User extends AggregateRoot
     use DomainEventTrait;
 
     private function __construct(
-        private UserId $id,
-        private Email $email,
-        private ?Name $username = null,
+        private readonly UserId $id,
+        private readonly Email $email,
+        private readonly ?Name $username = null,
     ) {
     }
 
     public static function create(
-        UserId $id,
         Email $email,
+        ?UserId $id = null,
         ?Name $username = null,
     ) {
+        $id = (null !== $id) ?: UserId::generate();
         $user = new self($id, $email, $username);
 
         $user->recordDomainEvent(
-            new UserCreated(id: $user->id(), email: $user->email())
+            new UserCreated($user->id(), $user->email())
         );
 
         return $user;

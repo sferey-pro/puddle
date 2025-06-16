@@ -6,7 +6,7 @@ namespace App\Module\UserManagement\Application\ReadModel;
 
 class UserView
 {
-    public string $userId;
+    public string $id;
     public ?string $email = null;
     public ?string $username = null;
     public ?bool $isVerified = null;
@@ -18,9 +18,9 @@ class UserView
     // public array $roles = [];
     // public ?\DateTimeImmutable $registeredAt = null;
 
-    public function __construct(string $userId)
+    public function __construct(string $id)
     {
-        $this->userId = $userId;
+        $this->id = $id;
     }
 
     // Setters pour les champs actifs

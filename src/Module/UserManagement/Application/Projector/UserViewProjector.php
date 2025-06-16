@@ -50,10 +50,7 @@ class UserViewProjector implements EventSubscriberInterface
             return;
         }
 
-        $userView = new UserView(
-            userId: (string) $event->id(),
-        );
-
+        $userView = new UserView((string) $event->id());
         $userView->setEmail((string) $event->email());
 
         $this->userViewRepository->save($userView, true);
@@ -66,10 +63,7 @@ class UserViewProjector implements EventSubscriberInterface
             return;
         }
 
-        $userView = new UserView(
-            userId: (string) $event->id(),
-        );
-
+        $userView = new UserView((string) $event->id());
         $userView->setEmail((string) $event->email());
 
         $this->userViewRepository->save($userView, true);
@@ -83,9 +77,7 @@ class UserViewProjector implements EventSubscriberInterface
             return;
         }
 
-        $userView = new UserView(
-            userId: (string) $event->id(),
-        );
+        $userView = new UserView((string) $event->id());
 
         $this->userViewRepository->delete($userView, true);
     }

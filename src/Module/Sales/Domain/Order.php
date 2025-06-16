@@ -24,7 +24,7 @@ class Order extends AggregateRoot
     private OrderStatus $status;
     private \DateTimeImmutable $createdAt;
 
-    public function __construct(
+    private function __construct(
         private readonly OrderId $id,
         private readonly UserId $userId,
     ) {

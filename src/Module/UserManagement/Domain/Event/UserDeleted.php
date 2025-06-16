@@ -11,13 +11,18 @@ use App\Shared\Domain\Event\DomainEventInterface;
 final class UserDeleted extends DomainEvent implements DomainEventInterface
 {
     public function __construct(
-        private(set) UserId $id,
+        private readonly UserId $userId,
     ) {
         parent::__construct();
     }
 
-    public function id(): UserId
+    public static function eventName(): string
     {
-        return $this->id;
+        return 'usermanagement.user.deleted';
+    }
+
+    public function userId(): UserId
+    {
+        return $this->userId;
     }
 }

@@ -5,7 +5,7 @@
                     https://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <document name="App\Module\UserManagement\Application\ReadModel\UserView" collection="user_views" repository-class="App\Module\UserManagement\Infrastructure\ReadModel\Repository\DoctrineUserViewRepository">
-        <id field-name="userId" strategy="NONE" type="string"/>
+        <id field-name="id" strategy="NONE" type="string"/>
         <field field-name="email" type="string"/>
         <field field-name="username" type="string" nullable="true"/>
         <field field-name="isVerified" type="bool" nullable="true"/>
