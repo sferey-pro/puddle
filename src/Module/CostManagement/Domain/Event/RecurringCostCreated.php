@@ -6,14 +6,18 @@ namespace App\Module\CostManagement\Domain\Event;
 
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
-final class RecurringCostCreated extends DomainEvent implements DomainEventInterface
+final readonly class RecurringCostCreated extends DomainEvent
 {
     public function __construct(
-        private readonly RecurringCostId $recurringCostId,
+        private RecurringCostId $recurringCostId,
     ) {
-        parent::__construct();
+        parent::__construct($this->recurringCostId);
+    }
+
+    public static function eventName(): string
+    {
+        return 'cost_management.recurringcost.created';
     }
 
     public function recurringCostId(): RecurringCostId

@@ -1,12 +1,13 @@
 <div {{ attributes }}>
-    {{ form_errors(form) }}
-
     {{ form_start(form, {
         attr: {
-            class: 'card card-md',
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'save',
             novalidate: true,
+            class: 'card card-md',
         },
     }) }}
+        {{ form_errors(form) }}
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Create new account</h2>
             {{ form_row(form.email) }}

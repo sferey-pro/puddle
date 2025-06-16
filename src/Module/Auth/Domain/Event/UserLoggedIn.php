@@ -6,18 +6,25 @@ namespace App\Module\Auth\Domain\Event;
 
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
-final class UserLoggedIn extends DomainEvent implements DomainEventInterface
+/**
+ * Événement levé lorsqu'un utilisateur se connecte.
+ */
+final readonly class UserLoggedIn extends DomainEvent
 {
     public function __construct(
-        private UserId $id,
+        private UserId $aggregateId,
     ) {
-        parent::__construct();
+        parent::__construct($this->aggregateId);
     }
 
-    public function id(): UserId
+    public static function eventName(): string
     {
-        return $this->id;
+        return 'auth.user.logged_in';
+    }
+
+    public function userId(): UserId
+    {
+        return $this->aggregateId;
     }
 }

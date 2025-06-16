@@ -6,7 +6,9 @@ namespace App\Module\SharedContext\Domain\ValueObject;
 
 use App\Shared\Domain\ValueObject\AggregateRootId;
 
-final class UserId implements \Stringable
+/**
+ * Représente l'identifiant unique d'un utilisateur (Aggregat User / Aggregat UserAccount).
+ */
+final class UserId extends AggregateRootId
 {
-    use AggregateRootId;
 }

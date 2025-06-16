@@ -6,7 +6,7 @@ namespace App\Module\ProductCatalog\Domain\ValueObject;
 
 use Webmozart\Assert\Assert;
 
-final class ProductName implements \Stringable
+final readonly class ProductName implements \Stringable
 {
     public readonly string $value;
 
@@ -26,6 +26,6 @@ final class ProductName implements \Stringable
 
     public function __toString(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 }

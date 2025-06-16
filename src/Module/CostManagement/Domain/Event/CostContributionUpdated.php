@@ -9,21 +9,25 @@ use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
  * Événement émis lorsqu'une contribution existante a été mise à jour.
  */
-final class CostContributionUpdated extends DomainEvent implements DomainEventInterface
+final readonly class CostContributionUpdated extends DomainEvent
 {
     public function __construct(
-        private readonly CostItemId $costItemId,
-        private readonly CostContributionId $costContributionId,
-        private readonly Money $newContributionAmount,
-        private readonly Money $newTotalCoveredAmount,
-        private readonly ?ProductId $newSourceProductId = null,
+        private CostItemId $costItemId,
+        private CostContributionId $costContributionId,
+        private Money $newContributionAmount,
+        private Money $newTotalCoveredAmount,
+        private ?ProductId $newSourceProductId = null,
     ) {
-        parent::__construct();
+        parent::__construct($this->costItemId);
+    }
+
+    public static function eventName(): string
+    {
+        return 'cost_management.costitem.contribution_updated';
     }
 
     public function costItemId(): CostItemId

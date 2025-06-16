@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Module\Auth\Domain\UserAccount;
+use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkFailureHandler;
 use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkSuccessHandler;
 use App\Module\Auth\Infrastructure\Symfony\Security\GoogleAuthenticator;
 use Symfony\Config\SecurityConfig;
@@ -39,9 +40,10 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
         ->checkRoute('login_check')
         ->checkPostOnly(true)
         ->maxUses(1)
-        ->signatureProperties(['id', 'email'])
+        ->signatureProperties(['id'])
         ->lifetime(300)
         ->successHandler(AuthenticationLoginLinkSuccessHandler::class)
+        ->failureHandler(AuthenticationLoginLinkFailureHandler::class)
     ;
 
     $mainFirewall->formLogin()

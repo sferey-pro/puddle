@@ -55,7 +55,6 @@ services:
 ###> doctrine/mongodb-odm-bundle ###
   dataview:
     image: mongo:latest
-    restart: always
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_DB:-app}
       # You should definitely set a root username and password in production
@@ -70,7 +69,6 @@ services:
 ###> symfony/messenger-amqp ###
   queue:
     image: rabbitmq:4-management
-    ports: [5672, 15672]
 ###< symfony/messenger-amqp ###
 
 volumes:

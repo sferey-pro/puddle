@@ -194,11 +194,11 @@ class CostItem extends AggregateRoot
             throw CostItemException::cannotReceiveContributionBecauseStatusIs($this->id(), $this->status);
         }
 
-        if ($amount->getCurrency() !== $this->targetAmount->getCurrency()) {
-            throw InvalidMoneyException::currencyMismatch($this->targetAmount->getCurrency(), $amount->getCurrency());
+        if ($amount->currency() !== $this->targetAmount->currency()) {
+            throw InvalidMoneyException::currencyMismatch($this->targetAmount->currency(), $amount->currency());
         }
 
-        if ($amount->getAmount() <= 0) {
+        if ($amount->amount() <= 0) {
             throw InvalidMoneyException::amountMustBePositive();
         }
 

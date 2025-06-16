@@ -1,20 +1,16 @@
 <div class="nav-item dropdown">
     <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu">
         <span class="avatar avatar-sm" {% if app.user and app.user.avatarUrl is defined %}style="background-image: url({{ app.user.avatarUrl }})"{% endif %}>
-            {% if app.user and app.user.avatarUrl is not defined and app.user.username is defined %}¨
-                {{ app.user.username|slice(0, 2)|upper }} {# Initiales si pas d'avatar #}
-            {% else %}
-                <twig:ux:icon name="tabler:user" />
-            {% endif %}
+            <twig:ux:icon name="tabler:user" />
         </span>
         <div class="d-none d-xl-block ps-2">
             <div>{{ app.user ? app.user.email : 'Visiteur' }}</div>
-            <div class="mt-1 small text-secondary">{{ app.user and app.user.mainRole ? app.user.mainRole.value|replace({ROLE_: ''})|capitalize : '' }}</div>
+            <div class="mt-1 small text-secondary">{{ app.user and app.user.roles ? app.user.mainRole.value|replace({ROLE_: ''})|capitalize : '' }}</div>
         </div>
     </a>
     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
         {% if app.user %}
-            <a href="{{ path('profile') }}" class="dropdown-item">Profil</a>
+            <a href="{{ path('profile_show') }}" class="dropdown-item">Profil</a>
             <a href="{{ path('settings') }}" class="dropdown-item">Paramètres</a>
             <div class="dropdown-divider"></div>
             <a href="{{ logout_path() }}" class="dropdown-item">Déconnexion</a>

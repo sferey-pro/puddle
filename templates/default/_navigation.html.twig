@@ -19,8 +19,8 @@
           <span class="nav-link-title"> Home </span>
         </a>
       </li>
-      <li class="nav-item{{ _route == 'profile' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ path('profile') }}">
+      <li class="nav-item{{ _route == 'profile_show' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ path('profile_show') }}">
           <span class="nav-link-icon">
             <twig:ux:icon name="tabler:user" />
           </span>
@@ -48,7 +48,7 @@
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
           <a href="#" class="dropdown-item">Status</a>
-          <a href="{{ path('profile') }}" class="dropdown-item">Profile</a>
+          <a href="{{ path('profile_show') }}" class="dropdown-item">Profile</a>
           <a href="#" class="dropdown-item">Feedback</a>
           <div class="dropdown-divider"></div>
           <a href="{{ path('settings') }}" class="dropdown-item">Settings</a>

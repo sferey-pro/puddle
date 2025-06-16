@@ -6,17 +6,21 @@ namespace App\Module\CostManagement\Domain\Event;
 
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
  * Événement émis lorsqu'un poste de coût est archivé.
  */
-final class CostItemArchived extends DomainEvent implements DomainEventInterface
+final readonly class CostItemArchived extends DomainEvent
 {
     public function __construct(
-        private readonly CostItemId $costItemId,
+        private CostItemId $costItemId,
     ) {
-        parent::__construct();
+        parent::__construct($this->costItemId);
+    }
+
+    public static function eventName(): string
+    {
+        return 'cost_management.costitem.archived';
     }
 
     public function costItemId(): CostItemId

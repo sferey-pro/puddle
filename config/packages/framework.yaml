@@ -3,14 +3,13 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session: 
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
 
     #esi: true
     #fragments: true
-
-    # form: { csrf_protection: { token_id: submit } }
-    # csrf_protection:
-    #     stateless_token_ids: [submit, authenticate, logout]
+    router:
+        default_uri: 'http://127.0.0.1:8000/'
 
 when@dev:
     framework:

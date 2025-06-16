@@ -7,20 +7,23 @@ namespace App\Module\UserManagement\Domain\Event;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
-final class UserEmailChanged extends DomainEvent implements DomainEventInterface
+/**
+ * Événement levé lorsque l'adresse e-mail d'un utilisateur est modifiée.
+ */
+final readonly class UserEmailChanged extends DomainEvent
 {
     public function __construct(
-        private readonly UserId $userId,
-        private readonly Email $email,
+        private UserId $userId,
+        private Email $newEmail,
+        private Email $oldEmail,
     ) {
-        parent::__construct();
+        parent::__construct($this->userId);
     }
 
     public static function eventName(): string
     {
-        return 'usermanagement.user.email_changed';
+        return 'user_management.user.email_changed';
     }
 
     public function userId(): UserId
@@ -28,8 +31,13 @@ final class UserEmailChanged extends DomainEvent implements DomainEventInterface
         return $this->userId;
     }
 
-    public function email(): Email
+    public function newEmail(): Email
     {
-        return $this->email;
+        return $this->newEmail;
+    }
+
+    public function oldEmail(): Email
+    {
+        return $this->oldEmail;
     }
 }

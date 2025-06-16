@@ -20,7 +20,7 @@
             <tr>
                 <th>Roles</th>
                 <td>
-                    {% for role in user.getEnumRoles() %}
+                    {% for role in user.enumRoles() %}
                         <twig:Role type="{{ role|trans }}" color="{{ role.getColors }}" />
                     {% endfor %}
                 </td>

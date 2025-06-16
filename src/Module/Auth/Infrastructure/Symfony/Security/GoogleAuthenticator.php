@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
-use App\Module\Auth\Domain\Model\UserSocialNetwork;
+use App\Module\Auth\Domain\SocialLink;
 use App\Module\Auth\Domain\UserAccount;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -25,15 +25,15 @@ class GoogleAuthenticator extends AbstractOAuth2Authenticator
             throw new AuthenticationException('Email not verified');
         }
 
-        $userSocialNetwork = $this->entityManager->getRepository(UserSocialNetwork::class)->findOneBy([
+        $SocialLink = $this->entityManager->getRepository(SocialLink::class)->findOneBy([
             'socialNetwork' => $this->serviceName,
             'socialId' => $resourceOwner->getId(),
         ]);
 
-        if (!$userSocialNetwork) {
+        if (!$SocialLink) {
             return null;
         }
 
-        return $userSocialNetwork->getUser();
+        return $SocialLink->getUser();
     }
 }

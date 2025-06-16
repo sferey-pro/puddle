@@ -6,6 +6,7 @@ namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
+use App\Shared\Application\Event\EventBusInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -18,6 +19,7 @@ class EmailVerifier
         private VerifyEmailHelperInterface $verifyEmailHelper,
         private MailerInterface $mailer,
         private UserRepositoryInterface $userRepository,
+        private EventBusInterface $eventBus,
     ) {
     }
 
@@ -25,8 +27,8 @@ class EmailVerifier
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            (string) $user->id(),
-            (string) $user->email()
+            $user->id()->value->toString(),
+            $user->email()->value
         );
 
         $context = $email->getContext();
@@ -46,12 +48,14 @@ class EmailVerifier
     {
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest(
             $request,
-            (string) $user->id(),
-            (string) $user->email()
+            $user->id()->value->toString(),
+            $user->email()->value
         );
 
         $user->verified();
 
         $this->userRepository->save($user, true);
+
+        $this->eventBus->publish(...$user->pullDomainEvents());
     }
 }

@@ -25,7 +25,7 @@ return static function (FrameworkConfig $framework): void {
     $messenger->bus('event.bus')
         ->defaultMiddleware()
         ->enabled(true)
-        ->allowNoHandlers(false)
+        ->allowNoHandlers(true)
         ->allowNoSenders(true)
     ;
 

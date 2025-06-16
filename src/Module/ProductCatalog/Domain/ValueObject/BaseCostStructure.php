@@ -8,7 +8,7 @@ use App\Module\SharedContext\Domain\ValueObject\Money;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 
-final class BaseCostStructure
+final readonly class BaseCostStructure
 {
     /** @var array<int, CostComponentLine> */
     public readonly array $costComponentLines;

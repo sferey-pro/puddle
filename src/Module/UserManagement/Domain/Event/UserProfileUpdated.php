@@ -4,29 +4,27 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Event;
 
-use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Module\UserManagement\Domain\ValueObject\Name;
+use App\Module\UserManagement\Domain\ValueObject\DisplayName;
+use App\Module\UserManagement\Domain\ValueObject\Username;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
- * Événement émis lorsque le profil d'un utilisateur a été mis à jour.
- * Il contient les nouvelles informations du profil pour permettre aux projecteurs
- * de mettre à jour les Read Models sans avoir à re-interroger le Write Model.
+ * Événement levé lorsque le profil d'un utilisateur a été mis à jour.
  */
-final class UserProfileUpdated extends DomainEvent implements DomainEventInterface
+final readonly class UserProfileUpdated extends DomainEvent
 {
     public function __construct(
-        private readonly UserId $userId,
-        private readonly Name $username
+        private UserId $userId,
+        private Username $username,
+        private DisplayName $displayName,
     ) {
-        parent::__construct();
+        parent::__construct($this->userId);
     }
 
     public static function eventName(): string
     {
-        return 'usermanagement.user.profile_updated';
+        return 'user_management.user.profile_updated';
     }
 
     public function userId(): UserId
@@ -34,8 +32,13 @@ final class UserProfileUpdated extends DomainEvent implements DomainEventInterfa
         return $this->userId;
     }
 
-    public function username(): Name
+    public function username(): Username
     {
         return $this->username;
+    }
+
+    public function displayName(): DisplayName
+    {
+        return $this->displayName;
     }
 }

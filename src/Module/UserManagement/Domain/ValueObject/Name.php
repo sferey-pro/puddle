@@ -6,24 +6,20 @@ namespace App\Module\UserManagement\Domain\ValueObject;
 
 use Webmozart\Assert\Assert;
 
-final class Name implements \Stringable
+final readonly class Name implements \Stringable
 {
-    public readonly string $value;
-
-    public function __construct(string $value)
+    public function __construct(public string $value)
     {
-        Assert::lengthBetween($value, 1, 180);
-
-        $this->value = $value;
+        Assert::that($value, 'name')->notBlank('Name cannot be blank.');
     }
 
-    public function isEqualTo(self $name): bool
+    public function equals(self $other): bool
     {
-        return $name->value === $this->value;
+        return $this->value === $other->value;
     }
 
     public function __toString(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 }

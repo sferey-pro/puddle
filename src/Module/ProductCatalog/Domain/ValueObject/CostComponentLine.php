@@ -8,12 +8,12 @@ use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use Webmozart\Assert\Assert;
 
-final class CostComponentLine
+final readonly class CostComponentLine
 {
-    public readonly string $name; // Ex: "Loyer", "Grain de café Arabica"
-    public readonly CostComponentType $type;
-    public readonly Money $cost; // Le coût de cette composante pour une unité du produit
-    public readonly ?Quantity $quantity; // Null si non applicable (ex: "Part du Loyer").
+    public string $name; // Ex: "Loyer", "Grain de café Arabica"
+    public CostComponentType $type;
+    public Money $cost; // Le coût de cette composante pour une unité du produit
+    public ?Quantity $quantity; // Null si non applicable (ex: "Part du Loyer").
 
     public function __construct(
         string $name,

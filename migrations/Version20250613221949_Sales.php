@@ -21,10 +21,10 @@ final class Version20250613221949_Sales extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE sales_order (user_id UUID NOT NULL, status VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, id UUID NOT NULL, PRIMARY KEY(id))
+            CREATE TABLE sales_order (id UUID NOT NULL, user_id UUID NOT NULL, status VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE sales_order_line (product_id UUID NOT NULL, quantity INT NOT NULL, id UUID NOT NULL, unit_price_amount INT NOT NULL, unit_price_currency VARCHAR(3) NOT NULL, order_id UUID DEFAULT NULL, PRIMARY KEY(id))
+            CREATE TABLE sales_order_line (id UUID NOT NULL, product_id UUID NOT NULL, quantity INT NOT NULL, unit_price_amount INT NOT NULL, unit_price_currency VARCHAR(3) NOT NULL, order_id UUID DEFAULT NULL, PRIMARY KEY(id))
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_93D9398D8D9F6D38 ON sales_order_line (order_id)

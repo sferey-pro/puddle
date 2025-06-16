@@ -8,6 +8,7 @@ use App\Shared\Domain\Service\ClockInterface;
 use App\Shared\Domain\Service\SystemTime;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
 
 /**
  * Ce souscripteur initialise la façade statique SystemTime au début de chaque requête.
@@ -28,6 +29,7 @@ final readonly class SystemTimeInitializerSubscriber implements EventSubscriberI
         // pour s'assurer que notre code s'exécute très tôt.
         return [
             KernelEvents::REQUEST => ['initializeSystemTime', 255],
+            WorkerMessageReceivedEvent::class => ['initializeSystemTime', 255],
         ];
     }
 

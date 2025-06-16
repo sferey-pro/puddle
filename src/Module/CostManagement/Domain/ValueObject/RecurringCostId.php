@@ -7,9 +7,8 @@ namespace App\Module\CostManagement\Domain\ValueObject;
 use App\Shared\Domain\ValueObject\AggregateRootId;
 
 /**
- * Représente l'identifiant unique d'un modèle de coût récurrent.
+ * Représente l'identifiant unique d'un modèle de coût récurrent (Aggregat RecurringCost).
  */
-final readonly class RecurringCostId
+final class RecurringCostId extends AggregateRootId
 {
-    use AggregateRootId;
 }

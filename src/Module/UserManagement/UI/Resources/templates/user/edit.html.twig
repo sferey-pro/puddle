@@ -1,11 +1,22 @@
-{% extends 'layout.html.twig' %}
+{% extends '@Tabler/layout.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% set user = user is defined ? user : null %}
 
-{% block body_id 'user_edit' %}
+{% block title %}
+    Détails : {{ user ? user.email : 'Utilisateur' }}
+{% endblock %}
 
-{% block main %}
-    <twig:Semantic:Title title="{{ 'user.edit'|trans }}" />
+{% block page_pretitle %}Modification utilisateur{% endblock %}
+{% block page_title %}{{ user ? user.email : 'Détails' }}{% endblock %}
 
-    {{ include('@UserManagement/user/_form.html.twig', {button_label: 'label.update_user'|trans}) }}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <twig:UserForm :initialUser="user" />
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

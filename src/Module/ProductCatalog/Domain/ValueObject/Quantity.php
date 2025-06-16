@@ -8,10 +8,10 @@ use App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 
-final class Quantity implements \Stringable
+final readonly class Quantity
 {
-    public readonly float $value;
-    public readonly UnitOfMeasure $unit;
+    public float $value;
+    public UnitOfMeasure $unit;
 
     public function __construct(float $value, UnitOfMeasure $unit)
     {
@@ -37,7 +37,10 @@ final class Quantity implements \Stringable
         return $this->value === $other->value && $this->unit === $other->unit;
     }
 
-    public function __toString(): string
+    /**
+     * Retourne une représentation formatée pour l'affichage.
+     */
+    public function format(): string
     {
         return \sprintf('%s %s', $this->value, $this->unit->value);
     }

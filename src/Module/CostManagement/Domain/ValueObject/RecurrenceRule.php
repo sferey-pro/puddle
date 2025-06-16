@@ -80,9 +80,7 @@ final readonly class RecurrenceRule
     /**
      * Calcule la prochaine date d'exécution de la règle à partir d'un point de référence.
      *
-     * @param DateTimeImmutable $from la date à partir de laquelle calculer la prochaine échéance
-     *
-     * @return DateTimeImmutable
+     * @param \DateTimeImmutable $from la date à partir de laquelle calculer la prochaine échéance
      */
     public function getNextRunDate(\DateTimeImmutable $from): \DateTimeImmutable
     {

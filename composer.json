@@ -69,7 +69,9 @@
         "symfony/yaml": "^7",
         "symfonycasts/sass-bundle": "^0.8",
         "symfonycasts/verify-email-bundle": "^1.17",
-        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/cssinliner-extra": "^3.21",
+        "twig/extra-bundle": "^3.21",
+        "twig/inky-extra": "^3.21",
         "twig/intl-extra": "^3.21",
         "twig/twig": "^2.12|^3.0"
     },

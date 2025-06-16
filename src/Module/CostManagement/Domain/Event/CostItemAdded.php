@@ -11,23 +11,27 @@ use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
  * Événement émis lorsqu'un nouveau poste de coût est créé avec succès.
  */
-final class CostItemAdded extends DomainEvent implements DomainEventInterface
+final readonly class CostItemAdded extends DomainEvent
 {
     public function __construct(
-        private readonly CostItemId $costItemId,
-        private readonly CostItemName $name,
+        private CostItemId $costItemId,
+        private CostItemName $name,
         private bool $isTemplate,
-        private readonly CostItemType $type,
-        private readonly Money $targetAmount,
-        private readonly CostItemStatus $status,
-        private readonly ?CoveragePeriod $coveragePeriod = null,
+        private CostItemType $type,
+        private Money $targetAmount,
+        private CostItemStatus $status,
+        private ?CoveragePeriod $coveragePeriod = null,
     ) {
-        parent::__construct();
+        parent::__construct($this->costItemId);
+    }
+
+    public static function eventName(): string
+    {
+        return 'cost_management.costitem.added';
     }
 
     public function costItemId(): CostItemId
@@ -55,13 +59,13 @@ final class CostItemAdded extends DomainEvent implements DomainEventInterface
         return $this->targetAmount;
     }
 
-    public function coveragePeriod(): ?CoveragePeriod
-    {
-        return $this->coveragePeriod;
-    }
-
     public function status(): CostItemStatus
     {
         return $this->status;
+    }
+
+    public function coveragePeriod(): ?CoveragePeriod
+    {
+        return $this->coveragePeriod;
     }
 }

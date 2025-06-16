@@ -1,28 +1,28 @@
 {% extends '@Auth/base.html.twig' %}
 
-{% block title %}Process Login{% endblock %}
+{% block title %}Bonjour !{% endblock %}
 
-{% block body_id 'process_login' %}
+{% block body_id 'login_link_check' %}
 
 {% block content %}
-    <div class="container my-5">
-        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
-        <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
-            <h1 class="display-4 fw-bold lh-1 text-body-emphasis">Bonjour ! </h1>
-            <p class="lead">Vous êtes sur le point de vous connecter à Puddle</p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-                <form action="{{ path('login_check') }}" method="POST">
-                    <input type="hidden" name="expires" value="{{ expires }}">
-                    <input type="hidden" name="user" value="{{ user }}">
-                    <input type="hidden" name="hash" value="{{ hash }}">
-
-                    <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Continuer</button>
-                </form>
+    <form class="card card-md" action="{{ path('login_check') }}" method="POST">
+        <div class="card-body text-center">
+            <div class="mb-4">
+              <h2 class="card-title">Bonjour !</h2>
             </div>
-        </div>
-        <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg rounded">
-            <img class="rounded-lg-3" src="{{ asset('images/ia_images/img2.png') }}" alt="" width="720">
-        </div>
-        </div>
-    </div>
+            <div class="mb-4">
+              <span class="avatar avatar-xl mb-3" style="background-image: url(./static/avatars/000m.jpg)"> </span>
+              <h3>{{ email }}</h3>
+            </div>
+            <div class="mb-4">
+              Vous êtes sur le point de vous connecter à Puddle
+              <input type="hidden" name="expires" value="{{ expires }}">
+              <input type="hidden" name="user" value="{{ identifier }}">
+              <input type="hidden" name="hash" value="{{ hash }}">
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary btn-4 w-100">Continuer</button>
+            </div>
+          </div>
+    </form>
 {% endblock %}

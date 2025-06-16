@@ -4,43 +4,44 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Symfony\Security\Authentication;
 
-use App\Module\Auth\Domain\Model\UserLogin;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Auth\Application\Command\VerifyLoginLink;
+use App\Module\Auth\Domain\ValueObject\Hash;
+use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
 
 class AuthenticationLoginLinkSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     protected array $defaultOptions = [
-        'default_target_path' => '/',
+        'default_target_path' => 'admin',
     ];
 
     public function __construct(
-        private HttpUtils $httpUtils,
-        private EntityManagerInterface $em,
+        private readonly CommandBusInterface $commandBus,
+        private readonly HttpUtils $httpUtils,
     ) {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
+        $options = $this->defaultOptions;
+
+        /** @var UserAccount $user */
         $user = $token->getUser();
-        $date = new \DateTimeImmutable();
 
-        /** @var UserLogin $userLogin */
-        $userLogin = $this->em->getRepository(UserLogin::class)->findOneBy([
-            'user' => $user,
-            'expiresAt' => $date->setTimestamp((int) $request->get('expires')),
-            'hash' => $request->get('hash'),
-        ]);
+        /** @var LoginLinkDetails $loginLinkDetails */
+        $loginLinkDetails = $request->attributes->get('_login_link_details');
 
-        $userLogin->verified();
+        // On déclenche la commande pour invalider le lien utilisé
+        $this->commandBus->dispatch(new VerifyLoginLink(
+            $user->id(),
+            new Hash($request->get('hash')),
+        ));
 
-        $this->em->persist($userLogin);
-        $this->em->flush();
-
-        return $this->httpUtils->createRedirectResponse($request, $this->defaultOptions['default_target_path']);
+        return $this->httpUtils->createRedirectResponse($request, $options['default_target_path']);
     }
 }

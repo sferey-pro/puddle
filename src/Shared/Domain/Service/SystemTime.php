@@ -25,4 +25,9 @@ final class SystemTime
 
         return self::$clock->now();
     }
+
+    public static function reset(): void
+    {
+        self::$clock = null;
+    }
 }

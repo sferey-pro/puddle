@@ -6,6 +6,9 @@ namespace App\Module\UserManagement\Application\Query;
 
 use App\Shared\Application\Query\QueryInterface;
 
+/**
+ * @implements QueryInterface<UserView[]>
+ */
 final readonly class ListUsersQuery implements QueryInterface
 {
     public function __construct(

@@ -4,16 +4,31 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Module\Auth\Domain\UserAccount" table="auth_users" repository-class="App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserAccountRepository">
+    <entity name="App\Module\Auth\Domain\UserAccount" table="user_accounts" repository-class="App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserAccountRepository">
         <unique-constraints>
             <unique-constraint columns="email" name="UNIQ_IDENTIFIER_AUTH_USERS_EMAIL" />
         </unique-constraints>
 
         <embedded name="id" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
+
         <embedded name="password" class="App\Module\Auth\Domain\ValueObject\Password" use-column-prefix="false" />
         <embedded name="email" class="App\Module\SharedContext\Domain\ValueObject\Email" use-column-prefix="false" />
+        <embedded name="username" class="App\Module\SharedContext\Domain\ValueObject\Username" use-column-prefix="false" />
+
         <field name="roles" type="json" />
         <field name="isVerified" type="boolean" />
+        <field name="isActive" type="boolean" />
+
+        <one-to-many field="loginLinks" target-entity="App\Module\Auth\Domain\LoginLink" mapped-by="user" >
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+        <one-to-many field="socialLinks" target-entity="App\Module\Auth\Domain\SocialLink" mapped-by="user" >
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
     </entity>
 
 </doctrine-mapping>

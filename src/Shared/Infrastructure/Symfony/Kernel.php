@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\Symfony;
 
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsEventHandler;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -24,6 +25,8 @@ class Kernel extends BaseKernel
 
         $container->import(\sprintf('%s/config/{services}/*.{php,yaml}', $this->getProjectDir()));
         $container->import(\sprintf('%s/config/{services}/%s/*.{php,yaml}', $this->getProjectDir(), $this->environment));
+
+        $container->import(\sprintf('%s/config/services.yaml', $this->getProjectDir()));
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
@@ -41,5 +44,9 @@ class Kernel extends BaseKernel
         $container->registerAttributeForAutoconfiguration(AsCommandHandler::class, static function (ChildDefinition $definition): void {
             $definition->addTag('messenger.message_handler', ['bus' => 'command.bus']);
         });
+
+        // $container->registerAttributeForAutoconfiguration(AsEventHandler::class, static function (ChildDefinition $definition): void {
+        //     $definition->addTag('messenger.message_handler', ['bus' => 'event.bus']);
+        // });
     }
 }

@@ -51,7 +51,7 @@ class CostItemTemplateView
             name: (string) $event->name(),
             type: $event->type()->value,
             targetAmount: self::convertMoneyToFloat($event->targetAmount()),
-            currency: $event->targetAmount()->getCurrency(),
+            currency: $event->targetAmount()->currency(),
             status: $event->status()->value,
         );
     }
@@ -66,7 +66,7 @@ class CostItemTemplateView
             name: (string) $item->name(),
             type: $item->type()->value,
             targetAmount: self::convertMoneyToFloat($item->targetAmount()),
-            currency: $item->targetAmount()->getCurrency(),
+            currency: $item->targetAmount()->currency(),
             status: $item->status()->value
         );
 
@@ -81,7 +81,7 @@ class CostItemTemplateView
         $this->name = (string) $item->name();
         $this->type = $item->type()->value;
         $this->targetAmount = self::convertMoneyToFloat($item->targetAmount());
-        $this->currency = $item->targetAmount()->getCurrency();
+        $this->currency = $item->targetAmount()->currency();
         $this->status = $item->status()->value;
     }
 
@@ -92,7 +92,7 @@ class CostItemTemplateView
     {
         $this->name = (string) $event->newName();
         $this->targetAmount = self::convertMoneyToFloat($event->newTargetAmount());
-        $this->currency = $event->newTargetAmount()->getCurrency();
+        $this->currency = $event->newTargetAmount()->currency();
     }
 
     /**

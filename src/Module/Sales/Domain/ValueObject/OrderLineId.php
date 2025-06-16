@@ -6,7 +6,9 @@ namespace App\Module\Sales\Domain\ValueObject;
 
 use App\Shared\Domain\ValueObject\AggregateRootId;
 
-final class OrderLineId implements \Stringable
+/**
+ * Représente l'identifiant unique d'une ligne de commande (Aggregat OrderLine).
+ */
+final class OrderLineId extends AggregateRootId
 {
-    use AggregateRootId;
 }

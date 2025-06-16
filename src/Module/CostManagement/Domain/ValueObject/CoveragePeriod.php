@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\ValueObject;
 
-use App\Module\CostManagement\Domain\Specification\CoveragePeriodHasEndedSpecification;
-use App\Module\CostManagement\Domain\Specification\CoveragePeriodIsActiveSpecification;
 use App\Shared\Domain\Service\ClockInterface;
 use Webmozart\Assert\Assert;
 
@@ -48,12 +46,12 @@ final readonly class CoveragePeriod
         return new self($startDate, $endDate);
     }
 
-    public function getStartDate(): \DateTimeImmutable
+    public function startDate(): \DateTimeImmutable
     {
         return $this->startDate;
     }
 
-    public function getEndDate(): ?\DateTimeImmutable
+    public function endDate(): ?\DateTimeImmutable
     {
         return $this->endDate;
     }

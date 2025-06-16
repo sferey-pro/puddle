@@ -6,16 +6,20 @@ namespace App\Module\UserManagement\Infrastructure\Doctrine\Repository;
 
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Module\UserManagement\Domain\Repository\CheckUserByEmailInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
 use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
-class DoctrineUserRepository extends ORMAbstractRepository implements UserRepositoryInterface, CheckUserByEmailInterface
+/**
+ * @extends ServiceEntityRepository<User>
+ *
+ * Implémentation concrète du UserRepositoryInterface utilisant Doctrine ORM.
+ * Cet "Adapter" connecte le domaine UserManagement à la base de données relationnelle.
+ */
+class DoctrineUserRepository extends ORMAbstractRepository implements UserRepositoryInterface
 {
     private const ENTITY_CLASS = User::class;
     private const ALIAS = 'user';
@@ -49,6 +53,14 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
         return $this->findOneBy(['id.value' => $id->value]);
     }
 
+    public function ofEmail(Email $email): ?User
+    {
+        return $this->withEmail($email)
+            ->select(User::class)
+            ->getQuery()
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
+    }
+
     public function withEmail(Email $email): ?self
     {
         return $this->filter(static function (QueryBuilder $qb) use ($email): void {
@@ -56,22 +68,24 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
         });
     }
 
-    public function ofNativeEmail(array $fieldName): array
-    {
-        return $this->findBy(['email.value' => $fieldName['email']]);
-    }
-
     /**
-     * @throws NonUniqueResultException
+     * Vérifie si un utilisateur avec l'adresse email spécifiée existe déjà.
+     * Si un ID d'exclusion est fourni, cet utilisateur est ignoré, ce qui est crucial
+     * pour les scénarios de mise à jour où un utilisateur peut changer son email
+     * sans que son propre email actuel ne soit considéré comme un doublon.
      */
-    public function existsEmail(Email $email): ?UserId
+    public function existsUserWithEmail(Email $email, ?UserId $excludeId = null): bool
     {
-        $userId = $this->withEmail($email)
-            ->select(UserId::class)
-            ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY)
+        $qb = $this->withEmail($email)
+            ->query()
+            ->select('COUNT('.self::ALIAS.'.id.value)')
         ;
 
-        return $userId['id'] ?? null;
+        if (null !== $excludeId) {
+            $qb->andWhere('u.id.uuid != :excludeId')
+                ->setParameter('excludeId', $excludeId->value);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
     }
 }

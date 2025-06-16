@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Domain\Event;
 
+use App\Module\Sales\Domain\ValueObject\OrderId;
+use App\Module\SharedContext\Domain\ValueObject\Money;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
-final class OrderCreated extends DomainEvent implements DomainEventInterface
+final readonly class OrderCreated extends DomainEvent
 {
     public function __construct(
-        private readonly string $orderId,
-        private readonly string $userId,
-        private readonly array $orderLines,
-        private readonly float $totalAmount,
-        private readonly string $currency,
+        private OrderId $orderId,
+        private UserId $userId,
+        private array $orderLines,
+        private Money $totalAmount,
+        private string $currency,
     ) {
-        parent::__construct();
+        parent::__construct($orderId);
     }
 
     public static function eventName(): string
@@ -24,12 +26,12 @@ final class OrderCreated extends DomainEvent implements DomainEventInterface
         return 'sales.order.created';
     }
 
-    public function orderId(): string
+    public function orderId(): OrderId
     {
         return $this->orderId;
     }
 
-    public function userId(): string
+    public function userId(): UserId
     {
         return $this->userId;
     }
@@ -39,7 +41,7 @@ final class OrderCreated extends DomainEvent implements DomainEventInterface
         return $this->orderLines;
     }
 
-    public function totalAmount(): float
+    public function totalAmount(): Money
     {
         return $this->totalAmount;
     }

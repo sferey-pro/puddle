@@ -10,7 +10,7 @@ use Webmozart\Assert\Assert;
  * Représente le nom d'un poste de coût.
  * Ce Value Object garantit que le nom n'est pas vide et respecte une longueur maximale.
  */
-final class CostItemName implements \Stringable
+final readonly class CostItemName implements \Stringable
 {
     public readonly string $value;
 
@@ -24,7 +24,7 @@ final class CostItemName implements \Stringable
 
     public function __toString(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 
     public function equals(self $other): bool

@@ -1,8 +1,8 @@
 {% extends '@Auth/base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Check your inbox!{% endblock %}
 
-{% block body_id 'login' %}
+{% block body_id 'login_link_sent' %}
 
 {% block content %}
     <div class="text-center">
@@ -10,14 +10,15 @@
             <h2 class="h1">Check your inbox</h2>
 
             <p class="fs-h3 text-secondary">
-                We've sent you a magic link to <strong class="mark">{{ email }}</strong>.<br />
+                We've sent you a magic link to <strong class="mark">{{ identifier }}</strong>.<br />
                 Please click the link to confirm your address.
             </p>
-            <div {{ stimulus_controller('countdown', {timeLeft: 5, callbackFunctionName: 'enabledForm', callbackIdentifier: 'disable'}) }}>
+            <div {{ stimulus_controller('countdown', {timeLeft: 5, callbackFunctionName: 'enabledForm', callbackIdentifier: 'disable', prefix: 'in '}) }}>
                 <form action="{{ path('login_link') }}" method="POST" {{ stimulus_controller('disable', {withEnabled: 'Resend E-mail', withDisabled: 'Wait...', disabled: true}) }} {{ stimulus_target('countdown', 'callback') }}>
-                    <input type="hidden" name="_username" value="{{ email }}">
-                    <input class="btn btn-primary" type="submit" value="" />
-                    <span class="p-4 fs-3" {{ stimulus_target('countdown', 'timer') }}></span>
+                    <input type="hidden" name="_username" value="{{ identifier }}">
+                    <button class="btn btn-primary" type="submit" value="">
+                        Resend E-mail&nbsp;<span {{ stimulus_target('countdown', 'timer') }}></span>
+                    </button>
                 </form>
             </div>
         </div>

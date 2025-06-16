@@ -1,17 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["timer", "callback"]
+  static targets = ["timer", "callback", ""]
 
   static values = {
     interval: { default: 1000, type: Number },
     callbackIdentifier: String,
     callbackFunctionName: String,
     timeLeft: Number,
+    prefix: String,
   }
 
   initialize() {
-    this.timerTarget.innerHTML = this.timeLeftValue + " seconds"
+    this.timerTarget.innerHTML = this.prefixValue + " " + this.timeLeftValue + " seconds"
   }
 
   connect() {
@@ -42,7 +43,7 @@ export default class extends Controller {
       this.disconnect()
       this.timerTarget.remove()
     } else {
-      this.timerTarget.innerHTML = this.timeLeftValue + " " + timeLeftText
+      this.timerTarget.innerHTML = this.prefixValue + " " + this.timeLeftValue + " " + timeLeftText
     }
   }
 
