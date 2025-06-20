@@ -11,7 +11,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mime\Address;
 
-#[AsMessageHandler]
+#[AsMessageHandler()]
 class WhenUserRegisteredThenSendUserConfirmationEmail
 {
     public function __construct(
@@ -22,13 +22,12 @@ class WhenUserRegisteredThenSendUserConfirmationEmail
 
     public function __invoke(UserRegistered $event): void
     {
-        $user = $this->userRepository->ofId($event->id());
+        $user = $this->userRepository->ofId($event->userId());
 
-        // generate a signed url and email it to the user
         $this->emailVerifier->sendEmailConfirmation('verify_email', $user,
             (new TemplatedEmail())
                 ->from(new Address('no-reply@puddle.com', 'Puddle Mail Bot'))
-                ->to((string) $event->email())
+                ->to($event->email()->value)
                 ->subject('Please Confirm your Email')
                 ->htmlTemplate('@Auth/emails/registration/confirmation_email.html.twig')
         );

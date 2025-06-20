@@ -5,7 +5,11 @@
 {% block body_id 'login' %}
 
 {% block content %}
-<form action="{{ path('login') }}"  method="POST" novalidate {{ stimulus_controller('login') }}>
+{% if error %}
+    <twig:Alert type="error" message="{{ error.messageKey|trans(error.messageData, 'security') }}" format="important" />
+{% endif %}
+
+<form  method="POST" novalidate {{ stimulus_controller('login') }}>
     <div class="card card-md" id="email-form" {{ stimulus_target('login', 'emailField') }}>
         <div class="card-body"  >
             <h2 class="h2 text-center mb-4">Login to your account</h2>
@@ -58,9 +62,9 @@
             <div class="mb-3">
                 <label class="form-label">
                     Password
-                    {# <span class="form-label-description">
-                        <a href="{{ path('forgot-password')}}">I forgot password</a>
-                    </span> #}
+                    <span class="form-label-description">
+                        <a href="{{ path('forgot-password') }}">I forgot password</a>
+                    </span>
                 </label>
                 <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="*******">
             </div>
@@ -73,7 +77,7 @@
             </div>
 
             <div class="form-footer">
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" formaction="{{ path('login') }}" class="btn btn-primary w-100">
                     <twig:ux:icon name="tabler:login"/> Sign in
                 </button>
             </div>

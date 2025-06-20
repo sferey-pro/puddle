@@ -11,9 +11,9 @@ Ajouter :
 
 AggregateRootId sont écrit comme ceci : 
 
-final class UserId implements \Stringable
+final class UserId extends AggregateRootId
 {
-    use AggregateRootId;
+    
 }
 
 Transformation de ValueObject en string comme ceci : 

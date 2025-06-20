@@ -1,0 +1,30 @@
+{% props format = 'basic' %}
+
+ {% set alert = cva({
+    base: 'alert',
+    variants: {
+        type: {
+            success: 'alert-success',
+            error: 'alert-danger',
+            warning: 'alert-warning',
+            notice: 'alert-info',
+        },
+        format: {
+            basic: '',
+            important: 'alert-important',
+            minor: 'alert-minor',
+        },
+    },
+}) %}
+
+<div class="{{ alert.apply({format, type}, attributes.render('class')) }} {% if dismissible is true %}alert-dismissible{% endif %}"  role="alert">
+    <div class="alert-icon">
+        <twig:ux:icon name="{{ this.icon }}" />
+    </div>
+
+    {{ message }}
+
+    {% if dismissible is true %}
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    {% endif %}
+</div>

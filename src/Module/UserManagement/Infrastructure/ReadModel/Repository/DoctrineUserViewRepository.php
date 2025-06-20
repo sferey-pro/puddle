@@ -21,7 +21,7 @@ class DoctrineUserViewRepository extends ODMAbstractRepository implements UserVi
 
     public function findById(UserId $id): ?UserView
     {
-        return parent::findOneBy(['userId' => $id->value]);
+        return parent::findOneBy(['id' => $id->value]);
     }
 
     public function findAll(): array

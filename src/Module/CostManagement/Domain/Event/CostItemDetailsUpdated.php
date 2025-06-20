@@ -9,25 +9,29 @@ use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
 /**
  * Événement émis lorsque les détails principaux d'un poste de coût sont mis à jour.
  */
-final class CostItemDetailsUpdated extends DomainEvent implements DomainEventInterface
+final readonly class CostItemDetailsUpdated extends DomainEvent
 {
     public function __construct(
-        private readonly CostItemId $costItemId,
-        private readonly CostItemName $newName,
-        private readonly CostItemName $oldName,
-        private readonly Money $newTargetAmount,
-        private readonly Money $oldTargetAmount,
-        private readonly CoveragePeriod $newCoveragePeriod,
-        private readonly CoveragePeriod $oldCoveragePeriod,
-        private readonly ?string $newDescription,
-        private readonly ?string $oldDescription,
+        private CostItemId $costItemId,
+        private CostItemName $newName,
+        private CostItemName $oldName,
+        private Money $newTargetAmount,
+        private Money $oldTargetAmount,
+        private CoveragePeriod $newCoveragePeriod,
+        private CoveragePeriod $oldCoveragePeriod,
+        private ?string $newDescription,
+        private ?string $oldDescription,
     ) {
-        parent::__construct();
+        parent::__construct($this->costItemId);
+    }
+
+    public static function eventName(): string
+    {
+        return 'cost_management.costitem.details_updated';
     }
 
     public function costItemId(): CostItemId

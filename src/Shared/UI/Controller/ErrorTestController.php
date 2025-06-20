@@ -7,7 +7,6 @@ namespace App\Shared\UI\Controller;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Contrôleur d'erreur minimaliste pour l'environnement de test.
@@ -20,10 +19,9 @@ final class ErrorTestController
     /**
      * Cette méthode est appelée par Symfony lorsqu'une exception se produit dans l'environnement de test.
      *
-     * @param \Throwable           $exception L'exception qui a été levée.
-     * @param DebugLoggerInterface|null $logger    Le logger pour les détails de debug.
+     * @param \Throwable $exception L'exception qui a été levée
      *
-     * @return JsonResponse Une réponse JSON simple avec les informations essentielles de l'erreur.
+     * @return JsonResponse une réponse JSON simple avec les informations essentielles de l'erreur
      */
     public function __invoke(\Throwable $exception): JsonResponse
     {

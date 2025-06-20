@@ -4,39 +4,52 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\ValueObject;
 
+use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * Classe de base abstraite pour les identifiants uniques (UID).
+ *
+ * Cette classe encapsule un objet Uid de Symfony, fournissant une base solide
+ * pour créer des identifiants typés (comme EventId, UserId, etc.) tout en centralisant
+ * la logique de génération et de comparaison.
+ */
 abstract class Uid implements \Stringable
 {
-    final public function __construct(protected string $value)
-    {
-        $this->ensureIsValidUuid($value);
+    final private function __construct(
+        public AbstractUid $value,
+    ) {
     }
 
-    final public static function random(): self
+    /**
+     * Crée une nouvelle instance avec un Uid généré aléatoirement (UUIDv7).
+     */
+    public static function generate(): static
     {
-        return new static(Uuid::v4()->toString());
+        return new static(Uuid::v7());
     }
 
-    final public function value(): string
+    /**
+     * Crée une instance à partir d'une représentation textuelle d'un UUID.
+     */
+    public static function fromString(string $uid): static
     {
-        return $this->value;
+        return new static(Uuid::fromString($uid));
     }
 
-    final public function equals(self $other): bool
-    {
-        return $this->value() === $other->value();
-    }
-
+    /**
+     * Retourne la représentation textuelle de l'Uid.
+     */
     public function __toString(): string
     {
-        return $this->value();
+        return (string) $this->value;
     }
 
-    private function ensureIsValidUuid(string $id): void
+    /**
+     * Compare cet Uid à un autre pour vérifier l'égalité.
+     */
+    public function equals(?object $other): bool
     {
-        if (!Uuid::isValid($id)) {
-            throw new \InvalidArgumentException(\sprintf('<%s> does not allow the value <%s>.', self::class, $id));
-        }
+        return $other instanceof self && $this->value->equals($other->value);
     }
 }

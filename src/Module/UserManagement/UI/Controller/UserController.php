@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\UI\Controller;
 
-use App\Module\UserManagement\Application\Command\CreateUser;
-use App\Module\UserManagement\Application\DTO\CreateUserDTO;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
+use App\Module\UserManagement\Application\Query\FindUserQuery;
 use App\Module\UserManagement\Application\Query\ListUsersQuery;
-use App\Module\UserManagement\UI\Form\UserFormType;
+use App\Module\UserManagement\Application\ReadModel\UserView;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
 use App\Shared\Infrastructure\Doctrine\Paginator;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 
 final class UserController extends AbstractController
@@ -37,20 +36,24 @@ final class UserController extends AbstractController
         ];
     }
 
-    public function new(Request $request): Response
+    #[Template('@UserManagement/user/new.html.twig')]
+    public function new(): void
     {
-        $dto = new CreateUserDTO();
-        $form = $this->createForm(UserFormType::class, $dto);
-        $form->handleRequest($request);
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->commandBus->dispatch(new CreateUser($dto));
+    #[Template('@UserManagement/user/edit.html.twig')]
+    public function edit(Request $request): array
+    {
+        $id = UserId::fromString($request->get('id'));
+        $instanceView = $this->findUserView($id);
 
-            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
-        }
+        return [
+            'user' => $instanceView,
+        ];
+    }
 
-        return $this->render('@UserManagement/user/new.html.twig', [
-            'form' => $form,
-        ]);
+    private function findUserView(UserId $userId): UserView
+    {
+        return $this->queryBus->ask(new FindUserQuery($userId));
     }
 }

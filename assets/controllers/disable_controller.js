@@ -34,7 +34,7 @@ export default class extends Controller {
   }
 
   submitButtons() {
-    return this.element.querySelectorAll("input[type='submit']")
+    return this.element.querySelectorAll("button[type='submit']")
   }
 
   applyTo() {

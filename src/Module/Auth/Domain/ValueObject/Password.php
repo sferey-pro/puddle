@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\ValueObject;
 
-use App\Shared\Domain\ValueObject\NullableValueObjectInterface;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Embeddable]
-final class Password implements NullableValueObjectInterface
+final readonly class Password
 {
-    #[ORM\Column(name: 'password', length: 255, nullable: true)]
     public readonly ?string $value;
 
     public function __construct(?string $value)
     {
         $this->value = $value;
+    }
+
+    public static function random(): self
+    {
+        return new self(md5(random_bytes(10)));
     }
 }

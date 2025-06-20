@@ -6,7 +6,9 @@ namespace App\Module\SharedContext\Domain\ValueObject;
 
 use App\Shared\Domain\ValueObject\AggregateRootId;
 
-final class ProductId implements \Stringable
+/**
+ * Représente l'identifiant unique d'un produit (Aggregat Product).
+ */
+final class ProductId extends AggregateRootId
 {
-    use AggregateRootId;
 }

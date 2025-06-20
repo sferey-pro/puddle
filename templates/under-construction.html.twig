@@ -5,8 +5,12 @@
 {% block body_id 'homepage' %}
 
 {% block main %}
+
 <div class="page-body">
     <div class="container-tight py-4">
+        {% block flash_messages %}
+            {{ include('@Tabler/partials/_flash_messages.html.twig') }}
+        {% endblock %}
         <div class="empty">
           <div class="empty-img">
             <svg class="img" xmlns="http://www.w3.org/2000/svg" height="256" fill="none" viewBox="0 0 800 600">

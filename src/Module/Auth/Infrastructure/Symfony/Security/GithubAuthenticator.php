@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
-use App\Module\Auth\Domain\Model\UserSocialNetwork;
+use App\Module\Auth\Domain\SocialLink;
 use App\Module\Auth\Domain\UserAccount;
 use League\OAuth2\Client\Provider\GithubResourceOwner;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -20,15 +20,15 @@ class GithubAuthenticator extends AbstractOAuth2Authenticator
             throw new \RuntimeException('Expecting Github user');
         }
 
-        $userSocialNetwork = $this->entityManager->getRepository(UserSocialNetwork::class)->findOneBy([
+        $SocialLink = $this->entityManager->getRepository(SocialLink::class)->findOneBy([
             'socialNetwork' => $this->serviceName,
             'socialId' => $resourceOwner->getId(),
         ]);
 
-        if (!$userSocialNetwork) {
+        if (!$SocialLink) {
             return null;
         }
 
-        return $userSocialNetwork->getUser();
+        return $SocialLink->getUser();
     }
 }

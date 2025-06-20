@@ -85,9 +85,9 @@ class CostItemInstanceView
             type: $event->type()->value,
             targetAmount: self::convertMoneyToFloat($event->targetAmount()),
             currentAmount: 0.0,
-            currency: $event->targetAmount()->getCurrency(),
-            startDate: $event->coveragePeriod()->getStartDate()->format('Y-m-d'),
-            endDate: $event->coveragePeriod()->getEndDate()->format('Y-m-d'),
+            currency: $event->targetAmount()->currency,
+            startDate: $event->coveragePeriod()->startDate()->format('Y-m-d'),
+            endDate: $event->coveragePeriod()->endDate()->format('Y-m-d'),
             status: $event->status()->value,
         );
     }
@@ -104,9 +104,9 @@ class CostItemInstanceView
             type: $item->type()->value,
             targetAmount: self::convertMoneyToFloat($item->targetAmount()),
             currentAmount: self::convertMoneyToFloat($item->currentAmountCovered()),
-            currency: $item->targetAmount()->getCurrency(),
-            startDate: $item->coveragePeriod()->getStartDate()->format('Y-m-d'),
-            endDate: $item->coveragePeriod()->getEndDate()->format('Y-m-d'),
+            currency: $item->targetAmount()->currency(),
+            startDate: $item->coveragePeriod()->startDate()->format('Y-m-d'),
+            endDate: $item->coveragePeriod()->endDate()->format('Y-m-d'),
             status: $item->status()->value
         );
 
@@ -129,9 +129,9 @@ class CostItemInstanceView
         $this->type = $item->type()->value;
         $this->targetAmount = self::convertMoneyToFloat($item->targetAmount());
         $this->currentAmount = self::convertMoneyToFloat($item->currentAmountCovered());
-        $this->currency = $item->targetAmount()->getCurrency();
-        $this->startDate = $item->coveragePeriod()->getStartDate()->format('Y-m-d');
-        $this->endDate = $item->coveragePeriod()->getEndDate()->format('Y-m-d');
+        $this->currency = $item->targetAmount()->currency();
+        $this->startDate = $item->coveragePeriod()->startDate()->format('Y-m-d');
+        $this->endDate = $item->coveragePeriod()->endDate()->format('Y-m-d');
         $this->status = $item->status()->value;
 
         // Logique de synchronisation des contributions (plus complexe, exemple simple ici)
@@ -180,8 +180,8 @@ class CostItemInstanceView
     {
         $this->name = (string) $event->newName();
         $this->targetAmount = self::convertMoneyToFloat($event->newTargetAmount());
-        $this->startDate = $event->newCoveragePeriod()->getStartDate()->format('Y-m-d');
-        $this->endDate = $event->newCoveragePeriod()->getEndDate()->format('Y-m-d');
+        $this->startDate = $event->newCoveragePeriod()->startDate()->format('Y-m-d');
+        $this->endDate = $event->newCoveragePeriod()->endDate()->format('Y-m-d');
         $this->updateCalculatedFields();
     }
 
@@ -194,9 +194,9 @@ class CostItemInstanceView
         $contributionView = new ContributionView(
             id: (string) $event->costContributionId(),
             amount: $event->contributionAmount()->toFloat(),
-            currency: $event->contributionAmount()->getCurrency(),
-            contributedAt: $event->occurredOn(),
-            sourceProductId: $event->sourceProductId ? (string) $event->sourceProductId : null
+            currency: $event->contributionAmount()->currency(),
+            contributedAt: $event->occurredOn,
+            sourceProductId: $event->sourceProductId() ? (string) $event->sourceProductId() : null
         );
 
         // Ajoute à la collection

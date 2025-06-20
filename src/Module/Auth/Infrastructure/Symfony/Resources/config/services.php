@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Module\Auth\Domain\Repository\UserLoginRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\Domain\Repository\UserSocialNetworkRepositoryInterface;
+use App\Module\Auth\Domain\Service\LoginLinkGeneratorInterface;
+use App\Module\Auth\Domain\Specification\UniqueEmailSpecification;
 use App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserAccountRepository;
-use App\Module\Auth\Infrastructure\Doctrine\Repository\UserLoginRepository;
-use App\Module\Auth\Infrastructure\Doctrine\Repository\UserSocialNetworkRepository;
+use App\Module\Auth\Infrastructure\Service\AuthUniqueConstraintChecker;
+use App\Module\Auth\Infrastructure\Symfony\Service\LoginLinkGenerator;
+use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return function (ContainerConfigurator $container): void {
@@ -24,13 +25,18 @@ return function (ContainerConfigurator $container): void {
             '%kernel.project_dir%/src/Module/Auth/Infrastructure/Symfony/Resources',
         ]);
 
+    $services->load('App\\Module\\Auth\\Domain\\Service\\', '%kernel.project_dir%/src/Module/Auth/Domain/Service/');
+
     // repositories
     $services->set(UserRepositoryInterface::class)
         ->class(DoctrineUserAccountRepository::class);
 
-    $services->set(UserSocialNetworkRepositoryInterface::class)
-        ->class(UserSocialNetworkRepository::class);
+    $services->set(UniqueConstraintCheckerInterface::class)
+        ->class(AuthUniqueConstraintChecker::class);
 
-    $services->set(UserLoginRepositoryInterface::class)
-        ->class(UserLoginRepository::class);
+    // Services de Domaine / Spécifications (maintenant injectées avec le vérificateur générique)
+    $services->set(UniqueEmailSpecification::class);
+
+    $services->set(LoginLinkGeneratorInterface::class)
+        ->class(LoginLinkGenerator::class);
 };

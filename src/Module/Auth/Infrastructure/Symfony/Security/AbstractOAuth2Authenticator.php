@@ -6,7 +6,7 @@ namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
 use App\Module\Auth\Domain\UserAccount;
-use App\Module\Auth\Infrastructure\Symfony\Services\OAuth\OAuthRegistration;
+use App\Module\Auth\Infrastructure\Symfony\Service\OAuth\OAuthRegistration;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;

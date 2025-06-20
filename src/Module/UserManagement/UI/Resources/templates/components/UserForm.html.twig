@@ -1,0 +1,32 @@
+<div {{ attributes }}>
+        {{ form_start(form, {
+        attr: {
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'save',
+            novalidate: true,
+            class: 'space-y',
+        },
+    }) }}
+    {{ form_errors(form) }}
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Profile Details</h3>
+                <div class="row row-cards">
+                    <div class="col-md-6">
+                        {{ form_row(form.email) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.username) }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="{{ path('user_index') }}" class="btn btn-1">Annuler</a>
+                <button type="submit" class="btn btn-primary btn-2 d-none d-sm-inline-block">
+                    <twig:ux:icon name="tabler:save-changes"  /> Enregistrer le Produit
+                </button>
+            </div>
+        </div>
+            {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>

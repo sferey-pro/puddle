@@ -15,9 +15,6 @@ class CreateUserDTO
     ])]
     public ?string $email;
 
-    #[Sequentially([
-        new Assert\NotBlank(message: 'Please enter a username'),
-    ])]
     public ?string $username;
 
     public function __construct(

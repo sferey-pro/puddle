@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Event;
 
+use App\Shared\Domain\Service\SystemTime;
+use App\Shared\Domain\ValueObject\AggregateRootId;
 use App\Shared\Domain\ValueObject\EventId;
-use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class DomainEvent extends Event
+abstract readonly class DomainEvent implements DomainEventInterface
 {
-    public readonly EventId $eventId;
-    public readonly \DateTimeImmutable $occurredOn;
+    private EventId $eventId;
+    private AggregateRootId $aggregateId;
+    private \DateTimeImmutable $occurredOn;
 
-    public function __construct()
+    public function __construct(AggregateRootId $aggregateId)
     {
-        $this->eventId = EventId::random();
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->eventId = EventId::generate();
+        $this->aggregateId = $aggregateId;
+        $this->occurredOn = SystemTime::now();
     }
 
     final public function eventId(): EventId
@@ -23,8 +26,15 @@ abstract class DomainEvent extends Event
         return $this->eventId;
     }
 
+    final public function aggregateId(): AggregateRootId
+    {
+        return $this->aggregateId;
+    }
+
     final public function occurredOn(): \DateTimeImmutable
     {
         return $this->occurredOn;
     }
+
+    abstract public static function eventName(): string;
 }

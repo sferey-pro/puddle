@@ -14,7 +14,7 @@ use Webmozart\Assert\Assert;
  * This example will assume the amount is passed as an integer (e.g., 1050 for 10.50 EUR).
  * Adjust if your current implementation uses floats or another representation.
  */
-final class Money implements \Stringable
+final class Money
 {
     public readonly int $amount; // Stocker en centimes pour éviter les problèmes de floating point
     public readonly string $currency;
@@ -37,12 +37,12 @@ final class Money implements \Stringable
         return new self(0, $currency);
     }
 
-    public function getAmount(): int
+    public function amount(): int
     {
         return $this->amount;
     }
 
-    public function getCurrency(): string
+    public function currency(): string
     {
         return $this->currency;
     }
@@ -107,7 +107,10 @@ final class Money implements \Stringable
         return $this->amount === $other->amount && $this->currency === $other->currency;
     }
 
-    public function __toString(): string
+    /**
+     * Retourne une représentation formatée pour l'affichage.
+     */
+    public function format(): string
     {
         return \sprintf('%.2f %s', $this->amount / 100, $this->currency);
     }

@@ -2,15 +2,17 @@ workers:
     sass:
         cmd: ['symfony', 'console', 'sass:build', '--watch']
 
-    messenger_consume_async_priority_low:
-        cmd: ['symfony', 'console', 'messenger:consume', 'async_priority_low']
-        watch: ['config', 'src', 'templates', 'vendor']
+    # messenger_consume_async_priority_low:
+    #     cmd: ['symfony', 'console', 'messenger:consume', 'async_priority_low', '-vv']
+    #     watch: ['config', 'src', 'templates', 'vendor']
 
-    messenger_consume_async_events:
-        cmd: ['symfony', 'console', 'messenger:consume', 'async_events']
-        watch: ['config', 'src', 'templates', 'vendor']
+    # messenger_consume_async_events:
+    #     cmd: ['symfony', 'console', 'messenger:consume', 'async_events', '-vv']
+    #     watch: ['config', 'src', 'templates', 'vendor']
 
+    # https://symfony.com/doc/current/setup/symfony_server.html#docker-integration
     docker_compose: ~
 
 http:
     no_tls: true
+

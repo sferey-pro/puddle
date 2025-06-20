@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Module\Static\UI\Controller\AdminController;
-use App\Module\Static\UI\Controller\HomepageController;
 use App\Module\Static\UI\Controller\UnderConstructionController;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -16,12 +15,12 @@ return function (RoutingConfigurator $routes): void {
         ->defaults(['template' => 'default/homepage.html.twig'])
     ;
 
-    $routes->add('profile', '/profile')
+    $routes->add('settings', '/settings')
         ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET])
     ;
 
-    $routes->add('settings', '/settings')
+    $routes->add('forgot-password', '/forgot-password')
         ->controller(UnderConstructionController::class)
         ->methods([Request::METHOD_GET])
     ;

@@ -6,18 +6,22 @@ namespace App\Module\ProductCatalog\Domain\Event;
 
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
-final class ProductCostStructureUpdated extends DomainEvent implements DomainEventInterface
+final readonly class ProductCostStructureUpdated extends DomainEvent
 {
     public function __construct(
-        private(set) ProductId $id,
+        private ProductId $productId,
     ) {
         parent::__construct();
     }
 
-    public function id(): ProductId
+    public static function eventName(): string
     {
-        return $this->id;
+        return 'product_catalog.product.cost_structure_updated';
+    }
+
+    public function productId(): ProductId
+    {
+        return $this->productId;
     }
 }

@@ -15,7 +15,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  * @internal
  *
  * Classe de test pour vérifier la disponibilité des pages critiques (Smoke Test)
- * du module ProductCatalog.
+ * du module ProductCatalog
  */
 #[CoversNothing]
 final class ApplicationAvailabilityTest extends WebTestCase

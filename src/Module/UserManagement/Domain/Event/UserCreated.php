@@ -7,20 +7,22 @@ namespace App\Module\UserManagement\Domain\Event;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventInterface;
 
-final class UserCreated extends DomainEvent implements DomainEventInterface
+/**
+ * Événement levé lorsqu'un nouvel utilisateur est créé.
+ */
+final readonly class UserCreated extends DomainEvent
 {
     public function __construct(
-        private readonly UserId $userId,
-        private readonly Email $email,
+        private UserId $userId,
+        private Email $email,
     ) {
-        parent::__construct();
+        parent::__construct($this->userId);
     }
 
     public static function eventName(): string
     {
-        return 'usermanagement.user.created';
+        return 'user_management.user.created';
     }
 
     public function userId(): UserId

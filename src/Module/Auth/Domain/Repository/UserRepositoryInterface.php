@@ -7,14 +7,37 @@ namespace App\Module\Auth\Domain\Repository;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
+use App\Module\SharedContext\Domain\ValueObject\Username;
+use App\Shared\Domain\Repository\RepositoryInterface;
 
-interface UserRepositoryInterface
+/**
+ * Définit le contrat pour la persistance et la récupération des comptes utilisateurs (agrégat UserAccount)
+ * pour le contexte d'authentification.
+ */
+interface UserRepositoryInterface extends RepositoryInterface
 {
+    /**
+     * Sauvegarde un agrégat UserAccount.
+     */
     public function save(UserAccount $model, bool $flush = false): void;
 
     public function add(UserAccount $model): void;
 
     public function ofEmail(Email $email): ?UserAccount;
 
+    public function ofUsername(Username $email): ?UserAccount;
+
     public function ofId(UserId $id): ?UserAccount;
+
+    /**
+     * Vérifie si un compte utilisateur avec l'adresse email donnée existe déjà.
+     * Cette méthode est cruciale pour garantir l'unicité des emails lors de l'enregistrement.
+     *
+     * @param Email       $email     L'adresse email à vérifier
+     * @param UserId|null $excludeId un identifiant utilisateur à exclure de la vérification,
+     *                               utile lors de la mise à jour d'un email existant
+     *
+     * @return bool vrai si un compte existe avec cet email (hors exclusion), faux sinon
+     */
+    public function existsUserWithEmail(Email $email, ?UserId $excludeId = null): bool;
 }

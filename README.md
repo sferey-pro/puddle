@@ -2,6 +2,10 @@
 
 Bienvenue sur le projet Puddle ! Ce projet est une application backend développée en PHP, servant de terrain d'exploration et d'implémentation de concepts architecturaux modernes tels que le Domain-Driven Design (DDD) et l'Architecture Hexagonale.
 
+# Important 
+
+Le développement suit une approche itérative, où la priorité est la progression continue sur la fonctionnalité. L'historique des commits reflète ce flux de travail exploratoire plutôt qu'une sémantique stricte.
+
 ## Objectif du Projet
 
 L'objectif principal est de construire une application robuste, maintenable et évolutive en appliquant des bonnes pratiques de conception logicielle. Il sert également de base pour expérimenter divers patterns et outils (voir la section [Challenges et Explorations](#challenges-et-explorations)).
@@ -21,15 +25,17 @@ Ce projet s'efforce de mettre en œuvre les principes suivants :
 
 L'application est organisée en modules, chacun représentant un Contexte Délimité (Bounded Context) du domaine :
 
-*   **`src/Module/User` :** Gère les informations relatives au profil des utilisateurs (création, lecture, mise à jour des données utilisateur).
+*   **`src/Module/UserManagement` :** Gère les informations relatives au profil des utilisateurs (création, lecture, mise à jour des données utilisateur).
 *   **`src/Module/Auth` :** Responsable de l'enregistrement, de l'authentification et des aspects liés à la sécurité des comptes utilisateurs.
 *   **`src/Module/Shared` :** Contient les éléments communs utilisés par plusieurs modules (Value Objects partagés, interfaces de bus, etc.).
+*   **Et d'autres**
 
 ## Technologies Principales (non exhaustif)
 
 *   **Langage :** PHP 8.x
 *   **Framework :** Symfony (utilisation de composants tels que Messenger pour les bus de Commandes/Queries/Événements, PasswordHasher, etc.)
 *   **Persistance :** Doctrine ORM (pour l'interaction avec la base de données)
+*   **ReadModel :** Doctrine ODM (pour l'affichage des données)
 *   **Gestion des dépendances :** Composer
 
 

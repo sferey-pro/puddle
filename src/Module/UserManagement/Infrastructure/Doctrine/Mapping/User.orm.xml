@@ -10,9 +10,11 @@
         </unique-constraints>
 
         <embedded name="id" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
-
         <embedded name="email" class="App\Module\SharedContext\Domain\ValueObject\Email" use-column-prefix="false" />
-        <embedded name="username" class="App\Module\UserManagement\Domain\ValueObject\Name" use-column-prefix="false" />
+
+        <field name="status" type="string" enum-type="App\Module\UserManagement\Domain\Enum\UserStatus" />
+
+        <field name="registeredAt" type="datetime_immutable" column="registered_at" nullable="false" />
     </entity>
 
 </doctrine-mapping>

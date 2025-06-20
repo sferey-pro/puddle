@@ -36,19 +36,12 @@ final class CostItemForm extends AbstractController
     ) {
     }
 
-    /**
-     * Méthode requise par ComponentWithFormTrait.
-     * C'est ici que nous créons notre instance de formulaire.
-     */
     protected function instantiateForm(): FormInterface
     {
         // On passe le DTO (formDto) qui sert de modèle de données au formulaire.
         return $this->createForm(CostItemFormType::class, $this->data);
     }
 
-    /**
-     * Action déclenchée lors du clic sur le bouton de sauvegarde.
-     */
     #[LiveAction]
     public function save(): ?RedirectResponse
     {

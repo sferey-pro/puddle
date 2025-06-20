@@ -28,15 +28,15 @@ class OrderProjector implements EventSubscriberInterface
     public function onOrderCreated(OrderCreated $event): void
     {
         $orderView = new OrderView(
-            $event->orderId(),
-            $event->userId(),
+            (string) $event->orderId,
+            (string) $event->userId,
             OrderStatus::PENDING->value,
-            $event->totalAmount(),
-            $event->currency(),
-            $event->occurredOn()
+            $event->totalAmount->amount(),
+            $event->currency,
+            $event->occurredOn
         );
 
-        foreach ($event->orderLines() as $line) {
+        foreach ($event->orderLines as $line) {
             $orderView->orderLines[] = new OrderLineView(
                 $line['productId'],
                 $line['quantity'],
