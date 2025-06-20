@@ -5,8 +5,11 @@ when@dev: &dev
             use_constructor: false
         make_factory:
             add_hints: false
+        persistence:
+            # Flush only once per call of `PersistentObjectFactory::create()`
+            flush_once: true
 
-when@test:
+when@test: 
     zenstruck_foundry:
         global_state:
             - Tests\Story\UserStory
