@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Symfony;
 
+use App\Shared\Domain\Service\SystemTime;
+use App\Shared\Infrastructure\Service\SystemClock;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsEventHandler;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
@@ -17,6 +19,15 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
+
+    public function __construct(string $environment, bool $debug)
+    {
+        parent::__construct($environment, $debug);
+
+        SystemTime::setDefaultClockProvider(static function (): SystemClock {
+            return new SystemClock();
+        });
+    }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {

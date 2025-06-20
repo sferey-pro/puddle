@@ -20,7 +20,7 @@ use App\Module\UserManagement\Domain\Specification\UserHasStatusSpecification;
 use App\Module\UserManagement\Domain\ValueObject\AvatarUrl;
 use App\Module\UserManagement\Domain\ValueObject\Username;
 use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Model\DomainEventTrait;
+use App\Shared\Domain\Event\DomainEventTrait;
 use App\Shared\Domain\Service\SystemTime;
 
 /**

@@ -23,7 +23,7 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\SharedContext\Domain\ValueObject\Username;
 use App\Module\UserManagement\Domain\Event\UserAccountSuspended;
 use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Model\DomainEventTrait;
+use App\Shared\Domain\Event\DomainEventTrait;
 use App\Shared\Domain\Service\ClockInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

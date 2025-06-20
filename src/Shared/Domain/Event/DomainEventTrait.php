@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Domain\Model;
-
-use App\Shared\Domain\Event\DomainEventInterface;
+namespace App\Shared\Domain\Event;
 
 trait DomainEventTrait
 {

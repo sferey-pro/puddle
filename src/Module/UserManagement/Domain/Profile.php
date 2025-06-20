@@ -9,7 +9,7 @@ use App\Module\UserManagement\Domain\Event\ProfileCreated;
 use App\Module\UserManagement\Domain\ValueObject\DisplayName;
 use App\Module\UserManagement\Domain\ValueObject\Username;
 use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Model\DomainEventTrait;
+use App\Shared\Domain\Event\DomainEventTrait;
 
 final class Profile extends AggregateRoot
 {

@@ -10,7 +10,7 @@ use App\Module\Sales\Domain\ValueObject\OrderId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Model\DomainEventTrait;
+use App\Shared\Domain\Event\DomainEventTrait;
 use App\Shared\Domain\Service\SystemTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

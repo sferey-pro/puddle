@@ -10,7 +10,7 @@ use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Model\DomainEventTrait;
+use App\Shared\Domain\Event\DomainEventTrait;
 
 class Product extends AggregateRoot
 {

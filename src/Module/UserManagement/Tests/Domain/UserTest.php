@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\UserManagement\Tests\Domain;
 
 use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Module\UserManagement\Domain\User;
 use App\Shared\Domain\Service\FixedClock;
@@ -13,6 +14,8 @@ use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
 {
+    private const DEFAULT_UUID = '26d72a29-ea3a-335e-8b82-bcad0da4bcda';
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -27,6 +30,7 @@ final class UserTest extends TestCase
 
         // ACT: On exécute la logique à tester
         $user = User::create(
+            UserId::fromString(static::DEFAULT_UUID),
             new Email('test@example.com')
         );
         $events = $user->pullDomainEvents();
@@ -34,6 +38,7 @@ final class UserTest extends TestCase
         // ASSERT: On vérifie les résultats
         $this->assertCount(1, $events);
         $this->assertInstanceOf(UserCreated::class, $events[0]);
-        $this->assertEquals($frozenTime, $events[0]->occurredOn);
+        $this->assertEquals(static::DEFAULT_UUID, (string) $events[0]->aggregateId());
+        $this->assertEquals($frozenTime, $events[0]->occurredOn());
     }
 }
