@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Module\Auth\Domain\Enum\SocialNetwork;
+use App\Module\Auth\UI\Controller\PasswordResetController;
 use App\Module\Auth\UI\Controller\Security\OAuthCheckController;
 use App\Module\Auth\UI\Controller\Security\OAuthConnectController;
 use App\Module\Auth\UI\Controller\SecurityController;
@@ -63,15 +64,15 @@ return static function (RoutingConfigurator $routes): void {
         ->methods([Request::METHOD_GET])
     ;
 
-    /** @todo à retravailler */
-    $routes->add('reset_password', '/reset-password')
-        ->controller(UnderConstructionController::class)
-        ->methods([Request::METHOD_GET, Request::METHOD_POST])
-    ;
+    $resetPasswordRoutes = $routes->collection('forgot_password_')
+        ->prefix('/reset-password');
 
-    /** @todo à retravailler */
-    $routes->add('forget_password', '/forget-password')
-        ->controller(UnderConstructionController::class)
-        ->methods([Request::METHOD_GET, Request::METHOD_POST])
-    ;
+    $resetPasswordRoutes->add('request', '/')
+        ->controller([PasswordResetController::class, 'request']);
+
+    $resetPasswordRoutes->add('check_email', '/check-email')
+        ->controller([PasswordResetController::class, 'checkEmail']);
+
+    $resetPasswordRoutes->add('reset_password', '/reset/{token}')
+        ->controller([PasswordResetController::class, 'reset']);
 };

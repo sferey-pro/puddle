@@ -19,14 +19,6 @@ class AdminController extends AbstractController
     #[Template('admin/index.html.twig')]
     public function __invoke(): void
     {
-        $userView = $this->viewRepository->findById(UserId::fromString('01978e9d-a933-7957-b9c5-8c751c0a125f'));
 
-        $userView->setIsVerified(false);
-
-        $this->viewRepository->save($userView, true);
-
-        $users = $this->viewRepository->findAll();
-
-        dd($userView, $users);
     }
 }

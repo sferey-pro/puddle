@@ -1,0 +1,19 @@
+{% extends '@Auth/base.html.twig' %}
+
+{% block title %}Réinitialiser Votre Mot de Passe{% endblock %}
+
+{% block content %}
+    <div class="card card-md">
+        <div class="card-body">
+            <h2 class="h2 text-center mb-4">Définir un nouveau mot de passe</h2>
+            <p class="text-muted mb-4">
+                Veuillez saisir votre nouveau mot de passe ci-dessous. Assurez-vous qu'il soit sécurisé.
+            </p>
+            <twig:ResetPasswordForm :token="token" />
+        </div>
+    </div>
+    <div class="text-center text-muted mt-3">
+        Finalement, tout va bien ? <a href="{{ path('login') }}">Retour à la page de connexion</a>.
+    </div>
+</div>
+{% endblock %}

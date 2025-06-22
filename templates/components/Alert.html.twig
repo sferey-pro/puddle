@@ -19,7 +19,7 @@
 
 <div class="{{ alert.apply({format, type}, attributes.render('class')) }} {% if dismissible is true %}alert-dismissible{% endif %}"  role="alert">
     <div class="alert-icon">
-        <twig:ux:icon name="{{ this.icon }}" />
+        <twig:ux:icon name="{{ this.icon }}" class="icon alert-icon" />
     </div>
 
     {{ message }}
