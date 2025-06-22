@@ -60,15 +60,16 @@ final class PasswordResetException extends \DomainException
             $requestUserId,
             $actualUserId
         );
+
         return new self($message, self::USER_MISMATCH);
     }
-
 
     /**
      * Retourne soit le payload complet, soit une valeur spécifique du payload.
      *
      * @param string|null $key La clé à récupérer. Si null, retourne tout le tableau.
-     * @return mixed La valeur de la clé, le tableau complet, ou null si la clé n'existe pas.
+     *
+     * @return mixed la valeur de la clé, le tableau complet, ou null si la clé n'existe pas
      */
     public function payload(?string $key = null): mixed
     {

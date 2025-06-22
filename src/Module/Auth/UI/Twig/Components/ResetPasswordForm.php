@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\UI\Twig\Components;
 
 use App\Module\Auth\Application\Command\ResetPassword;
@@ -7,10 +9,8 @@ use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\UI\Form\ResetPasswordFormType;
 use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -53,12 +53,13 @@ final class ResetPasswordForm extends AbstractController
         $this->domainError = null;
 
         $this->submitForm();
-        $form =  $this->getForm();
-        $data =  $form->getData();
+        $form = $this->getForm();
+        $data = $form->getData();
 
         if ($form->isValid()) {
             if ($data['plainPassword'] !== $data['confirmPassword']) {
-                $this->passwordMismatchError   = 'Les mots de passe ne correspondent pas.';
+                $this->passwordMismatchError = 'Les mots de passe ne correspondent pas.';
+
                 return null;
             }
 

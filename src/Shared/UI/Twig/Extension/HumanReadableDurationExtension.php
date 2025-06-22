@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\UI\Twig\Extension;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Fournit des filtres Twig pour afficher des durées de manière lisible.
@@ -29,7 +31,7 @@ final class HumanReadableDurationExtension extends AbstractExtension
     public function formatHumanDuration(\DateTimeInterface $date): string
     {
         $now = new \DateTime();
-        
+
         // S'assure que la date est dans le futur
         if ($date <= $now) {
             return $this->translator->trans('now');
@@ -50,6 +52,7 @@ final class HumanReadableDurationExtension extends AbstractExtension
             default:
                 // Pour les minutes, on s'assure de ne pas retourner 0
                 $minutes = $interval->i ?: 1;
+
                 return $this->translator->trans('%count% minute|%count% minutes', ['%count%' => $minutes]);
         }
     }

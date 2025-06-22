@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\UI\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -43,7 +45,6 @@ class ResetPasswordFormType extends AbstractType
                 ],
                 'label' => 'Confirmer le nouveau mot de passe',
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

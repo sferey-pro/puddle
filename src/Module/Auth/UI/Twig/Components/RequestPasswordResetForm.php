@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\UI\Twig\Components;
 
 use App\Module\Auth\Application\Command\RequestPasswordReset;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\UI\Form\RequestPasswordResetFormType;
-use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\UI\Twig\Extension\HumanReadableDurationExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -59,7 +59,6 @@ final class RequestPasswordResetForm extends AbstractController
 
                 return $this->redirectToRoute('forgot_password_check_email');
             } catch (PasswordResetException $e) {
-
                 $remainingTime = $this->durationExtension->formatHumanDuration($e->payload('availableAt'));
                 $this->throttleMessage = "Vous avez fait trop de demandes. Veuillez réessayer dans {$remainingTime}.";
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\Application\Command;
 
 use App\Module\Auth\Domain\Exception\PasswordResetException;
@@ -7,7 +9,6 @@ use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\ValueObject\HashedToken;
 use App\Module\Auth\Domain\ValueObject\Password;
-use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
 use App\Shared\Application\Event\EventBusInterface;
 use App\Shared\Domain\Service\ClockInterface;
 use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
@@ -26,14 +27,14 @@ final readonly class ResetPasswordHandler
         private PasswordHasherFactoryInterface $passwordHasherFactory,
         private ClockInterface $clock,
         private EventBusInterface $eventBus,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
     public function __invoke(ResetPassword $command): void
     {
-        $selector = substr($command->token, 0, 32);
-        $verifier = substr($command->token, 32);
+        $selector = mb_substr($command->token, 0, 32);
+        $verifier = mb_substr($command->token, 32);
 
         $hashedToken = new HashedToken($command->token);
 
@@ -62,7 +63,6 @@ final readonly class ResetPasswordHandler
 
         $this->entityManager->beginTransaction();
         try {
-
             // Sauvegarder les deux agrégats modifiés
             $this->passwordResetRequestRepository->save($request);
             $this->userRepository->save($userAccount, true);

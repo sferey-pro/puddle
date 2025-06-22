@@ -7,7 +7,6 @@ use App\Module\Auth\UI\Controller\PasswordResetController;
 use App\Module\Auth\UI\Controller\Security\OAuthCheckController;
 use App\Module\Auth\UI\Controller\Security\OAuthConnectController;
 use App\Module\Auth\UI\Controller\SecurityController;
-use App\Module\Static\UI\Controller\UnderConstructionController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Requirement\EnumRequirement;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\UI\Controller;
 
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -47,7 +49,7 @@ final class PasswordResetController extends AbstractController
     #[Template('@Auth/reset_password/reset.html.twig')]
     public function reset(string $token): array
     {
-        return  [
+        return [
             'token' => $token,
         ];
     }

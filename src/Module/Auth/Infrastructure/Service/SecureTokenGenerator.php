@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\Infrastructure\Service;
 
 use App\Module\Auth\Domain\Service\PasswordResetTokenGeneratorInterface;
@@ -20,7 +22,7 @@ final class SecureTokenGenerator implements PasswordResetTokenGeneratorInterface
 
     public function __construct(
         #[Autowire('%env(APP_SECRET)%')]
-        string $signingKey
+        string $signingKey,
     ) {
         if (empty($signingKey)) {
             throw new \InvalidArgumentException('A non-empty APP_SECRET_KEY environment variable is required.');
@@ -36,7 +38,7 @@ final class SecureTokenGenerator implements PasswordResetTokenGeneratorInterface
         $verifier = bin2hex(random_bytes(self::VERIFIER_LENGTH));
 
         // 2. On crée le token public complet qui sera dans le lien de l'email.
-        $publicToken = $selector . $verifier;
+        $publicToken = $selector.$verifier;
 
         // 3. On génère la signature HMAC sécurisée (notre "hashedToken").
         $hashedToken = $this->createHashedToken($userId, $expiresAt, $verifier);

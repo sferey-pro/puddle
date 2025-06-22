@@ -8,7 +8,6 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
-use Symfony\Bridge\Doctrine\Types\AbstractUidType;
 use Doctrine\DBAL\Types\Type;
 
 /**

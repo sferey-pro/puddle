@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\Application\EventSubscriber;
 
 use App\Module\Auth\Domain\Event\PasswordResetRequested;
@@ -18,7 +20,7 @@ final class WhenUserRequestPasswordResetThenSendPasswordResetEmail
 {
     public function __construct(
         private readonly MailerInterface $mailer,
-        private readonly UrlGeneratorInterface $urlGenerator
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 

@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Auth\Domain;
 
 use App\Module\Auth\Domain\Event\PasswordResetRequested;
+use App\Module\Auth\Domain\ValueObject\HashedToken;
+use App\Module\Auth\Domain\ValueObject\IpAddress; // Nous allons créer ce VO
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
-use App\Module\Auth\Domain\ValueObject\HashedToken; // Nous allons créer ce VO
-use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Event\DomainEventTrait;
-use DateTimeImmutable;
 
 /**
  * Représente une demande de réinitialisation de mot de passe.
@@ -43,7 +44,7 @@ final class PasswordResetRequest extends AggregateRoot
         \DateTimeImmutable $expiresAt,
         ?UserId $userId = null,
         ?string $selector = null,
-        ?HashedToken $hashedToken = null
+        ?HashedToken $hashedToken = null,
     ) {
         $this->id = PasswordResetRequestId::generate();
 
@@ -65,7 +66,7 @@ final class PasswordResetRequest extends AggregateRoot
         \DateTimeImmutable $expiresAt,
         string $selector,
         HashedToken $hashedToken,
-        string $publicTokenForEmail
+        string $publicTokenForEmail,
     ): self {
         $request = new self($requestedEmail, $ipAddress, $expiresAt, $userId, $selector, $hashedToken);
 
@@ -86,9 +87,8 @@ final class PasswordResetRequest extends AggregateRoot
     public static function logAttemptForUnknownUser(
         Email $requestedEmail,
         IpAddress $ipAddress,
-        \DateTimeImmutable $expiresAt
+        \DateTimeImmutable $expiresAt,
     ): self {
-
         return new self($requestedEmail, $ipAddress, $expiresAt);
     }
 

@@ -16,7 +16,6 @@ use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\Domain\ValueObject\Hash;
-use App\Module\Auth\Domain\ValueObject\HashedToken;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
 use App\Module\Auth\Domain\ValueObject\Password;
@@ -183,12 +182,12 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     /**
      * Réinitialise le mot de passe de l'utilisateur après vérification du token.
      *
-     * @throws PasswordResetException Si la demande est invalide, expirée ou déjà utilisée.
+     * @throws PasswordResetException si la demande est invalide, expirée ou déjà utilisée
      */
     public function resetPassword(
         PasswordResetRequest $request,
         Password $newPassword,
-        \DateTimeImmutable $now
+        \DateTimeImmutable $now,
     ): void {
         if (!$this->id->equals($request->userId())) {
             throw PasswordResetException::userMismatch($request->userId(), $this->id());
