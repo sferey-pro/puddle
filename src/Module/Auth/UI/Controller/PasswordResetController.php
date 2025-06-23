@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Controller;
 
+use App\Module\Auth\Application\Command\RequestPasswordReset;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Contrôleur pour le processus de réinitialisation de mot de passe.
+ *
+ * En tant qu'adaptateur de la couche UI, son unique responsabilité est de mapper
+ * les routes aux bonnes vues. Toute la logique d'interaction et de traitement
+ * est déléguée aux LiveComponents qu'il affiche.
+ */
 final class PasswordResetController extends AbstractController
 {
     /**
-     * Affiche la page contenant le formulaire de demande de réinitialisation.
-     * La logique du formulaire est gérée par le LiveComponent.
+     * Affiche la page initiale où un utilisateur peut démarrer le processus de réinitialisation.
      */
     #[Template('@Auth/reset_password/request.html.twig')]
     public function request(): array
@@ -21,30 +28,23 @@ final class PasswordResetController extends AbstractController
     }
 
     /**
-     * Page de confirmation affichée après la demande.
+     * Affiche une page de confirmation générique après la soumission de la demande.
+     * Pour des raisons de sécurité, cette page est statique et ne révèle aucune information.
      */
     #[Template('@Auth/reset_password/check_email.html.twig')]
-    public function checkEmail(SessionInterface $session): array
+    public function checkEmail(Request $request): array
     {
-        $expirationDate = $session->get('password_reset_expires_at');
-
-        // On nettoie la session pour que l'information ne soit affichée qu'une seule fois.
-        $session->remove('password_reset_expires_at');
-
-        // Generate a fake expirationDate if the user does not exist or someone hit this page directly.
-        // This prevents exposing whether or not a user was found with the given email address or not
-        if (!$expirationDate) {
-            $expirationDate = new \DateTimeImmutable('+1 hour');
-        }
+        $expirationDate = $request->get('expiresAt');
 
         return [
-            'expirationDate' => $expirationDate,
+            'expirationDate' => $expirationDate ?? new \DateTimeImmutable(RequestPasswordReset::EXPIRES_AT_TIME),
         ];
     }
 
     /**
-     * Affiche la page contenant le formulaire pour saisir un nouveau mot de passe.
-     * Le token est passé au LiveComponent pour qu'il puisse l'utiliser.
+     * Affiche la page finale où un utilisateur peut saisir son nouveau mot de passe.
+     *
+     * @param string $token le token public sécurisé, extrait de l'URL, qui identifie la demande
      */
     #[Template('@Auth/reset_password/reset.html.twig')]
     public function reset(string $token): array

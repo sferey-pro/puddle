@@ -12,8 +12,11 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Gère l'envoi de l'email de réinitialisation de mot de passe
- * lorsqu'une demande est effectuée.
+ * Réagit à l'événement de domaine `PasswordResetRequested` pour envoyer l'e-mail de réinitialisation.
+ *
+ * En tant qu'écouteur d'événement, son unique rôle est de gérer la communication avec l'utilisateur
+ * lorsqu'une demande de réinitialisation valide a été créée. Cela découple la logique
+ * d'envoi de notification de la logique de création de la demande elle-même.
  */
 #[AsMessageHandler()]
 final class WhenUserRequestPasswordResetThenSendPasswordResetEmail
@@ -26,27 +29,27 @@ final class WhenUserRequestPasswordResetThenSendPasswordResetEmail
 
     public function __invoke(PasswordResetRequested $event): void
     {
-        // Récupérer le token en clair depuis le payload de l'événement
-        $plainToken = $event->plainToken;
+        $plainToken = $event->plainToken();
         if (null === $plainToken) {
-            // Logguer une erreur, car le token est indispensable
+            // Cas de sécurité : si l'événement ne contient pas de token, c'est qu'il ne faut rien envoyer.
             return;
         }
 
+        // Construit l'URL unique que l'utilisateur devra visiter pour réinitialiser son mot de passe.
         $resetUrl = $this->urlGenerator->generate(
-            'forgot_password_reset_password', // Nom de la route que nous créerons dans la couche UI
+            'forgot_password_reset_password',
             ['token' => $plainToken],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         $email = (new TemplatedEmail())
             ->from(new Address('no-reply@puddle.com', 'Puddle Security'))
-            ->to($event->email->value)
+            ->to($event->email()->value)
             ->subject('Your password reset request')
-            ->htmlTemplate('@Auth/emails/password_reset.html.twig') // Template à créer
+            ->htmlTemplate('@Auth/emails/password_reset.html.twig')
             ->context([
                 'resetUrl' => $resetUrl,
-                'expiresAt' => $event->expiresAt,
+                'expiresAt' => $event->expiresAt(),
             ]);
 
         $this->mailer->send($email);

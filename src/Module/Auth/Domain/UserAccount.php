@@ -201,8 +201,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
             throw PasswordResetException::alreadyUsed();
         }
 
-        $this->password = $newPassword;
-        $this->recordDomainEvent(new UserPasswordChanged($this->id()));
+        $this->changePassword($newPassword);
 
         $request->markAsUsed();
     }

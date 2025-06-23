@@ -10,8 +10,12 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * Implémente la génération de token de manière sécurisée.
- * Cette classe est un adaptateur qui se branche sur le port défini dans le domaine.
+ * Implémente le contrat de génération de token de manière sécurisée.
+ *
+ * En tant qu'adaptateur d'infrastructure, cette classe encapsule la complexité
+ * cryptographique. Elle utilise le pattern "Sélecteur / Vérificateur" avec une
+ * signature HMAC pour créer des tokens infalsifiables, garantissant que seuls
+ * les tokens générés par le système avec la bonne clé secrète sont valides.
  */
 final class SecureTokenGenerator implements PasswordResetTokenGeneratorInterface
 {
@@ -20,6 +24,10 @@ final class SecureTokenGenerator implements PasswordResetTokenGeneratorInterface
 
     private readonly string $signingKey;
 
+    /**
+     * @param string $signingKey la clé secrète de l'application (ex: APP_SECRET), essentielle
+     *                           pour créer des signatures HMAC uniques et sécurisées
+     */
     public function __construct(
         #[Autowire('%env(APP_SECRET)%')]
         string $signingKey,
@@ -31,16 +39,19 @@ final class SecureTokenGenerator implements PasswordResetTokenGeneratorInterface
         $this->signingKey = $signingKey;
     }
 
+    /**
+     * Pour une demande de réinitialisation, génère un jeu complet de tokens :
+     * - Un `selector` public pour retrouver la demande.
+     * - Un `publicToken` (selector + verifier) à envoyer à l'utilisateur.
+     * - Un `hashedToken` (la signature HMAC) à stocker en base de données comme preuve.
+     */
     public function generate(UserId $userId, \DateTimeImmutable $expiresAt): array
     {
-        // 1. On génère un sélecteur et un vérificateur aléatoires et sécurisés.
         $selector = bin2hex(random_bytes(self::SELECTOR_LENGTH));
         $verifier = bin2hex(random_bytes(self::VERIFIER_LENGTH));
 
-        // 2. On crée le token public complet qui sera dans le lien de l'email.
         $publicToken = $selector.$verifier;
 
-        // 3. On génère la signature HMAC sécurisée (notre "hashedToken").
         $hashedToken = $this->createHashedToken($userId, $expiresAt, $verifier);
 
         return [
@@ -50,6 +61,11 @@ final class SecureTokenGenerator implements PasswordResetTokenGeneratorInterface
         ];
     }
 
+    /**
+     * Recrée la signature HMAC à partir des informations d'une demande et du vérificateur
+     * fourni par l'utilisateur. Le but est de la comparer à celle stockée en base de données
+     * pour valider l'authenticité d'un token.
+     */
     public function createHashedToken(UserId $userId, \DateTimeImmutable $expiresAt, string $verifier): HashedToken
     {
         $data = json_encode([$verifier, $userId->value, $expiresAt->getTimestamp()]);

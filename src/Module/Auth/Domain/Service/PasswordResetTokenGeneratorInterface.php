@@ -8,21 +8,25 @@ use App\Module\Auth\Domain\ValueObject\HashedToken;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
- * Port pour la génération de tokens de réinitialisation de mot de passe.
- * Définit le contrat pour l'infrastructure qui implémentera la logique de génération.
+ * Port pour le service de génération de tokens sécurisés.
+ *
+ * Cette interface définit le contrat pour un service technique capable de créer
+ * des tokens cryptographiquement sûrs. Elle abstrait la complexité de l'algorithme
+ * (HMAC, Sélecteur/Vérificateur) de la couche Application qui l'utilise.
  */
 interface PasswordResetTokenGeneratorInterface
 {
     /**
-     * Génère un nouveau token et retourne sa version hashée pour le stockage,
-     * ainsi que le token en clair pour l'envoi à l'utilisateur.
+     * Crée un jeu de tokens complet pour une nouvelle demande.
      *
-     * @return array{selector: string, hashedToken: HashedToken, publicToken: string}
+     * @return array{selector: string, hashedToken: HashedToken, publicToken: string} le jeu de tokens
      */
     public function generate(UserId $userId, \DateTimeImmutable $expiresAt): array;
 
     /**
-     * Crée un token hashé à partir des composants pour la comparaison.
+     * Recrée la signature de sécurité (le "hashedToken") pour un token donné.
+     * Cette méthode est essentielle pour la phase de vérification, afin de comparer
+     * de manière sécurisée le token de l'utilisateur avec ce qui est attendu.
      */
     public function createHashedToken(UserId $userId, \DateTimeImmutable $expiresAt, string $verifier): HashedToken;
 }

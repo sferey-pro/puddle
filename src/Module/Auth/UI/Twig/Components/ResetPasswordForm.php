@@ -17,6 +17,13 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
+/**
+ * Gère le formulaire interactif pour la dernière étape de la réinitialisation de mot de passe.
+ *
+ * Ce composant permet à un utilisateur disposant d'un token valide de définir son nouveau
+ * mot de passe. Il est responsable de la validation des champs, de la comparaison des mots de passe
+ * et de la communication avec la couche Application pour finaliser le processus.
+ */
 #[AsLiveComponent]
 final class ResetPasswordForm extends AbstractController
 {
@@ -46,6 +53,13 @@ final class ResetPasswordForm extends AbstractController
         return $this->getForm()->isSubmitted() && !$this->getForm()->isValid();
     }
 
+    /**
+     * Action déclenchée lorsque l'utilisateur soumet son nouveau mot de passe.
+     *
+     * Elle valide que les mots de passe correspondent, puis dispatche la commande de
+     * réinitialisation. Elle intercepte les erreurs métier (ex: token invalide) pour
+     * les afficher à l'utilisateur.
+     */
     #[LiveAction]
     public function save(): ?RedirectResponse
     {
@@ -73,7 +87,6 @@ final class ResetPasswordForm extends AbstractController
             } catch (PasswordResetException $e) {
                 $this->domainError = $e->getMessage();
             } catch (\Throwable $e) {
-                dd($e);
                 $this->domainError = 'Une erreur inattendue est survenue.';
             }
         }

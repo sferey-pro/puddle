@@ -8,8 +8,9 @@ use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
- * Exception métier unique pour l'entité PasswordReset.
- * Elle centralise toutes les erreurs possibles liées au processus de connexion de reset Password.
+ * Exception métier unique pour le processus de réinitialisation de mot de passe.
+ *
+ * Elle centralise toutes les erreurs prévisibles et gérables qui peuvent survenir.
  */
 final class PasswordResetException extends \DomainException
 {
@@ -33,21 +34,36 @@ final class PasswordResetException extends \DomainException
         return new self(\sprintf('Password reset request with ID "%s" not found.', $id), self::NOT_FOUND);
     }
 
+    /**
+     * Le token fourni par l'utilisateur dans l'URL ne correspond à aucune demande valide.
+     * Cela peut arriver si le token est incorrect, ou si la demande a été purgée.
+     */
     public static function notFoundByToken(): self
     {
         return new self('The provided password reset token is invalid or does not exist.', self::NOT_FOUND_BY_TOKEN);
     }
 
+    /**
+     * L'utilisateur a tenté d'utiliser un token dont la durée de validité est dépassée.
+     */
     public static function expired(): self
     {
         return new self('The password reset request has expired.', self::EXPIRED);
     }
 
+    /**
+     * L'utilisateur a fait trop de demandes de réinitialisation dans un court laps de temps.
+     *
+     * @param \DateTimeImmutable $nextAttemptAt la date à partir de laquelle une nouvelle tentative est autorisée
+     */
     public static function throttling(\DateTimeImmutable $nextAttemptAt): self
     {
         return new self('Too many password reset requests.', self::THROTTLING, ['availableAt' => $nextAttemptAt]);
     }
 
+    /**
+     * L'utilisateur a tenté d'utiliser un token qui a déjà servi à une réinitialisation.
+     */
     public static function alreadyUsed(): self
     {
         return new self('This password reset request has already been used.', self::ALREADY_USED);

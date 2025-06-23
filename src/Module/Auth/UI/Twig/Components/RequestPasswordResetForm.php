@@ -19,6 +19,14 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
+/**
+ * Gère le formulaire interactif pour la première étape de la réinitialisation de mot de passe.
+ *
+ * En tant que LiveComponent, il est responsable de l'état du formulaire, de la gestion
+ * des entrées utilisateur, et de la communication avec la couche Application pour
+ * initier le processus métier. Il gère également l'affichage des erreurs spécifiques,
+ * comme le blocage dû à un trop grand nombre de tentatives.
+ */
 #[AsLiveComponent]
 final class RequestPasswordResetForm extends AbstractController
 {
@@ -45,6 +53,9 @@ final class RequestPasswordResetForm extends AbstractController
         return $this->getForm()->isSubmitted() && !$this->getForm()->isValid();
     }
 
+    /**
+     * Action déclenchée lorsque l'utilisateur soumet le formulaire.
+     */
     #[LiveAction]
     public function save(): ?RedirectResponse
     {
@@ -55,10 +66,11 @@ final class RequestPasswordResetForm extends AbstractController
             $ip = $this->requestStack->getCurrentRequest()?->getClientIp() ?? '127.0.0.1';
 
             try {
-                $this->commandBus->dispatch(new RequestPasswordReset($email, $ip));
+                $expireAt = $this->commandBus->dispatch(new RequestPasswordReset($email, $ip));
 
-                return $this->redirectToRoute('forgot_password_check_email');
+                return $this->redirectToRoute('forgot_password_check_email', ['expiresAt' => $expireAt]);
             } catch (PasswordResetException $e) {
+                // En cas de blocage, on informe l'utilisateur du temps d'attente restant.
                 $remainingTime = $this->durationExtension->formatHumanDuration($e->payload('availableAt'));
                 $this->throttleMessage = "Vous avez fait trop de demandes. Veuillez réessayer dans {$remainingTime}.";
             }

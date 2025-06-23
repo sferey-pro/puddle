@@ -6,7 +6,7 @@ namespace App\Module\Auth\Domain;
 
 use App\Module\Auth\Domain\Event\PasswordResetRequested;
 use App\Module\Auth\Domain\ValueObject\HashedToken;
-use App\Module\Auth\Domain\ValueObject\IpAddress; // Nous allons créer ce VO
+use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
@@ -14,23 +14,30 @@ use App\Shared\Domain\Aggregate\AggregateRoot;
 use App\Shared\Domain\Event\DomainEventTrait;
 
 /**
- * Représente une demande de réinitialisation de mot de passe.
- * C'est un agrégat qui garantit que chaque demande est unique,
- * a une durée de vie limitée et est associée à un utilisateur.
+ * Représente le processus de demande de réinitialisation de mot de passe.
+ *
+ * Cet agrégat a une double responsabilité :
+ * 1. Gérer le cycle de vie d'une demande de réinitialisation VALIDE pour un utilisateur connu (création, expiration, utilisation).
+ * 2. Servir de journal d'audit en enregistrant TOUTES les tentatives de demande, y compris celles pour des
+ * utilisateurs inconnus, à des fins de sécurité et de throttling (limitation des tentatives).
+ *
+ * L'état de l'objet (la présence ou non d'un userId et d'un token) détermine la nature de la demande.
  */
 final class PasswordResetRequest extends AggregateRoot
 {
     use DomainEventTrait;
 
     private readonly PasswordResetRequestId $id;
-
     private \DateTimeImmutable $expiresAt;
     private bool $used = false;
 
+    // Ces propriétés sont nullables car une demande peut être une simple trace
+    // pour un utilisateur inconnu, sans token ni utilisateur associé.
     private ?UserId $userId;
     private ?string $selector;
     private ?HashedToken $hashedToken;
 
+    // Ces propriétés sont toujours présentes pour tracer l'origine de la demande.
     private IpAddress $ipAddress;
     private Email $requestedEmail;
 
@@ -57,7 +64,10 @@ final class PasswordResetRequest extends AggregateRoot
     }
 
     /**
-     * Factory pour une demande réelle d'un utilisateur connu.
+     * Crée une demande de réinitialisation complète et valide pour un utilisateur connu du système.
+     * C'est le seul cas où un événement est publié pour déclencher l'envoi d'un e-mail.
+     *
+     * @return self une nouvelle instance de la demande, prête à être persistée
      */
     public static function createForRealUser(
         UserId $userId,
@@ -70,6 +80,8 @@ final class PasswordResetRequest extends AggregateRoot
     ): self {
         $request = new self($requestedEmail, $ipAddress, $expiresAt, $userId, $selector, $hashedToken);
 
+        // L'événement `PasswordResetRequested` notifie les autres parties de l'application
+        // (comme le service d'envoi d'e-mails) qu'une action est requise.
         $request->recordDomainEvent(new PasswordResetRequested(
             $request->id(),
             $userId,
@@ -82,7 +94,10 @@ final class PasswordResetRequest extends AggregateRoot
     }
 
     /**
-     * Factory pour logger une tentative sur un utilisateur inconnu.
+     * Enregistre une tentative de réinitialisation pour un e-mail qui ne correspond à aucun utilisateur connu.
+     * L'objectif est de conserver une trace (un log) à des fins de sécurité, sans générer de token ni envoyer d'e-mail.
+     *
+     * @return self une nouvelle instance représentant la tentative
      */
     public static function logAttemptForUnknownUser(
         Email $requestedEmail,
@@ -93,7 +108,11 @@ final class PasswordResetRequest extends AggregateRoot
     }
 
     /**
-     * Vérifie si la demande a expiré.
+     * Vérifie si la fenêtre de temps pour utiliser cette demande est dépassée.
+     *
+     * @param \DateTimeImmutable $now le moment actuel pour la comparaison
+     *
+     * @return bool vrai si la demande a expiré, faux sinon
      */
     public function isExpired(\DateTimeImmutable $now): bool
     {
@@ -101,7 +120,10 @@ final class PasswordResetRequest extends AggregateRoot
     }
 
     /**
-     * Vérifie si le token a déjà été utilisé.
+     * Vérifie si cette demande a déjà été utilisée pour réinitialiser un mot de passe.
+     * Une demande ne peut être utilisée qu'une seule fois.
+     *
+     * @return bool vrai si la demande a déjà été utilisée
      */
     public function isUsed(): bool
     {
@@ -109,7 +131,8 @@ final class PasswordResetRequest extends AggregateRoot
     }
 
     /**
-     * Marque le token comme utilisé pour empêcher sa réutilisation.
+     * Marque la demande comme utilisée, la rendant invalide pour de futures tentatives.
+     * C'est une action métier qui garantit l'unicité d'utilisation du token.
      */
     public function markAsUsed(): void
     {

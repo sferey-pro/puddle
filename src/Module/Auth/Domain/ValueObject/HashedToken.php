@@ -6,9 +6,6 @@ namespace App\Module\Auth\Domain\ValueObject;
 
 use Webmozart\Assert\Assert;
 
-/**
- * Représente un token de réinitialisation après avoir été hashé.
- */
 final readonly class HashedToken implements \Stringable
 {
     public readonly ?string $value;

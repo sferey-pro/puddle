@@ -52,7 +52,6 @@ final class DoctrinePasswordResetRequestRepository extends ORMAbstractRepository
 
     public function countRecentRequests(Email $email): int
     {
-        // On compte le nombre de demandes pour cet utilisateur dont la date d'expiration est dans le futur.
         $count = $this->createQueryBuilder('r')
             ->select('COUNT(r.id.value)')
             ->where('r.requestedEmail.value = :email')
