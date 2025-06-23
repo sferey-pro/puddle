@@ -78,7 +78,7 @@ Pour s'assurer que l'email fourni par l'utilisateur est valide lors d'une inscri
 
 - **Processus** :
     1. L'utilisateur clique sur le lien de déconnexion.
-    2. La route `auth_logout` est appelée, gérée par le pare-feu de sécurité de Symfony.
+    2. La route `logout` est appelée, gérée par le pare-feu de sécurité de Symfony.
     3. Le `LogoutUserHandler` est invoqué pour invalider le token de sécurité.
     4. Un événement `UserLoggedOut` est publié pour permettre à d'autres parties du système de réagir si nécessaire.
 

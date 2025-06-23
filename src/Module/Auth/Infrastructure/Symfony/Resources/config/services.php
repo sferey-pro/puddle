@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\LoginLinkGeneratorInterface;
+use App\Module\Auth\Domain\Service\PasswordResetTokenGeneratorInterface;
 use App\Module\Auth\Domain\Specification\UniqueEmailSpecification;
+use App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrinePasswordResetRequestRepository;
 use App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserAccountRepository;
 use App\Module\Auth\Infrastructure\Service\AuthUniqueConstraintChecker;
+use App\Module\Auth\Infrastructure\Service\SecureTokenGenerator;
 use App\Module\Auth\Infrastructure\Symfony\Service\LoginLinkGenerator;
 use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -31,6 +35,8 @@ return function (ContainerConfigurator $container): void {
     $services->set(UserRepositoryInterface::class)
         ->class(DoctrineUserAccountRepository::class);
 
+    $services->alias(PasswordResetRequestRepositoryInterface::class, DoctrinePasswordResetRequestRepository::class);
+
     $services->set(UniqueConstraintCheckerInterface::class)
         ->class(AuthUniqueConstraintChecker::class);
 
@@ -39,4 +45,6 @@ return function (ContainerConfigurator $container): void {
 
     $services->set(LoginLinkGeneratorInterface::class)
         ->class(LoginLinkGenerator::class);
+
+    $services->alias(PasswordResetTokenGeneratorInterface::class, SecureTokenGenerator::class);
 };

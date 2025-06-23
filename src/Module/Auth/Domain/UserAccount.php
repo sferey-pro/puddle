@@ -14,6 +14,7 @@ use App\Module\Auth\Domain\Event\UserPasswordChanged;
 use App\Module\Auth\Domain\Event\UserRegistered;
 use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
+use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\Domain\ValueObject\Hash;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
@@ -176,6 +177,33 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         $this->recordDomainEvent(
             new UserPasswordChanged($this->id())
         );
+    }
+
+    /**
+     * Réinitialise le mot de passe de l'utilisateur après vérification du token.
+     *
+     * @throws PasswordResetException si la demande est invalide, expirée ou déjà utilisée
+     */
+    public function resetPassword(
+        PasswordResetRequest $request,
+        Password $newPassword,
+        \DateTimeImmutable $now,
+    ): void {
+        if (!$this->id->equals($request->userId())) {
+            throw PasswordResetException::userMismatch($request->userId(), $this->id());
+        }
+
+        if ($request->isExpired($now)) {
+            throw PasswordResetException::expired();
+        }
+
+        if ($request->isUsed()) {
+            throw PasswordResetException::alreadyUsed();
+        }
+
+        $this->changePassword($newPassword);
+
+        $request->markAsUsed();
     }
 
     /**

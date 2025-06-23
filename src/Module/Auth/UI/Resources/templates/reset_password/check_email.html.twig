@@ -1,0 +1,27 @@
+{% extends '@Auth/base.html.twig' %}
+
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
+
+{% block body_id 'forgot-password-check-email' %}
+
+{% block content %}
+    <div class="card card-body">
+        <div class="mb-4">
+            <twig:ux:icon name="tabler:mail-check" class="text-green" width="4rem" height="4rem" />
+        </div>
+        <h1 class="card-title">Vérifiez votre boîte de réception</h1>
+        <p class="text-muted">
+            Si un compte correspondant à l'adresse que vous avez fournie existe, un e-mail contenant les instructions
+            pour réinitialiser votre mot de passe vient d'être envoyé.
+        </p>
+        <p class="text-muted mt-2">
+            Ce lien expirera dans <strong>{{ expirationDate|human_duration }}</strong>. <br>
+            <br>
+            Pensez à vérifier votre dossier de courrier indésirable (spam) ou <a href="{{ path('forgot_password_request') }}">réessayer encore</a>.
+        </p>
+    </div>
+
+    <div class="text-center text-muted mt-3">
+        <a href="{{ path('login') }}">Retour à la page de connexion</a>
+    </div>
+{% endblock %}
