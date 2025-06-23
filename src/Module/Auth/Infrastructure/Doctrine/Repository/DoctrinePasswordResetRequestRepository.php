@@ -78,4 +78,15 @@ final class DoctrinePasswordResetRequestRepository extends ORMAbstractRepository
 
         return $result ? new \DateTimeImmutable($result) : null;
     }
+
+    public function deleteExpiredOlderThan(\DateTimeImmutable $threshold): int
+    {
+        $query = $this->createQueryBuilder('r')
+            ->delete(self::ENTITY_CLASS, 'r')
+            ->where('r.expiresAt < :threshold')
+            ->setParameter('threshold', $threshold)
+            ->getQuery();
+
+        return $query->execute();
+    }
 }
