@@ -23,6 +23,8 @@ interface UserRepositoryInterface extends RepositoryInterface
 
     public function add(UserAccount $model): void;
 
+    public function remove(UserAccount $model, bool $flush = false): void;
+
     public function ofEmail(Email $email): ?UserAccount;
 
     public function ofUsername(Username $email): ?UserAccount;

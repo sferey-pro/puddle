@@ -63,6 +63,15 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
         $this->getEntityManager()->persist($user);
     }
 
+    public function remove(UserAccount $user, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($user);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function ofId(UserId $id): ?UserAccount
     {
         return $this->findOneBy(['id.value' => $id->value]);

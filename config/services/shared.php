@@ -29,10 +29,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(ClockInterface::class, SystemClock::class);
 
     $services
-        ->instanceof(AbstractEnumType::class)
-            ->tag('app.doctrine_enum_type');
-
-    $services
         ->alias(EventBusInterface::class, 'event.bus');
 
     $services->set(EventBusInterface::class)

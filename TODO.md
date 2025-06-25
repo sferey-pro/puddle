@@ -29,3 +29,13 @@ public function __construct(
 ) {
     parent::__construct();
 }
+
+
+## Recherche de la logique 
+
+Faire la recherche entre Shared et SharedContext
+
+De même est-ce que les VO classique comme Email / Username / Address ne devrait pas être dans Shared au lieu de Module/SharedContext
+
+Faire la recherche entre Core et SharedContext ou Shared
+

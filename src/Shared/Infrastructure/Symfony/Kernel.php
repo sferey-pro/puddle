@@ -34,10 +34,10 @@ class Kernel extends BaseKernel
         $container->import(\sprintf('%s/config/{packages}/*.{php,yaml}', $this->getProjectDir()));
         $container->import(\sprintf('%s/config/{packages}/%s/*.{php,yaml}', $this->getProjectDir(), $this->environment));
 
-        $container->import(\sprintf('%s/config/{services}/*.{php,yaml}', $this->getProjectDir()));
-        $container->import(\sprintf('%s/config/{services}/%s/*.{php,yaml}', $this->getProjectDir(), $this->environment));
+        $container->import(\sprintf('%s/config/services/*.php', $this->getProjectDir()));
 
-        $container->import(\sprintf('%s/config/services.yaml', $this->getProjectDir()));
+        // $container->import(\sprintf('%s/config/services.yaml', $this->getProjectDir()));
+        // $container->import(\sprintf('%s/config/services_%s.yaml', $this->getProjectDir(), $this->environment));
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

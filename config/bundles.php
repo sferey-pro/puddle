@@ -1,8 +1,6 @@
 <?php
 
 return [
-
-    // System
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
@@ -30,12 +28,10 @@ return [
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
-
-    // Module
     App\Module\Auth\Infrastructure\Symfony\AuthBundle::class => ['all' => true],
     App\Module\UserManagement\Infrastructure\Symfony\UserManagementBundle::class => ['all' => true],
     App\Module\ProductCatalog\Infrastructure\Symfony\ProductCatalogBundle::class => ['all' => true],
     App\Module\CostManagement\Infrastructure\Symfony\CostManagementBundle::class => ['all' => true],
     App\Module\Sales\Infrastructure\Symfony\SalesBundle::class => ['all' => true],
-
+    FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true],
 ];

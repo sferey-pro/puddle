@@ -9,6 +9,11 @@ use Doctrine\DBAL\Types\Exception\InvalidFormat;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Type;
 
+/**
+ * @todo Vérifier son utilité ?
+ *  - enum-type de doctrine répond suffisamment au besoin ?
+ * @package App\Shared\Infrastructure\Doctrine\Types
+ */
 abstract class AbstractEnumType extends Type
 {
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string

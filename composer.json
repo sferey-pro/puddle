@@ -128,8 +128,12 @@
         }
     },
     "require-dev": {
+        "behat/behat": "^3.22",
+        "behat/mink-browserkit-driver": "^2.2",
         "dama/doctrine-test-bundle": "^8.2",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
+        "friends-of-behat/mink-extension": "^2.7",
+        "friends-of-behat/symfony-extension": "^2.6",
         "phpunit/phpunit": "^12",
         "symfony/maker-bundle": "^1.63",
         "symfony/panther": "^2.2",
