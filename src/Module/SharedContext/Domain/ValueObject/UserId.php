@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\SharedContext\Domain\ValueObject;
 
-use App\Shared\Domain\ValueObject\AggregateRootId;
+use App\Core\Domain\ValueObject\AggregateRootId;
 
 /**
  * Représente l'identifiant unique d'un utilisateur (Aggregat User / Aggregat UserAccount).

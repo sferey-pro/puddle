@@ -4,37 +4,30 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\Doctrine\Types;
 
+use App\Core\Infrastructure\Persistence\Doctrine\Types\AbstractValueObjectIdType;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Symfony\Bridge\Doctrine\Types\AbstractUidType;
 
 /**
  * Classe de type Doctrine pour le ValueObject CostItemId.
  * Permet à Doctrine de comprendre comment stocker et récupérer cet objet.
  */
-final class CostItemIdType extends AbstractUidType
+final class CostItemIdType extends AbstractValueObjectIdType
 {
     /**
      * Le nom unique de notre type pour Doctrine.
      */
     public const TYPE_NAME = 'cost_item_id';
 
-    public function getName(): string
-    {
-        return self::TYPE_NAME;
-    }
-
     /**
      * Spécifie la classe du ValueObject que ce type gère.
      */
-    protected function getUidClass(): string
+    protected function getValueObjectClass(): string
     {
         return CostItemId::class;
     }
 
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    public function getName(): string
     {
-        // Force le type de la colonne en base de données à être un UUID
-        return $platform->getGuidTypeDeclarationSQL($column);
+        return self::TYPE_NAME;
     }
 }

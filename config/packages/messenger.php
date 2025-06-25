@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Module\Music\Application\Command\FetchCurrentlyPlayingMusicCommand;
-use App\Shared\Application\Command\CommandInterface;
-use App\Shared\Application\Query\QueryInterface;
-use App\Shared\Domain\Event\DomainEventInterface;
+use App\Core\Application\Command\CommandInterface;
+use App\Core\Application\Query\QueryInterface;
+use App\Core\Domain\Event\DomainEventInterface;
 use Symfony\Config\FrameworkConfig;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\env;

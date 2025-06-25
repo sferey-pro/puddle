@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
+use App\Core\Application\Command\CommandInterface;
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
-use App\Shared\Application\Command\CommandInterface;
 
 /**
  * Commande pour créer un nouveau poste de coût.

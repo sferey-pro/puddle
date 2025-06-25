@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

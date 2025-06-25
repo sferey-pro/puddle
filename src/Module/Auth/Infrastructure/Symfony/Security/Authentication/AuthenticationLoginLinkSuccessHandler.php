@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Symfony\Security\Authentication;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\VerifyLoginLink;
 use App\Module\Auth\Domain\ValueObject\Hash;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

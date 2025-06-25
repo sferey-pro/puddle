@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Service;
 
+use App\Core\Application\Validator\UniqueConstraintCheckerInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 
 /**
  * Implémentation concrète du vérificateur de contraintes d'unicité pour le module Auth.

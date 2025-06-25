@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
-use App\Shared\Domain\Service\ClockInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
 /**
  * Orchestre le cas d'usage "Nettoyer les anciennes demandes de réinitialisation".

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Command;
 
+use App\Core\Application\Event\EventBusInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\UserManagement\Domain\Exception\UserException;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\Specification\UniqueEmailSpecification;
-use App\Shared\Application\Event\EventBusInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
 #[AsCommandHandler]
 final class ChangeUserEmailHandler

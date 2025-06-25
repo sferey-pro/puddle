@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command;
 
+use App\Core\Application\Command\CommandInterface;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
-use App\Shared\Application\Command\CommandInterface;
 use Webmozart\Assert\Assert;
 
 final readonly class RequestLoginLink implements CommandInterface

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Symfony\Security\Authentication;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\Auth\Application\Command\RecordLoginLinkFailure;
 use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\UserAccount;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;

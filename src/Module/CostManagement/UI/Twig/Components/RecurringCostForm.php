@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Twig\Components;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\CostManagement\Application\Command\CreateRecurringCost;
 use App\Module\CostManagement\Application\DTO\CreateRecurringCostDTO;
 use App\Module\CostManagement\Domain\Enum\RecurrenceFrequency;
 use App\Module\CostManagement\UI\Form\RecurringCostFormType;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

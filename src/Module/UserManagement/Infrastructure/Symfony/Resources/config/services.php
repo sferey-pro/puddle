@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Core\Application\Validator\UniqueConstraintCheckerInterface;
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Domain\Repository\ProfileRepositoryInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
@@ -11,7 +12,6 @@ use App\Module\UserManagement\Infrastructure\Doctrine\Repository\DoctrineProfile
 use App\Module\UserManagement\Infrastructure\Doctrine\Repository\DoctrineUserRepository;
 use App\Module\UserManagement\Infrastructure\ReadModel\Repository\DoctrineUserViewRepository;
 use App\Module\UserManagement\Infrastructure\Service\UserUniqueConstraintChecker;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return function (ContainerConfigurator $container): void {

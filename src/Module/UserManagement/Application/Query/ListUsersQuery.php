@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Query;
 
-use App\Shared\Application\Query\QueryInterface;
+use App\Core\Application\Query\QueryInterface;
 
 /**
  * @implements QueryInterface<UserView[]>

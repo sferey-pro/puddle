@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Infrastructure\Doctrine\Repository;
 
+use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\Sales\Domain\Order;
 use App\Module\Sales\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Sales\Domain\ValueObject\OrderId;
-use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class DoctrineOrderRepository extends ORMAbstractRepository implements OrderRepositoryInterface

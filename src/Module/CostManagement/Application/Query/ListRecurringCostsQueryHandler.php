@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Query;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use App\Module\CostManagement\Application\ReadModel\RecurringCostView;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 #[AsQueryHandler]

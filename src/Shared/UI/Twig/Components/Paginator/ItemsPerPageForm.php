@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\UI\Twig\Components\Paginator;
 
-use App\Shared\Infrastructure\Doctrine\Paginator;
+use App\Core\Infrastructure\Persistence\Paginator\Paginator;
 use App\Shared\UI\Form\ItemsPerPageType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;

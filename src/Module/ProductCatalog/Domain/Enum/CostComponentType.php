@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\Enum;
 
-use App\Core\Enum\EnumJsonSerializableTrait;
+use App\Core\Domain\Enum\EnumJsonSerializableTrait;
 
 enum CostComponentType: string
 {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Infrastructure\Service;
 
+use App\Core\Application\Validator\UniqueConstraintCheckerInterface;
 use App\Module\UserManagement\Domain\Repository\ProfileRepositoryInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 

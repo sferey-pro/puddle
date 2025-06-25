@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\Repository;
 
+use App\Core\Domain\Repository\RepositoryInterface;
 use App\Module\ProductCatalog\Domain\Product;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Domain\Repository\RepositoryInterface;
 
 /**
  * @extends RepositoryInterface<Product>

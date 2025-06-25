@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\ReadModel;
 
+use App\Core\Application\Clock\SystemTime;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Event\CostContributionReceived;
 use App\Module\CostManagement\Domain\Event\CostContributionRemoved;
@@ -11,7 +12,6 @@ use App\Module\CostManagement\Domain\Event\CostContributionUpdated;
 use App\Module\CostManagement\Domain\Event\CostItemAdded;
 use App\Module\CostManagement\Domain\Event\CostItemDetailsUpdated;
 use App\Module\SharedContext\Domain\ValueObject\Money;
-use App\Shared\Domain\Service\SystemTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 

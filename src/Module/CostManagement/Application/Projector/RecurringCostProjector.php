@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Projector;
 
+use App\Core\Application\Clock\ClockInterface;
 use App\Module\CostManagement\Application\ReadModel\RecurringCostView;
 use App\Module\CostManagement\Application\ReadModel\Repository\RecurringCostViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Event\RecurringCostCreated;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface;
-use App\Shared\Domain\Service\ClockInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

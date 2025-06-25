@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Enum;
 
-use App\Core\Enum\EnumJsonSerializableTrait;
+use App\Core\Domain\Enum\EnumJsonSerializableTrait;
 
 /**
  * Définit les différents statuts possibles pour un compte utilisateur.

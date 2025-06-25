@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
+use App\Core\Application\Clock\ClockInterface;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
 use App\Module\Auth\Domain\ValueObject\LoginLinkId;
-use App\Shared\Domain\Service\ClockInterface;
 
 /**
  * Représente un lien de connexion magique ("magic link").

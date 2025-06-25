@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Doctrine\Repository;
 
+use App\Core\Application\Clock\SystemTime;
+use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\Auth\Domain\PasswordResetRequest;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
 use App\Module\SharedContext\Domain\ValueObject\Email;
-use App\Shared\Domain\Service\SystemTime;
-use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

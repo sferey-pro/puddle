@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Controller;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\Auth\Application\Command\RequestLoginLink;
 use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Infrastructure\Symfony\Security\EmailVerifier;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;

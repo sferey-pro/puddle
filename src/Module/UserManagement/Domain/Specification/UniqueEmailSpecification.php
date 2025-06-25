@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Specification;
 
+use App\Core\Application\Validator\UniqueConstraintCheckerInterface;
 use App\Core\Specification\AbstractSpecification;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 
 /**
  * Spécification métier pour vérifier l'unicité de l'adresse email d'un utilisateur.

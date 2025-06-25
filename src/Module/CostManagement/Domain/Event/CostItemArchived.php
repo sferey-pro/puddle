@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement émis lorsqu'un poste de coût est archivé.

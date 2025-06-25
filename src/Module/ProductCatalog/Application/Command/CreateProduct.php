@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\Command;
 
+use App\Core\Application\Command\CommandInterface;
 use App\Module\ProductCatalog\Application\DTO\CreateProductDTO;
-use App\Shared\Application\Command\CommandInterface;
 
 final readonly class CreateProduct implements CommandInterface
 {

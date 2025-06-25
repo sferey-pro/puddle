@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Shared\Application\Event\EventBusInterface;
-use App\Shared\Application\Event\MessengerEventBus;
-use App\Shared\Domain\Service\ClockInterface;
-use App\Shared\Infrastructure\Doctrine\Types\AbstractEnumType;
-use App\Shared\Infrastructure\Service\SystemClock;
+use App\Core\Application\Event\EventBusInterface;
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Infrastructure\Bus\MessengerEventBus;
+use App\Core\Infrastructure\Clock\SystemClock;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Uid\Command\GenerateUuidCommand;
 use Symfony\Component\Uid\Command\InspectUuidCommand;
@@ -18,8 +17,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autowire()
         ->autoconfigure();
 
-    $services->load('App\\Shared\\', dirname(__DIR__, 2).'/src/Shared')
-        ->exclude([dirname(__DIR__, 2).'/src/Shared/Infrastructure/Symfony/Kernel.php']);
+    $services->load('App\\Core\\', dirname(__DIR__, 2).'/src/Core');
+
+    $services->load('App\\Shared\\', dirname(__DIR__, 2).'/src/Shared');
 
     $services->load('App\\Module\\SharedContext\\', dirname(__DIR__, 2).'/src/Module/SharedContext')
         ->exclude([
@@ -27,10 +27,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]);
 
     $services->set(ClockInterface::class, SystemClock::class);
-
-    $services
-        ->instanceof(AbstractEnumType::class)
-            ->tag('app.doctrine_enum_type');
 
     $services
         ->alias(EventBusInterface::class, 'event.bus');

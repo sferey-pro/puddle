@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\UI\Twig\Components;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Application\Command\CreateUser;
 use App\Module\UserManagement\Application\Command\UpdateUser;
-use App\Module\UserManagement\Application\DTO\CreateUserDTO;
+use App\Module\UserManagement\Application\DTO\CreateUserDTO; // Supposons que cette Query existe
 use App\Module\UserManagement\Application\DTO\UpdateUserDTO;
-use App\Module\UserManagement\Application\Query\FindUserQuery; // Supposons que cette Query existe
+use App\Module\UserManagement\Application\Query\FindUserQuery;
 use App\Module\UserManagement\Application\ReadModel\UserView;
 use App\Module\UserManagement\UI\Form\UserFormType;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

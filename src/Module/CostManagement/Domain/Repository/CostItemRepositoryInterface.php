@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Repository;
 
+use App\Core\Domain\Repository\RepositoryInterface;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Domain\Repository\RepositoryInterface;
 
 /**
  * Interface pour le repository de l'agrégat CostItem.

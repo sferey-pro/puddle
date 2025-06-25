@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Doctrine\Repository;
 
+use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\SharedContext\Domain\ValueObject\Username;
-use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;

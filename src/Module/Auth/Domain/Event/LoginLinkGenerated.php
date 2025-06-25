@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement levé quand un lien de connexion a été généré avec succès.

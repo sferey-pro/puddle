@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\Doctrine\Repository;
 
+use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\CostManagement\Domain\Enum\RecurringCostStatus;
 use App\Module\CostManagement\Domain\RecurringCost;
 use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
-use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

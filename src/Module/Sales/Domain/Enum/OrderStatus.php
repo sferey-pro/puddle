@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Domain\Enum;
 
-use App\Core\Enum\EnumArraySerializableTrait;
+use App\Core\Domain\Enum\EnumArraySerializableTrait;
 
 /**
  * Représente les différents statuts qu'une commande (Order) peut avoir.

@@ -8,8 +8,8 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use ApiPlatform\Symfony\Action\NotFoundAction;
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Sales\Application\Command\CreateOrder;
-use App\Shared\Application\Command\CommandBusInterface;
 
 class OrderProcessor implements ProcessorInterface
 {

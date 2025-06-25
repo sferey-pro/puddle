@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Specification;
 
+use App\Core\Application\Validator\UniqueConstraintCheckerInterface;
 use App\Core\Specification\AbstractSpecification;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\ValueObject\Username;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 
 final class UniqueUsernameSpecification extends AbstractSpecification
 {

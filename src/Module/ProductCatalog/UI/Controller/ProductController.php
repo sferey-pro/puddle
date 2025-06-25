@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\UI\Controller;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
+use App\Core\Infrastructure\Persistence\Paginator\Paginator;
 use App\Module\ProductCatalog\Application\Command\CreateProduct;
 use App\Module\ProductCatalog\Application\DTO\CostComponentLineDTO;
 use App\Module\ProductCatalog\Application\DTO\CreateProductDTO;
@@ -11,9 +14,6 @@ use App\Module\ProductCatalog\Application\Query\FindProductQuery;
 use App\Module\ProductCatalog\Application\Query\ListProductsQuery;
 use App\Module\ProductCatalog\UI\Form\ProductFormType;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
-use App\Shared\Infrastructure\Doctrine\Paginator;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;

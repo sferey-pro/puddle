@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Twig\Components;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\RegisterUser;
 use App\Module\Auth\Application\DTO\RegisterUserDTO;
 use App\Module\Auth\UI\Form\RegistrationFormType;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

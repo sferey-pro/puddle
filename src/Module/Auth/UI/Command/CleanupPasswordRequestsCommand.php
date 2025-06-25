@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Command;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\CleanupPasswordRequests;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

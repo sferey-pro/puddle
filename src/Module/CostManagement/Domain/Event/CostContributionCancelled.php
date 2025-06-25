@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement de domaine levé lorsqu'une contribution à un poste de coût

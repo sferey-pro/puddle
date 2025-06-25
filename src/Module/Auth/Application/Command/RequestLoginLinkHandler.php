@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command;
 
+use App\Core\Application\Event\EventBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\LoginLinkManager;
 use App\Module\Auth\Domain\UserAccount;
-use App\Shared\Application\Event\EventBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
 /**
  * Gère le cas d'utilisation "demander un lien de connexion".

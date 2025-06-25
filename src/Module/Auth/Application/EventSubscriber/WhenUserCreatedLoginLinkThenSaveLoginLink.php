@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\EventSubscriber;
 
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\Auth\Application\Notifier\CustomLoginLinkNotification;
 use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\Event\LoginLinkGenerated;
-use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Notifier\Recipient\Recipient;

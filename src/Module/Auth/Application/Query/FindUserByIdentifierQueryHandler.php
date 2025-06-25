@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Query;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\Username;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Psr\Log\LoggerInterface;
 
 /**

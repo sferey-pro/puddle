@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\Auth\Domain\Event\PasswordResetRequested;
 use App\Module\Auth\Domain\ValueObject\HashedToken;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
 
 /**
  * Représente le processus de demande de réinitialisation de mot de passe.

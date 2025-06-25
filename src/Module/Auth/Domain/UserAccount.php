@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\Auth\Domain\Enum\Role;
 use App\Module\Auth\Domain\Event\LoginLinkGenerated;
 use App\Module\Auth\Domain\Event\LoginLinkVerified;
@@ -23,9 +26,6 @@ use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\SharedContext\Domain\ValueObject\Username;
 use App\Module\UserManagement\Domain\Event\UserAccountSuspended;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
-use App\Shared\Domain\Service\ClockInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;

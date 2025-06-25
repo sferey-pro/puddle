@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Infrastructure\ReadModel\Repository;
 
+use App\Core\Infrastructure\Persistence\ODMAbstractRepository;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Application\ReadModel\UserView;
-use App\Shared\Infrastructure\Doctrine\ODMAbstractRepository;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
 class DoctrineUserViewRepository extends ODMAbstractRepository implements UserViewRepositoryInterface

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Domain\Event\DomainEvent;
 
 final readonly class ProductCostStructureUpdated extends DomainEvent
 {

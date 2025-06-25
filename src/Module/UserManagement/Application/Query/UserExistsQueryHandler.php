@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Query;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 
 #[AsQueryHandler]
 final readonly class UserExistsQueryHandler

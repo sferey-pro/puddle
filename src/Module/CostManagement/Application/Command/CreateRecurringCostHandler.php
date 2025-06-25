@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\CostManagement\Domain\CostItem;
 use App\Module\CostManagement\Domain\Enum\CostItemType;
 use App\Module\CostManagement\Domain\Enum\RecurrenceFrequency;
@@ -13,8 +15,6 @@ use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface
 use App\Module\CostManagement\Domain\ValueObject\CostItemName;
 use App\Module\CostManagement\Domain\ValueObject\RecurrenceRule;
 use App\Module\SharedContext\Domain\ValueObject\Money;
-use App\Shared\Domain\Service\ClockInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

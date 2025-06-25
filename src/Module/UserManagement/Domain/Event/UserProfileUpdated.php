@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\ValueObject\DisplayName;
 use App\Module\UserManagement\Domain\ValueObject\Username;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement levé lorsque le profil d'un utilisateur a été mis à jour.

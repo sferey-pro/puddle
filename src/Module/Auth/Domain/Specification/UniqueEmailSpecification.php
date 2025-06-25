@@ -7,7 +7,6 @@ namespace App\Module\Auth\Domain\Specification;
 use App\Core\Specification\AbstractSpecification;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 
 /** *
  * Spécification métier pour vérifier l'unicité de l'adresse email lors de l'enregistrement ou la mise à jour d'un compte Auth.

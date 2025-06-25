@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\Query;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use App\Module\ProductCatalog\Domain\Repository\ProductRepositoryInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 
 #[AsQueryHandler]
 final readonly class ListProductsQueryHandler

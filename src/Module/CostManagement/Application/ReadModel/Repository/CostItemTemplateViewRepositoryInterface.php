@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\ReadModel\Repository;
 
+use App\Core\Domain\Repository\RepositoryInterface;
 use App\Module\CostManagement\Application\ReadModel\CostItemTemplateView;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Domain\Repository\RepositoryInterface;
 
 /**
  * Interface pour le repository du ReadModel CostItemTemplateView.

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\ReadModel\Repository;
 
+use App\Core\Infrastructure\Persistence\ODMAbstractRepository;
 use App\Module\CostManagement\Application\ReadModel\RecurringCostView;
 use App\Module\CostManagement\Application\ReadModel\Repository\RecurringCostViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Exception\RecurringCostException;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
-use App\Shared\Infrastructure\Doctrine\ODMAbstractRepository;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
 /**

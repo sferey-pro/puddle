@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\Command;
 
+use App\Core\Application\Event\EventBusInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\ProductCatalog\Domain\Enum\CostComponentType;
 use App\Module\ProductCatalog\Domain\Enum\UnitOfMeasure;
 use App\Module\ProductCatalog\Domain\Product;
@@ -14,8 +16,6 @@ use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
 use App\Module\ProductCatalog\Domain\ValueObject\Quantity;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Application\Event\EventBusInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 #[AsCommandHandler]

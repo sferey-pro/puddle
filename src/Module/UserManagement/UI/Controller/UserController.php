@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\UI\Controller;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
+use App\Core\Infrastructure\Persistence\Paginator\Paginator;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Application\Query\FindUserQuery;
 use App\Module\UserManagement\Application\Query\ListUsersQuery;
 use App\Module\UserManagement\Application\ReadModel\UserView;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
-use App\Shared\Infrastructure\Doctrine\Paginator;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

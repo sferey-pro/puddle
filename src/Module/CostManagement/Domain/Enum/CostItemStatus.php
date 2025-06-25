@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Enum;
 
-use App\Core\Enum\EnumJsonSerializableTrait;
+use App\Core\Domain\Enum\EnumJsonSerializableTrait;
 
 /**
  * Représente les différents statuts qu'un poste de coût (CostItem) peut avoir.

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Core\Specification\AndSpecification;
 use App\Core\Specification\NotSpecification;
 use App\Module\CostManagement\Domain\Enum\CostItemStatus;
@@ -36,9 +39,6 @@ use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
 use App\Module\SharedContext\Domain\Exception\InvalidMoneyException;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
-use App\Shared\Domain\Service\ClockInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Infrastructure\ReadModel\Repository;
 
+use App\Core\Infrastructure\Persistence\ODMAbstractRepository;
 use App\Module\Sales\Application\ReadModel\OrderView;
 use App\Module\Sales\Application\ReadModel\Repository\OrderViewRepositoryInterface;
 use App\Module\Sales\Domain\ValueObject\OrderId;
-use App\Shared\Infrastructure\Doctrine\ODMAbstractRepository;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
 final class DoctrineOrderViewRepository extends ODMAbstractRepository implements OrderViewRepositoryInterface

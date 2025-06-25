@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Controller;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\CostManagement\Application\DTO\CreateRecurringCostDTO;
 use App\Module\CostManagement\Application\Query\FindRecurringCostQuery;
 use App\Module\CostManagement\Application\Query\ListRecurringCostsQuery;
@@ -11,8 +13,6 @@ use App\Module\CostManagement\Domain\Exception\RecurringCostException;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

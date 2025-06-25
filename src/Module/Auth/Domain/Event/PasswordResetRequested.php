@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement publié lorsqu'un utilisateur a demandé une réinitialisation de mot de passe.

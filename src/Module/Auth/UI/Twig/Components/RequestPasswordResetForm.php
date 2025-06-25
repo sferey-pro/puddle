@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Twig\Components;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\RequestPasswordReset;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\UI\Form\RequestPasswordResetFormType;
-use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\UI\Twig\Extension\HumanReadableDurationExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;

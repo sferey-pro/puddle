@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Specification;
 
+use App\Core\Application\Clock\SystemTime;
 use App\Core\Specification\AbstractSpecification;
 use App\Module\CostManagement\Domain\ValueObject\CoveragePeriod;
-use App\Shared\Domain\Service\SystemTime;
 
 /**
  * Spécification qui détermine si une `CoveragePeriod` est terminée.

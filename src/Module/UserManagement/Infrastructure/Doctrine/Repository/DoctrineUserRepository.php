@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Infrastructure\Doctrine\Repository;
 
+use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
-use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain;
 
+use App\Core\Application\Clock\SystemTime;
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Enum\UserStatus;
@@ -19,9 +22,6 @@ use App\Module\UserManagement\Domain\Specification\UserCanBeDeactivatedSpecifica
 use App\Module\UserManagement\Domain\Specification\UserHasStatusSpecification;
 use App\Module\UserManagement\Domain\ValueObject\AvatarUrl;
 use App\Module\UserManagement\Domain\ValueObject\Username;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
-use App\Shared\Domain\Service\SystemTime;
 
 /**
  * Agrégat représentant un utilisateur dans le contexte de UserManagement.

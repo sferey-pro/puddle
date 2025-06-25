@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Repository;
 
+use App\Core\Domain\Repository\RepositoryInterface;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\User;
-use App\Shared\Domain\Repository\RepositoryInterface;
 
 /**
  * Définit le contrat pour l'accès aux données des utilisateurs (agrégat User).

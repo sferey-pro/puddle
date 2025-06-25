@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\CostManagement\Domain\Enum\RecurringCostStatus;
 use App\Module\CostManagement\Domain\Event\RecurringCostCreated;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\Domain\ValueObject\RecurrenceRule;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
-use App\Shared\Domain\Service\ClockInterface;
 
 /**
  * Représente la planification d'un coût récurrent.

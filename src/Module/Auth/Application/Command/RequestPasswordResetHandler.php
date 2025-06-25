@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Application\Event\EventBusInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\Domain\PasswordResetRequest;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
@@ -11,9 +14,6 @@ use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\PasswordResetTokenGeneratorInterface;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\SharedContext\Domain\ValueObject\Email;
-use App\Shared\Application\Event\EventBusInterface;
-use App\Shared\Domain\Service\ClockInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
 /**
  * Orchestre le cas d'usage "Demander une réinitialisation de mot de passe".

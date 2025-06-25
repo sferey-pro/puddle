@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Query;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use App\Module\CostManagement\Application\ReadModel\CostItemInstanceView;
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemInstanceViewRepositoryInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 
 /**
  * Handler for the FindCostItemInstanceQuery.

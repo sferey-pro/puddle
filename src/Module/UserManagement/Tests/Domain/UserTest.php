@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Tests\Domain;
 
+use App\Core\Application\Clock\SystemTime;
+use App\Core\Infrastructure\Clock\FixedClock;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Module\UserManagement\Domain\User;
-use App\Shared\Domain\Service\FixedClock;
-use App\Shared\Domain\Service\SystemTime;
 use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase

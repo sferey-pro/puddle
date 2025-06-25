@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Enum;
 
-use App\Core\Enum\EnumArraySerializableTrait;
+use App\Core\Domain\Enum\EnumArraySerializableTrait;
 
 /**
  * Définit la typologie d'un poste de coût (CostItem).

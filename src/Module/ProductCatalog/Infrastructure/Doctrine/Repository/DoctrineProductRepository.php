@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Infrastructure\Doctrine\Repository;
 
+use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\ProductCatalog\Domain\Product;
 use App\Module\ProductCatalog\Domain\Repository\ProductRepositoryInterface;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Infrastructure\Doctrine\ORMAbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class DoctrineProductRepository extends ORMAbstractRepository implements ProductRepositoryInterface

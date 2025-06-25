@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Twig\Components;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\CostManagement\Application\Command\AddCostContribution;
 use App\Module\CostManagement\Application\Command\RemoveCostContribution;
 use App\Module\CostManagement\Application\Command\UpdateCostContribution;
@@ -13,8 +15,6 @@ use App\Module\CostManagement\Application\ReadModel\ContributionView;
 use App\Module\CostManagement\Application\ReadModel\CostItemInstanceView;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\CostManagement\UI\Form\ContributionItemFormType;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

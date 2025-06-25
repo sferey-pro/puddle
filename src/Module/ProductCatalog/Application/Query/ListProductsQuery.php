@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Application\Query;
 
-use App\Shared\Application\Query\QueryInterface;
+use App\Core\Application\Query\QueryInterface;
 
 final readonly class ListProductsQuery implements QueryInterface
 {

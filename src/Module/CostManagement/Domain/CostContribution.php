@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain;
 
+use App\Core\Application\Clock\SystemTime;
 use App\Module\CostManagement\Domain\Enum\ContributionStatus;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Domain\Service\SystemTime;
 
 /**
  * Représente une contribution financière unique à un poste de coût (CostItem).

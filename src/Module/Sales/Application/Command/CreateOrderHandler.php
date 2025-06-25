@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Application\Command;
 
+use App\Core\Application\Event\EventBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\ProductCatalog\Application\Query\FindProductQuery;
 use App\Module\Sales\Domain\Exception\OrderExceptionACLFactory;
 use App\Module\Sales\Domain\Order;
@@ -11,9 +14,6 @@ use App\Module\Sales\Domain\OrderLine;
 use App\Module\Sales\Domain\Repository\OrderRepositoryInterface;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Application\Event\EventBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
 #[AsCommandHandler]
 final class CreateOrderHandler

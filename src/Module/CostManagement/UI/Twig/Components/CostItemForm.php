@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Twig\Components;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\CostManagement\Application\Command\CreateCostItem;
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
 use App\Module\CostManagement\UI\Form\CostItemFormType;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain;
 
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Event\ProfileCreated;
 use App\Module\UserManagement\Domain\ValueObject\DisplayName;
 use App\Module\UserManagement\Domain\ValueObject\Username;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
 
 final class Profile extends AggregateRoot
 {

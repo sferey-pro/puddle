@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Query;
 
+use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Application\ReadModel\UserView;
 use App\Module\UserManagement\Domain\Exception\UserException;
-use App\Shared\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 
 #[AsQueryHandler]
 final readonly class FindUserQueryHandler

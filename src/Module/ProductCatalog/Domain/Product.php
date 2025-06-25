@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain;
 
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\ProductCatalog\Domain\Event\ProductCreated;
 use App\Module\ProductCatalog\Domain\ValueObject\BaseCostStructure;
 use App\Module\ProductCatalog\Domain\ValueObject\ProductName;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
 
 class Product extends AggregateRoot
 {

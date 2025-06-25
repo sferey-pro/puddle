@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\DTO;
 
-use App\Shared\Application\Validator\Constraints\IsUnique;
+use App\Core\Application\Validator\Constraints\IsUnique;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;

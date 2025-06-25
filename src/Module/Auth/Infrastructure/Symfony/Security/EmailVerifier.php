@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Infrastructure\Symfony\Security;
 
+use App\Core\Application\Event\EventBusInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
-use App\Shared\Application\Event\EventBusInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;

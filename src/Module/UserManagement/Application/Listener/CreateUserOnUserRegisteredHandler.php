@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Listener;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Domain\Event\UserRegistered;
 use App\Module\UserManagement\Application\Command\CreateUser;
 use App\Module\UserManagement\Application\DTO\CreateUserDTO;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

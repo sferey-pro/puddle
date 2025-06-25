@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Application\Projector;
 
+use App\Core\Application\Clock\SystemTime;
 use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
 use App\Module\UserManagement\Application\ReadModel\UserView;
@@ -15,7 +16,6 @@ use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Module\UserManagement\Domain\Event\UserDeleted;
 use App\Module\UserManagement\Domain\Event\UserEmailChanged;
 use App\Module\UserManagement\Domain\Event\UserProfileUpdated;
-use App\Shared\Domain\Service\SystemTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

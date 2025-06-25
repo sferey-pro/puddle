@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\ValueObject\AvatarUrl;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement levé lorsque l'avatar d'un utilisateur est modifié.

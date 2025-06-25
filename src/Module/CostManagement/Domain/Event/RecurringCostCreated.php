@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
-use App\Shared\Domain\Event\DomainEvent;
 
 final readonly class RecurringCostCreated extends DomainEvent
 {

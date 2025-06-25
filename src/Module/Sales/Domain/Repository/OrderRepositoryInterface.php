@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Domain\Repository;
 
+use App\Core\Domain\Repository\RepositoryInterface;
 use App\Module\Sales\Domain\Order;
 use App\Module\Sales\Domain\ValueObject\OrderId;
-use App\Shared\Domain\Repository\RepositoryInterface;
 
 interface OrderRepositoryInterface extends RepositoryInterface
 {

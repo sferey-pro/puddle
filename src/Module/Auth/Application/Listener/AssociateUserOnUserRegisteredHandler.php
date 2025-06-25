@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Listener;
 
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\CreateAssociatedUserAccount;
 use App\Module\UserManagement\Domain\Event\UserCreated;
-use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

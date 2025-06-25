@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\Event;
 
-use App\Module\SharedContext\Domain\ValueObject\Money;
-use App\Module\SharedContext\Domain\ValueObject\ProductId; // Assuming Money ValueObject
-use App\Shared\Domain\Event\DomainEvent;
+use App\Core\Domain\Event\DomainEvent;
+use App\Module\SharedContext\Domain\ValueObject\Money; // Assuming Money ValueObject
+use App\Module\SharedContext\Domain\ValueObject\ProductId;
 
 final readonly class ProductPriceChanged extends DomainEvent
 {

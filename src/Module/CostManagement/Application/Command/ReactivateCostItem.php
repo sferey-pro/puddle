@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Application\Command;
 
+use App\Core\Application\Command\CommandInterface;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Application\Command\CommandInterface;
 
 /**
  * Commande représentant l'intention de réactiver un poste de coût archivé.

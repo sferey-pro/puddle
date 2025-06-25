@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Core\Application\Validator\UniqueConstraintCheckerInterface;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\LoginLinkGeneratorInterface;
@@ -12,7 +13,6 @@ use App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserAccountReposi
 use App\Module\Auth\Infrastructure\Service\AuthUniqueConstraintChecker;
 use App\Module\Auth\Infrastructure\Service\SecureTokenGenerator;
 use App\Module\Auth\Infrastructure\Symfony\Service\LoginLinkGenerator;
-use App\Shared\Domain\Service\UniqueConstraintCheckerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return function (ContainerConfigurator $container): void {

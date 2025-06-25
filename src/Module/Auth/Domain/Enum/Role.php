@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\Enum;
 
-use App\Core\Enum\EnumJsonSerializableTrait;
+use App\Core\Domain\Enum\EnumJsonSerializableTrait;
 
 /**
  * @see Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter

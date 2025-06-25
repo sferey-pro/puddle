@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\UI\Controller;
 
+use App\Core\Application\Command\CommandBusInterface;
+use App\Core\Application\Query\QueryBusInterface;
 use App\Module\CostManagement\Application\Command\ArchiveCostItem;
 use App\Module\CostManagement\Application\Command\ReactivateCostItem;
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
@@ -13,8 +15,6 @@ use App\Module\CostManagement\Application\Query\ListCostItemsQuery;
 use App\Module\CostManagement\Domain\Enum\CostItemType;
 use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Application\Query\QueryBusInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

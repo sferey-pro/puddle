@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\ReadModel\Repository;
 
+use App\Core\Infrastructure\Persistence\ODMAbstractRepository;
 use App\Module\CostManagement\Application\ReadModel\CostItemTemplateView;
 use App\Module\CostManagement\Application\ReadModel\Repository\CostItemTemplateViewRepositoryInterface;
 use App\Module\CostManagement\Domain\Exception\CostItemException;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
-use App\Shared\Infrastructure\Doctrine\ODMAbstractRepository;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
 class DoctrineCostItemTemplateViewRepository extends ODMAbstractRepository implements CostItemTemplateViewRepositoryInterface

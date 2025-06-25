@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Domain;
 
+use App\Core\Application\Clock\SystemTime;
+use App\Core\Domain\Aggregate\AggregateRoot;
+use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\Sales\Domain\Enum\OrderStatus;
 use App\Module\Sales\Domain\Event\OrderCreated;
 use App\Module\Sales\Domain\ValueObject\OrderId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Aggregate\AggregateRoot;
-use App\Shared\Domain\Event\DomainEventTrait;
-use App\Shared\Domain\Service\SystemTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 

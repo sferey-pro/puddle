@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Sales\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\Sales\Domain\ValueObject\OrderId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Shared\Domain\Event\DomainEvent;
 
 final readonly class OrderCreated extends DomainEvent
 {

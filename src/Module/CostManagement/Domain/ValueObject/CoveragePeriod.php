@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\ValueObject;
 
-use App\Shared\Domain\Service\ClockInterface;
+use App\Core\Application\Clock\ClockInterface;
 use Webmozart\Assert\Assert;
 
 /**

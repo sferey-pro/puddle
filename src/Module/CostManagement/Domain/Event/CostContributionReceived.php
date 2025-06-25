@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\Event;
 
+use App\Core\Domain\Event\DomainEvent;
 use App\Module\CostManagement\Domain\ValueObject\CostContributionId;
 use App\Module\CostManagement\Domain\ValueObject\CostItemId;
 use App\Module\SharedContext\Domain\ValueObject\Money;
 use App\Module\SharedContext\Domain\ValueObject\ProductId;
-use App\Shared\Domain\Event\DomainEvent;
 
 /**
  * Événement émis chaque fois qu'une contribution financière est ajoutée à un poste de coût.

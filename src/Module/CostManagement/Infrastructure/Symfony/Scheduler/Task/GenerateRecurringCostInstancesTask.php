@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Infrastructure\Symfony\Scheduler\Task;
 
+use App\Core\Application\Clock\ClockInterface;
+use App\Core\Application\Command\CommandBusInterface;
 use App\Module\CostManagement\Application\Command\CreateCostItem;
 use App\Module\CostManagement\Application\DTO\CreateCostItemDTO;
 use App\Module\CostManagement\Domain\Repository\CostItemRepositoryInterface;
 use App\Module\CostManagement\Domain\Repository\RecurringCostRepositoryInterface;
-use App\Shared\Application\Command\CommandBusInterface;
-use App\Shared\Domain\Service\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
 
