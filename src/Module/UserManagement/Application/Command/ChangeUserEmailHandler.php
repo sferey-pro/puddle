@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Module\UserManagement\Application\Command;
 
 use App\Core\Application\Event\EventBusInterface;
+use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\UserManagement\Domain\Exception\UserException;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
-use App\Module\UserManagement\Domain\Specification\UniqueEmailSpecification;
 
 #[AsCommandHandler]
 final class ChangeUserEmailHandler
@@ -17,7 +17,6 @@ final class ChangeUserEmailHandler
     public function __construct(
         private EventBusInterface $eventBus,
         private UserRepositoryInterface $repository,
-        private UniqueEmailSpecification $uniqueEmailSpecification,
     ) {
     }
 
@@ -35,7 +34,13 @@ final class ChangeUserEmailHandler
 
         // Vérifie si la nouvelle adresse email est déjà utilisée par un autre utilisateur.
         // L'utilisateur actuel est exclu de la vérification, car il peut simplement confirmer son propre email.
-        if (!$this->uniqueEmailSpecification->isSatisfiedBy($newEmail, $user->id())) {
+        $spec = new IsUniqueSpecification(
+            $newEmail,
+            (string) $user->id() // On passe l'ID à exclure !
+        );
+
+        // On demande au repository de la vérifier.
+        if (0 !== $this->repository->countBySpecification($spec)) {
             throw UserException::emailAlreadyExists($newEmail);
         }
 

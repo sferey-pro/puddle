@@ -23,13 +23,8 @@ abstract class AbstractSpecification implements SpecificationInterface
      */
     abstract public function isSatisfiedBy(mixed $candidate): bool;
 
-    public function getFailureReason(): ?string
+    public function failureReason(): ?string
     {
         return $this->failureReason;
-    }
-
-    protected function setFailureReason(string $reason): void
-    {
-        $this->failureReason = $reason;
     }
 }

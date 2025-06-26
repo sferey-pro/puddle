@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\UserManagement\Domain\Repository;
 
 use App\Core\Domain\Repository\RepositoryInterface;
+use App\Core\Domain\Repository\SpecificationRepositoryInterface;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\User;
@@ -14,7 +15,7 @@ use App\Module\UserManagement\Domain\User;
  * Il s'agit d'un "Port" dans l'architecture hexagonale, permettant au domaine
  * de persister et de récupérer les utilisateurs sans connaître les détails d'implémentation.
  */
-interface UserRepositoryInterface extends RepositoryInterface
+interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepositoryInterface
 {
     /**
      * Sauvegarde un agrégat User, garantissant sa persistance.

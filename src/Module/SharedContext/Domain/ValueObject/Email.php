@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\SharedContext\Domain\ValueObject;
 
+use App\Core\Domain\ValueObject\UniqueValueInterface;
 use Webmozart\Assert\Assert;
 
-final class Email implements \Stringable
+final class Email implements \Stringable, UniqueValueInterface
 {
     public readonly string $value;
 
@@ -17,6 +18,16 @@ final class Email implements \Stringable
         $this->ensureIsValidEmail($value);
 
         $this->value = $value;
+    }
+
+    public static function uniqueFieldPath(): string
+    {
+        return 'email.value';
+    }
+
+    public function uniqueValue(): string
+    {
+        return $this->value;
     }
 
     public static function fromString(string $email)

@@ -7,6 +7,7 @@ namespace App\Module\Auth\UI\Twig\Components;
 use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\RegisterUser;
 use App\Module\Auth\Application\DTO\RegisterUserDTO;
+use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\UI\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -25,6 +26,9 @@ class RegistrationForm extends AbstractController
 
     #[LiveProp()]
     public ?RegisterUserDTO $data;
+
+    #[LiveProp()]
+    public ?string $errorMessage = null;
 
     public function __construct(
         private readonly CommandBusInterface $commandBus,
@@ -55,7 +59,13 @@ class RegistrationForm extends AbstractController
             /** @var RegisterUserDTO $dto */
             $dto = $this->getForm()->getData();
 
-            $this->commandBus->dispatch(new RegisterUser($dto));
+            try {
+                $this->commandBus->dispatch(new RegisterUser($dto));
+            } catch (UserException $e) {
+                $this->errorMessage = $e->getMessage();
+
+                return null;
+            }
 
             $this->addFlash('success', 'Utilisateur enregistré avec succès !');
 

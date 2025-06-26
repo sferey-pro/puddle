@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Domain\Repository;
 
 use App\Core\Domain\Repository\RepositoryInterface;
+use App\Core\Domain\Repository\SpecificationRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
@@ -14,7 +15,7 @@ use App\Module\SharedContext\Domain\ValueObject\Username;
  * Définit le contrat pour la persistance et la récupération des comptes utilisateurs (agrégat UserAccount)
  * pour le contexte d'authentification.
  */
-interface UserRepositoryInterface extends RepositoryInterface
+interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepositoryInterface
 {
     /**
      * Sauvegarde un agrégat UserAccount.

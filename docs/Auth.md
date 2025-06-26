@@ -24,7 +24,7 @@ L'utilisateur peut s'inscrire en fournissant une adresse email et un mot de pass
 - **Processus** :
     1. L'utilisateur remplit le formulaire d'inscription (`RegistrationForm`).
     2. Une commande `RegisterUser` est envoyée au Command Bus.
-    3. Le `RegisterUserHandler` valide que l'email n'est pas déjà utilisé (`UniqueEmailSpecification`).
+    3. Le `RegisterUserHandler` valide que l'email n'est pas déjà utilisé.
     4. Un nouvel agrégat `UserAccount` est créé avec un rôle `ROLE_USER`.
     5. Un événement de domaine `UserRegistered` est publié.
 - **Post-Inscription** :
@@ -100,8 +100,6 @@ C'est là que réside la logique métier.
     - `UserLoggedIn`: Publié après une connexion réussie.
     - `LoginLinkGenerated`: Publié lorsqu'un lien magique est créé.
     - `UserVerified`: Publié lorsque l'email d'un utilisateur est vérifié.
-- **Specifications** :
-    - `UniqueEmailSpecification`: Utilisée pour vérifier qu'une adresse email n'est pas déjà utilisée, assurant une contrainte d'unicité au niveau du domaine.
 
 ### 3.2. Couche Application
 

@@ -1,4 +1,8 @@
 <div {{ attributes }}>
+    {% if errorMessage %}
+        <twig:Alert type="warning" :message="errorMessage" format="important" />
+    {% endif %}
+
     {{ form_start(form, {
         attr: {
             'data-action': 'live#action:prevent',

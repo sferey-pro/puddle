@@ -29,5 +29,5 @@ interface SpecificationInterface
      * Retourne la raison pour laquelle la dernière évaluation a échoué.
      * Retourne null si la dernière évaluation a réussi.
      */
-    public function getFailureReason(): ?string;
+    public function failureReason(): ?string;
 }

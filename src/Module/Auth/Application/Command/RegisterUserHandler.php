@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command;
 
 use App\Core\Application\Event\EventBusInterface;
+use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\Domain\Specification\UniqueEmailSpecification;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
 use App\Module\SharedContext\Domain\ValueObject\Email;
@@ -29,7 +29,6 @@ final class RegisterUserHandler
         private UserPasswordHasherInterface $userPasswordHasher,
         private UserRepositoryInterface $repository,
         private EventBusInterface $eventBus,
-        private UniqueEmailSpecification $uniqueEmailSpecification,
         private EventDispatcherInterface $eventDispatcher,
     ) {
     }
@@ -39,10 +38,10 @@ final class RegisterUserHandler
         $dto = $command->dto;
         $email = new Email($dto->email);
 
-        // Vérifie l'unicité de l'email avant de créer le compte utilisateur,
-        // garantissant que chaque utilisateur a une adresse email unique.
-        if (!$this->uniqueEmailSpecification->isSatisfiedBy($email)) {
-            throw UserException::notFoundWithEmail($email);
+        $spec = new IsUniqueSpecification($email);
+
+        if (0 !== $this->repository->countBySpecification($spec)) {
+            throw UserException::emailAlreadyExists($email);
         }
 
         $user = UserAccount::register($command->userId ?? UserId::generate(), $email);

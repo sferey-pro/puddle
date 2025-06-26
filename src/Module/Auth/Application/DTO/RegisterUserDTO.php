@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\DTO;
 
-use App\Core\Application\Validator\Constraints\IsUnique;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
@@ -16,7 +15,6 @@ class RegisterUserDTO
     #[Sequentially([
         new NotBlank(message: 'Please enter an email!'),
         new Email(),
-        new IsUnique(entityContext: 'user_account', constraintType: 'email', message: 'Cette adresse email est déjà utilisée.'),
     ])]
     public ?string $email;
 
