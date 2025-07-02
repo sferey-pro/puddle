@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Module\Auth\Application\Saga\Step\CreateUserAccountStep;
+use App\Module\Auth\Application\Saga\Step\TriggerWelcomeEmailStep;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\LoginLinkGeneratorInterface;
@@ -11,6 +13,7 @@ use App\Module\Auth\Infrastructure\Doctrine\Repository\DoctrineUserAccountReposi
 use App\Module\Auth\Infrastructure\Service\SecureTokenGenerator;
 use App\Module\Auth\Infrastructure\Symfony\Service\LoginLinkGenerator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return function (ContainerConfigurator $container): void {
     // default configuration for services in *this* file
@@ -36,7 +39,14 @@ return function (ContainerConfigurator $container): void {
 
     // Services de Domaine / Spécifications (maintenant injectées avec le vérificateur générique)
     $services->set(LoginLinkGeneratorInterface::class)
+        ->arg('$loginLinkHandler', service('security.authenticator.login_link_handler.main'))
         ->class(LoginLinkGenerator::class);
 
     $services->alias(PasswordResetTokenGeneratorInterface::class, SecureTokenGenerator::class);
+
+    $services->set(CreateUserAccountStep::class)
+        ->tag('saga.step', ['transition' => 'create_user_account']);
+
+    $services->set(TriggerWelcomeEmailStep::class)
+        ->tag('saga.step', ['transition' => 'trigger_welcome_link']);
 };

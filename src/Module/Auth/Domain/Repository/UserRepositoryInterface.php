@@ -17,12 +17,9 @@ use App\Module\SharedContext\Domain\ValueObject\Username;
  */
 interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepositoryInterface
 {
-    /**
-     * Sauvegarde un agrégat UserAccount.
-     */
-    public function save(UserAccount $model, bool $flush = false): void;
-
     public function add(UserAccount $model): void;
+
+    public function remove(UserAccount $model): void;
 
     public function ofEmail(Email $email): ?UserAccount;
 

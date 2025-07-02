@@ -17,19 +17,12 @@ use App\Module\UserManagement\Domain\User;
  */
 interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepositoryInterface
 {
-    /**
-     * Sauvegarde un agrégat User, garantissant sa persistance.
-     */
-    public function save(User $user): void;
+    public function add(User $user): void;
 
-    /**
-     * Recherche un utilisateur par son ID.
-     */
+    public function remove(User $model): void;
+
     public function ofId(UserId $id): ?User;
 
-    /**
-     * Recherche un utilisateur par son adresse email.
-     */
     public function ofEmail(Email $email): ?User;
 
     /**

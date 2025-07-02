@@ -10,13 +10,15 @@ use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\UserManagement\Domain\Exception\UserException;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[AsCommandHandler]
 final class ChangeUserEmailHandler
 {
     public function __construct(
         private EventBusInterface $eventBus,
-        private UserRepositoryInterface $repository,
+        private UserRepositoryInterface $userRepository,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -25,7 +27,7 @@ final class ChangeUserEmailHandler
         $dto = $command->dto;
 
         // Récupère l'utilisateur à modifier. Si non trouvé, une exception métier est levée.
-        $user = $this->repository->ofId($command->userId);
+        $user = $this->userRepository->ofId($command->userId);
         if (null === $user) {
             throw UserException::notFoundWithId($command->userId);
         }
@@ -40,13 +42,15 @@ final class ChangeUserEmailHandler
         );
 
         // On demande au repository de la vérifier.
-        if (0 !== $this->repository->countBySpecification($spec)) {
+        if (0 !== $this->userRepository->countBySpecification($spec)) {
             throw UserException::emailAlreadyExists($newEmail);
         }
 
         // Applique le changement d'email sur l'agrégat User, déclenchant un événement de domaine interne.
         $user->changeEmail($newEmail);
-        $this->repository->save($user, true);
+
+        $this->userRepository->add($user);
+        $this->em->flush();
 
         $this->eventBus->publish(...$user->pullDomainEvents());
     }

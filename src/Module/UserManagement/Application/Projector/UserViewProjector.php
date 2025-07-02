@@ -16,7 +16,6 @@ use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Module\UserManagement\Domain\Event\UserDeleted;
 use App\Module\UserManagement\Domain\Event\UserEmailChanged;
 use App\Module\UserManagement\Domain\Event\UserProfileUpdated;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -29,7 +28,6 @@ class UserViewProjector
 {
     public function __construct(
         private readonly UserViewRepositoryInterface $viewRepository,
-        private readonly LoggerInterface $logger,
         private readonly SystemTime $clock,
     ) {
     }
@@ -61,7 +59,7 @@ class UserViewProjector
         $userView->username = (string) $event->username();
         $userView->updatedAt = $this->clock->now();
 
-        $this->viewRepository->save($userView);
+        $this->viewRepository->save($userView, true);
     }
 
     #[AsMessageHandler]

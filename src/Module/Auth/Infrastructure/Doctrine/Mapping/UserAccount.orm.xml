@@ -19,6 +19,8 @@
         <field name="isVerified" type="boolean" />
         <field name="isActive" type="boolean" />
 
+        <field name="firstLoginAt" type="datetime_immutable" nullable="true" />
+
         <one-to-many field="loginLinks" target-entity="App\Module\Auth\Domain\LoginLink" mapped-by="user" >
             <cascade>
                 <cascade-persist/>

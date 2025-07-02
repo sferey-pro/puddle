@@ -8,6 +8,7 @@ use App\Core\Application\Clock\ClockInterface;
 use App\Core\Application\Event\EventBusInterface;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[AsCommandHandler]
 final readonly class RecordLoginLinkFailureHandler
@@ -16,6 +17,7 @@ final readonly class RecordLoginLinkFailureHandler
         private UserRepositoryInterface $userRepository,
         private EventBusInterface $eventBus,
         private ClockInterface $clock,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -26,7 +28,9 @@ final readonly class RecordLoginLinkFailureHandler
         // On appelle la méthode de l'agrégat qui contient la logique
         $user->recordLoginFailure($this->clock);
 
-        $this->userRepository->save($user);
+        $this->userRepository->add($user);
+        $this->em->flush();
+
         $this->eventBus->publish(...$user->pullDomainEvents());
     }
 }

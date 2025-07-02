@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\UI\Twig\Components;
 
 use App\Core\Application\Command\CommandBusInterface;
-use App\Module\Auth\Application\Command\RegisterUser;
+use App\Module\Auth\Application\Command\StartRegistrationSaga;
 use App\Module\Auth\Application\DTO\RegisterUserDTO;
 use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\UI\Form\RegistrationFormType;
@@ -38,7 +38,6 @@ class RegistrationForm extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        // On passe le DTO (formDto) qui sert de modèle de données au formulaire.
         return $this->createForm(RegistrationFormType::class, $this->data);
     }
 
@@ -50,26 +49,20 @@ class RegistrationForm extends AbstractController
     #[LiveAction]
     public function save(): ?RedirectResponse
     {
-        // Soumet le formulaire avec les données actuelles du composant.
-        // La validation est automatiquement déclenchée ici.
         $this->submitForm();
 
-        // Si le formulaire est valide, on procède à la sauvegarde.
         if ($this->getForm()->isValid()) {
             /** @var RegisterUserDTO $dto */
             $dto = $this->getForm()->getData();
 
             try {
-                $this->commandBus->dispatch(new RegisterUser($dto));
+                $this->commandBus->dispatch(new StartRegistrationSaga($dto));
+                $this->addFlash('success', 'Votre compte a été créé. Veuillez vérifier votre boîte de réception pour valider votre e-mail.');
+
+                return $this->redirectToRoute('login');
             } catch (UserException $e) {
                 $this->errorMessage = $e->getMessage();
-
-                return null;
             }
-
-            $this->addFlash('success', 'Utilisateur enregistré avec succès !');
-
-            return $this->redirectToRoute('login');
         }
 
         return null;

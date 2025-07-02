@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Core\Domain\ValueObject;
 
 /**
- * Rôle : Contrat pour les Value Objects qui peuvent être vérifiés pour leur unicité.
+ * Contrat pour les Value Objects qui peuvent être vérifiés pour leur unicité.
+ * 
  * Un VO implémentant cette interface devient "auto-descriptif" : il sait lui-même
  * comment il doit être recherché en base de données.
  */

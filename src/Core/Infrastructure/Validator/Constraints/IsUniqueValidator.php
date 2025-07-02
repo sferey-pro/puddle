@@ -16,7 +16,8 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Rôle : Validateur pour la contrainte IsUnique.
+ * Validateur pour la contrainte IsUnique.
+ *
  * C'est l'implémentation ("Adapter") qui connecte le besoin de validation
  * à l'infrastructure de persistance via le Pattern Spécification.
  */

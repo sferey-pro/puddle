@@ -9,5 +9,7 @@ return function (RoutingConfigurator $routes): void {
         $routes->import('@FrameworkBundle/Resources/config/routing/errors.php')
             ->prefix('/_error')
         ;
+
+        $routes->import('../../src/Shared/UI/Controller/', 'attribute');
     }
 };
