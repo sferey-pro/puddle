@@ -25,7 +25,7 @@ interface SagaStepInterface
      * Exécute la tâche principale de cette étape.
      * Par exemple : "Créer le compte utilisateur en base de données".
      *
-     * @param SagaProcessInterface $sagaProcess Le parcours métier en cours.
+     * @param SagaProcessInterface $sagaProcess le parcours métier en cours
      */
     public function execute(SagaProcessInterface $sagaProcess): void;
 
@@ -34,7 +34,7 @@ interface SagaStepInterface
      * C'est l'action de "marche arrière" indispensable en cas d'échec global du parcours.
      * Par exemple : "Supprimer le compte utilisateur qui vient d'être créé".
      *
-     * @param SagaProcessInterface $sagaProcess Le parcours métier en cours.
+     * @param SagaProcessInterface $sagaProcess le parcours métier en cours
      */
     public function compensate(SagaProcessInterface $sagaProcess): void;
 }

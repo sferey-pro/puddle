@@ -7,7 +7,6 @@ namespace App\Core\Application\Security;
 use App\Module\Auth\Domain\ValueObject\Password;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-
 interface PasswordFactoryInterface
 {
     public function createFromPlain(

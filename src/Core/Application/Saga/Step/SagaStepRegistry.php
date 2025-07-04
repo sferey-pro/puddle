@@ -43,7 +43,7 @@ final readonly class SagaStepRegistry
     /**
      * Récupère l'étape correspondant à un nom donné.
      *
-     * @throws \InvalidArgumentException si aucune procédure n'est trouvée pour ce nom.
+     * @throws \InvalidArgumentException si aucune procédure n'est trouvée pour ce nom
      */
     public function getStep(string $transitionName): SagaStepInterface
     {

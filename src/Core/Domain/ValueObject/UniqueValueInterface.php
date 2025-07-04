@@ -6,7 +6,7 @@ namespace App\Core\Domain\ValueObject;
 
 /**
  * Contrat pour les Value Objects qui peuvent être vérifiés pour leur unicité.
- * 
+ *
  * Un VO implémentant cette interface devient "auto-descriptif" : il sait lui-même
  * comment il doit être recherché en base de données.
  */

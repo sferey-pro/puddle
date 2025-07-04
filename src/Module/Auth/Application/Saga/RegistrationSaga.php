@@ -119,7 +119,7 @@ final class RegistrationSaga
     /**
      * Exécute les actions de compensation en ordre inverse.
      *
-     * @return bool True si toutes les compensations ont réussi.
+     * @return bool true si toutes les compensations ont réussi
      */
     private function compensate(SagaProcessInterface $sagaProcess): bool
     {

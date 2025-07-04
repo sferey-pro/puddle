@@ -26,8 +26,9 @@ interface SagaProcessInterface
     /**
      * Accède aux informations du parcours en cours.
      *
-     * @param string|null $key La donnée spécifique à récupérer (ex: "email").
-     * @return mixed Les informations du parcours.
+     * @param string|null $key la donnée spécifique à récupérer (ex: "email")
+     *
+     * @return mixed les informations du parcours
      */
     public function context(?string $key = null): mixed;
 
