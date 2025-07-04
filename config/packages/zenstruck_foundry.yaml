@@ -9,13 +9,13 @@ when@dev: &dev
             # Flush only once per call of `PersistentObjectFactory::create()`
             flush_once: true
 
-when@test: 
+when@test:
     zenstruck_foundry:
         global_state:
             - Tests\Story\UserStory
         orm:
             reset:
-                mode: schema
+                mode: migrate
         mongo:
             reset:
                 document_managers:

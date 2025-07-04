@@ -48,7 +48,7 @@ final class UserAccountFactory extends PersistentProxyObjectFactory
             ->instantiateWith(function (array $attributes): UserAccount {
                 // Étape 1 : Créer l'objet via la méthode de fabrique statique.
                 // Note : On passe le mot de passe en clair à ce stade, comme le fait le RegisterUserHandler.
-                $user = UserAccount::register(
+                $user = UserAccount::create(
                     UserId::generate($attributes['id']),
                     new Email($attributes['email'])
                 );
