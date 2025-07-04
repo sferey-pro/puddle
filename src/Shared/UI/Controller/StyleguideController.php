@@ -9,8 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Rôle : Contrôleur de développement pour afficher le catalogue de tous les
- * composants d'interface (Styleguide / UI Kit).
+ * Contrôleur de développement pour afficher le catalogue de tous les composants d'interface (Styleguide / UI Kit).
  *
  * Il n'est accessible qu'en environnement de développement.
  */

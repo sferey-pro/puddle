@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Module\UserManagement\Application\ReadModel\Repository\UserViewRepositoryInterface;
+use App\Module\UserManagement\Application\Saga\Step\CreateUserStep;
 use App\Module\UserManagement\Domain\Repository\ProfileRepositoryInterface;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Infrastructure\Doctrine\Repository\DoctrineProfileRepository;
@@ -33,4 +34,7 @@ return function (ContainerConfigurator $container): void {
 
     $services->set(ProfileRepositoryInterface::class)
         ->class(DoctrineProfileRepository::class);
+
+    $services->set(CreateUserStep::class)
+        ->tag('saga.step', ['transition' => 'create_user_profile']);
 };

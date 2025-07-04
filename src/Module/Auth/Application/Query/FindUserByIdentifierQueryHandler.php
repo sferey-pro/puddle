@@ -9,7 +9,6 @@ use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\SharedContext\Domain\ValueObject\Email;
 use App\Module\SharedContext\Domain\ValueObject\Username;
-use Psr\Log\LoggerInterface;
 
 /**
  * Handler pour la query FindUserByIdentifierQuery.
@@ -21,7 +20,6 @@ final readonly class FindUserByIdentifierQueryHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
-        private LoggerInterface $logger,
     ) {
     }
 
@@ -45,8 +43,6 @@ final readonly class FindUserByIdentifierQueryHandler
         } catch (\InvalidArgumentException) {
             // Ce n'était pas un username valide.
         }
-
-        $this->logger->emergency('Tentative de MagicLink non reconnue : '.$query->identifier);
 
         return null;
     }

@@ -7,8 +7,7 @@ namespace App\Core\Domain\Specification;
 use App\Core\Domain\ValueObject\UniqueValueInterface;
 
 /**
- * Rôle : Spécification qui encapsule la règle métier "une valeur pour un champ donné est unique".
- * C'est un objet de domaine de première classe, réutilisable et testable.
+ * Spécification qui encapsule la règle métier "une valeur pour un champ donné est unique".
  */
 final class IsUniqueSpecification extends AbstractSpecification
 {

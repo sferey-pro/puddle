@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bac à Sable{% endblock %}
+
+{% block body %}
+    <div class="page">
+        <div class="page-header">
+            <h1 class="page-title">
+                <twig:ux:icon name="tabler:beaker" class="me-2" />
+                Bac à Sable (Sandbox)
+            </h1>
+        </div>
+        <div class="page-body">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Pages de prévisualisation et de test</h3>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% if sandboxRoutes is not empty %}
+                        {% for route in sandboxRoutes %}
+                            <a href="{{ route.path }}" class="list-group-item list-group-item-action">
+                                <twig:ux:icon name="tabler:link" />
+                                {{ route.name }}
+                                <div class="text-muted small mt-1">{{ route.path }}</div>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-group-item">
+                            Aucune page de test n'a été trouvée dans le <code>SandboxController</code>.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <twig:Alert format="important" type="notice" class="mt-4">
+                <strong>Note :</strong> Ces pages ne sont disponibles qu'en environnement de développement.
+            </twig:Alert>
+        </div>
+    </div>
+{% endblock %}

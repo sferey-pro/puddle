@@ -26,7 +26,7 @@ final readonly class VerifyLoginLinkHandler
         // L'agrégat gère la logique de vérification
         $user->verifyLoginLink($command->hash, $this->clock);
 
-        $this->userRepository->save($user, true);
+        $this->userRepository->add($user);
 
         $this->eventBus->publish(...$user->pullDomainEvents());
     }

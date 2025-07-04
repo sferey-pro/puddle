@@ -23,6 +23,11 @@ final class UserException extends \DomainException
         parent::__construct(message: $message, previous: $previous);
     }
 
+    public static function notFound(): self
+    {
+        return new self('User not found.', self::NOT_FOUND);
+    }
+
     public static function notFoundWithId(UserId $id): self
     {
         return new self(\sprintf('User with ID "%s" not found.', $id), self::NOT_FOUND);

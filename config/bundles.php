@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     // System
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
@@ -14,7 +13,6 @@ return [
     ApiPlatform\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
     Symfony\Bundle\MercureBundle\MercureBundle::class => ['all' => true],
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
-    SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
     Symfonycasts\SassBundle\SymfonycastsSassBundle::class => ['all' => true],
@@ -37,5 +35,4 @@ return [
     App\Module\ProductCatalog\Infrastructure\Symfony\ProductCatalogBundle::class => ['all' => true],
     App\Module\CostManagement\Infrastructure\Symfony\CostManagementBundle::class => ['all' => true],
     App\Module\Sales\Infrastructure\Symfony\SalesBundle::class => ['all' => true],
-
 ];

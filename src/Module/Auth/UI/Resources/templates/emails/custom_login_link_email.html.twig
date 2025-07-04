@@ -1,0 +1,30 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    <p style="text-align: center; margin-bottom: 24px;">
+        <img src="{{ asset('static/logo.png') }}" width="72" height="57" alt="" style="display: inline-block; line-height: 100%; outline: none; text-decoration: none; vertical-align: bottom; font-size: 0; border-style: none; border-width: 0;" />
+    </p>
+
+    <h1>Connexion à Puddle</h1>
+    <p>
+        Bonjour,<br><br>
+        Vous avez demandé à vous connecter à Puddle. Cliquez sur le bouton ci-dessous pour continuer.
+    </p>
+
+    <p>
+        {{ raw ? content|raw : content|nl2br }}<br><br>
+        <a href="{{ action_url }}" class="button">
+            <twig:ux:icon name="tabler:key" />
+            {{ action_text }}
+        </a>
+    </p>
+
+    <p>
+        Si vous ne savez pas pourquoi vous recevez cet email, ignorez-le ou contactez-nous en répondant à cet email.
+    </p>
+
+{% endblock %}
+
+{% block footer %}
+    <p style="margin-top: 15px;">Cordialement,<br>L'équipe Puddle</p>
+{% endblock %}

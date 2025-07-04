@@ -75,21 +75,27 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
 
         $user->changePassword(password: new Password($newHashedPassword));
 
-        $this->save($user, true);
+        $this->add($user);
+        $this->getEntityManager()->flush();
     }
 
-    public function save(UserAccount $user, bool $flush = false): void
+    public function add(UserAccount $user): void
     {
-        $this->add($user);
+        $this->getEntityManager()->persist($user);
+    }
+
+    public function delete(UserAccount $user, bool $flush = false): void
+    {
+        $this->remove($user);
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function add(UserAccount $user): void
+    public function remove(UserAccount $user): void
     {
-        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->remove($user);
     }
 
     public function ofId(UserId $id): ?UserAccount

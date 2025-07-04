@@ -9,19 +9,17 @@ use App\Core\Application\Query\QueryBusInterface;
 use App\Module\Auth\Application\Command\RequestLoginLink;
 use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
+use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
-use App\Module\Auth\Infrastructure\Symfony\Security\EmailVerifier;
+// use App\Module\Auth\Infrastructure\Symfony\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 final class SecurityController extends AbstractController
 {
@@ -32,35 +30,13 @@ final class SecurityController extends AbstractController
         private UserRepositoryInterface $userRepository,
         private CommandBusInterface $commandBus,
         private QueryBusInterface $queryBus,
-        private EmailVerifier $emailVerifier,
+        // private EmailVerifier $emailVerifier,
     ) {
     }
 
     #[Template('@Auth/registration/register.html.twig')]
     public function register(): void
     {
-    }
-
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
-    {
-        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $this->addFlash('notice', 'Veuillez vous connecté pour vérifier votre adresse e-mail.');
-        }
-
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
-            return $this->redirectToRoute('register');
-        }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('register');
     }
 
     #[Template('@Auth/security/login.html.twig')]
@@ -114,6 +90,10 @@ final class SecurityController extends AbstractController
     {
         $identifier = $request->query->get('user');
         $user = $this->queryBus->ask(new FindUserByIdentifierQuery($identifier));
+
+        if (null === $user) {
+            throw UserException::notFound();
+        }
 
         // get the login link query parameters
         $expires = $request->query->get('expires');

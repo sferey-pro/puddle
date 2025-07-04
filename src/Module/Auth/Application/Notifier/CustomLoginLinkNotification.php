@@ -10,6 +10,9 @@ use Symfony\Component\Notifier\Message\EmailMessage;
 use Symfony\Component\Notifier\Recipient\EmailRecipientInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkNotification;
 
+/**
+ * Représente la notification envoyée pour une connexion par "lien magique".
+ */
 class CustomLoginLinkNotification extends LoginLinkNotification
 {
     public function __construct(
@@ -23,7 +26,7 @@ class CustomLoginLinkNotification extends LoginLinkNotification
         $email = NotificationEmail::asPublicEmail()
             ->to($recipient->getEmail())
             ->subject($this->subject)
-            ->htmlTemplate('@Auth/emails/security/custom_login_link_email.html.twig')
+            ->htmlTemplate('@Auth/emails/custom_login_link_email.html.twig')
             ->action('Sign in', $this->loginLinkDetails->url())
         ;
 

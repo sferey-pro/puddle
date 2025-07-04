@@ -58,15 +58,6 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
         }
     }
 
-    public function save(User $user, bool $flush = false): void
-    {
-        $this->add($user);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     public function add(User $user): void
     {
         $this->getEntityManager()->persist($user);

@@ -7,7 +7,7 @@ namespace App\Core\Domain\Repository;
 use App\Core\Domain\Specification\SpecificationInterface;
 
 /**
- * Rôle : Contrat pour les repositories qui peuvent évaluer des Spécifications,
+ * Contrat pour les repositories qui peuvent évaluer des Spécifications,
  * notamment pour compter le nombre d'entités qui les satisfont.
  */
 interface SpecificationRepositoryInterface

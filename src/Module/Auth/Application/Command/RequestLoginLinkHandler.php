@@ -11,6 +11,7 @@ use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\LoginLinkManager;
 use App\Module\Auth\Domain\UserAccount;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Gère le cas d'utilisation "demander un lien de connexion".
@@ -30,6 +31,7 @@ final readonly class RequestLoginLinkHandler
         private UserRepositoryInterface $repository,
         private LoginLinkManager $loginLinkManager,
         private EventBusInterface $eventBus,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -44,10 +46,11 @@ final readonly class RequestLoginLinkHandler
         }
 
         // Délègue la création du lien de connexion.
-        $this->loginLinkManager->createFor($user, $command->ipAddress);
+        $this->loginLinkManager->createForStandardLogin($user, $command->ipAddress);
 
         // Enregistre la demande de connexion.
-        $this->repository->save($user, true);
+        $this->repository->add($user);
+        $this->em->flush();
 
         // Notifie les autres systèmes (ex: pour l'envoi d'email) qu'un lien a été généré.
         $this->eventBus->publish(...$user->pullDomainEvents());

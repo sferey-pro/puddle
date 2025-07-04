@@ -10,11 +10,10 @@ use App\Core\Domain\Event\DomainEventTrait;
 use App\Module\Auth\Domain\Enum\Role;
 use App\Module\Auth\Domain\Event\LoginLinkGenerated;
 use App\Module\Auth\Domain\Event\LoginLinkVerified;
-use App\Module\Auth\Domain\Event\UserAccountAssociated;
+use App\Module\Auth\Domain\Event\UserAccountCreated;
 use App\Module\Auth\Domain\Event\UserLoggedIn;
 use App\Module\Auth\Domain\Event\UserLoggedOut;
 use App\Module\Auth\Domain\Event\UserPasswordChanged;
-use App\Module\Auth\Domain\Event\UserRegistered;
 use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
@@ -59,6 +58,12 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     private ?\DateTimeImmutable $lastLoginFailureAt = null;
 
     /**
+     * @var \DateTimeImmutable|null Date de la première connexion.
+     *                              Permet de savoir si l'utilisateur s'est déjà connecté au moins une fois.
+     */
+    private ?\DateTimeImmutable $firstLoginAt = null;
+
+    /**
      * @var int nombre maximum de tentatives de connexion autorisées avant de suspendre le compte
      */
     private const MAX_LOGIN_ATTEMPTS = 3;
@@ -87,54 +92,20 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         $this->socialLinks = new ArrayCollection();
     }
 
-    /**
-     * Crée un compte utilisateur suite à une création depuis le gestionnaire d'utilisateur.
-     * Le compte est initialement crée avec un mot de passe aléatoire non communiqué
-     * à l'utilisateur et est considéré comme actif.
-     *
-     * @return self le nouveau compte associé créé
-     */
-    public static function createAssociated(UserId $id, Email $email, ?Username $username = null): self
+    public static function create(UserId $id, Email $email, ?Username $username = null): self
     {
         $user = new self(
             $id,
             $email,
             $username,
-            $password ?? Password::random(), // Un mot de passe est généré aléatoirement si aucun n'est fourni.
+            null,
             [Role::USER], // Tout nouvel utilisateur obtient le rôle de base "USER".
             false, // Le compte n'est pas vérifié par défaut.
             true // Le compte est actif par défaut.
         );
 
-        // Notifie le reste du système qu'un compte a été créé via une source externe (gestionnaire d'utilisateur).
         $user->recordDomainEvent(
-            new UserAccountAssociated($user->id(), $user->email())
-        );
-
-        return $user;
-    }
-
-    /**
-     * Crée un nouveau compte utilisateur suite à une inscription classique (email/mot de passe).
-     * C'est le point d'entrée pour enregistrer un nouvel utilisateur.
-     *
-     * @return self le nouveau compte utilisateur créé
-     */
-    public static function register(UserId $id, Email $email, ?Username $username = null, #[\SensitiveParameter] ?Password $password = null): self
-    {
-        $user = new self(
-            $id,
-            $email,
-            $username,
-            $password,
-            [Role::USER], // Tout nouvel utilisateur obtient le rôle de base "USER".
-            false, // Le compte n'est pas vérifié par défaut.
-            true // Le compte est actif par défaut.
-        );
-
-        // Notifie le système qu'un nouvel utilisateur s'est inscrit (pour envoyer un email de bienvenue, etc.).
-        $user->recordDomainEvent(
-            new UserRegistered($user->id(), $user->email())
+            new UserAccountCreated($user->id(), $user->email())
         );
 
         return $user;
@@ -216,6 +187,28 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         $this->recordDomainEvent(
             new UserVerified($this->id())
         );
+    }
+
+    /**
+     * Vérifie si l'utilisateur s'est déjà connecté au moins une fois.
+     */
+    public function hasAlreadyLoggedIn(): bool
+    {
+        return null !== $this->firstLoginAt;
+    }
+
+    /**
+     * Enregistre la date de la première connexion.
+     * Ne fait rien si l'utilisateur s'est déjà connecté.
+     * Pourrait aussi lever un événement de domaine `UserCompletedFirstLogin`.
+     */
+    public function recordFirstLogin(): void
+    {
+        if ($this->hasAlreadyLoggedIn()) {
+            return;
+        }
+
+        $this->firstLoginAt = new \DateTimeImmutable();
     }
 
     /**

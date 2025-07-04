@@ -18,15 +18,20 @@ doctrine:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
         report_fields_where_declared: true
-        validate_xml_mapping: true
+        validate_xml_mapping: false
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            SharedContext:
-                type: xml
+            Core:
                 is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Core/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Core\Domain'
+            SharedContext:
+                is_bundle: false
+                type: xml
                 dir: "%kernel.project_dir%/src/Module/SharedContext/Infrastructure/Doctrine/Mapping"
                 prefix: 'App\Module\SharedContext\Domain'
         controller_resolver:

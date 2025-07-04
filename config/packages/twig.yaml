@@ -3,8 +3,10 @@ twig:
         - 'form/layout.html.twig'
     file_name_pattern: '*.twig'
     paths:
+        '%kernel.project_dir%/templates/email': 'email'
         '%kernel.project_dir%/templates/tabler': 'Tabler'
         '%kernel.project_dir%/src/Module/Music/UI/Resources/views': 'MusicUI'
+        '%kernel.project_dir%/src/Shared/UI/Resources/templates': 'Shared'
 
 babdev_pagerfanta:
   default_view: twig

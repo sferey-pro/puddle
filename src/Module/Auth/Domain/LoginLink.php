@@ -27,7 +27,7 @@ readonly class LoginLink
         private LoginLinkId $id,
         private UserAccount $user,
         private LoginLinkDetails $details,
-        private IpAddress $ipAddress,
+        private ?IpAddress $ipAddress = null,
         private bool $isVerified = false,
     ) {
     }
@@ -44,7 +44,7 @@ readonly class LoginLink
     public static function createFor(
         UserAccount $user,
         LoginLinkDetails $details,
-        IpAddress $ipAddress,
+        ?IpAddress $ipAddress = null,
     ): self {
         return new self(
             id: LoginLinkId::generate(),
