@@ -27,7 +27,7 @@ final class Version20250613221710_Auth extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_IDENTIFIER_AUTH_USERS_EMAIL ON user_accounts (email)
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE "user_logins" (id UUID NOT NULL, user_id UUID NOT NULL, is_verified BOOLEAN DEFAULT NULL,  expires_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, login_link_hash VARCHAR(255) NOT NULL, ip_address VARCHAR(32) DEFAULT NULL, PRIMARY KEY(id))
+            CREATE TABLE "user_logins" (id UUID NOT NULL, user_id UUID NOT NULL, is_verified BOOLEAN DEFAULT NULL, expires_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, login_link_hash VARCHAR(255) NOT NULL, ip_address VARCHAR(32) NOT NULL, PRIMARY KEY(id))
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_6341CC99A76ED395 ON "user_logins" (user_id)
