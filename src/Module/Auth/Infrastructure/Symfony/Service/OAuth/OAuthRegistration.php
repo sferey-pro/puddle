@@ -36,7 +36,7 @@ final readonly class OAuthRegistration
             isActive: null
         );
 
-        $this->userRepository->save($user);
+        $this->userRepository->add($user);
 
         return $user;
     }

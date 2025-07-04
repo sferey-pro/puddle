@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\Command;
+namespace App\Module\Auth\Application\Command\PasswordRequest;
 
 use App\Core\Application\Clock\ClockInterface;
 use App\Core\Application\Event\EventBusInterface;
@@ -89,7 +89,7 @@ final readonly class ResetPasswordHandler
         try {
             // Sauvegarder les deux agrégats modifiés
             $this->passwordResetRequestRepository->save($request);
-            $this->userRepository->save($userAccount);
+            $this->userRepository->add($userAccount);
 
             $this->entityManager->flush();
             $this->entityManager->commit();

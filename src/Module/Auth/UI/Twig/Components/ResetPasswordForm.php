@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\UI\Twig\Components;
 
 use App\Core\Application\Command\CommandBusInterface;
-use App\Module\Auth\Application\Command\ResetPassword;
+use App\Module\Auth\Application\Command\PasswordRequest\ResetPassword;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\UI\Form\ResetPasswordFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

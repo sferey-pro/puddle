@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\Command;
+namespace App\Module\Auth\Application\Command\LoginLink;
 
 use App\Core\Application\Clock\ClockInterface;
 use App\Core\Application\Event\EventBusInterface;

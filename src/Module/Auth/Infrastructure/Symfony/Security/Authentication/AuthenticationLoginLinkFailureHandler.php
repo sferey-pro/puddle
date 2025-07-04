@@ -6,7 +6,7 @@ namespace App\Module\Auth\Infrastructure\Symfony\Security\Authentication;
 
 use App\Core\Application\Command\CommandBusInterface;
 use App\Core\Application\Query\QueryBusInterface;
-use App\Module\Auth\Application\Command\RecordLoginLinkFailure;
+use App\Module\Auth\Application\Command\LoginLink\RecordLoginLinkFailure;
 use App\Module\Auth\Application\Query\FindUserByIdentifierQuery;
 use App\Module\Auth\Domain\UserAccount;
 use Symfony\Component\HttpFoundation\Request;

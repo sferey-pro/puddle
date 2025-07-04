@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Controller;
 
-use App\Module\Auth\Application\Command\RequestPasswordReset;
+use App\Module\Auth\Application\Command\PasswordRequest\RequestPasswordReset;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
