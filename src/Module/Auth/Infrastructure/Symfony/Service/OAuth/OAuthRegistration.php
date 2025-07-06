@@ -21,7 +21,7 @@ final readonly class OAuthRegistration
 
     public function persist(SocialNetwork $serviceName, ResourceOwnerInterface $resourceOwner): UserAccount
     {
-        $user = UserAccount::register(
+        $user = UserAccount::create(
             id: UserId::generate(),
             password: new Password(md5(random_bytes(10))),
             email: $resourceOwner->getEmail(),
