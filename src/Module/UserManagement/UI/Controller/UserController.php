@@ -7,6 +7,7 @@ namespace App\Module\UserManagement\UI\Controller;
 use App\Core\Application\Command\CommandBusInterface;
 use App\Core\Application\Query\QueryBusInterface;
 use App\Core\Infrastructure\Persistence\Paginator\Paginator;
+use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Application\Query\FindUserQuery;
 use App\Module\UserManagement\Application\Query\ListUsersQuery;
@@ -21,6 +22,7 @@ final class UserController extends AbstractController
     public function __construct(
         private QueryBusInterface $queryBus,
         private CommandBusInterface $commandBus,
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 
@@ -31,9 +33,23 @@ final class UserController extends AbstractController
     ): array {
         $models = $this->queryBus->ask(new ListUsersQuery($page, $limit));
 
+
+        $users = $this->userRepository->findAll();
+        $loginLinks = $users[0]->loginLinks();
+
+        foreach ($loginLinks as $loginLink) {
+
+            // Affiche le premier lien de connexion magique
+            dump($loginLink->details()->hash->value);
+        }
+
+        dd('finish');
+
         return [
             'users' => $models,
         ];
+
+
     }
 
     #[Template('@UserManagement/user/new.html.twig')]

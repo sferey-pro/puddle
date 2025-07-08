@@ -7,7 +7,10 @@ namespace App\Module\UserManagement\Domain;
 use App\Core\Application\Clock\SystemTime;
 use App\Core\Domain\Aggregate\AggregateRoot;
 use App\Core\Domain\Event\DomainEventTrait;
+use App\Module\SharedContext\Domain\Enum\Role;
 use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\Phone;
+use App\Module\SharedContext\Domain\ValueObject\Roles;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Enum\UserStatus;
 use App\Module\UserManagement\Domain\Event\UserAccountAnonymized;
@@ -17,10 +20,12 @@ use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Module\UserManagement\Domain\Event\UserDeleted;
 use App\Module\UserManagement\Domain\Event\UserEmailChanged;
 use App\Module\UserManagement\Domain\Event\UserProfileCompleted;
+use App\Module\UserManagement\Domain\Event\UserRoleGranted;
+use App\Module\UserManagement\Domain\Event\UserSuspended;
 use App\Module\UserManagement\Domain\Exception\UserException;
 use App\Module\UserManagement\Domain\Specification\UserCanBeDeactivatedSpecification;
 use App\Module\UserManagement\Domain\Specification\UserHasStatusSpecification;
-use App\Module\UserManagement\Domain\ValueObject\AvatarUrl;
+use App\Module\UserManagement\Domain\ValueObject\SuspensionReason;
 use App\Module\UserManagement\Domain\ValueObject\Username;
 
 /**
@@ -35,16 +40,23 @@ final class User extends AggregateRoot
 {
     use DomainEventTrait;
 
-    private Email $email;
     private UserStatus $status;
+
+    private Roles $roles;
+
+    private ?Email $email;
+    private ?Phone $phone;
+    private ?SuspensionReason $suspensionReason = null;
+
     private readonly \DateTimeImmutable $registeredAt;
 
     private function __construct(
-        private readonly UserId $id,
-        Email $email,
+        private(set) UserId $id
     ) {
-        $this->email = $email;
         $this->registeredAt = SystemTime::now();
+
+        $this->status = UserStatus::ACTIVE;
+        $this->roles = Roles::user();
     }
 
     /**
@@ -98,6 +110,25 @@ final class User extends AggregateRoot
         $this->recordDomainEvent(
             new UserEmailChanged($this->id(), $newEmail, $oldEmail)
         );
+    }
+
+    public function suspend(SuspensionReason $reason): void
+    {
+        if ($this->status !== UserStatus::ACTIVE) {
+            return;
+        }
+        $this->status = UserStatus::SUSPENDED;
+        $this->suspensionReason = $reason;
+        $this->recordDomainEvent(new UserSuspended($this->id, $this->suspensionReason));
+    }
+
+    public function grantRole(Role $roleToGrant): void
+    {
+        if (in_array($roleToGrant, $this->roles, true)) {
+            return;
+        }
+        $this->roles[] = $roleToGrant;
+        $this->recordDomainEvent(new UserRoleGranted($this->id, $roleToGrant));
     }
 
     public function deactivate(?string $reason = null): void

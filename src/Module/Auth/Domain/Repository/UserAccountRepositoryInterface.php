@@ -15,7 +15,7 @@ use App\Module\SharedContext\Domain\ValueObject\Username;
  * Définit le contrat pour la persistance et la récupération des comptes utilisateurs (agrégat UserAccount)
  * pour le contexte d'authentification.
  */
-interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepositoryInterface
+interface UserAccountRepositoryInterface extends RepositoryInterface, SpecificationRepositoryInterface
 {
     public function add(UserAccount $model): void;
 

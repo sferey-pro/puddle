@@ -8,6 +8,7 @@ use App\Core\Application\Command\CommandBusInterface;
 use App\Module\Auth\Application\Command\StartRegistrationSaga;
 use App\Module\Auth\Application\DTO\RegisterUserDTO;
 use App\Module\Auth\Domain\Exception\UserException;
+use App\Module\Auth\Domain\ValueObject\Identifier;
 use App\Module\Auth\UI\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -56,7 +57,9 @@ class RegistrationForm extends AbstractController
             $dto = $this->getForm()->getData();
 
             try {
-                $this->commandBus->dispatch(new StartRegistrationSaga($dto));
+                $this->commandBus->dispatch(new StartRegistrationSaga(
+                    identifier: Identifier::fromString($dto->identifier),
+                ));
                 $this->addFlash('success', 'Votre compte a été créé. Veuillez vérifier votre boîte de réception pour valider votre e-mail.');
 
                 return $this->redirectToRoute('login');

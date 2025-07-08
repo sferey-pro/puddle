@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Domain\Enum;
+namespace App\Module\SharedContext\Domain\Enum;
 
 use App\Core\Domain\Enum\EnumJsonSerializableTrait;
 
@@ -21,11 +21,11 @@ enum Role: string
 {
     use EnumJsonSerializableTrait;
 
-    case SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-    case ADMIN = 'ROLE_ADMIN';
-    case USER = 'ROLE_USER';
-    case GUEST = 'ROLE_GUEST';
-    case ALLOWED_TO_SWITCH = 'ROLE_ALLOWED_TO_SWITCH';
+    case SUPER_ADMIN = 'super_admin';
+    case ADMIN = 'admin';
+    case USER = 'user';
+    case GUEST = 'guest';
+    case ALLOWED_TO_SWITCH = 'allowed_to_switch';
 
     public function getLabel(): string
     {
@@ -53,6 +53,11 @@ enum Role: string
                 self::ALLOWED_TO_SWITCH => 'blue',
             },
         ];
+    }
+
+    public function toSecurityRole(): string
+    {
+        return 'ROLE_' . mb_strtoupper($this->value);
     }
 
     public function equals(self $other): bool

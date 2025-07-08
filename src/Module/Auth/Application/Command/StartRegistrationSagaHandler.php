@@ -11,6 +11,7 @@ use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Application\Saga\Event\RegistrationSagaStarted;
 use App\Module\Auth\Domain\Exception\UserException;
+use App\Module\Auth\Domain\Repository\UserAccountRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess;
 use App\Module\SharedContext\Domain\ValueObject\Email;
@@ -33,7 +34,7 @@ final readonly class StartRegistrationSagaHandler
     public function __construct(
         #[Target('registration_saga')]
         private WorkflowInterface $workflow,
-        private UserRepositoryInterface $userRepository,
+        private UserAccountRepositoryInterface $useAccountRepository,
         private CommandBusInterface $commandBus,
         private EntityManagerInterface $em,
         private EventBusInterface $eventBus,
@@ -42,16 +43,16 @@ final readonly class StartRegistrationSagaHandler
 
     public function __invoke(StartRegistrationSaga $command): void
     {
-        $email = new Email($command->dto->email);
+        $identifier = $command->identifier;
         $userId = $command->userId();
 
         // Règle métier critique : l'email doit être unique pour démarrer un nouveau parcours.
-        $spec = new IsUniqueSpecification($email);
-        if (0 !== $this->userRepository->countBySpecification($spec)) {
-            throw UserException::emailAlreadyExists($email);
+        $spec = new IsUniqueSpecification($identifier->value);
+        if (0 !== $this->useAccountRepository->countBySpecification($spec)) {
+            throw UserException::identifierAlreadyExists($identifier);
         }
 
-        $sagaProcess = new RegistrationSagaProcess(SagaStateId::generate(), $userId, $email);
+        $sagaProcess = new RegistrationSagaProcess(SagaStateId::generate(), $userId, $identifier);
 
         $this->workflow->getMarking($sagaProcess);
 

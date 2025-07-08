@@ -14,17 +14,22 @@
         {{ form_errors(form) }}
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Create new account</h2>
-            {{ form_row(form.email) }}
+
+            {{ form_row(form.identifier, {
+                    label: 'Email address or phone number',
+                })
+            }}
 
             <twig:Alert type="notice" format="important" >
-                Après votre inscription, un e-mail vous sera envoyé. Il contiendra un lien sécurisé pour effectuer votre première connexion.
+                Après votre inscription, un e-mail ou sms vous sera envoyé. Il contiendra un lien sécurisé pour effectuer votre première connexion.
             </twig:Alert>
 
-            {{ form_widget(form.agreeTerms, {
+            {# {{ form_widget(form.agreeTerms, {
                 label: 'Agree the <a href="" tabindex="-1">terms and policy</a>.',
                 label_html: true,
                 })
-            }}
+            }} #}
+
             <div class="form-footer">
                 <button type="submit" class="btn btn-primary w-100 {{ this.hasValidationErrors ? 'disabled' : '' }}">Create new account</button>
             </div>

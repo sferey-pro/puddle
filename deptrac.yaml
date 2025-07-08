@@ -1,0 +1,54 @@
+deptrac:
+  paths:
+    - ./src/Module/Auth
+    - ./src/Module/CostManagement
+    - ./src/Module/Music
+    - ./src/Module/ProductCatalog
+    - ./src/Module/Sales
+    - ./src/Module/UserManagement
+  exclude_files:
+    - '#.*test.*#'
+  layers:
+    - name: Domain
+      collectors:
+        - type: directory
+          value: .+/Domain/.*
+
+    - name: Application
+      collectors:
+        - type: directory
+          value: .+/Application/.*
+
+    - name: Infrastructure
+      collectors:
+        - type: directory
+          value: .+/Infrastructure/.*
+
+    - name: UserInterface
+      collectors:
+        - type: directory
+          value: .+/UI/.*
+
+    - name: Vendors
+      collectors:
+        - type: classLike
+          value: ^ApiPlatform\\
+        - type: classLike
+          value: ^Symfony\\(?!Component\\Uid\\)
+        - type: classLike
+          value: ^Doctrine\\(?!ORM\\Mapping)
+        - type: classLike
+          value: ^Webmozart\\(?!Assert\\Assert)
+
+  ruleset:
+    Domain: ~
+    Application:
+        - Domain
+    Infrastructure:
+        - Domain
+        - Application
+        - Vendors
+    UserInterface:
+        - Domain
+        - Application
+        - Vendors

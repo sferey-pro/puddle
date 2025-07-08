@@ -33,7 +33,7 @@ final class RegistrationSagaProcess extends AbstractSagaProcess
     public function __construct(
         SagaStateId $id,
         UserId $userId,
-        Email $email,
+        Identifier $email,
     ) {
         parent::__construct($id);
 

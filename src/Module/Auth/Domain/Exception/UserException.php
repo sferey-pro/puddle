@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\Exception;
 
+use App\Module\Auth\Domain\Enum\IdentifierType;
+use App\Module\Auth\Domain\ValueObject\Identifier;
 use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\Phone;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -14,6 +17,7 @@ final class UserException extends \DomainException
 {
     private const NOT_FOUND = 'U-001';
     private const EMAIL_ALREADY_EXISTS = 'U-002';
+    private const PHONE_ALREADY_EXISTS = 'U-003';
 
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.
@@ -38,11 +42,31 @@ final class UserException extends \DomainException
         return new self(\sprintf('User not found with email : %s', $email), self::NOT_FOUND);
     }
 
+    public static function identifierAlreadyExists(Identifier $identifier): self
+    {
+        switch ($identifier->type) {
+            case IdentifierType::EMAIL:
+                return self::emailAlreadyExists($identifier->value);
+            case IdentifierType::PHONE:
+                return self::phoneAlreadyExists($identifier->value);
+            default:
+                throw new \InvalidArgumentException('Invalid identifier type provided.');
+        }
+    }
+
     public static function emailAlreadyExists(Email $email): self
     {
         return new self(
             \sprintf('A user with the email "%s" already exists.', $email),
             self::EMAIL_ALREADY_EXISTS
+        );
+    }
+
+    public static function phoneAlreadyExists(Phone $phone): self
+    {
+        return new self(
+            \sprintf('A user with the phone number "%s" already exists.', $phone),
+            self::PHONE_ALREADY_EXISTS
         );
     }
 

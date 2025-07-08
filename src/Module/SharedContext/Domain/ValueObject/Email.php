@@ -4,22 +4,53 @@ declare(strict_types=1);
 
 namespace App\Module\SharedContext\Domain\ValueObject;
 
+use App\Core\Domain\Validation\ValidationResult;
+use App\Core\Domain\ValueObject\Trait\SmartValidation;
 use App\Core\Domain\ValueObject\UniqueValueInterface;
+use App\Module\SharedContext\Domain\Exception\InvalidEmailException;
 use Webmozart\Assert\Assert;
 
-final class Email implements \Stringable, UniqueValueInterface
+final readonly class Email implements \Stringable, UniqueValueInterface
 {
-    public readonly string $value;
+    use SmartValidation;
 
-    public function __construct(string $value)
+    private function __construct(private string $value) {}
+
+    public static function validate(string $value): ValidationResult
     {
-        Assert::lengthBetween($value, 1, 180);
-
-        $this->ensureIsValidEmail($value);
-
-        $this->value = $value;
+        return self::validateInternal($value);
     }
 
+    public static function fromString(string $value): self
+    {
+        $result = self::tryFromString($value);
+        if ($result->isFailure()) {
+            throw new \InvalidArgumentException('Invalid email address: '.implode(', ', $result->getErrors()->all()));
+        }
+
+        return $result->getValue();
+    }
+
+    public static function tryFromString(string $value): ValueObjectResult
+    {
+        return self::validateAndCreate(
+            $value,
+            ['lengthBetween:1,180', 'email'], // Note: 'email' pour filter_var
+            fn($v) => new self($v)
+        );
+    }
+
+    private static function normalizeEmail(string $email): string
+    {
+        return strtolower(trim($email));
+    }
+
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    // Interface UniqueValueInterface
     public static function uniqueFieldPath(): string
     {
         return 'email.value';
@@ -30,25 +61,15 @@ final class Email implements \Stringable, UniqueValueInterface
         return $this->value;
     }
 
-    public static function fromString(string $email)
-    {
-        return new self($email);
-    }
-
+    // Comparaison
     public function isEqualTo(self $email): bool
     {
         return $email->value === $this->value;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return (string) $this->value;
-    }
-
-    protected function ensureIsValidEmail(string $email): void
-    {
-        if (false === filter_var($email, \FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException(\sprintf('The email <%s> is not valid', $email));
-        }
     }
 }
