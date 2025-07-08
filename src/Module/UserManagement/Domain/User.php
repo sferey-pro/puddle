@@ -7,27 +7,17 @@ namespace App\Module\UserManagement\Domain;
 use App\Core\Application\Clock\SystemTime;
 use App\Core\Domain\Aggregate\AggregateRoot;
 use App\Core\Domain\Event\DomainEventTrait;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Enum\UserStatus;
-use App\Module\UserManagement\Domain\Event\UserAccountAnonymized;
-use App\Module\UserManagement\Domain\Event\UserAccountDeactivated;
-use App\Module\UserManagement\Domain\Event\UserAccountReactivated;
 use App\Module\UserManagement\Domain\Event\UserCreated;
-use App\Module\UserManagement\Domain\Event\UserDeleted;
 use App\Module\UserManagement\Domain\Event\UserEmailChanged;
-use App\Module\UserManagement\Domain\Event\UserProfileCompleted;
-use App\Module\UserManagement\Domain\Exception\UserException;
-use App\Module\UserManagement\Domain\Specification\UserCanBeDeactivatedSpecification;
-use App\Module\UserManagement\Domain\Specification\UserHasStatusSpecification;
-use App\Module\UserManagement\Domain\ValueObject\AvatarUrl;
-use App\Module\UserManagement\Domain\ValueObject\Username;
 
 /**
  * Agrégat représentant un utilisateur dans le contexte de UserManagement.
  *
  * Responsabilités:
- * - Encapsuler les informations de profil (nom, avatar...).
+ * - Encapsuler les informations de profil
  * - Gérer le cycle de vie de l'utilisateur (statut actif, suspendu...).
  * - Garantir l'intégrité de ses propres données (invariants).
  */
@@ -35,13 +25,13 @@ final class User extends AggregateRoot
 {
     use DomainEventTrait;
 
-    private Email $email;
+    private EmailAddress $email;
     private UserStatus $status;
     private readonly \DateTimeImmutable $registeredAt;
 
     private function __construct(
         private readonly UserId $id,
-        Email $email,
+        EmailAddress $email,
     ) {
         $this->email = $email;
         $this->registeredAt = SystemTime::now();
@@ -53,7 +43,7 @@ final class User extends AggregateRoot
      */
     public static function create(
         UserId $id,
-        Email $email,
+        EmailAddress $email,
     ): self {
         $user = new self($id, $email);
         $user->status = UserStatus::PENDING;
@@ -65,30 +55,9 @@ final class User extends AggregateRoot
         return $user;
     }
 
-    /**
-     * Cas d'usage pour compléter le profil pour la première fois.
-     * C'est une transition d'état majeure pour l'utilisateur.
-     */
-    public function completeProfile(
-        Username $username,
-    ): void {
-        $this->status = UserStatus::ACTIVE;
-
-        $this->recordDomainEvent(new UserProfileCompleted($this->id));
-    }
-
-    public function delete(): self
+    public function changeEmail(EmailAddress $newEmail): void
     {
-        $this->recordDomainEvent(
-            new UserDeleted($this->id())
-        );
-
-        return $this;
-    }
-
-    public function changeEmail(Email $newEmail): void
-    {
-        if ($this->email->isEqualTo($newEmail)) {
+        if ($this->email->equals($newEmail)) {
             return;
         }
 
@@ -100,52 +69,12 @@ final class User extends AggregateRoot
         );
     }
 
-    public function deactivate(?string $reason = null): void
-    {
-        $spec = new UserCanBeDeactivatedSpecification();
-
-        if (!$spec->isSatisfiedBy($this)) {
-            throw UserException::accountAlreadyDeactivated($this->id);
-        }
-
-        $this->status = UserStatus::DEACTIVATED;
-        $this->recordDomainEvent(new UserAccountDeactivated($this->id, $reason));
-    }
-
-    public function reactivate(): void
-    {
-        $spec = new UserHasStatusSpecification(UserStatus::DEACTIVATED);
-
-        if (!$spec->isSatisfiedBy($this)) {
-            throw UserException::accountNotDeactivated($this->id);
-        }
-
-        $this->status = UserStatus::ACTIVE;
-        $this->recordDomainEvent(new UserAccountReactivated($this->id));
-    }
-
-    public function anonymize(): void
-    {
-        $spec = new UserHasStatusSpecification(UserStatus::ANONYMIZED);
-        if (!$spec->isSatisfiedBy($this)) {
-            throw UserException::accountAlreadyAnonymized($this->id, $this->status);
-        }
-
-        // Anonymisation des données
-        // $this->username = new Username('anonymized_'.$this->id);
-        $this->email = new Email(\sprintf('%s@anonymous.puddle.com', $this->id));
-        // $this->avatarUrl = null;
-
-        $this->status = UserStatus::ANONYMIZED;
-        $this->recordDomainEvent(new UserAccountAnonymized($this->id));
-    }
-
     public function id(): UserId
     {
         return $this->id;
     }
 
-    public function email(): Email
+    public function email(): EmailAddress
     {
         return $this->email;
     }

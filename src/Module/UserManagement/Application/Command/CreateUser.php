@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\UserManagement\Application\Command;
 
 use App\Core\Application\Command\CommandInterface;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -15,7 +15,7 @@ final readonly class CreateUser implements CommandInterface
 {
     public function __construct(
         public UserId $userId,
-        public Email $email,
+        public EmailAddress $email,
     ) {
     }
 }

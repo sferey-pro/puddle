@@ -7,7 +7,7 @@ namespace App\Module\UserManagement\Application\DTO;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-final readonly class ChangeEmailDTO
+final readonly class ChangeEmailAddressDTO
 {
     #[Sequentially([
         new Assert\NotBlank(message: 'Please enter an email!'),

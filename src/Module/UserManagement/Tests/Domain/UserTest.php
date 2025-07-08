@@ -6,7 +6,7 @@ namespace App\Module\UserManagement\Tests\Domain;
 
 use App\Core\Application\Clock\SystemTime;
 use App\Core\Infrastructure\Clock\FixedClock;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Event\UserCreated;
 use App\Module\UserManagement\Domain\User;
@@ -31,7 +31,7 @@ final class UserTest extends TestCase
         // ACT: On exécute la logique à tester
         $user = User::create(
             UserId::fromString(static::DEFAULT_UUID),
-            new Email('test@example.com')
+            new EmailAddress('test@example.com')
         );
         $events = $user->pullDomainEvents();
 

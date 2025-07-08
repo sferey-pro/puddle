@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\UserManagement\Domain\Event;
 
 use App\Core\Domain\Event\DomainEvent;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -15,8 +15,8 @@ final readonly class UserEmailChanged extends DomainEvent
 {
     public function __construct(
         private UserId $userId,
-        private Email $newEmail,
-        private Email $oldEmail,
+        private EmailAddress $newEmail,
+        private EmailAddress $oldEmail,
     ) {
         parent::__construct($this->userId);
     }
@@ -31,12 +31,12 @@ final readonly class UserEmailChanged extends DomainEvent
         return $this->userId;
     }
 
-    public function newEmail(): Email
+    public function newEmail(): EmailAddress
     {
         return $this->newEmail;
     }
 
-    public function oldEmail(): Email
+    public function oldEmail(): EmailAddress
     {
         return $this->oldEmail;
     }

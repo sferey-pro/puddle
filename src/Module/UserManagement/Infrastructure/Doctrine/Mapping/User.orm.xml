@@ -6,14 +6,12 @@
 
     <entity name="App\Module\UserManagement\Domain\User" table="users" repository-class="App\Module\UserManagement\Infrastructure\Doctrine\Repository\DoctrineUserRepository">
         <unique-constraints>
-            <unique-constraint columns="email" name="UNIQ_IDENTIFIER_USERS_EMAIL" />
+            <unique-constraint columns="emailAddress" name="UNIQ_IDENTIFIER_USERS_EMAIL" />
         </unique-constraints>
-
-        <embedded name="id" class="App\Module\SharedContext\Domain\ValueObject\UserId" use-column-prefix="false" />
-        <embedded name="email" class="App\Module\SharedContext\Domain\ValueObject\Email" use-column-prefix="false" />
-
+        
+        <id name="id" type="user_id" column="id" length="36" />
+        <field name="emailAddress" type="email_address" column="email_address" nullable="true" />
         <field name="status" type="string" enum-type="App\Module\UserManagement\Domain\Enum\UserStatus" />
-
         <field name="registeredAt" type="datetime_immutable" column="registered_at" nullable="false" />
     </entity>
 

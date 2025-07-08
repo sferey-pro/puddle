@@ -9,13 +9,8 @@ class UserView
     public string $id;
     public string $status;
     public ?string $email = null;
-    public ?string $username = null;
     public ?string $avatarUrl = null;
     public ?bool $isVerified = null;
-
-    public ?string $displayName = null;
-    public ?string $firstName = null;
-    public ?string $lastName = null;
 
     public ?\DateTimeImmutable $registeredAt = null;
     public ?\DateTimeImmutable $updatedAt = null;
@@ -40,13 +35,6 @@ class UserView
         return $this;
     }
 
-    public function setUsername(?string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
     public function setAvatarUrl(?string $avatarUrl): self
     {
         $this->avatarUrl = $avatarUrl;
@@ -57,27 +45,6 @@ class UserView
     public function setIsVerified(?bool $isVerified): self
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function setDisplayName(?string $displayName): self
-    {
-        $this->displayName = $displayName;
-
-        return $this;
-    }
-
-    public function setFirstName(?string $firstName): self
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    public function setLastName(?string $lastName): self
-    {
-        $this->lastName = $lastName;
 
         return $this;
     }

@@ -6,7 +6,7 @@ namespace App\Module\UserManagement\Domain\Repository;
 
 use App\Core\Domain\Repository\RepositoryInterface;
 use App\Core\Domain\Repository\SpecificationRepositoryInterface;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\User;
 
@@ -23,7 +23,7 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
 
     public function ofId(UserId $id): ?User;
 
-    public function ofEmail(Email $email): ?User;
+    public function ofEmail(EmailAddress $email): ?User;
 
     /**
      * Vérifie l'existence d'un utilisateur avec une adresse email donnée.
@@ -34,5 +34,5 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
      *
      * @return bool vrai si un utilisateur avec cet email existe (hors exclusion), faux sinon
      */
-    public function existsUserWithEmail(Email $email, ?UserId $excludeId = null): bool;
+    public function existsUserWithEmail(EmailAddress $email, ?UserId $excludeId = null): bool;
 }

@@ -15,13 +15,9 @@ class CreateUserDTO
     ])]
     public ?string $email;
 
-    public ?string $username;
-
     public function __construct(
         ?string $email = null,
-        ?string $username = null,
     ) {
         $this->email = $email;
-        $this->username = $username;
     }
 }

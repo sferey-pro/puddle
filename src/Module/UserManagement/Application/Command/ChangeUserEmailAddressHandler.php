@@ -7,13 +7,13 @@ namespace App\Module\UserManagement\Application\Command;
 use App\Core\Application\Event\EventBusInterface;
 use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\UserManagement\Domain\Exception\UserException;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 #[AsCommandHandler]
-final class ChangeUserEmailHandler
+final class ChangeUserEmailAddressHandler
 {
     public function __construct(
         private EventBusInterface $eventBus,
@@ -22,7 +22,7 @@ final class ChangeUserEmailHandler
     ) {
     }
 
-    public function __invoke(ChangeUserEmail $command): void
+    public function __invoke(ChangeUserEmailAddress $command): void
     {
         $dto = $command->dto;
 
@@ -32,7 +32,7 @@ final class ChangeUserEmailHandler
             throw UserException::notFoundWithId($command->userId);
         }
 
-        $newEmail = new Email($dto->email);
+        $newEmail = new EmailAddress($dto->email);
 
         // Vérifie si la nouvelle adresse email est déjà utilisée par un autre utilisateur.
         // L'utilisateur actuel est exclu de la vérification, car il peut simplement confirmer son propre email.

@@ -6,10 +6,11 @@ namespace App\Module\UserManagement\UI\Twig\Components;
 
 use App\Core\Application\Command\CommandBusInterface;
 use App\Core\Application\Query\QueryBusInterface;
+use App\Core\Domain\Result;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Application\Command\CreateUser;
-use App\Module\UserManagement\Application\Command\UpdateUser;
-use App\Module\UserManagement\Application\DTO\CreateUserDTO; // Supposons que cette Query existe
+use App\Module\UserManagement\Application\DTO\CreateUserDTO;
 use App\Module\UserManagement\Application\DTO\UpdateUserDTO;
 use App\Module\UserManagement\Application\Query\FindUserQuery;
 use App\Module\UserManagement\Application\ReadModel\UserView;
@@ -82,10 +83,6 @@ final class UserForm extends AbstractController
         if (!$this->initialUser) {
             $this->initialUser = $this->queryBus->ask(new FindUserQuery($this->userId));
         }
-
-        $this->data = new UpdateUserDTO(
-            username: $this->initialUser->username,
-        );
     }
 
     /**
@@ -100,15 +97,12 @@ final class UserForm extends AbstractController
             /** @var CreateUserDTO|UpdateUserDTO $dto */
             $dto = $this->getForm()->getData();
 
+            $result = EmailAddress::create($dto->email);
+
             if ($this->isCreationMode()) {
                 $command = new CreateUser(
-                    dto: $dto,
-                );
-            } else {
-                /** @var UpdateUserDTO $dto */
-                $command = new UpdateUser(
                     userId: UserId::fromString($this->userId),
-                    dto: $dto
+                    email: $result->value(),
                 );
             }
 

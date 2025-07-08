@@ -7,7 +7,7 @@ namespace App\Module\UserManagement\Infrastructure\Doctrine\Repository;
 use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Domain\Specification\SpecificationInterface;
 use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
@@ -73,7 +73,7 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
         return $this->findOneBy(['id.value' => $id->value]);
     }
 
-    public function ofEmail(Email $email): ?User
+    public function ofEmail(EmailAddress $email): ?User
     {
         return $this->withEmail($email)
             ->select(User::class)
@@ -81,7 +81,7 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
             ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
-    public function withEmail(Email $email): ?self
+    public function withEmail(EmailAddress $email): ?self
     {
         return $this->filter(static function (QueryBuilder $qb) use ($email): void {
             $qb->where(\sprintf('%s.email.value = :email', self::ALIAS))->setParameter('email', $email->value);
@@ -94,7 +94,7 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
      * pour les scénarios de mise à jour où un utilisateur peut changer son email
      * sans que son propre email actuel ne soit considéré comme un doublon.
      */
-    public function existsUserWithEmail(Email $email, ?UserId $excludeId = null): bool
+    public function existsUserWithEmail(EmailAddress $email, ?UserId $excludeId = null): bool
     {
         $qb = $this->withEmail($email)
             ->query()
