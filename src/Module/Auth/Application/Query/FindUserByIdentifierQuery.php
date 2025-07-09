@@ -8,7 +8,7 @@ use App\Core\Application\Query\QueryInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Query pour trouver un utilisateur par son identifiant (email ou username).
+ * Query pour trouver un utilisateur par son identifiant (EmailAddress).
  *
  * @implements QueryInterface<UserAccount>
  */

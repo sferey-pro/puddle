@@ -19,10 +19,12 @@ class Order extends AggregateRoot
 {
     use DomainEventTrait;
 
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
     /** @var Collection<int, OrderLine> */
     private Collection $orderLines;
     private OrderStatus $status;
-    private \DateTimeImmutable $createdAt;
 
     private function __construct(
         private readonly OrderId $id,

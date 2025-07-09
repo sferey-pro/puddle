@@ -10,9 +10,8 @@ use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Module\SharedContext\Domain\ValueObject\Username;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
@@ -47,13 +46,13 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
 
         try {
             $qb = $this->query();
-            $qb->select('COUNT('.self::ALIAS.'.id.value)')
+            $qb->select('COUNT('.self::ALIAS.'.id)')
                ->where(\sprintf(self::ALIAS.'.%s = :value', $specification->field()))
                ->setParameter('value', $specification->value());
 
             // Si un ID est fourni, on l'exclut de la recherche (cas d'une mise à jour).
             if (null !== $specification->excludeId()) {
-                $qb->andWhere(self::ALIAS.'.id.value != :excludeId')
+                $qb->andWhere(self::ALIAS.'.id != :excludeId')
                    ->setParameter('excludeId', $specification->excludeId());
             }
 
@@ -100,10 +99,10 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
 
     public function ofId(UserId $id): ?UserAccount
     {
-        return $this->findOneBy(['id.value' => $id->value]);
+        return $this->findOneBy(['id' => $id->value]);
     }
 
-    public function ofEmail(Email $email): ?UserAccount
+    public function ofEmail(EmailAddress $email): ?UserAccount
     {
         $qb = $this->withEmail($email)
             ->query();
@@ -111,25 +110,10 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
         return $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
-    public function ofUsername(Username $username): ?UserAccount
-    {
-        $qb = $this->withUsername($username)
-            ->query();
-
-        return $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
-    }
-
-    private function withEmail(Email $email): ?self
+    private function withEmail(EmailAddress $email): ?self
     {
         return $this->filter(static function (QueryBuilder $qb) use ($email): void {
-            $qb->where(\sprintf('%s.email.value = :email', self::ALIAS))->setParameter('email', $email->value);
-        });
-    }
-
-    private function withUsername(Username $username): ?self
-    {
-        return $this->filter(static function (QueryBuilder $qb) use ($username): void {
-            $qb->where(\sprintf('%s.username.value = :username', self::ALIAS))->setParameter('username', $username->value);
+            $qb->where(\sprintf('%s.email = :email', self::ALIAS))->setParameter('email', $email->value);
         });
     }
 
@@ -138,11 +122,11 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
      * excluant un ID d'utilisateur si fourni. Cela assure que chaque email est unique
      * dans le contexte d'authentification.
      */
-    public function existsUserWithEmail(Email $email, ?UserId $excludeId = null): bool
+    public function existsUserWithEmail(EmailAddress $email, ?UserId $excludeId = null): bool
     {
         $qb = $this->withEmail($email)
             ->query()
-            ->select('COUNT('.self::ALIAS.'.id.value)')
+            ->select('COUNT('.self::ALIAS.'.id)')
         ;
 
         if (null !== $excludeId) {

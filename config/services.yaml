@@ -2,3 +2,7 @@ services:
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
             - '%env(DATABASE_URL)%'
+
+    # _instanceof:
+    #     App\Core\Infrastructure\Persistence\Doctrine\Types\DoctrineCustomTypeInterface:
+    #         tags: ['doctrine.custom_type']

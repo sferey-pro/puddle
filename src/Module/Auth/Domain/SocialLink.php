@@ -13,8 +13,12 @@ use App\Module\Auth\Domain\ValueObject\SocialLinkId;
  * Cet objet simple stocke quel compte externe est lié à quel compte interne.
  * C'est une entité enfant de l'agrégat UserAccount.
  */
-readonly class SocialLink
+final readonly class SocialLink
 {
+
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
     public function __construct(
         private SocialLinkId $id,
         private Social $social,

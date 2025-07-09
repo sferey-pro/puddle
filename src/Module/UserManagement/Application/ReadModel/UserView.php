@@ -9,7 +9,6 @@ class UserView
     public string $id;
     public string $status;
     public ?string $email = null;
-    public ?string $avatarUrl = null;
     public ?bool $isVerified = null;
 
     public ?\DateTimeImmutable $registeredAt = null;
@@ -31,13 +30,6 @@ class UserView
     public function setEmail(?string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function setAvatarUrl(?string $avatarUrl): self
-    {
-        $this->avatarUrl = $avatarUrl;
 
         return $this;
     }

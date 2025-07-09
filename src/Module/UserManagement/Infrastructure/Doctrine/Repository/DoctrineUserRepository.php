@@ -41,13 +41,13 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
 
         try {
             $qb = $this->query();
-            $qb->select('COUNT('.self::ALIAS.'.id.value)')
+            $qb->select('COUNT('.self::ALIAS.'.id)')
                ->where(\sprintf(self::ALIAS.'.%s = :value', $specification->field()))
                ->setParameter('value', $specification->value());
 
             // Si un ID est fourni, on l'exclut de la recherche (cas d'une mise à jour).
             if (null !== $specification->excludeId()) {
-                $qb->andWhere(self::ALIAS.'.id.value != :excludeId')
+                $qb->andWhere(self::ALIAS.'.id != :excludeId')
                    ->setParameter('excludeId', $specification->excludeId());
             }
 
@@ -70,7 +70,7 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
 
     public function ofId(UserId $id): ?User
     {
-        return $this->findOneBy(['id.value' => $id->value]);
+        return $this->findOneBy(['id' => $id->value]);
     }
 
     public function ofEmail(EmailAddress $email): ?User
@@ -84,7 +84,7 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
     public function withEmail(EmailAddress $email): ?self
     {
         return $this->filter(static function (QueryBuilder $qb) use ($email): void {
-            $qb->where(\sprintf('%s.email.value = :email', self::ALIAS))->setParameter('email', $email->value);
+            $qb->where(\sprintf('%s.email = :email', self::ALIAS))->setParameter('email', $email->value);
         });
     }
 
@@ -98,7 +98,7 @@ class DoctrineUserRepository extends ORMAbstractRepository implements UserReposi
     {
         $qb = $this->withEmail($email)
             ->query()
-            ->select('COUNT('.self::ALIAS.'.id.value)')
+            ->select('COUNT('.self::ALIAS.'.id)')
         ;
 
         if (null !== $excludeId) {

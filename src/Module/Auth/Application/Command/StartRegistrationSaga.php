@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command;
 
 use App\Core\Application\Command\CommandInterface;
-use App\Module\Auth\Application\DTO\RegisterUserDTO;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -21,7 +20,8 @@ final readonly class StartRegistrationSaga implements CommandInterface
     private UserId $userId;
 
     public function __construct(
-        public RegisterUserDTO $dto,
+        public string $email,
+        public bool $agreeTerms,
     ) {
         $this->userId = UserId::generate();
     }

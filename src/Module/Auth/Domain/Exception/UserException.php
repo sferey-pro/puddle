@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\Exception;
 
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -33,12 +33,12 @@ final class UserException extends \DomainException
         return new self(\sprintf('User with ID "%s" not found.', $id), self::NOT_FOUND);
     }
 
-    public static function notFoundWithEmail(Email $email): self
+    public static function notFoundWithEmail(EmailAddress $email): self
     {
         return new self(\sprintf('User not found with email : %s', $email), self::NOT_FOUND);
     }
 
-    public static function emailAlreadyExists(Email $email): self
+    public static function emailAlreadyExists(EmailAddress $email): self
     {
         return new self(
             \sprintf('A user with the email "%s" already exists.', $email),

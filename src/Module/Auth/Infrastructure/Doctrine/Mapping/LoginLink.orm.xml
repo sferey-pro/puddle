@@ -5,13 +5,24 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Module\Auth\Domain\LoginLink" table="`user_logins`">
+    <entity name="App\Module\Auth\Domain\LoginLink" table="`auth_user_logins`">
+        <id name="id" type="login_link_id" column="id" length="36" />
 
-        <embedded name="id" class="App\Module\Auth\Domain\ValueObject\LoginLinkId" use-column-prefix="false" />
         <embedded name="details" class="App\Module\Auth\Domain\ValueObject\LoginLinkDetails" use-column-prefix="false" />
 
-        <field name="isVerified" type="boolean" nullable="true" />
-        <embedded name="ipAddress" class="App\Module\Auth\Domain\ValueObject\IpAddress" use-column-prefix="false"/>
+        <field name="ipAddress" type="ip_address" column="ip_address" nullable="true" />
+        <field name="isVerified" type="boolean" nullable="false">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
+
+        <field name="createdAt" type="datetime_immutable">
+            <gedmo:timestampable on="create"/>
+        </field>
+        <field name="updatedAt" type="datetime_immutable">
+            <gedmo:timestampable on="update"/>
+        </field>
 
         <many-to-one field="user" target-entity="App\Module\Auth\Domain\UserAccount" inversed-by="loginLinks">
             <join-column name="user_id" referenced-column-name="id" nullable="false" />

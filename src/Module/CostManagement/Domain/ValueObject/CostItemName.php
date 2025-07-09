@@ -4,31 +4,30 @@ declare(strict_types=1);
 
 namespace App\Module\CostManagement\Domain\ValueObject;
 
-use Webmozart\Assert\Assert;
+use App\Core\Domain\Result;
+use App\Core\Domain\ValueObject\AbstractStringValueObject;
+use Assert\Assert;
 
 /**
  * Représente le nom d'un poste de coût.
  * Ce Value Object garantit que le nom n'est pas vide et respecte une longueur maximale.
  */
-final readonly class CostItemName implements \Stringable
+final readonly class CostItemName extends AbstractStringValueObject
 {
-    public readonly string $value;
-
-    public function __construct(string $value)
+    /**
+     * @return Result<self> Un Result contenant un CostItemName en cas de succès.
+     */
+    public static function create(string $email): Result
     {
-        Assert::notEmpty($value, 'Cost item name cannot be empty.');
-        Assert::maxLength($value, 255, 'Cost item name cannot be longer than 255 characters.');
+        try {
+            $normalizedEmail = strtolower($email);
+            Assert::that($normalizedEmail)
+                ->notEmpty('Cost item name cannot be empty.')
+                ->maxLength(180, 'Cost item name cannot exceed 180 characters.');
 
-        $this->value = $value;
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->value;
-    }
-
-    public function equals(self $other): bool
-    {
-        return $this->value === $other->value;
+            return Result::success(new self($normalizedEmail));
+        } catch (\InvalidArgumentException $e) {
+            return Result::failure(new \DomainException($e->getMessage()));
+        }
     }
 }

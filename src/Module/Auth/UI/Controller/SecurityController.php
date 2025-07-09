@@ -48,7 +48,7 @@ final class SecurityController extends AbstractController
         $lastUsername = $this->authenticationUtils->getLastUsername();
 
         return [
-            'last_username' => $lastUsername,
+            '_username' => $lastUsername,
             'error' => $error,
         ];
     }

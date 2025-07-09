@@ -10,7 +10,7 @@ use App\Module\Auth\Domain\Event\PasswordResetRequested;
 use App\Module\Auth\Domain\ValueObject\HashedToken;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -27,6 +27,9 @@ final class PasswordResetRequest extends AggregateRoot
 {
     use DomainEventTrait;
 
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
     private readonly PasswordResetRequestId $id;
     private \DateTimeImmutable $expiresAt;
     private bool $used = false;
@@ -39,14 +42,14 @@ final class PasswordResetRequest extends AggregateRoot
 
     // Ces propriétés sont toujours présentes pour tracer l'origine de la demande.
     private IpAddress $ipAddress;
-    private Email $requestedEmail;
+    private EmailAddress $requestedEmail;
 
     /**
      * Crée une nouvelle demande de réinitialisation de mot de passe.
      * Enregistre un événement de domaine pour signaler cette création.
      */
     private function __construct(
-        Email $requestedEmail,
+        EmailAddress $requestedEmail,
         IpAddress $ipAddress,
         \DateTimeImmutable $expiresAt,
         ?UserId $userId = null,
@@ -71,7 +74,7 @@ final class PasswordResetRequest extends AggregateRoot
      */
     public static function createForRealUser(
         UserId $userId,
-        Email $requestedEmail,
+        EmailAddress $requestedEmail,
         IpAddress $ipAddress,
         \DateTimeImmutable $expiresAt,
         string $selector,
@@ -100,7 +103,7 @@ final class PasswordResetRequest extends AggregateRoot
      * @return self une nouvelle instance représentant la tentative
      */
     public static function logAttemptForUnknownUser(
-        Email $requestedEmail,
+        EmailAddress $requestedEmail,
         IpAddress $ipAddress,
         \DateTimeImmutable $expiresAt,
     ): self {
@@ -165,7 +168,7 @@ final class PasswordResetRequest extends AggregateRoot
         return $this->expiresAt;
     }
 
-    public function requestedEmail(): Email
+    public function requestedEmail(): EmailAddress
     {
         return $this->requestedEmail;
     }

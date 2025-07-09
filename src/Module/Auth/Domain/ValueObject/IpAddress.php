@@ -4,26 +4,24 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\ValueObject;
 
-use Webmozart\Assert\Assert;
+use App\Core\Domain\Result;
+use App\Core\Domain\ValueObject\AbstractStringValueObject;
+use Assert\Assert;
 
-final readonly class IpAddress implements \Stringable
+final readonly class IpAddress extends AbstractStringValueObject
 {
-    public readonly ?string $value;
-
-    public function __construct(?string $value)
+    /**
+     * @return Result<self> Un Result contenant un IpAddress en cas de succès.
+     */
+    public static function create(string $ip): Result
     {
-        Assert::lengthBetween($value, 1, 32);
+        try {
+            Assert::that($ip)
+                ->ip('Invalid IP address.');
 
-        $this->value = $value;
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->value;
-    }
-
-    public function equals(self $other): bool
-    {
-        return $this->value === $other->value;
+            return Result::success(new self($ip));
+        } catch (\InvalidArgumentException $e) {
+            return Result::failure(new \DomainException($e->getMessage()));
+        }
     }
 }

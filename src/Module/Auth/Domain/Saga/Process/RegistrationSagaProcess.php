@@ -6,7 +6,7 @@ namespace App\Module\Auth\Domain\Saga\Process;
 
 use App\Core\Domain\Saga\Process\AbstractSagaProcess;
 use App\Core\Domain\Saga\SagaStateId;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -33,7 +33,7 @@ final class RegistrationSagaProcess extends AbstractSagaProcess
     public function __construct(
         SagaStateId $id,
         UserId $userId,
-        Email $email,
+        EmailAddress $email,
     ) {
         parent::__construct($id);
 
@@ -51,9 +51,9 @@ final class RegistrationSagaProcess extends AbstractSagaProcess
         return UserId::fromString($this->context('userId'));
     }
 
-    public function email(): Email
+    public function email(): EmailAddress
     {
-        return new Email($this->context('email'));
+        return EmailAddress::create($this->context('email'))->value();
     }
 
     public function getCurrentState(): string

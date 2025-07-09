@@ -21,9 +21,8 @@ use App\Module\Auth\Domain\ValueObject\Hash;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
 use App\Module\Auth\Domain\ValueObject\Password;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Module\SharedContext\Domain\ValueObject\Username;
 use App\Module\UserManagement\Domain\Event\UserAccountSuspended;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,15 +32,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Représente le compte d'un utilisateur dans le système d'authentification.
  * Cet objet est le cœur de la sécurité : il gère les informations d'identification
- * (email, mot de passe), les permissions (rôles) et le statut du compte (actif, vérifié).
+ * (EmailAddress, mot de passe), les permissions (rôles) et le statut du compte (actif, vérifié).
  * Il est responsable de toutes les actions liées à la sécurité comme l'inscription,
  * la connexion, et protège le compte contre les tentatives de connexion frauduleuses.
  *
  * @TODO Faire évoluer en readonly si c'est possible (à examiner)
  */
-class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthenticatedUserInterface
+final class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use DomainEventTrait;
+
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
 
     // --- Propriétés liées à la sécurité du compte ---
 
@@ -81,23 +84,21 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      */
     private function __construct(
         private UserId $id,
-        private ?Email $email = null,
-        private ?Username $username = null,
+        private ?EmailAddress $email = null,
         #[\SensitiveParameter] private ?Password $password = null,
         private array $roles = [],
-        private bool $isVerified = false,
-        private bool $isActive = true,
+        private bool $verified = false,
+        private bool $active = true,
     ) {
         $this->loginLinks = new ArrayCollection();
         $this->socialLinks = new ArrayCollection();
     }
 
-    public static function create(UserId $id, Email $email, ?Username $username = null): self
+    public static function create(UserId $id, EmailAddress $email): self
     {
         $user = new self(
             $id,
             $email,
-            $username,
             null,
             [Role::USER], // Tout nouvel utilisateur obtient le rôle de base "USER".
             false, // Le compte n'est pas vérifié par défaut.
@@ -114,7 +115,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     /**
      * Enregistre une connexion réussie. Peut être utilisé pour l'historique ou des actions post-connexion.
      */
-    public static function login(UserId $id, Email $email): self
+    public static function login(UserId $id, EmailAddress $email): self
     {
         $user = new self($id, $email);
 
@@ -182,7 +183,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
      */
     public function verified(): void
     {
-        $this->isVerified = true;
+        $this->verified = true;
 
         $this->recordDomainEvent(
             new UserVerified($this->id())
@@ -303,7 +304,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
             return;
         }
 
-        $this->isActive = false;
+        $this->active = false;
 
         $this->recordDomainEvent(
             new UserAccountSuspended($this->id(), 'Too many login failures')
@@ -316,15 +317,11 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
         return $this->id;
     }
 
-    public function email(): Email
+    public function email(): EmailAddress
     {
         return $this->email;
     }
 
-    public function username(): ?Username
-    {
-        return $this->username;
-    }
 
     public function password(): ?Password
     {
@@ -338,12 +335,12 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
 
     public function isVerified(): bool
     {
-        return $this->isVerified;
+        return $this->verified;
     }
 
     public function isActive(): bool
     {
-        return $this->isActive;
+        return $this->active;
     }
 
     public function roles(): array
@@ -366,7 +363,7 @@ class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthen
     /** @see PasswordAuthenticatedUserInterface */
     public function getPassword(): ?string
     {
-        return $this->password()->value;
+        return $this->password()->value();
     }
 
     /** @see UserInterface */

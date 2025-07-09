@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace App\Module\ProductCatalog\Domain\ValueObject;
 
-use Webmozart\Assert\Assert;
+use App\Core\Domain\Result;
+use App\Core\Domain\ValueObject\AbstractStringValueObject;
+use Assert\Assert;
 
-final readonly class ProductName implements \Stringable
+final readonly class ProductName extends AbstractStringValueObject
 {
-    public readonly string $value;
-
-    public function __construct(string $value)
+    /**
+     * @return Result<self> Un Result contenant un ProductName en cas de succès.
+     */
+    public static function create(string $email): Result
     {
-        Assert::notEmpty($value, 'Product name cannot be empty.');
-        Assert::maxLength($value, 100, 'Product name cannot be longer than 100 characters.');
-        // Autres assertions si nécessaire (ex: caractères autorisés)
+        try {
+            $normalizedEmail = strtolower($email);
+            Assert::that($normalizedEmail)
+                ->notEmpty('Product name cannot be empty.')
+                ->maxLength(180, 'Product name cannot exceed 180 characters.');
 
-        $this->value = $value;
-    }
-
-    public function isEqualTo(self $other): bool
-    {
-        return $this->value === $other->value;
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->value;
+            return Result::success(new self($normalizedEmail));
+        } catch (\InvalidArgumentException $e) {
+            return Result::failure(new \DomainException($e->getMessage()));
+        }
     }
 }

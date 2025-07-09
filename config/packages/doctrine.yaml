@@ -9,11 +9,6 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
 
-        types:
-            user_id: App\Module\SharedContext\Infrastructure\Doctrine\Types\UserIdType
-            product_id: App\Module\SharedContext\Infrastructure\Doctrine\Types\ProductIdType
-            cost_item_id: App\Module\CostManagement\Infrastructure\Doctrine\Types\CostItemIdType
-
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250622210155_PasswordReset extends AbstractMigration
+final class Version20250708213709_Saga extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,10 +21,7 @@ final class Version20250622210155_PasswordReset extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE password_reset_requests (user_id UUID NOT NULL, expires_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, is_used BOOLEAN DEFAULT false NOT NULL, selector VARCHAR(32) DEFAULT NULL, id UUID NOT NULL, email VARCHAR(255) NOT NULL, ip_address VARCHAR(32) DEFAULT NULL, token VARCHAR(255) NOT NULL, PRIMARY KEY(id))
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE UNIQUE INDEX UNIQ_9075A7489692E25D ON password_reset_requests (selector)
+            CREATE TABLE "saga_process" (current_state VARCHAR(255) NOT NULL, context JSON NOT NULL, history JSON NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, id UUID NOT NULL, saga_type VARCHAR(255) NOT NULL, PRIMARY KEY(id))
         SQL);
     }
 
@@ -32,7 +29,7 @@ final class Version20250622210155_PasswordReset extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            DROP TABLE password_reset_requests
+            DROP TABLE "saga_process"
         SQL);
     }
 }

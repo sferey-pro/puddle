@@ -14,7 +14,7 @@ interface UniqueValueInterface
 {
     /**
      * Retourne le chemin de la propriété Doctrine à utiliser pour la requête.
-     * Exemples : 'email.value', 'username', etc.
+     * Exemples : 'email', etc.
      */
     public static function uniqueFieldPath(): string;
 

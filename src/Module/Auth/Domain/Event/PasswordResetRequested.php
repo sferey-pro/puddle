@@ -6,7 +6,7 @@ namespace App\Module\Auth\Domain\Event;
 
 use App\Core\Domain\Event\DomainEvent;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -17,7 +17,7 @@ final readonly class PasswordResetRequested extends DomainEvent
     public function __construct(
         private PasswordResetRequestId $aggregateId,
         private UserId $userId,
-        private Email $email,
+        private EmailAddress $email,
         private \DateTimeImmutable $expiresAt,
         private string $plainToken,
     ) {
@@ -39,7 +39,7 @@ final readonly class PasswordResetRequested extends DomainEvent
         return $this->userId;
     }
 
-    public function email(): Email
+    public function email(): EmailAddress
     {
         return $this->email;
     }

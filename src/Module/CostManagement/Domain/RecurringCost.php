@@ -18,11 +18,12 @@ use App\Module\CostManagement\Domain\ValueObject\RecurringCostId;
  * Cet agrégat simple contient la règle de récurrence et une référence
  * vers le CostItem qui sert de modèle.
  */
-class RecurringCost extends AggregateRoot
+final class RecurringCost extends AggregateRoot
 {
     use DomainEventTrait;
 
-    private \DateTimeImmutable $updatedAt;
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
     private ?\DateTimeImmutable $lastGeneratedAt = null;
 
     private function __construct(
@@ -30,7 +31,6 @@ class RecurringCost extends AggregateRoot
         private CostItemId $templateCostItemId, // Référence vers le modèle
         private RecurrenceRule $recurrenceRule,
         private RecurringCostStatus $status,
-        private \DateTimeImmutable $createdAt,
     ) {
     }
 
@@ -52,10 +52,11 @@ class RecurringCost extends AggregateRoot
             $templateCostItemId,
             $recurrenceRule,
             RecurringCostStatus::ACTIVE,
-            $clock->now()
         );
 
+        $recurringCost->createdAt = $clock->now();
         $recurringCost->updatedAt = $clock->now();
+
         $recurringCost->recordDomainEvent(new RecurringCostCreated($id));
 
         return $recurringCost;

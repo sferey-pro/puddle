@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250613221820_ProductCatalog extends AbstractMigration
+final class Version20250708213617_User extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,10 @@ final class Version20250613221820_ProductCatalog extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE catalog_products (id UUID NOT NULL, name VARCHAR(100) NOT NULL, base_cost_components JSON NOT NULL, total_base_cost_amount INT NOT NULL, is_active BOOLEAN NOT NULL, total_base_cost_currency VARCHAR(3) NOT NULL, PRIMARY KEY(id))
+            CREATE TABLE "users" (email VARCHAR DEFAULT NULL, status VARCHAR(255) NOT NULL, registered_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, id UUID NOT NULL, PRIMARY KEY(id))
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE UNIQUE INDEX UNIQ_IDENTIFIER_USERS_EMAIL ON "users" (email)
         SQL);
     }
 
@@ -29,7 +32,7 @@ final class Version20250613221820_ProductCatalog extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            DROP TABLE catalog_products
+            DROP TABLE "users"
         SQL);
     }
 }

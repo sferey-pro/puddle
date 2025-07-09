@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\ValueObject;
 
-use Webmozart\Assert\Assert;
+use App\Core\Domain\Result;
+use App\Core\Domain\ValueObject\AbstractStringValueObject;
+use Assert\Assert;
 
-final readonly class Password
+final readonly class Password extends AbstractStringValueObject
 {
-    public readonly ?string $value;
-
-    public function __construct(?string $value)
+    /**
+     * @return Result<self> Un Result contenant un Password en cas de succès.
+     */
+    public static function create(string $password): Result
     {
-        Assert::notEmpty($value, 'Password cannot be empty.');
-        $this->value = $value;
-    }
+        try {
 
-    public static function random(): self
-    {
-        return new self(md5(random_bytes(10)));
+            return Result::success(new self($password));
+        } catch (\InvalidArgumentException $e) {
+            return Result::failure(new \DomainException($e->getMessage()));
+        }
     }
 }

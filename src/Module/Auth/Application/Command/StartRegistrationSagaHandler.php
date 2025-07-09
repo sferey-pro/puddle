@@ -13,7 +13,7 @@ use App\Module\Auth\Application\Saga\Event\RegistrationSagaStarted;
 use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -42,8 +42,14 @@ final readonly class StartRegistrationSagaHandler
 
     public function __invoke(StartRegistrationSaga $command): void
     {
-        $email = new Email($command->dto->email);
+        $emailResult = EmailAddress::create($command->email);
         $userId = $command->userId();
+
+        if ($emailResult->isFailure()) {
+            throw new \InvalidArgumentException($emailResult->error()->getMessage());
+        }
+
+        $email = $emailResult->value();
 
         // Règle métier critique : l'email doit être unique pour démarrer un nouveau parcours.
         $spec = new IsUniqueSpecification($email);

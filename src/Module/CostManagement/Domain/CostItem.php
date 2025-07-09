@@ -54,9 +54,12 @@ use Doctrine\Common\Collections\Collection;
  * d'appliquer des changements. Chaque changement d'état significatif est enregistré
  * sous forme d'événement de domaine.
  */
-class CostItem extends AggregateRoot
+final class CostItem extends AggregateRoot
 {
     use DomainEventTrait;
+
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
 
     private CostItemName $name;
 

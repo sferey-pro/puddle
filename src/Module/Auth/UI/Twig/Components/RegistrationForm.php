@@ -9,6 +9,7 @@ use App\Module\Auth\Application\Command\StartRegistrationSaga;
 use App\Module\Auth\Application\DTO\RegisterUserDTO;
 use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\UI\Form\RegistrationFormType;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -52,11 +53,13 @@ class RegistrationForm extends AbstractController
         $this->submitForm();
 
         if ($this->getForm()->isValid()) {
-            /** @var RegisterUserDTO $dto */
-            $dto = $this->getForm()->getData();
-
             try {
-                $this->commandBus->dispatch(new StartRegistrationSaga($dto));
+                $command = new StartRegistrationSaga(
+                    email: $this->data->email,
+                    agreeTerms: $this->data->agreeTerms
+                );
+                $this->commandBus->dispatch($command);
+
                 $this->addFlash('success', 'Votre compte a été créé. Veuillez vérifier votre boîte de réception pour valider votre e-mail.');
 
                 return $this->redirectToRoute('login');

@@ -17,8 +17,11 @@ use App\Module\Auth\Domain\ValueObject\LoginLinkId;
  * s'il a déjà été utilisé, et depuis quelle adresse IP il a été demandé.
  * C'est une entité enfant de l'agrégat UserAccount.
  */
-readonly class LoginLink
+final readonly class LoginLink
 {
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
     /**
      * Le constructeur est privé pour s'assurer que sa création passe
      * par une méthode métier explicite comme `createFor()`.

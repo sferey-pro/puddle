@@ -16,7 +16,7 @@ final class ProductIdType extends AbstractValueObjectIdType
     /**
      * Le nom unique de notre type pour Doctrine.
      */
-    public const TYPE_NAME = 'product_id';
+    public const NAME = 'product_id';
 
     /**
      * Spécifie la classe du ValueObject que ce type gère.
@@ -28,6 +28,6 @@ final class ProductIdType extends AbstractValueObjectIdType
 
     public function getName(): string
     {
-        return self::TYPE_NAME;
+        return self::NAME;
     }
 }

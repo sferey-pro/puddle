@@ -6,6 +6,7 @@ namespace App\Module\Auth\Application\Command\PasswordRequest;
 
 use App\Core\Application\Clock\ClockInterface;
 use App\Core\Application\Event\EventBusInterface;
+use App\Core\Domain\Validation\ValidationResult;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
 use App\Module\Auth\Domain\PasswordResetRequest;
@@ -13,7 +14,7 @@ use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\PasswordResetTokenGeneratorInterface;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 
 /**
  * Orchestre le cas d'usage "Demander une réinitialisation de mot de passe".
@@ -41,8 +42,16 @@ final readonly class RequestPasswordResetHandler
 
     public function __invoke(RequestPasswordReset $command): \DateTimeImmutable
     {
-        $email = new Email($command->email);
-        $ipAddress = new IpAddress($command->ipAddress);
+        $validation = ValidationResult::collect([
+            'email' => EmailAddress::create($command->email),
+            'ip' => IpAddress::create($command->ipAddress),
+        ]);
+
+        if ($validation->isFailure()) {
+            throw new \InvalidArgumentException($validation->getJoinedErrorMessages());
+        }
+
+        ['email' => $email, 'ip' => $ipAddress] = $validation->getValues();
 
         // Règle de sécurité : si la même adresse e-mail a fait trop de demandes récentes,
         // on lève une exception pour bloquer la tentative et informer l'utilisateur.

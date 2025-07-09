@@ -31,7 +31,7 @@ class DoctrineRecurringCostRepository extends ORMAbstractRepository implements R
 
     public function ofId(RecurringCostId $id): ?RecurringCost
     {
-        return $this->findOneBy(['id.value' => $id->value]);
+        return $this->findOneBy(['id' => $id->value]);
     }
 
     public function findDueForGeneration(\DateTimeInterface $dateTime): array

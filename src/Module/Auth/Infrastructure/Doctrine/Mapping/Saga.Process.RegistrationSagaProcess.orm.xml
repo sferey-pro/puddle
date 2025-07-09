@@ -7,5 +7,4 @@
     <entity name="App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess">
 
     </entity>
-
 </doctrine-mapping>

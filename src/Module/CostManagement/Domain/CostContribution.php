@@ -19,8 +19,11 @@ use App\Module\SharedContext\Domain\ValueObject\ProductId;
  * à l'origine de la contribution (ex: un produit vendu).
  * C'est une entité enfant de l'agrégat CostItem.
  */
-class CostContribution
+final class CostContribution
 {
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
     /**
      * @var costItem L'agrégat parent
      */

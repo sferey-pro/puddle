@@ -16,9 +16,12 @@ class Product extends AggregateRoot
 {
     use DomainEventTrait;
 
+    private(set) \DateTimeImmutable $createdAt;
+    private(set) \DateTimeImmutable $updatedAt;
+
     private ProductName $name;
     private BaseCostStructure $baseCostStructure;
-    private bool $isActive = true;
+    private bool $active = true;
 
     private function __construct(
         private ProductId $id,
@@ -62,12 +65,12 @@ class Product extends AggregateRoot
 
     public function isActive(): bool
     {
-        return $this->isActive;
+        return $this->active;
     }
 
     public function changeName(ProductName $newName): void
     {
-        if (!$this->name->isEqualTo($newName)) {
+        if (!$this->name->equals($newName)) {
             $this->name = $newName;
         }
     }
@@ -79,12 +82,12 @@ class Product extends AggregateRoot
 
     public function activate(): void
     {
-        $this->isActive = true;
+        $this->active = true;
     }
 
     public function deactivate(): void
     {
-        $this->isActive = false;
+        $this->active = false;
     }
 
     public function totalBaseCost(): Money

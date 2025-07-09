@@ -9,7 +9,7 @@ use App\Core\Infrastructure\Persistence\ORMAbstractRepository;
 use App\Module\Auth\Domain\PasswordResetRequest;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\ValueObject\PasswordResetRequestId;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -42,7 +42,7 @@ final class DoctrinePasswordResetRequestRepository extends ORMAbstractRepository
 
     public function ofId(PasswordResetRequestId $id): ?PasswordResetRequest
     {
-        return $this->findOneBy(['id.value' => $id->value]);
+        return $this->findOneBy(['id' => $id->value]);
     }
 
     public function ofSelector(string $selector): ?PasswordResetRequest
@@ -50,10 +50,10 @@ final class DoctrinePasswordResetRequestRepository extends ORMAbstractRepository
         return $this->findOneBy(['selector' => $selector]);
     }
 
-    public function countRecentRequests(Email $email): int
+    public function countRecentRequests(EmailAddress $email): int
     {
         $count = $this->createQueryBuilder('r')
-            ->select('COUNT(r.id.value)')
+            ->select('COUNT(r.id)')
             ->where('r.requestedEmail.value = :email')
             ->andWhere('r.expiresAt > :now')
             ->setParameter('email', $email->value)
@@ -64,7 +64,7 @@ final class DoctrinePasswordResetRequestRepository extends ORMAbstractRepository
         return (int) $count;
     }
 
-    public function findOldestNonExpiredRequestDate(Email $email): ?\DateTimeImmutable
+    public function findOldestNonExpiredRequestDate(EmailAddress $email): ?\DateTimeImmutable
     {
         $result = $this->createQueryBuilder('r')
             ->select('MIN(r.expiresAt)')

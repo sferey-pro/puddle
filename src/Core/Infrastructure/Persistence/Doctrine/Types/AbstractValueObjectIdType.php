@@ -18,7 +18,7 @@ use Doctrine\DBAL\Types\Type;
  * Cette classe abstraite contient la logique générique pour convertir correctement
  * ces objets en leur représentation en base de données et vice-versa.
  */
-abstract class AbstractValueObjectIdType extends Type
+abstract class AbstractValueObjectIdType extends Type implements DoctrineCustomTypeInterface
 {
     /**
      * Doit retourner le nom unique du type Doctrine (ex: 'user_id', 'saga_state_id').

@@ -7,9 +7,8 @@ namespace App\Module\Auth\Domain\Repository;
 use App\Core\Domain\Repository\RepositoryInterface;
 use App\Core\Domain\Repository\SpecificationRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
-use App\Module\SharedContext\Domain\ValueObject\Username;
 
 /**
  * Définit le contrat pour la persistance et la récupération des comptes utilisateurs (agrégat UserAccount)
@@ -21,9 +20,8 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
 
     public function remove(UserAccount $model): void;
 
-    public function ofEmail(Email $email): ?UserAccount;
+    public function ofEmail(EmailAddress $email): ?UserAccount;
 
-    public function ofUsername(Username $email): ?UserAccount;
 
     public function ofId(UserId $id): ?UserAccount;
 
@@ -37,5 +35,5 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
      *
      * @return bool vrai si un compte existe avec cet email (hors exclusion), faux sinon
      */
-    public function existsUserWithEmail(Email $email, ?UserId $excludeId = null): bool;
+    public function existsUserWithEmail(EmailAddress $email, ?UserId $excludeId = null): bool;
 }

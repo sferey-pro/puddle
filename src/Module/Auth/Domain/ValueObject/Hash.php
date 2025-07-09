@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain\ValueObject;
 
-final readonly class Hash implements \Stringable
+use App\Core\Domain\Result;
+use App\Core\Domain\ValueObject\AbstractStringValueObject;
+
+final readonly class Hash extends AbstractStringValueObject
 {
-    public readonly ?string $value;
-
-    public function __construct(?string $value)
+    /**
+     * @return Result<self> Un Result contenant un Hash en cas de succès.
+     */
+    public static function create(string $hash): Result
     {
-        $this->value = $value;
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->value;
-    }
-
-    public function equals(self $other): bool
-    {
-        return $this->value === $other->value;
+        try {
+            return Result::success(new self($hash));
+        } catch (\InvalidArgumentException $e) {
+            return Result::failure(new \DomainException($e->getMessage()));
+        }
     }
 }

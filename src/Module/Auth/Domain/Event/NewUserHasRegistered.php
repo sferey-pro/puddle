@@ -6,7 +6,7 @@ namespace App\Module\Auth\Domain\Event;
 
 use App\Core\Domain\Event\DomainEvent;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 final readonly class NewUserHasRegistered extends DomainEvent
@@ -14,7 +14,7 @@ final readonly class NewUserHasRegistered extends DomainEvent
     public function __construct(
         private UserId $aggregateId,
         private LoginLinkDetails $loginLinkDetails,
-        private ?Email $email = null,
+        private ?EmailAddress $email = null,
         private ?string $phoneNumber = null,
     ) {
         parent::__construct($this->aggregateId);
@@ -30,7 +30,7 @@ final readonly class NewUserHasRegistered extends DomainEvent
         return $this->aggregateId;
     }
 
-    public function email(): ?Email
+    public function email(): ?EmailAddress
     {
         return $this->email;
     }

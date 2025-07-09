@@ -41,6 +41,6 @@ class DoctrineProductRepository extends ORMAbstractRepository implements Product
 
     public function ofId(ProductId $id): ?Product
     {
-        return $this->findOneBy(['id.value' => $id->value]);
+        return $this->findOneBy(['id' => $id->value]);
     }
 }

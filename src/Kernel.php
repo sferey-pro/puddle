@@ -6,6 +6,7 @@ namespace App;
 
 use App\Core\Application\Clock\SystemTime;
 use App\Core\Infrastructure\Clock\SystemClock;
+use App\Core\Infrastructure\Symfony\DependencyInjection\Compiler\AutoConfigureDoctrineTypesPass;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -47,6 +48,8 @@ class Kernel extends BaseKernel
 
     protected function build(ContainerBuilder $container): void
     {
+        $container->addCompilerPass(new AutoConfigureDoctrineTypesPass());
+
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition): void {
             $definition->addTag('messenger.message_handler', ['bus' => 'query.bus']);
         });

@@ -8,7 +8,7 @@ use App\Module\Auth\Domain\LoginLink;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
-use App\Module\SharedContext\Domain\ValueObject\Email;
+use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
 
 /**
  * Service de domaine pur responsable de la gestion des liens de connexion.
@@ -45,7 +45,7 @@ final readonly class LoginLinkManager
      *
      * @return LoginLink L'entité LoginLink créée, avec son token en clair accessible
      */
-    public function createForNewUser(Email $email): LoginLink
+    public function createForNewUser(EmailAddress $email): LoginLink
     {
         $userAccount = $this->userRepository->ofEmail($email);
         if (!$userAccount) {

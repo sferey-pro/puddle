@@ -45,9 +45,12 @@ final readonly class LoginLinkGenerator implements LoginLinkGeneratorInterface
         // 2. Extraction des informations depuis l'URL générée par Symfony.
         $request = Request::create($symfonyLoginLinkDetails->getUrl());
 
+
+        $resultHash = Hash::create($request->get('hash'));
+
         // 3. Traduction (mapping) des données de Symfony vers notre Value Object de domaine.
         return new LoginLinkDetails(
-            hash: new Hash($request->get('hash')), // Le hash est dans l'url.
+            hash: $resultHash->value(), // Le hash est dans l'url.
             expiresAt: $symfonyLoginLinkDetails->getExpiresAt(),
             url: $symfonyLoginLinkDetails->getUrl()
         );

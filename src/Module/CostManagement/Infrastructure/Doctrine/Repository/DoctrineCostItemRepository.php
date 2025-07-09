@@ -84,6 +84,6 @@ class DoctrineCostItemRepository extends ORMAbstractRepository implements CostIt
 
     public function ofId(CostItemId $id): ?CostItem
     {
-        return $this->findOneBy(['id.value' => $id->value]);
+        return $this->findOneBy(['id' => $id->value]);
     }
 }
