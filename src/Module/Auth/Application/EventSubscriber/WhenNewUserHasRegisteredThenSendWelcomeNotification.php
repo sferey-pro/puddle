@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\EventSubscriber;
 
-use App\Module\Auth\Application\Notifier\WelcomeLinkNotification;
+use App\Module\Auth\Application\Notifier\WelcomeNotification;
 use App\Module\Auth\Domain\Event\NewUserHasRegistered;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -31,7 +31,7 @@ final readonly class WhenNewUserHasRegisteredThenSendWelcomeNotification
 
     public function __invoke(NewUserHasRegistered $event): void
     {
-        $notification = new WelcomeLinkNotification(
+        $notification = new WelcomeNotification(
             $event->loginLinkDetails(),
             '🎉 Bienvenue sur Puddle !'
         );

@@ -11,6 +11,7 @@ use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\Auth\Domain\ValueObject\Password;
 use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
+use App\Module\SharedContext\Domain\ValueObject\PhoneNumber;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
@@ -99,7 +100,7 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
 
     public function ofId(UserId $id): ?UserAccount
     {
-        return $this->findOneBy(['id' => $id->value]);
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function ofEmail(EmailAddress $email): ?UserAccount
@@ -113,7 +114,7 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
     private function withEmail(EmailAddress $email): ?self
     {
         return $this->filter(static function (QueryBuilder $qb) use ($email): void {
-            $qb->where(\sprintf('%s.email = :email', self::ALIAS))->setParameter('email', $email->value);
+            $qb->where(\sprintf('%s.email = :email', self::ALIAS))->setParameter('email', $email);
         });
     }
 
@@ -130,8 +131,43 @@ class DoctrineUserAccountRepository extends ORMAbstractRepository implements Use
         ;
 
         if (null !== $excludeId) {
-            $qb->andWhere('ua.id.uuid != :excludeId')
-                ->setParameter('excludeId', $excludeId->value);
+            $qb->andWhere('ua.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    public function ofPhone(PhoneNumber $phone): ?UserAccount
+    {
+        $qb = $this->withPhone($phone)
+            ->query();
+
+        return $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
+    }
+
+    private function withPhone(PhoneNumber $phone): ?self
+    {
+        return $this->filter(static function (QueryBuilder $qb) use ($phone): void {
+            $qb->where(\sprintf('%s.phone = :phone', self::ALIAS))->setParameter('phone', $phone);
+        });
+    }
+
+    /**
+     * Vérifie si un compte utilisateur avec l'adresse phone spécifiée existe déjà,
+     * excluant un ID d'utilisateur si fourni. Cela assure que chaque phone est unique
+     * dans le contexte d'authentification.
+     */
+    public function existsUserWithPhone(PhoneNumber $phone, ?UserId $excludeId = null): bool
+    {
+        $qb = $this->withPhone($phone)
+            ->query()
+            ->select('COUNT('.self::ALIAS.'.id)')
+        ;
+
+        if (null !== $excludeId) {
+            $qb->andWhere('ua.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult() > 0;

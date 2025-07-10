@@ -45,6 +45,7 @@
         "symfony/flex": "^2",
         "symfony/form": "^7",
         "symfony/framework-bundle": "^7",
+        "symfony/free-mobile-notifier": "^7",
         "symfony/intl": "^7",
         "symfony/mailer": "^7",
         "symfony/mercure-bundle": "^0.3.9",
@@ -85,7 +86,11 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Kernel\\": "src/Kernel/",
+            "Account\\": "src/Account/",
+            "Identity\\": "src/Identity/",
+            "Authentification\\": "src/Authentification/"
         }
     },
     "autoload-dev": {

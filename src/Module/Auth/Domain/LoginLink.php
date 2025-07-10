@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
+use App\Module\Auth\Domain\AuthenticationMethod;
 use App\Core\Application\Clock\ClockInterface;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
@@ -17,22 +18,21 @@ use App\Module\Auth\Domain\ValueObject\LoginLinkId;
  * s'il a déjà été utilisé, et depuis quelle adresse IP il a été demandé.
  * C'est une entité enfant de l'agrégat UserAccount.
  */
-final readonly class LoginLink
+final readonly class LoginLink implements AuthenticationMethod
 {
+    private(set) LoginLinkId $id;
+    private(set) LoginLinkDetails $details;
+
+    private(set) UserAccount $user;
+    private(set) bool $isVerified;
+
+    private(set) ?IpAddress $ipAddress;
+
     private(set) \DateTimeImmutable $createdAt;
     private(set) \DateTimeImmutable $updatedAt;
 
-    /**
-     * Le constructeur est privé pour s'assurer que sa création passe
-     * par une méthode métier explicite comme `createFor()`.
-     */
-    public function __construct(
-        private LoginLinkId $id,
-        private UserAccount $user,
-        private LoginLinkDetails $details,
-        private ?IpAddress $ipAddress = null,
-        private bool $isVerified = false,
-    ) {
+    private function __construct() {
+
     }
 
     /**
@@ -44,18 +44,20 @@ final readonly class LoginLink
      *
      * @return self le nouvel objet lien de connexion
      */
-    public static function createFor(
+    public static function create(
         UserAccount $user,
         LoginLinkDetails $details,
         ?IpAddress $ipAddress = null,
     ): self {
-        return new self(
-            id: LoginLinkId::generate(),
-            user: $user,
-            details: $details,
-            ipAddress: $ipAddress,
-            // isVerified est false par défaut, car le lien vient juste d'être créé.
-        );
+        $loginLink = new self();
+        $loginLink->id = LoginLinkId::generate();
+
+        $loginLink->user = $user;
+        $loginLink->details = $details;
+        $loginLink->ipAddress = $ipAddress;
+        $loginLink->isVerified = false;
+
+        return $loginLink;
     }
 
     /**
@@ -68,7 +70,7 @@ final readonly class LoginLink
      *
      * @return self une nouvelle instance du lien marqué comme vérifié
      */
-    public function markAsVerified(ClockInterface $clock): self
+    public function verify(ClockInterface $clock): self
     {
         if ($this->isVerified) {
             throw LoginLinkException::alreadyVerified();
@@ -78,16 +80,71 @@ final readonly class LoginLink
             throw LoginLinkException::expired();
         }
 
-        // On crée une copie de l'objet avec le statut vérifié.
-        $verifiedLogin = new self(
-            $this->id(),
-            $this->user(),
-            $this->details(),
-            $this->ipAddress(),
-            isVerified: true,
-        );
+        $verifiedLogin = clone $this;
+        $verifiedLogin->verified();
+        $verifiedLogin->updatedAt = $clock->now();
 
         return $verifiedLogin;
+    }
+
+
+    /**
+     * Ajoute un "magic link" (lien de connexion sans mot de passe) pour cet utilisateur.
+     */
+    public function addLoginLink(
+        LoginLinkDetails $loginLinkDetails,
+        IpAddress $ipAddress,
+    ): void {
+        $login = LoginLink::createFor($this, $loginLinkDetails, $ipAddress);
+
+        $this->loginLinks->add($login);
+
+        // Notifie qu'un lien a été généré, par exemple pour l'envoyer par e-mail.
+        $this->recordDomainEvent(
+            new LoginLinkGenerated($this->id(), $this->email(), $loginLinkDetails)
+        );
+    }
+
+    /**
+     * Valide un "magic link" fourni par l'utilisateur.
+     * Si le lien est correct et non expiré, il est marqué comme vérifié.
+     */
+    public function verifyLoginLink(Hash $hash, ClockInterface $clock): void
+    {
+        $loginLinkToVerify = null;
+
+        $matchingLinks = $this->loginLinks->filter(
+            fn (LoginLink $loginLink) => $loginLink->details()->hash->equals($hash)
+        );
+
+        if ($matchingLinks->isEmpty()) {
+            throw LoginLinkException::notFoundWithHash($hash);
+        }
+
+        /** @var LoginLink $loginLinkToVerify */
+        $loginLinkToVerify = $matchingLinks->first();
+
+        $verifiedLogin = $loginLinkToVerify->markAsVerified($clock);
+
+        $this->recordDomainEvent(
+            new LoginLinkVerified($this->id(), $verifiedLogin->id())
+        );
+
+        $this->clearUnusedLoginLinks($verifiedLogin);
+    }
+
+    /**
+     * Nettoie les anciens liens magiques après qu'un a été utilisé avec succès.
+     */
+    private function clearUnusedLoginLinks(LoginLink $justVerifiedLink): void
+    {
+        $linksToRemove = $this->loginLinks->filter(
+            fn (LoginLink $link) => !$link->id()->equals($justVerifiedLink->id())
+        );
+
+        foreach ($linksToRemove as $link) {
+            $this->loginLinks->removeElement($link);
+        }
     }
 
     /**
@@ -95,33 +152,7 @@ final readonly class LoginLink
      */
     public function isExpired(ClockInterface $clock): bool
     {
-        return $this->details()->expiresAt < $clock->now();
-    }
-
-    // --- Accesseurs ---
-    public function id(): LoginLinkId
-    {
-        return $this->id;
-    }
-
-    public function user(): ?UserAccount
-    {
-        return $this->user;
-    }
-
-    public function details(): ?LoginLinkDetails
-    {
-        return $this->details;
-    }
-
-    public function isVerified(): ?bool
-    {
-        return $this->isVerified;
-    }
-
-    public function ipAddress(): ?IpAddress
-    {
-        return $this->ipAddress;
+        return $this->details->expiresAt < $clock->now();
     }
 
     public function verified(): static

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Core\Application\Clock\SystemTime;
-use App\Core\Infrastructure\Clock\SystemClock;
-use App\Core\Infrastructure\Symfony\DependencyInjection\Compiler\AutoConfigureDoctrineTypesPass;
-use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
-use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
+use Kernel\Application\Clock\SystemTime;
+use Kernel\Infrastructure\Clock\SystemClock;
+use Kernel\Infrastructure\Symfony\DependencyInjection\Compiler\AutoConfigureDoctrineTypesPass;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsEventHandler;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -58,8 +59,8 @@ class Kernel extends BaseKernel
             $definition->addTag('messenger.message_handler', ['bus' => 'command.bus']);
         });
 
-        // $container->registerAttributeForAutoconfiguration(AsEventHandler::class, static function (ChildDefinition $definition): void {
-        //     $definition->addTag('messenger.message_handler', ['bus' => 'event.bus']);
-        // });
+        $container->registerAttributeForAutoconfiguration(AsEventHandler::class, static function (ChildDefinition $definition): void {
+            $definition->addTag('messenger.message_handler', ['bus' => 'event.bus']);
+        });
     }
 }

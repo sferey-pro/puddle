@@ -8,6 +8,7 @@ use App\Core\Domain\Repository\RepositoryInterface;
 use App\Core\Domain\Repository\SpecificationRepositoryInterface;
 use App\Module\Auth\Domain\UserAccount;
 use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
+use App\Module\SharedContext\Domain\ValueObject\PhoneNumber;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -22,6 +23,7 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
 
     public function ofEmail(EmailAddress $email): ?UserAccount;
 
+    public function ofPhone(PhoneNumber $phone): ?UserAccount;
 
     public function ofId(UserId $id): ?UserAccount;
 
@@ -29,8 +31,8 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
      * Vérifie si un compte utilisateur avec l'adresse email donnée existe déjà.
      * Cette méthode est cruciale pour garantir l'unicité des emails lors de l'enregistrement.
      *
-     * @param Email       $email     L'adresse email à vérifier
-     * @param UserId|null $excludeId un identifiant utilisateur à exclure de la vérification,
+     * @param EmailAddress $email     L'adresse email à vérifier
+     * @param UserId|null  $excludeId un identifiant utilisateur à exclure de la vérification,
      *                               utile lors de la mise à jour d'un email existant
      *
      * @return bool vrai si un compte existe avec cet email (hors exclusion), faux sinon

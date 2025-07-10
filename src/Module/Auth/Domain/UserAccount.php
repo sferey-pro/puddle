@@ -17,11 +17,15 @@ use App\Module\Auth\Domain\Event\UserPasswordChanged;
 use App\Module\Auth\Domain\Event\UserVerified;
 use App\Module\Auth\Domain\Exception\LoginLinkException;
 use App\Module\Auth\Domain\Exception\PasswordResetException;
+use App\Module\Auth\Domain\ValueObject\EmailIdentity;
 use App\Module\Auth\Domain\ValueObject\Hash;
 use App\Module\Auth\Domain\ValueObject\IpAddress;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
 use App\Module\Auth\Domain\ValueObject\Password;
+use App\Module\Auth\Domain\ValueObject\PhoneIdentity;
+use App\Module\Auth\Domain\ValueObject\UserIdentity;
 use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
+use App\Module\SharedContext\Domain\ValueObject\PhoneNumber;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Event\UserAccountSuspended;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,77 +40,38 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Il est responsable de toutes les actions liées à la sécurité comme l'inscription,
  * la connexion, et protège le compte contre les tentatives de connexion frauduleuses.
  *
- * @TODO Faire évoluer en readonly si c'est possible (à examiner)
  */
-final class UserAccount extends AggregateRoot implements UserInterface, PasswordAuthenticatedUserInterface
+final class UserAccount extends AggregateRoot
 {
     use DomainEventTrait;
+
+    private(set) UserId $id;
+    private(set) array $roles;
+    private(set) bool $verified;
+    private(set) bool $active;
+    private(set) ?EmailAddress $email = null;
+    private(set) ?PhoneNumber $phone = null;
 
     private(set) \DateTimeImmutable $createdAt;
     private(set) \DateTimeImmutable $updatedAt;
 
+    private function __construct() {}
 
-    // --- Propriétés liées à la sécurité du compte ---
-
-    /**
-     * @var int Compteur des tentatives de connexion échouées.
-     *          Utilisé pour détecter et bloquer les attaques par force brute.
-     */
-    private int $loginFailureAttempts = 0;
-
-    /**
-     * @var \DateTimeImmutable|null Date de la dernière tentative de connexion échouée.
-     *                              Permet de réinitialiser le compteur après un certain temps.
-     */
-    private ?\DateTimeImmutable $lastLoginFailureAt = null;
-
-    /**
-     * @var \DateTimeImmutable|null Date de la première connexion.
-     *                              Permet de savoir si l'utilisateur s'est déjà connecté au moins une fois.
-     */
-    private ?\DateTimeImmutable $firstLoginAt = null;
-
-    /**
-     * @var int nombre maximum de tentatives de connexion autorisées avant de suspendre le compte
-     */
-    private const MAX_LOGIN_ATTEMPTS = 3;
-
-    /** @var Collection<int, LoginLink> Stocke les liens de connexion magiques ("magic links") générés pour l'utilisateur. */
-    private Collection $loginLinks;
-
-    /** @var Collection<int, SocialLink> Stocke les associations avec des comptes de réseaux sociaux (Google, GitHub, etc.). */
-    private Collection $socialLinks;
-
-    /**
-     * Le constructeur est privé pour forcer la création d'un compte
-     * via une méthode métier explicite (register, createAssociated).
-     * Cela garantit que chaque compte est créé dans un état valide.
-     */
-    private function __construct(
-        private UserId $id,
-        private ?EmailAddress $email = null,
-        #[\SensitiveParameter] private ?Password $password = null,
-        private array $roles = [],
-        private bool $verified = false,
-        private bool $active = true,
-    ) {
-        $this->loginLinks = new ArrayCollection();
-        $this->socialLinks = new ArrayCollection();
-    }
-
-    public static function create(UserId $id, EmailAddress $email): self
+    public static function create(UserId $id, UserIdentity $identity): self
     {
-        $user = new self(
-            $id,
-            $email,
-            null,
-            [Role::USER], // Tout nouvel utilisateur obtient le rôle de base "USER".
-            false, // Le compte n'est pas vérifié par défaut.
-            true // Le compte est actif par défaut.
-        );
+        $user = new self();
+        $user->id = $id;
+        $user->roles = [Role::USER];
+        $user->verified = false;
+        $user->active = true;
+
+        match ($identity::class) {
+            EmailIdentity::class => $user->email = $identity->email,
+            PhoneIdentity::class => $user->phone = $identity->phone,
+        };
 
         $user->recordDomainEvent(
-            new UserAccountCreated($user->id(), $user->email())
+            new UserAccountCreated($user->id, $user->email, $user->phone)
         );
 
         return $user;
@@ -115,12 +80,18 @@ final class UserAccount extends AggregateRoot implements UserInterface, Password
     /**
      * Enregistre une connexion réussie. Peut être utilisé pour l'historique ou des actions post-connexion.
      */
-    public static function login(UserId $id, EmailAddress $email): self
+    public static function login(UserId $id, UserIdentity $identity): self
     {
-        $user = new self($id, $email);
+        $user = new self();
+        $user->id = $id;
+
+        match ($identity::class) {
+            EmailIdentity::class => $user->email = $identity->email,
+            PhoneIdentity::class => $user->phone = $identity->phone,
+        };
 
         $user->recordDomainEvent(
-            new UserLoggedIn($user->id())
+            new UserLoggedIn($user->id, $user->email, $user->phone)
         );
 
         return $user;
@@ -131,51 +102,14 @@ final class UserAccount extends AggregateRoot implements UserInterface, Password
      */
     public static function logout(UserId $id): self
     {
-        $user = new self($id);
+        $user = new self();
+        $user->id = $id;
+
         $user->recordDomainEvent(
-            new UserLoggedOut($user->id())
+            new UserLoggedOut($user->id)
         );
 
         return $user;
-    }
-
-    /**
-     * Met à jour le mot de passe du compte.
-     */
-    public function changePassword(#[\SensitiveParameter] Password $password): void
-    {
-        $this->password = $password;
-
-        $this->recordDomainEvent(
-            new UserPasswordChanged($this->id())
-        );
-    }
-
-    /**
-     * Réinitialise le mot de passe de l'utilisateur après vérification du token.
-     *
-     * @throws PasswordResetException si la demande est invalide, expirée ou déjà utilisée
-     */
-    public function resetPassword(
-        PasswordResetRequest $request,
-        Password $newPassword,
-        \DateTimeImmutable $now,
-    ): void {
-        if (!$this->id->equals($request->userId())) {
-            throw PasswordResetException::userMismatch($request->userId(), $this->id());
-        }
-
-        if ($request->isExpired($now)) {
-            throw PasswordResetException::expired();
-        }
-
-        if ($request->isUsed()) {
-            throw PasswordResetException::alreadyUsed();
-        }
-
-        $this->changePassword($newPassword);
-
-        $request->markAsUsed();
     }
 
     /**
@@ -186,89 +120,8 @@ final class UserAccount extends AggregateRoot implements UserInterface, Password
         $this->verified = true;
 
         $this->recordDomainEvent(
-            new UserVerified($this->id())
+            new UserVerified($this->id)
         );
-    }
-
-    /**
-     * Vérifie si l'utilisateur s'est déjà connecté au moins une fois.
-     */
-    public function hasAlreadyLoggedIn(): bool
-    {
-        return null !== $this->firstLoginAt;
-    }
-
-    /**
-     * Enregistre la date de la première connexion.
-     * Ne fait rien si l'utilisateur s'est déjà connecté.
-     * Pourrait aussi lever un événement de domaine `UserCompletedFirstLogin`.
-     */
-    public function recordFirstLogin(): void
-    {
-        if ($this->hasAlreadyLoggedIn()) {
-            return;
-        }
-
-        $this->firstLoginAt = new \DateTimeImmutable();
-    }
-
-    /**
-     * Ajoute un "magic link" (lien de connexion sans mot de passe) pour cet utilisateur.
-     */
-    public function addLoginLink(
-        LoginLinkDetails $loginLinkDetails,
-        IpAddress $ipAddress,
-    ): void {
-        $login = LoginLink::createFor($this, $loginLinkDetails, $ipAddress);
-
-        $this->loginLinks->add($login);
-
-        // Notifie qu'un lien a été généré, par exemple pour l'envoyer par e-mail.
-        $this->recordDomainEvent(
-            new LoginLinkGenerated($this->id(), $this->email(), $loginLinkDetails)
-        );
-    }
-
-    /**
-     * Valide un "magic link" fourni par l'utilisateur.
-     * Si le lien est correct et non expiré, il est marqué comme vérifié.
-     */
-    public function verifyLoginLink(Hash $hash, ClockInterface $clock): void
-    {
-        $loginLinkToVerify = null;
-
-        $matchingLinks = $this->loginLinks->filter(
-            fn (LoginLink $loginLink) => $loginLink->details()->hash->equals($hash)
-        );
-
-        if ($matchingLinks->isEmpty()) {
-            throw LoginLinkException::notFoundWithHash($hash);
-        }
-
-        /** @var LoginLink $loginLinkToVerify */
-        $loginLinkToVerify = $matchingLinks->first();
-
-        $verifiedLogin = $loginLinkToVerify->markAsVerified($clock);
-
-        $this->recordDomainEvent(
-            new LoginLinkVerified($this->id(), $verifiedLogin->id())
-        );
-
-        $this->clearUnusedLoginLinks($verifiedLogin);
-    }
-
-    /**
-     * Nettoie les anciens liens magiques après qu'un a été utilisé avec succès.
-     */
-    private function clearUnusedLoginLinks(LoginLink $justVerifiedLink): void
-    {
-        $linksToRemove = $this->loginLinks->filter(
-            fn (LoginLink $link) => !$link->id()->equals($justVerifiedLink->id())
-        );
-
-        foreach ($linksToRemove as $link) {
-            $this->loginLinks->removeElement($link);
-        }
     }
 
     /**
@@ -312,22 +165,6 @@ final class UserAccount extends AggregateRoot implements UserInterface, Password
     }
 
     // --- Accesseurs ---
-    public function id(): UserId
-    {
-        return $this->id;
-    }
-
-    public function email(): EmailAddress
-    {
-        return $this->email;
-    }
-
-
-    public function password(): ?Password
-    {
-        return $this->password;
-    }
-
     public function enumRoles(): array
     {
         return array_map(fn (string $role): ?Role => Role::tryFrom($role), $this->roles());
@@ -351,21 +188,6 @@ final class UserAccount extends AggregateRoot implements UserInterface, Password
         return array_unique($roles);
     }
 
-    // --- @TODO trouver une nouvelle solution ---
-    public function setHashPassword(Password $password): void
-    {
-        $this->password = $password;
-    }
-
-    // --- Méthodes requises par Symfony Security ---
-    // --- @TODO à retirer du Domain ---
-
-    /** @see PasswordAuthenticatedUserInterface */
-    public function getPassword(): ?string
-    {
-        return $this->password()->value();
-    }
-
     /** @see UserInterface */
     public function getRoles(): array
     {
@@ -376,18 +198,5 @@ final class UserAccount extends AggregateRoot implements UserInterface, Password
     public function getMainRole(): Role
     {
         return Role::USER;
-    }
-
-    /** @see UserInterface */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    /** @see UserInterface */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email();
     }
 }

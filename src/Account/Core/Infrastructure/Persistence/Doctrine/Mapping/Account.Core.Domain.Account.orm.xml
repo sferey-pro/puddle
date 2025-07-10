@@ -1,0 +1,27 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Account\Core\Domain\Account" table="`account`">
+        <id name="id" type="user_id" column="id" length="36" />
+
+        <!-- État stocké comme embedded object -->
+        <embedded name="state" class="Account\Lifecycle\Domain\State\AccountState" use-column-prefix="false" />
+
+        <field name="verifiedAt" type="datetime_immutable" nullable="true" />
+        <field name="deletedAt" type="datetime_immutable" nullable="true" />
+
+        <field name="createdAt" type="datetime_immutable">
+            <gedmo:timestampable on="create"/>
+        </field>
+        <field name="updatedAt" type="datetime_immutable">
+            <gedmo:timestampable on="update"/>
+        </field>
+
+        <indexes>
+            <index columns="state_name" name="idx_account_state"/>
+            <index columns="deleted_at" name="idx_account_deleted"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

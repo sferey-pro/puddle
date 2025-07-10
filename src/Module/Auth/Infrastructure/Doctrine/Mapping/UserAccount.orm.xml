@@ -8,8 +8,8 @@
     <entity name="App\Module\Auth\Domain\UserAccount" table="`auth_user_accounts`">
         <id name="id" type="user_id" column="id" length="36" />
 
-        <field name="password" type="password" column="password" nullable="true" />
         <field name="email" type="email_address" column="email" nullable="true" />
+        <field name="phone" type="phone_number" column="phone" nullable="true" />
         <field name="roles" type="json" />
 
         <field name="verified" type="boolean" column="is_verified" nullable="false">
@@ -23,7 +23,6 @@
             </options>
         </field>
 
-        <field name="firstLoginAt" type="datetime_immutable" nullable="true" />
         <field name="createdAt" type="datetime_immutable">
             <gedmo:timestampable on="create"/>
         </field>
@@ -33,6 +32,7 @@
 
         <unique-constraints>
             <unique-constraint columns="email" name="UNIQ_IDENTIFIER_AUTH_USERS_EMAIL" />
+            <unique-constraint columns="phone" name="UNIQ_IDENTIFIER_AUTH_USERS_PHONE" />
         </unique-constraints>
     </entity>
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Domain;
 
+use App\Module\Auth\Domain\AuthenticationMethod;
+use App\Module\Auth\Domain\Exception\SocialLinkException;
 use App\Module\Auth\Domain\ValueObject\Social;
 use App\Module\Auth\Domain\ValueObject\SocialLinkId;
 
@@ -13,38 +15,53 @@ use App\Module\Auth\Domain\ValueObject\SocialLinkId;
  * Cet objet simple stocke quel compte externe est lié à quel compte interne.
  * C'est une entité enfant de l'agrégat UserAccount.
  */
-final readonly class SocialLink
+final readonly class SocialLink implements AuthenticationMethod
 {
+    private(set) SocialLinkId $id;
+    private(set) Social $social;
+
+    private(set) UserAccount $user;
+    private(set) bool $isActive;
 
     private(set) \DateTimeImmutable $createdAt;
     private(set) \DateTimeImmutable $updatedAt;
 
-    public function __construct(
-        private SocialLinkId $id,
-        private Social $social,
-        private ?UserAccount $user = null,
-        private ?bool $isActive = null,
-    ) {
+    private function __construct() {
+
     }
 
-    // --- Accesseurs ---
-    public function id(): SocialLinkId
-    {
-        return $this->id;
+    public static function create(
+        UserAccount $user,
+        Social $social,
+    ): self {
+        $socialLink = new self();
+        $socialLink->id = SocialLinkId::generate();
+
+        $socialLink->user = $user;
+        $socialLink->social = $social;
+
+        $socialLink->isActive = false;
+
+        return $socialLink;
     }
 
-    public function social(): Social
+    public function activate(): self
     {
-        return $this->social;
+        if ($this->isActive) {
+            throw SocialLinkException::alreadyActivated();
+        }
+
+
+        $socialLink = clone $this;
+        $socialLink->activated();
+
+        return $socialLink;
     }
 
-    public function user(): ?UserAccount
+    public function activated(): static
     {
-        return $this->user;
-    }
+        $this->isActive = true;
 
-    public function isActive(): ?bool
-    {
-        return $this->isActive;
+        return $this;
     }
 }

@@ -29,8 +29,8 @@ interface UserRepositoryInterface extends RepositoryInterface, SpecificationRepo
      * Vérifie l'existence d'un utilisateur avec une adresse email donnée.
      * Permet d'exclure un utilisateur spécifique de la vérification (utile lors des mises à jour).
      *
-     * @param Email       $email     L'adresse email à vérifier
-     * @param UserId|null $excludeId L'identifiant de l'utilisateur à ignorer
+     * @param EmailAddress $email     L'adresse email à vérifier
+     * @param UserId|null  $excludeId L'identifiant de l'utilisateur à ignorer
      *
      * @return bool vrai si un utilisateur avec cet email existe (hors exclusion), faux sinon
      */
