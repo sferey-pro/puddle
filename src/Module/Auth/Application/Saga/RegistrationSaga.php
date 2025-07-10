@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Saga;
 
 use App\Core\Application\Saga\Process\SagaProcessInterface;
+use App\Core\Application\Saga\SagaManager;
 use App\Core\Application\Saga\Step\SagaStepRegistry;
 use App\Module\Auth\Application\Saga\Event\RegistrationSagaStarted;
 use App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess;
@@ -37,7 +38,7 @@ final class RegistrationSaga
         #[Target('registration_saga')]
         private WorkflowInterface $workflow,
         private SagaStepRegistry $stepRegistry,
-        private EntityManagerInterface $em,
+        private SagaManager $sagaManager,
         private LoggerInterface $logger,
     ) {
     }
@@ -48,7 +49,9 @@ final class RegistrationSaga
     public function __invoke(RegistrationSagaStarted $event): void
     {
         /** @var RegistrationSagaProcess|null $sagaProcess */
-        $sagaProcess = $this->em->find(RegistrationSagaProcess::class, $event->sagaStateId());
+        // $sagaProcess = $this->em->find(RegistrationSagaProcess::class, $event->sagaStateId());
+
+        $sagaProcess = $this->sagaManager->find($event->sagaStateId());
 
         // Si le parcours n'existe pas ou est déjà terminé, on ne fait rien.
         if (null === $sagaProcess || $this->workflow->can($sagaProcess, 'complete')) {
@@ -86,11 +89,11 @@ final class RegistrationSaga
                 $this->workflow->apply($sagaProcess, $transitionName);
                 $sagaProcess->addTransitionToHistory($transitionName);
 
-                $this->em->flush();
+                $this->sagaManager->save($sagaProcess);
             } catch (\Throwable $e) {
                 $this->handleFailure($sagaProcess, $e);
 
-                $this->em->flush();
+                $this->sagaManager->save($sagaProcess);
                 throw $e;
             }
         }
@@ -99,7 +102,7 @@ final class RegistrationSaga
             $this->workflow->apply($sagaProcess, 'complete');
             $this->logger->info('Saga completed successfully.');
 
-            $this->em->flush();
+            $this->sagaManager->save($sagaProcess);
         }
     }
 

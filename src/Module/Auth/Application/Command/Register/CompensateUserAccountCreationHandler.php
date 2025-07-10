@@ -24,6 +24,7 @@ final readonly class CompensateUserAccountCreationHandler
 
     public function __invoke(CompensateUserAccountCreation $command): void
     {
+
         $userAccount = $this->userRepository->ofId($command->userId);
 
         if (null !== $userAccount) {

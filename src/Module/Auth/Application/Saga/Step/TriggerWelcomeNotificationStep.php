@@ -4,24 +4,19 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Saga\Step;
 
-use App\Core\Application\Event\EventBusInterface;
+use App\Core\Application\Command\CommandBusInterface;
 use App\Core\Application\Saga\Process\SagaProcessInterface;
 use App\Core\Application\Saga\Step\SagaStepInterface;
-use App\Module\Auth\Domain\Event\NewUserHasRegistered;
-use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\Domain\Service\LoginLinkManager;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Auth\Application\Command\Register\SendWelcomeNotification;
+use App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess;
 
 /**
  * Étape du Saga responsable du déclenchement de l'email de bienvenue.
  */
-final readonly class TriggerWelcomeEmailStep implements SagaStepInterface
+final readonly class TriggerWelcomeNotificationStep implements SagaStepInterface
 {
     public function __construct(
-        private LoginLinkManager $loginLinkManager,
-        private EventBusInterface $eventBus,
-        private UserRepositoryInterface $userRepository,
-        private EntityManagerInterface $em,
+        private CommandBusInterface $commandBus
     ) {
     }
 
@@ -31,16 +26,14 @@ final readonly class TriggerWelcomeEmailStep implements SagaStepInterface
      */
     public function execute(SagaProcessInterface $sagaProcess): void
     {
-        /** @var RegistrationSagaProcess $sagaProcess */
-        $loginLink = $this->loginLinkManager->createForNewUser($sagaProcess->email());
+        if (!$sagaProcess instanceof RegistrationSagaProcess) {
+            throw new \LogicException('Cette étape ne peut être exécutée que pour une RegistrationSagaProcess.');
+        }
 
-        $this->em->persist($loginLink);
-
-        $this->eventBus->publish(
-            new NewUserHasRegistered(
+        $this->commandBus->dispatch(
+            new SendWelcomeNotification(
                 $sagaProcess->userId(),
-                $loginLink->details(),
-                $sagaProcess->email(),
+                $sagaProcess->channel(),
             )
         );
     }

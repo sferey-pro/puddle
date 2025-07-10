@@ -34,11 +34,11 @@ class RegistrationForm extends AbstractController
     public function __construct(
         private readonly CommandBusInterface $commandBus,
     ) {
-        $this->data = new RegisterUserDTO();
     }
 
     protected function instantiateForm(): FormInterface
     {
+        $this->data ??= new RegisterUserDTO();
         return $this->createForm(RegistrationFormType::class, $this->data);
     }
 
@@ -55,9 +55,10 @@ class RegistrationForm extends AbstractController
         if ($this->getForm()->isValid()) {
             try {
                 $command = new StartRegistrationSaga(
-                    email: $this->data->email,
+                    identifier: $this->data->identifier,
                     agreeTerms: $this->data->agreeTerms
                 );
+                
                 $this->commandBus->dispatch($command);
 
                 $this->addFlash('success', 'Votre compte a été créé. Veuillez vérifier votre boîte de réception pour valider votre e-mail.');

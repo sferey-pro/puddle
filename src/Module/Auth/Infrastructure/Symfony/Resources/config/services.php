@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use App\Module\Auth\Application\Saga\Step\CreateUserAccountStep;
-use App\Module\Auth\Application\Saga\Step\TriggerWelcomeEmailStep;
+use App\Module\Auth\Application\Saga\Step\TriggerWelcomeNotificationStep;
+use App\Module\Auth\Domain\Notification\WelcomeNotifierInterface;
 use App\Module\Auth\Domain\Repository\PasswordResetRequestRepositoryInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Service\LoginLinkGeneratorInterface;
@@ -22,6 +23,10 @@ return function (ContainerConfigurator $container): void {
             ->autowire()      // Automatically injects dependencies in your services.
             ->autoconfigure() // Automatically registers your services as commands, event subscribers, etc.
     ;
+
+    $services
+        ->instanceof(WelcomeNotifierInterface::class)
+            ->tag('app.welcome_notifier');
 
     $services->load('App\\Module\\Auth\\', '%kernel.project_dir%/src/Module/Auth/')
         ->exclude([
@@ -47,6 +52,6 @@ return function (ContainerConfigurator $container): void {
     $services->set(CreateUserAccountStep::class)
         ->tag('saga.step', ['transition' => 'create_user_account']);
 
-    $services->set(TriggerWelcomeEmailStep::class)
+    $services->set(TriggerWelcomeNotificationStep::class)
         ->tag('saga.step', ['transition' => 'trigger_welcome_link']);
 };

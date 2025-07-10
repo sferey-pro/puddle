@@ -25,11 +25,14 @@ final readonly class CreateUserAccountStep implements SagaStepInterface
      */
     public function execute(SagaProcessInterface $sagaProcess): void
     {
-        /** @var RegistrationSagaProcess $sagaProcess */
+        if (!$sagaProcess instanceof RegistrationSagaProcess) {
+            throw new \LogicException('Cette étape ne peut être exécutée que pour une RegistrationSagaProcess.');
+        }
+
         $this->commandBus->dispatch(
             new CreateUserAccount(
                 $sagaProcess->userId(),
-                $sagaProcess->email(),
+                $sagaProcess->identity(),
             )
         );
     }

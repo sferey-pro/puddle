@@ -6,6 +6,7 @@ namespace App\Core\Domain\Saga\Process;
 
 use App\Core\Application\Saga\Process\SagaProcessInterface;
 use App\Core\Domain\Saga\SagaStateId;
+use App\Core\Domain\Saga\SagaStatus;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -24,23 +25,13 @@ abstract class AbstractSagaProcess implements SagaProcessInterface
 {
     use TimestampableEntity;
 
-    public SagaStateId $id;
-
     public string $currentState;
 
     private array $history = [];
 
     private array $context = [];
 
-    public function __construct(SagaStateId $id)
-    {
-        $this->id = $id;
-    }
-
-    public function id(): SagaStateId
-    {
-        return $this->id;
-    }
+    protected function __construct(private(set) SagaStateId $id) {}
 
     public function addTransitionToHistory(string $transitionName): void
     {

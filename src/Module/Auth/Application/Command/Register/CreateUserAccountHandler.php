@@ -30,13 +30,17 @@ final class CreateUserAccountHandler
 
     public function __invoke(CreateUserAccount $command): void
     {
-        $spec = new IsUniqueSpecification($command->email);
+        $identity = $command->identity;
 
+        $spec = new IsUniqueSpecification($identity);
         if (0 !== $this->userRepository->countBySpecification($spec)) {
-            throw UserException::emailAlreadyExists($command->email);
+            throw UserException::identityAlreadyInUse($identity);
         }
 
-        $user = UserAccount::create($command->userId ?? UserId::generate(), $command->email);
+        $user = UserAccount::create(
+            $command->userId ?? UserId::generate(),
+            $identity
+        );
 
         $this->userRepository->add($user);
         $this->em->flush();

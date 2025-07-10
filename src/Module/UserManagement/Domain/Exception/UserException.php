@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\UserManagement\Domain\Exception;
 
+use App\Module\Auth\Domain\ValueObject\EmailIdentity;
+use App\Module\Auth\Domain\ValueObject\PhoneIdentity;
+use App\Module\Auth\Domain\ValueObject\UserIdentity;
 use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
+use App\Module\SharedContext\Domain\ValueObject\PhoneNumber;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\ValueObject\Username;
 
@@ -15,6 +19,7 @@ final class UserException extends \DomainException
 {
     private const NOT_FOUND = 'UM-001';
     private const EMAIL_ALREADY_EXISTS = 'UM-002';
+    private const PHONE_ALREADY_EXISTS = 'UM-003';
 
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.
@@ -34,11 +39,33 @@ final class UserException extends \DomainException
         return new self(\sprintf('User not found with email : %s', $email), self::NOT_FOUND);
     }
 
-    public static function emailAlreadyExists(EmailAddress $email): self
+    public static function notFoundWithPhone(PhoneNumber $phone): self
+    {
+        return new self(\sprintf('User not found with phone : %s', $phone), self::NOT_FOUND);
+    }
+
+    public static function identityAlreadyInUse(UserIdentity $identity): self
+    {
+        return match ($identity::class) {
+            EmailIdentity::class => self::emailAlreadyExists($identity->value()),
+            PhoneIdentity::class => self::phoneAlreadyExists($identity->value()),
+            default => new self('Cet identifiant est déjà utilisé.', "000"),
+        };
+    }
+
+    public static function emailAlreadyExists(string $email): self
     {
         return new self(
             \sprintf('A user with the email "%s" already exists.', $email),
             self::EMAIL_ALREADY_EXISTS
+        );
+    }
+
+    public static function phoneAlreadyExists(string $phone): self
+    {
+        return new self(
+            \sprintf('A user with the phone "%s" already exists.', $phone),
+            self::PHONE_ALREADY_EXISTS
         );
     }
 

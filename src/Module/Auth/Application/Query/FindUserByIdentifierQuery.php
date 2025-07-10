@@ -19,6 +19,7 @@ final readonly class FindUserByIdentifierQuery implements QueryInterface
     public function __construct(string $identifier)
     {
         Assert::notEmpty($identifier, 'Identifier cannot be empty.');
+
         $this->identifier = $identifier;
     }
 }

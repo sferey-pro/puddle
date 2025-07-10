@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Notifier;
 
+use App\Module\Auth\Domain\AccessCredential\AccessCredential;
+use App\Module\Auth\Domain\AccessCredential\MagicLinkCredential;
+use App\Module\Auth\Domain\AccessCredential\OtpCredential;
 use App\Module\Auth\Domain\ValueObject\LoginLinkDetails;
 use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Component\Notifier\Message\EmailMessage;
@@ -20,10 +23,10 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkNotification;
  *
  * Il est utilisé lors de la première connexion d'un utilisateur après son inscription.
  */
-class WelcomeLinkNotification extends LoginLinkNotification
+class WelcomeNotification extends LoginLinkNotification implements EmailNotificationInterface, SmsNotificationInterface
 {
     public function __construct(
-        private LoginLinkDetails $loginLinkDetails,
+        private AccessCredential $credential,
         private string $subject,
     ) {
     }
@@ -49,11 +52,15 @@ class WelcomeLinkNotification extends LoginLinkNotification
      */
     public function asEmailMessage(EmailRecipientInterface $recipient, ?string $transport = null): ?EmailMessage
     {
+        if (!$this->credential instanceof MagicLinkCredential) {
+            throw new \LogicException('Cannot send welcome email with a non-link credential.');
+        }
+
         $email = NotificationEmail::asPublicEmail()
             ->to($recipient->getEmail())
             ->subject($this->subject)
             ->htmlTemplate('@Auth/emails/welcome_first_login.html.twig')
-            ->action('Accéder à mon compte', $this->loginLinkDetails->url())
+            ->action('Accéder à mon compte', $this->credential->url)
         ;
 
         return new EmailMessage($email);
@@ -64,10 +71,13 @@ class WelcomeLinkNotification extends LoginLinkNotification
      */
     public function asSmsMessage(SmsRecipientInterface $recipient, ?string $transport = null): ?SmsMessage
     {
-        $url = 'puddle.app/login/'.$this->loginLinkDetails->url();
+        if (!$this->credential instanceof OtpCredential) {
+            throw new \LogicException('Cannot send welcome email with a non-link credential.');
+        }
+
         $message = \sprintf(
-            'Bienvenue sur Puddle ! Cliquez ici pour votre première connexion : %s',
-            $url
+            'Bienvenue sur Puddle !Votre code de connexion est : %s',
+            $this->credential->code
         );
 
         return new SmsMessage($recipient->getPhone(), $message);

@@ -6,7 +6,9 @@ namespace App\Module\Auth\Domain\Saga\Process;
 
 use App\Core\Domain\Saga\Process\AbstractSagaProcess;
 use App\Core\Domain\Saga\SagaStateId;
-use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
+use App\Module\Auth\Domain\Notification\NotificationChannel;
+use App\Module\Auth\Domain\Service\IdentifierResolver;
+use App\Module\Auth\Domain\ValueObject\UserIdentity;
 use App\Module\SharedContext\Domain\ValueObject\UserId;
 
 /**
@@ -20,30 +22,30 @@ use App\Module\SharedContext\Domain\ValueObject\UserId;
  *
  * Il est responsable de conserver :
  * - L'identifiant du parcours lui-même.
- * - Les données métier clés (l'ID de l'utilisateur, son email).
+ * - Les données métier clés (l'ID de l'utilisateur, son email ou phone).
  * - L'étape actuelle du parcours (gérée par la machine à états).
  * - L'historique des étapes déjà complétées.
  */
 final class RegistrationSagaProcess extends AbstractSagaProcess
 {
-    public const SAGA_TYPE = 'registration';
-
     public string $currentState;
 
-    public function __construct(
-        SagaStateId $id,
-        UserId $userId,
-        EmailAddress $email,
-    ) {
+    private function __construct(SagaStateId $id) {
         parent::__construct($id);
-
-        $this->addToContext('email', (string) $email);
-        $this->addToContext('userId', (string) $userId);
     }
 
-    public static function sagaType(): string
-    {
-        return self::SAGA_TYPE;
+    public static function start(
+        UserId $userId,
+        UserIdentity $identity,
+        NotificationChannel $channel
+    ): self {
+        $process = new self(SagaStateId::generate());
+
+        $process->addToContext('userId', (string) $userId);
+        $process->addToContext('identity', (string) $identity->value());
+        $process->addToContext('channel', (string) $channel->value);
+
+        return $process;
     }
 
     public function userId(): UserId
@@ -51,9 +53,23 @@ final class RegistrationSagaProcess extends AbstractSagaProcess
         return UserId::fromString($this->context('userId'));
     }
 
-    public function email(): EmailAddress
+    public function identity(): UserIdentity
     {
-        return EmailAddress::create($this->context('email'))->value();
+        $identityResult = IdentifierResolver::resolve($this->context('identity'));
+
+        if ($identityResult->isFailure()) {
+            throw new \InvalidArgumentException($identityResult->error()->getMessage());
+        }
+
+        /** @var UserIdentity $identity */
+        $identity = $identityResult->value();
+
+        return $identity;
+    }
+
+    public function channel(): NotificationChannel
+    {
+        return NotificationChannel::from($this->context('channel'));
     }
 
     public function getCurrentState(): string

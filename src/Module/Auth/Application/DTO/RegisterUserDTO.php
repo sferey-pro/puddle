@@ -5,24 +5,20 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Sequentially;
 
 class RegisterUserDTO
 {
-    #[Sequentially([
-        new Assert\NotBlank(message: 'Please enter an email!'),
-        new Assert\Email(),
-    ])]
-    public ?string $email;
+    #[Assert\NotBlank(message: 'Please enter an email or phone number!')]
+    public ?string $identifier;
 
     #[Assert\IsTrue(message: 'You should agree to our terms.')]
     public ?bool $agreeTerms;
 
     public function __construct(
-        ?string $email = null,
+        ?string $identifier = null,
         ?bool $agreeTerms = null,
     ) {
-        $this->email = $email;
+        $this->identifier = $identifier;
         $this->agreeTerms = $agreeTerms;
     }
 }

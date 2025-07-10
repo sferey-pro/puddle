@@ -6,6 +6,7 @@ namespace App\Module\Auth\Application\Command;
 
 use App\Core\Application\Command\CommandBusInterface;
 use App\Core\Application\Event\EventBusInterface;
+use App\Core\Application\Saga\SagaManager;
 use App\Core\Domain\Saga\SagaStateId;
 use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
@@ -13,7 +14,8 @@ use App\Module\Auth\Application\Saga\Event\RegistrationSagaStarted;
 use App\Module\Auth\Domain\Exception\UserException;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess;
-use App\Module\SharedContext\Domain\ValueObject\EmailAddress;
+use App\Module\Auth\Domain\Service\IdentifierResolver;
+use App\Module\Auth\Domain\ValueObject\UserIdentity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -35,37 +37,41 @@ final readonly class StartRegistrationSagaHandler
         private WorkflowInterface $workflow,
         private UserRepositoryInterface $userRepository,
         private CommandBusInterface $commandBus,
-        private EntityManagerInterface $em,
         private EventBusInterface $eventBus,
+        private SagaManager $sagaManager,
     ) {
     }
 
     public function __invoke(StartRegistrationSaga $command): void
     {
-        $emailResult = EmailAddress::create($command->email);
-        $userId = $command->userId();
+        $identityResult = IdentifierResolver::resolve($command->identifier);
 
-        if ($emailResult->isFailure()) {
-            throw new \InvalidArgumentException($emailResult->error()->getMessage());
+        if ($identityResult->isFailure()) {
+            throw new \InvalidArgumentException($identityResult->error()->getMessage());
         }
 
-        $email = $emailResult->value();
+        /** @var UserIdentity $identity */
+        $identity = $identityResult->value();
 
-        // Règle métier critique : l'email doit être unique pour démarrer un nouveau parcours.
-        $spec = new IsUniqueSpecification($email);
+        $userId = $command->userId;
+
+        $spec = new IsUniqueSpecification($identity);
         if (0 !== $this->userRepository->countBySpecification($spec)) {
-            throw UserException::emailAlreadyExists($email);
+            throw UserException::identityAlreadyInUse($identity);
         }
 
-        $sagaProcess = new RegistrationSagaProcess(SagaStateId::generate(), $userId, $email);
+        $sagaProcess = RegistrationSagaProcess::start(
+            $userId,
+            $identity,
+            $command->channel
+        );
 
         $this->workflow->getMarking($sagaProcess);
 
-        $this->em->persist($sagaProcess);
-        $this->em->flush();
+        $this->sagaManager->save($sagaProcess);
 
         $this->eventBus->publish(
-            new RegistrationSagaStarted($sagaProcess->id())
+            new RegistrationSagaStarted($sagaProcess->id)
         );
     }
 }

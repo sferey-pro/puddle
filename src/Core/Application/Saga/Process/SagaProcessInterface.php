@@ -19,11 +19,6 @@ namespace App\Core\Application\Saga\Process;
 interface SagaProcessInterface
 {
     /**
-     * Retourne le type de parcours métier (ex: "inscription", "commande").
-     */
-    public static function sagaType(): string;
-
-    /**
      * Accède aux informations du parcours en cours.
      *
      * @param string|null $key la donnée spécifique à récupérer (ex: "email")

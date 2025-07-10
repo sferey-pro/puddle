@@ -7,6 +7,7 @@ namespace App\Module\UserManagement\Application\Command;
 use App\Core\Application\Event\EventBusInterface;
 use App\Core\Domain\Specification\IsUniqueSpecification;
 use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use App\Module\SharedContext\Domain\ValueObject\UserId;
 use App\Module\UserManagement\Domain\Exception\UserException;
 use App\Module\UserManagement\Domain\Repository\UserRepositoryInterface;
 use App\Module\UserManagement\Domain\User;
@@ -30,15 +31,17 @@ final class CreateUserHandler
 
     public function __invoke(CreateUser $command): void
     {
-        $spec = new IsUniqueSpecification($command->email);
+        $identity = $command->identity;
 
+
+        $spec = new IsUniqueSpecification($identity);
         if (0 !== $this->userRepository->countBySpecification($spec)) {
-            throw UserException::emailAlreadyExists($command->email);
+            throw UserException::identityAlreadyInUse($identity);
         }
 
         $user = User::create(
-            $command->userId,
-            $command->email,
+            $command->userId ?? UserId::generate(),
+            $identity
         );
 
         $this->userRepository->add($user);

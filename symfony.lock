@@ -202,6 +202,15 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/free-mobile-notifier": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.1",
+            "ref": "dbe101f67224906c96b528ca84ea22bcba00bd2b"
+        }
+    },
     "symfony/mailer": {
         "version": "7.1",
         "recipe": {

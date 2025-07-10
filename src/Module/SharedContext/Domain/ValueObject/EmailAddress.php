@@ -6,12 +6,10 @@ namespace App\Module\SharedContext\Domain\ValueObject;
 
 use App\Core\Domain\Result;
 use App\Core\Domain\ValueObject\AbstractStringValueObject;
-use App\Core\Domain\ValueObject\UniqueValueInterface;
 use Assert\Assert;
 
-final readonly class EmailAddress extends AbstractStringValueObject implements UniqueValueInterface
+final readonly class EmailAddress extends AbstractStringValueObject
 {
-
     /**
      * @return Result<self> Un Result contenant un EmailAddress en cas de succès.
      */
@@ -29,15 +27,4 @@ final readonly class EmailAddress extends AbstractStringValueObject implements U
             return Result::failure(new \DomainException($e->getMessage()));
         }
     }
-
-    public static function uniqueFieldPath(): string
-    {
-        return 'email';
-    }
-
-    public function uniqueValue(): string
-    {
-        return $this->value;
-    }
-
 }

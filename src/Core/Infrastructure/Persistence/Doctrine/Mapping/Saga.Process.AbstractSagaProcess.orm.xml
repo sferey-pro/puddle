@@ -10,7 +10,7 @@
 
         <id name="id" type="saga_state_id" column="id" length="36" />
         <field name="currentState" type="string" length="255" />
-        
+
         <field name="context" type="json" />
         <field name="history" type="json" />
 

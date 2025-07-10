@@ -14,7 +14,10 @@
         {{ form_errors(form) }}
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Create new account</h2>
-            {{ form_row(form.email) }}
+            {{ form_row(form.identifier, {
+                'label': 'Email address or Phone number',
+                'attr': {'placeholder': 'example@email.com ou +33612345678'
+            }}) }}
 
             <twig:Alert type="notice" format="important" >
                 Après votre inscription, un e-mail vous sera envoyé. Il contiendra un lien sécurisé pour effectuer votre première connexion.

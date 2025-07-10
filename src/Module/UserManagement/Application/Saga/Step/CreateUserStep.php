@@ -29,7 +29,7 @@ final readonly class CreateUserStep implements SagaStepInterface
         $this->commandBus->dispatch(
             new CreateUser(
                 $sagaProcess->userId(),
-                $sagaProcess->email()
+                $sagaProcess->identity(),
             )
         );
     }
