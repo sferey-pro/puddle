@@ -1,0 +1,33 @@
+{% extends '@Authentication/base.html.twig' %}
+
+{% block title %}Sign in or Register{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h1 class="h3 text-center mb-4">Welcome to Puddle</h1>
+                    <p class="text-muted text-center mb-4">
+                        Sign in or create an account using your email or phone number
+                    </p>
+
+                    <twig:RegistrationForm />
+
+                    <div class="hr-text my-4">or continue with</div>
+
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('oauth_google') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-google me-2"></i> Google
+                        </a>
+                        <a href="{{ path('oauth_github') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-github me-2"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

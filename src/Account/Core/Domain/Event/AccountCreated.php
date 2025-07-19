@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Account\Core\Domain\Event;
 
-use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\Model\ValueObject\Identifier;
 use Kernel\Domain\Event\DomainEvent;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 

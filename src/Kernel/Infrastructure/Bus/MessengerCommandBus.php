@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kernel\Infrastructure\Bus;
 
+use Kernel\Application\Bus\CommandBusInterface;
+use Kernel\Application\Message\CommandInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;

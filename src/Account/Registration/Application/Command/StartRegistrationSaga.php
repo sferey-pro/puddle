@@ -6,7 +6,6 @@ namespace Account\Registration\Application\Command;
 
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 use Kernel\Application\Message\CommandInterface;
-use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
  * Commande pour démarrer le Saga d'inscription.
@@ -22,7 +21,7 @@ final readonly class StartRegistrationSaga implements CommandInterface
 
     public function __construct(
         public string $identifier,
-        public ?string $ipAddress
+        public ?string $ipAddress = null
     ) {
         $this->userId = UserId::generate();
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Account\Lifecycle\Domain\State;
 
-use Account\Core\Domain\Account;
+use Account\Core\Domain\Model\Account;
 
 /**
  * Interface pour le pattern State du cycle de vie Account.

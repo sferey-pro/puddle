@@ -25,7 +25,7 @@ final readonly class CompensateAccountCreationHandler
     public function __invoke(CompensateAccountCreation $command): void
     {
 
-        $userAccount = $this->accountRepository->ofId($command->userId);
+        $userAccount = $this->accountRepository->find($command->userId);
 
         if (null !== $userAccount) {
             $this->accountRepository->remove($userAccount);

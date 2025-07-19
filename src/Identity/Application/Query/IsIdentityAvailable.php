@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Identity\Application\Query;
 
-use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\Model\ValueObject\Identifier;
 use Kernel\Application\Message\QueryInterface;
 
 final readonly class IsIdentityAvailable implements QueryInterface

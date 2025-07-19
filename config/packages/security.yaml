@@ -1,0 +1,67 @@
+security:
+    providers:
+        app_user_provider:
+            entity:
+                class: Account\Core\Domain\Account
+                property: email
+
+    firewalls:
+        main:
+            lazy: true
+            provider: app_user_provider
+
+            # Login link pour magic link
+            login_link:
+                check_route: auth_magic_link_verify
+                signature_properties: ['id']
+                max_uses: 1
+                used_link_cache: cache.app
+
+            # Custom authenticator pour OTP
+            custom_authenticators:
+                - Authentication\Infrastructure\Security\OTPAuthenticator
+
+            logout:
+                path: app_logout
+
+    access_control:
+        - { path: ^/account/register, roles: PUBLIC_ACCESS }
+        - { path: ^/auth/magic-link, roles: PUBLIC_ACCESS }
+        - { path: ^/dashboard, roles: ROLE_USER }
+
+services:
+    # Token Generator
+    Authentication\Domain\Service\TokenGeneratorInterface:
+        class: Authentication\Infrastructure\Token\SymfonyTokenGeneratorAdapter
+        arguments:
+            - '@security.csrf.token_generator'
+
+    # Login Link Adapter
+    Authentication\Infrastructure\Security\SymfonyLoginLinkAdapter:
+        arguments:
+            - '@security.login_link_handler.main'
+            - '@Authentication\Domain\Repository\AccessCredentialRepositoryInterface'
+            - '@Authentication\Domain\Service\TokenGeneratorInterface'
+            - '@router'
+
+    # Notifications
+    notification.email:
+        class: Infrastructure\Notification\EmailNotificationAdapter
+        arguments:
+            - '@mailer'
+            - '@twig'
+        tags:
+            - { name: 'kernel.notification', channel: 'email' }
+
+    notification.sms:
+        class: Infrastructure\Notification\SMSNotificationAdapter
+        arguments:
+            - '@notifier'
+        tags:
+            - { name: 'kernel.notification', channel: 'sms' }
+
+    # Repository
+    Authentication\Domain\Repository\AccessCredentialRepositoryInterface:
+        class: Authentication\Infrastructure\Repository\AccessCredentialRepository
+        arguments:
+            - '@doctrine.orm.entity_manager'

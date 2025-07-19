@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_meta_description }}{% endblock %}
+{% block meta_robots %}{{ page_robots }}{% endblock %}
+
+{% block content %}
+    {% if breadcrumb is defined %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                {% for label, url in breadcrumb %}
+                    <li class="breadcrumb-item {{ url is null ? 'active' : '' }}">
+                        {% if url %}
+                            <a href="{{ url }}">{{ label }}</a>
+                        {% else %}
+                            {{ label }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </nav>
+    {% endif %}
+
+    <h1>{{ page_title }}</h1>
+
+    <div class="content">
+        {# Ton contenu statique ici #}
+    </div>
+
+    {% if show_last_modified and last_modified %}
+        <p class="text-muted small">
+            Dernière mise à jour : {{ last_modified|date('d/m/Y à H:i') }}
+        </p>
+    {% endif %}
+{% endblock %}

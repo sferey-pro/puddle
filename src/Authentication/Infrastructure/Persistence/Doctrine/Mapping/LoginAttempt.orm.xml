@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Authentication\Domain\Model\LoginAttempt" table="auth_login_attempts">
+        <id name="id" type="login_attempt_id" />
+
+        <field name="accountId" type="account_id" column="account_id" nullable="true" />
+        <field name="email" type="email" column="email" />
+        <field name="method" type="login_method" column="method" />
+        <field name="successful" type="boolean" column="successful" />
+        <field name="failureReason" type="failure_reason" column="failure_reason" nullable="true" />
+        <field name="ipAddress" type="string" column="ip_address" length="45" />
+        <field name="userAgent" type="string" column="user_agent" length="255" />
+        <field name="country" type="string" column="country" nullable="true" length="2" />
+        <field name="city" type="string" column="city" nullable="true" length="100" />
+        <field name="attemptedAt" type="datetime_immutable" column="attempted_at" />
+        <field name="resultingSessionId" type="session_id" column="resulting_session_id" nullable="true" />
+
+        <indexes>
+            <index columns="account_id,attempted_at" />
+            <index columns="email,attempted_at" />
+            <index columns="ip_address,attempted_at" />
+            <index columns="successful,attempted_at" />
+        </indexes>
+    </entity>
+</doctrine-mapping>

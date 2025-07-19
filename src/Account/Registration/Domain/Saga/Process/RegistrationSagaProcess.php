@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Account\Registration\Domain\Saga\Process;
 
 use Account\Core\Domain\Notification\NotificationChannel;
+use DateTimeImmutable;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
-use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\Model\ValueObject\Identifier;
 use Kernel\Domain\Saga\Process\AbstractSagaProcess;
 use Kernel\Domain\Saga\SagaStateId;
 
@@ -29,16 +30,16 @@ final class RegistrationSagaProcess extends AbstractSagaProcess
 {
     public string $currentState;
 
-    private function __construct(SagaStateId $id) {
-        parent::__construct($id);
-    }
+    public function setCreatedAt(DateTimeImmutable $createdAt): void { }
+
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): void { }
 
     public static function start(
         UserId $userId,
         Identifier $identifier,
         NotificationChannel $channel
     ): self {
-        $process = new self(SagaStateId::generate());
+        $process = self::create();
 
         $process->addToContext('userId', (string) $userId);
         $process->addToContext('identifier_value', $identifier->value());

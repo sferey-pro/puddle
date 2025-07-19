@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Authentication\Domain\SecurityEvent" table="authentication_security_events">
+
+        <id name="id" type="string" column="id" length="36">
+            <generator strategy="UUID" />
+        </id>
+
+        <!-- Identifiant concerné -->
+        <field name="identifier" type="string" column="identifier" length="255" nullable="false">
+            <options>
+                <option name="comment">Email or phone number involved</option>
+            </options>
+        </field>
+
+        <!-- Type d'événement -->
+        <field name="eventType" type="string" column="event_type" length="50" nullable="false">
+            <options>
+                <option name="comment">Type of security event</option>
+            </options>
+        </field>
+
+        <!-- Sévérité -->
+        <field name="severity" type="string" column="severity" length="20" nullable="false">
+            <options>
+                <option name="comment">Event severity: low, medium, high, critical</option>
+            </options>
+        </field>
+
+        <!-- IP Address -->
+        <field name="ipAddress" type="string" column="ip_address" length="45" nullable="false">
+            <options>
+                <option name="comment">IP address (supports IPv6)</option>
+            </options>
+        </field>
+
+        <!-- User Agent -->
+        <field name="userAgent" type="text" column="user_agent" nullable="true">
+            <options>
+                <option name="comment">Browser user agent string</option>
+            </options>
+        </field>
+
+        <!-- Flags (array) -->
+        <field name="flags" type="simple_array" column="flags" nullable="true">
+            <options>
+                <option name="comment">Security flags: rapid_attempts, multiple_ips, etc.</option>
+            </options>
+        </field>
+
+        <!-- Context JSON -->
+        <field name="context" type="json" column="context" nullable="true">
+            <options>
+                <option name="comment">Additional context data</option>
+                <option name="default">{}</option>
+            </options>
+        </field>
+
+        <!-- Timestamp -->
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false">
+            <options>
+                <option name="default">CURRENT_TIMESTAMP</option>
+            </options>
+        </field>
+
+        <!-- ==================== INDEXES ==================== -->
+
+        <indexes>
+            <index name="idx_security_identifier" columns="identifier" />
+            <index name="idx_security_ip" columns="ip_address" />
+            <index name="idx_security_created" columns="created_at" />
+            <index name="idx_security_severity" columns="severity">
+                <options>
+                    <option name="where">severity IN ('high', 'critical')</option>
+                </options>
+            </index>
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

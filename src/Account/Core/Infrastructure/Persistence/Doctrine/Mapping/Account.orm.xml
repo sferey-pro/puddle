@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Account\Core\Domain\Model\Account" table="`accounts`">
+
+        <!-- ==================== IDENTIFIANT PRINCIPAL ==================== -->
+        <id name="id" type="user_id" column="id" length="36" />
+
+        <!-- ==================== PROPRIÉTÉS MÉTIER ==================== -->
+
+        <!-- Date de vérification -->
+        <field name="verifiedAt" type="datetime_immutable" column="verified_at" nullable="true">
+            <options>
+                <option name="comment">When the account was verified</option>
+            </options>
+        </field>
+
+        <!-- État de l'Account stocké comme embedded object (classe concrète) -->
+        <embedded name="stateData" class="Account\Lifecycle\Domain\State\AccountStateData" use-column-prefix="false" />
+
+        <!-- ==================== PROPRIÉTÉS DES CONTRACTS ==================== -->
+
+        <!-- Timestampable Contract -->
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false">
+            <gedmo:timestampable on="create"/>
+            <options>
+                <option name="comment">Creation timestamp</option>
+            </options>
+        </field>
+
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="false">
+            <gedmo:timestampable on="update"/>
+            <options>
+                <option name="comment">Last update timestamp</option>
+            </options>
+        </field>
+
+        <!-- Blameable Contract -->
+        <field name="createdBy" type="user_id" column="created_by" nullable="true">
+            <options>
+                <option name="comment">User who created this account</option>
+            </options>
+        </field>
+
+        <field name="updatedBy" type="user_id" column="updated_by" nullable="true">
+            <options>
+                <option name="comment">User who last updated this account</option>
+            </options>
+        </field>
+
+        <!-- Versionable Contract (Optimistic Locking) -->
+        <field name="version" type="integer" column="version" nullable="false">
+            <options>
+                <option name="default">0</option>
+                <option name="unsigned">true</option>
+                <option name="comment">Version for optimistic locking</option>
+            </options>
+        </field>
+
+        <!-- SoftDeletable Contract -->
+        <field name="deletedAt" type="datetime_immutable" column="deleted_at" nullable="true">
+            <options>
+                <option name="comment">Soft deletion timestamp</option>
+            </options>
+        </field>
+
+        <!-- ==================== INDEX STRATÉGIQUES ==================== -->
+
+        <indexes>
+            <!-- Index pour les requêtes par état -->
+            <index name="idx_account_state" columns="state_name" />
+
+            <!-- Index pour la soft deletion (performance des queries non-supprimés) -->
+            <index name="idx_account_deleted" columns="deleted_at" />
+
+            <!-- Index composite pour les requêtes par état et date -->
+            <index name="idx_account_state_created" columns="state_name,created_at" />
+
+            <!-- Index pour les requêtes de vérification -->
+            <index name="idx_account_verified" columns="verified_at" />
+
+            <!-- Index pour les états actifs (optimisation) -->
+            <index name="idx_account_state_active" columns="state_is_active" />
+
+            <!-- Index pour expiration des suspensions -->
+            <index name="idx_account_state_expires" columns="state_expires_at" />
+        </indexes>
+
+        <!-- ==================== OPTIONS DE TABLE ==================== -->
+
+        <options>
+            <option name="comment">Core Account aggregate - manages account lifecycle and identity</option>
+            <option name="charset">utf8mb4</option>
+            <option name="collate">utf8mb4_unicode_ci</option>
+        </options>
+
+    </entity>
+
+</doctrine-mapping>

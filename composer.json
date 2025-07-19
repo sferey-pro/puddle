@@ -88,9 +88,11 @@
         "psr-4": {
             "App\\": "src/",
             "Kernel\\": "src/Kernel/",
+            "SharedKernel\\": "src/SharedKernel/",
+            "Content\\": "src/Content/",
             "Account\\": "src/Account/",
             "Identity\\": "src/Identity/",
-            "Authentification\\": "src/Authentification/"
+            "Authentication\\": "src/Authentication/"
         }
     },
     "autoload-dev": {

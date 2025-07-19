@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Account\Registration\Application\Command;
 
+use Account\Registration\Application\Service\WelcomeNotifierRegistry;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
 #[AsCommandHandler]
 final readonly class SendWelcomeNotificationHandler

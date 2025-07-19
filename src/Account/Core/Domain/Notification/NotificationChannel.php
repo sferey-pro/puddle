@@ -6,6 +6,6 @@ namespace Account\Core\Domain\Notification;
 
 enum NotificationChannel: string
 {
-    case Email = 'email';
-    case Sms = 'sms';
+    case EMAIL = 'email';
+    case SMS = 'sms';
 }

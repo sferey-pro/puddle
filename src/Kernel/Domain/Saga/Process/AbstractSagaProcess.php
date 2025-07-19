@@ -20,26 +20,60 @@ use Kernel\Domain\Saga\SagaStateId;
  * - L'historique des étapes déjà validées.
  * - Toutes les informations métier nécessaires pour mener le parcours à son terme (le contexte).
  */
-abstract class AbstractSagaProcess implements SagaProcessInterface, Timestampable
+abstract class AbstractSagaProcess implements SagaProcessInterface,
+    Timestampable
 {
+    // ==================== PROPRIÉTÉS PRINCIPALES ====================
+    public SagaStateId $id;
+    public string $currentState;
+    private array $history = [];
+    private array $context = [];
+
+
+    // ==================== PROPRIÉTÉS POUR CONTRACTS ====================
+
+    // Timestampable
     private \DateTimeImmutable $createdAt;
     private \DateTimeImmutable $updatedAt;
 
-    public string $currentState;
+    private function __construct(
+        SagaStateId $id
+    ) {
+        $this->id = $id;
+    }
 
-    private array $history = [];
+    public static function create() {
+        return new static(SagaStateId::generate());
+    }
 
-    private array $context = [];
+    public function id(): SagaStateId
+    {
+        return $this->id;
+    }
 
-    protected function __construct(protected(set) SagaStateId $id) {}
+    // ==================== IMPLÉMENTATION TIMESTAMPABLE ====================
 
-    public function getCreatedAt(): \DateTimeImmutable {
+    public function getCreatedAt(): \DateTimeImmutable
+    {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): \DateTimeImmutable {
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
         return $this->updatedAt;
     }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    // ==================== MÉTHODES PRIVÉES ====================
 
     public function addTransitionToHistory(string $transitionName): void
     {

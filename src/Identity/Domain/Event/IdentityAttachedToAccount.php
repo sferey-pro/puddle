@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Identity\Domain\Event;
 
 use SharedKernel\Domain\ValueObject\Identity\UserId;
-use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\Model\ValueObject\Identifier;
 use Kernel\Domain\Event\DomainEvent;
 
 /**

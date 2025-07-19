@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-// src/Account/Lifecycle/Domain/State/DeletedState.php
-
 namespace Account\Lifecycle\Domain\State;
 
-use Account\Core\Domain\Account;
+use Account\Core\Domain\Model\Account;
 
 /**
  * Représente l'état terminal d'un compte supprimé.

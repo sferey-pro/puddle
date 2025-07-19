@@ -6,18 +6,17 @@ namespace Account\Registration\Application\Command;
 
 use Account\Core\Domain\Repository\AccountRepositoryInterface;
 use Account\Registration\Application\Saga\Event\RegistrationSagaStarted;
-use Account\Registration\Application\Service\IdentifierResolverInterface;
 use Account\Registration\Application\Service\NotificationChannelResolverInterface;
 use Account\Registration\Domain\Exception\RegistrationException;
-use Account\Registration\Domain\RegistrationRequest;
+use Account\Registration\Domain\Model\RegistrationRequest;
 use Account\Registration\Domain\Repository\RegistrationProcessRepositoryInterface;
 use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
+use Account\Registration\Domain\Service\IdentifierResolverInterface;
 use Account\Registration\Domain\Specification\CanRegisterSpecification;
-use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\Model\ValueObject\Identifier;
 use Kernel\Application\Bus\CommandBusInterface;
 use Kernel\Application\Bus\EventBusInterface;
 use Kernel\Application\Bus\QueryBusInterface;
-use Kernel\Application\Saga\SagaManager;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -50,7 +49,7 @@ final readonly class StartRegistrationSagaHandler
 
     public function __invoke(StartRegistrationSaga $command): void
     {
-        $identityResult = $this->identifierResolver->resolve($command->identifier);
+        $identityResult = $this->identifierResolver->resolveIdentifier($command->identifier);
 
         if ($identityResult->isFailure()) {
             throw new \InvalidArgumentException($identityResult->error->getMessage());

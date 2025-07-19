@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 use Account\Core\Domain\Repository\AccountRepositoryInterface;
 use Account\Core\Infrastructure\Persistence\Doctrine\Repository\DoctrineAccountRepository;
-use Account\Registration\Application\Saga\Step\CreateAccountStep;
-use Account\Registration\Application\Saga\Step\TriggerWelcomeNotificationStep;
+use Account\Registration\Domain\Repository\RegistrationProcessRepositoryInterface;
+use Account\Registration\Domain\Repository\RegistrationRepositoryInterface;
+use Account\Registration\Domain\Service\IdentifierResolverInterface;
+use Account\Registration\Domain\Specification\CanRegisterSpecification;
+use Account\Registration\Infrastructure\Persistence\Doctrine\Repository\DoctrineRegistrationProcessRepository;
+use Account\Registration\Infrastructure\Service\IdentifierServiceAdapter;
+use Account\Registration\Infrastructure\Service\NotificationChannelServiceAdapter;
 use Kernel\Application\Saga\Step\SagaStepInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -19,19 +24,28 @@ return function (ContainerConfigurator $container): void {
 
     // $services
     //     ->instanceof(WelcomeNotifierInterface::class)
-    //         ->tag('app.welcome_notifier');
+    //     ->tag('app.welcome_notifier');
 
     $services
         ->instanceof(SagaStepInterface::class)
-            ->tag('saga.step');
+        ->tag('saga.step');
+
+    // Adaptateurs pour les services Identity
+    $services->set(IdentifierResolverInterface::class, IdentifierServiceAdapter::class);
+    $services->set(NotificationChannelResolverInterface::class, NotificationChannelServiceAdapter::class);
 
     $services->load('Account\\', '%kernel.project_dir%/src/Account/')
         ->exclude([
-            '%kernel.project_dir%/src/Account/**/Domain',
+            '%kernel.project_dir%/src/Account/**/Domain/{Entity,ValueObject,Event}',
             '%kernel.project_dir%/src/Account/**/Infrastructure/Symfony/Resources',
         ]);
 
-    // repositories
-    // $services->set(AccountRepositoryInterface::class)
-    //     ->class(DoctrineAccountRepository::class);
+    $services->set(CanRegisterSpecification::class)
+        ->tag('account.domain_specification');
+
+    // Repositories
+    $services->alias(AccountRepositoryInterface::class, DoctrineAccountRepository::class);
+    $services->alias(RegistrationProcessRepositoryInterface::class, DoctrineRegistrationProcessRepository::class);
+    $services->alias(RegistrationRepositoryInterface::class, DoctrineAccountRepository::class);
+
 };

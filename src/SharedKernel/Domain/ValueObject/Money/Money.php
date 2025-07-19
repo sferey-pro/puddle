@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\SharedContext\Domain\ValueObject;
+namespace SharedKernel\Domain\ValueObject\Money;
 
 use Webmozart\Assert\Assert;
 
@@ -19,7 +19,7 @@ final class Money
     public readonly int $amount; // Stocker en centimes pour éviter les problèmes de floating point
     public readonly string $currency;
 
-    private const DEFAULT_CURRENCY = 'EUR';
+    private const string DEFAULT_CURRENCY = 'EUR';
 
     public function __construct(int $amount, ?string $currency = null)
     {

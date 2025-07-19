@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Account\Registration\Application\Command;
 
+use Account\Core\Domain\Notification\NotificationChannel;
+use Kernel\Application\Message\CommandInterface;
+use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 final readonly class SendWelcomeNotification implements CommandInterface
 {

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Account\Lifecycle\Domain\State;
 
-use Account\Core\Domain\Account;
+use Account\Core\Domain\Model\Account;
 
-final class SuspendedState implements AccountState
+final readonly class SuspendedState implements AccountState
 {
     public function __construct(
-        private readonly string $reason,
-        private readonly ?\DateTimeImmutable $until = null
+        private(set) string $reason,
+        private(set) ?\DateTimeImmutable $until = null
     ) {
     }
 
@@ -19,15 +19,7 @@ final class SuspendedState implements AccountState
         return 'suspended';
     }
 
-    public function getReason(): string
-    {
-        return $this->reason;
-    }
 
-    public function getSuspendedUntil(): ?\DateTimeImmutable
-    {
-        return $this->until;
-    }
 
     public function canBeVerified(Account $account): bool
     {
@@ -91,7 +83,6 @@ final class SuspendedState implements AccountState
     public function delete(Account $account): void
     {
         $account->changeState(new DeletedState());
-        $account->markAsDeleted();
     }
 
     public function getPossibleTransitions(): array

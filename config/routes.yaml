@@ -1,0 +1,7 @@
+register_controllers:
+    resource: '../src/Account/Registration/Presentation/Controller/'
+    type: attribute
+
+auth_controllers:
+    resource: '../src/Authentication/Presentation/Controller/'
+    type: attribute

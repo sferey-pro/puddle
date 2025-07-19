@@ -14,20 +14,19 @@ use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 final class AttachIdentityHandler
 {
     public function __construct(
-        private readonly UserIdentityRepositoryInterface $repository,
-        private readonly IsUniqueIdentitySpecification $uniqueSpec
+        private readonly UserIdentityRepositoryInterface $userIdentityRepository,
     ) {
     }
 
     public function __invoke(AttachIdentity $command): void
     {
         // 1. Vérifier l'unicité
-        if (!$this->uniqueSpec->isSatisfiedBy($command->identifier)) {
+        if (0 !== $this->userIdentityRepository->existsByIdentifier($command->identifier)) {
             throw IdentityException::identityAlreadyExists();
         }
 
         // 2. ✅ APPROCHE DDD CORRECTE : Récupérer l'agrégat existant
-        $userIdentity = $this->repository->ofId($command->userId);
+        $userIdentity = $this->userIdentityRepository->ofId($command->userId);
 
         if (null === $userIdentity) {
             // 3. Si pas d'agrégat existant, en créer un nouveau
@@ -38,6 +37,6 @@ final class AttachIdentityHandler
         }
 
         // 5. Sauvegarder l'agrégat (les événements sont émis automatiquement)
-        $this->repository->save($userIdentity);
+        $this->userIdentityRepository->save($userIdentity);
     }
 }

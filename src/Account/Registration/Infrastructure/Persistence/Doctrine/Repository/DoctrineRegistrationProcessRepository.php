@@ -4,35 +4,38 @@ declare(strict_types=1);
 
 namespace Account\Registration\Infrastructure\Persistence\Doctrine\Repository;
 
+use Account\Registration\Domain\Exception\RegistrationSagaNotFoundException;
 use Account\Registration\Domain\Repository\RegistrationProcessRepositoryInterface;
 use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Kernel\Domain\Saga\SagaStateId;
-use Kernel\Infrastructure\Persistence\Doctrine\ORMAbstractRepository;
+use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
- * Implémentation Doctrine du repository pour les processus de saga d'inscription.
+ * Repository Doctrine pour les processus de saga d'inscription.
  *
- * @extends ServiceEntityRepository<RegistrationSagaProcess>
+ * Utilise la stratégie SINGLE_TABLE inheritance via AbstractSagaProcess.
  */
-final class DoctrineRegistrationProcessRepository extends ORMAbstractRepository implements RegistrationProcessRepositoryInterface
+final class DoctrineRegistrationProcessRepository extends ServiceEntityRepository
+    implements RegistrationProcessRepositoryInterface
 {
-    private const ENTITY_CLASS = RegistrationSagaProcess::class;
-    private const ALIAS = 'registration_process';
-
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, self::ENTITY_CLASS, self::ALIAS);
+        parent::__construct($registry, RegistrationSagaProcess::class);
     }
 
-    public function ofId(SagaStateId $id): ?RegistrationSagaProcess
-    {
-        return parent::find($id);
-    }
+    // ========== CRUD ==========
 
     public function save(RegistrationSagaProcess $process): void
     {
         $this->getEntityManager()->persist($process);
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(RegistrationSagaProcess $process): void
+    {
+        $this->getEntityManager()->remove($process);
+        $this->getEntityManager()->flush();
     }
 }

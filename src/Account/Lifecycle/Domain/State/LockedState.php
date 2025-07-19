@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Account\Lifecycle\Domain\State;
 
-use Account\Core\Domain\Account;
+use Account\Core\Domain\Model\Account;
 use DomainException;
 
 /**
@@ -14,24 +14,19 @@ use DomainException;
  * a des actions très limitées, nécessitant souvent une intervention manuelle
  * pour être réactivé.
  */
-final class LockedState implements AccountState
+final readonly class LockedState implements AccountState
 {
     /**
      * @param string $reason La raison du verrouillage.
      */
     public function __construct(
-        private readonly string $reason
+        private(set) string $reason
     ) {
     }
 
     public function getName(): string
     {
         return 'locked';
-    }
-
-    public function getReason(): string
-    {
-        return $this->reason;
     }
 
     public function canBeVerified(Account $account): bool
@@ -82,7 +77,6 @@ final class LockedState implements AccountState
     public function delete(Account $account): void
     {
         $account->changeState(new DeletedState());
-        $account->markAsDeleted();
     }
 
     public function getPossibleTransitions(): array

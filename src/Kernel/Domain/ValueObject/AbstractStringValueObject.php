@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kernel\Domain\ValueObject;
 
+use Kernel\Domain\Result;
+
 /**
  * Classe de base pour les Value Objects qui ne sont qu'un wrapper
  * autour d'une unique valeur de type string.
@@ -17,7 +19,7 @@ abstract readonly class AbstractStringValueObject implements ValueObjectInterfac
      * nommée (comme `create()` ou `fromString()`) dans les classes enfants,
      * qui contiendra la logique de validation.
      */
-    protected function __construct(protected(set) string $value) {}
+    protected function __construct(public string $value) {}
 
     /**
      * @return T
@@ -37,8 +39,12 @@ abstract readonly class AbstractStringValueObject implements ValueObjectInterfac
         return ['value' => $this->value];
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): mixed
     {
+        if (!isset($data['value'])) {
+            throw new \InvalidArgumentException('Missing required fields: value');
+        }
+
         return static::create($data['value']);
     }
 

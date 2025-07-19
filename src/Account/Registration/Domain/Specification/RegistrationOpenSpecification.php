@@ -2,6 +2,7 @@
 
 namespace Account\Registration\Domain\Specification;
 
+use Account\Registration\Domain\Model\RegistrationRequest;
 use Account\Registration\Domain\Repository\RegistrationConfigRepositoryInterface;
 use Kernel\Domain\Specification\SpecificationInterface;
 use Kernel\Application\Clock\ClockInterface;
@@ -22,7 +23,7 @@ final class RegistrationOpenSpecification implements SpecificationInterface
     }
 
     public function failureReason(): ?string {
-        return $this->getErrorMessage();
+        return null;
     }
 
     public function isSatisfiedBy(mixed $candidate): bool

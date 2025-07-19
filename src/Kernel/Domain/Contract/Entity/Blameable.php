@@ -2,6 +2,8 @@
 
 namespace Kernel\Domain\Contract\Entity;
 
+use SharedKernel\Domain\ValueObject\Identity\UserId;
+
 interface Blameable
 {
     public function getCreatedBy(): ?UserId;

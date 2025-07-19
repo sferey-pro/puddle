@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Account\Registration\Application\Command;
 
 use SharedKernel\Domain\ValueObject\Identity\UserId;
-use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\Model\ValueObject\Identifier;
 use Kernel\Application\Message\CommandInterface;
 
 /**
@@ -14,7 +14,8 @@ use Kernel\Application\Message\CommandInterface;
 final class CreateAccount implements CommandInterface
 {
     public function __construct(
-        public UserId $userId
+        public UserId $userId,
+        public Identifier $identifier
     ) {
     }
 }

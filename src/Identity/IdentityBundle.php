@@ -11,11 +11,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class IdentityBundle extends Bundle
 {
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-    }
-
     public function getContainerExtension(): ?ExtensionInterface
     {
         if (!isset($this->extension)) {

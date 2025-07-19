@@ -8,6 +8,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
 use Doctrine\DBAL\Types\Type;
+use Kernel\Domain\ValueObject\AggregateRootId;
 
 /**
  * Classe de base pour les types Doctrine qui gèrent nos Value Objects d'ID d'agrégat.
@@ -27,7 +28,7 @@ abstract class AbstractValueObjectIdType extends Type implements DoctrineCustomT
 
     /**
      * Doit retourner le FQCN (Fully Qualified Class Name) de la classe du Value Object.
-     * Ex: App\Module\SharedContext\Domain\ValueObject\UserId::class.
+     * Ex: SharedKernel\Domain\ValueObject\UserId::class.
      */
     abstract protected function getValueObjectClass(): string;
 
