@@ -4,7 +4,61 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
+    <!--
+    ==================== REGISTRATION SAGA PROCESS ====================
+
+    Hérite de AbstractSagaProcess via SINGLE_TABLE inheritance.
+
+    Architecture Saga :
+    - AbstractSagaProcess : Structure commune (id, currentState, context, history, timestamps)
+    - RegistrationSagaProcess : Spécialisation pour processus d'inscription
+    - Stratégie SINGLE_TABLE : Toutes les Sagas dans la table `saga_process`
+    - Discriminator : 'registration' pour identifier ce type de Saga
+
+    Données Context stockées (JSON) :
+    - userId : ID de l'utilisateur en cours d'inscription
+    - identifier_value : Valeur de l'identifier (email, phone, etc.)
+    - identifier_class : Classe PHP de l'identifier pour reconstruction
+    - channel : Canal de notification choisi
+
+    États possibles (Symfony Workflow) :
+    - started : Saga initiée
+    - account_created : Compte créé dans Account context
+    - identity_attached : Identité attachée dans Identity context
+    - notification_sent : Notification envoyée
+    - completed : Inscription terminée
+    - compensated : Compensation réussie
+    - failed : Échec de compensation
+    -->
+
     <entity name="Account\Registration\Domain\Saga\Process\RegistrationSagaProcess">
 
+        <!--
+        ==================== PROPRIÉTÉS SPÉCIFIQUES ====================
+
+        Pas de propriétés supplémentaires car toutes sont héritées d'AbstractSagaProcess.
+        La spécialisation se fait via :
+        - Les méthodes métier (userId(), identifier(), channel())
+        - La logique de reconstruction du context
+        - Les règles de workflow spécifiques
+
+        Le mapping AbstractSagaProcess gère :
+        - id (saga_state_id)
+        - currentState (string)
+        - context (json) <- Contient userId, identifier_value, identifier_class, channel
+        - history (json) <- Historique des transitions
+        - createdAt, updatedAt (timestamps)
+        - saga_type = 'registration' (discriminator)
+        -->
+
+        <!-- ==================== OPTIONS DE CLASSE ==================== -->
+
+        <options>
+            <option name="comment">Registration saga process - inherits from AbstractSagaProcess</option>
+            <option name="charset">utf8mb4</option>
+            <option name="collate">utf8mb4_unicode_ci</option>
+        </options>
+
     </entity>
+
 </doctrine-mapping>

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Module\Auth\Domain\UserAccount;
-use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkFailureHandler;
-use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkSuccessHandler;
-use App\Module\Auth\Infrastructure\Symfony\Security\GoogleAuthenticator;
+use Authentication\Infrastructure\Security\Authenticator\MagicLinkAuthenticator;
+use Authentication\Infrastructure\Security\Authenticator\OTPAuthenticator;
+use Authentication\Infrastructure\Security\UserProvider;
 use Symfony\Config\SecurityConfig;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,9 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
     ;
 
     $security->provider('app_user_provider')
-        ->entity()
-            ->class(UserAccount::class)
-            ->property('email.value')
+        ->id(UserProvider::class)
     ;
 
     $security->firewall('dev')
@@ -40,16 +37,15 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
         ->checkRoute('login_check')
         ->checkPostOnly(true)
         ->maxUses(1)
-        ->signatureProperties(['id'])
+        ->signatureProperties(['userId'])
         ->lifetime(300)
-        ->successHandler(AuthenticationLoginLinkSuccessHandler::class)
-        ->failureHandler(AuthenticationLoginLinkFailureHandler::class)
     ;
 
     $mainFirewall->formLogin()
         ->loginPath('login')
         ->checkPath('login')
         ->enableCsrf(true)
+
     ;
 
     $mainFirewall->rememberMe()
@@ -57,7 +53,12 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
         ->lifetime(604800)
     ;
 
-    $mainFirewall->customAuthenticators([GoogleAuthenticator::class]);
+    $mainFirewall->customAuthenticators([
+            MagicLinkAuthenticator::class,
+            OTPAuthenticator::class,
+        ])
+        ->entryPoint('form_login')
+    ;
 
     $mainFirewall->logout()
         ->path('logout')

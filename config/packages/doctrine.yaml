@@ -18,19 +18,8 @@ doctrine:
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
-        mappings:
-            Core:
-                is_bundle: false
-                type: xml
-                dir: '%kernel.project_dir%/src/Core/Infrastructure/Persistence/Doctrine/Mapping'
-                prefix: 'App\Core\Domain'
-            SharedContext:
-                is_bundle: false
-                type: xml
-                dir: "%kernel.project_dir%/src/Module/SharedContext/Infrastructure/Doctrine/Mapping"
-                prefix: 'App\Module\SharedContext\Domain'
         controller_resolver:
-            auto_mapping: false
+            auto_mapping: true
 
 when@test:
     doctrine:

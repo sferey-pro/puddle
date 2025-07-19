@@ -7,9 +7,6 @@ namespace Account\Core\Domain\Event;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 use Kernel\Domain\Event\DomainEvent;
 
-/**
- * Événement levé lorsqu'un compte utilisateur est suspendu pour des causes de sécurité.
- */
 final readonly class AccountSuspended extends DomainEvent
 {
     public function __construct(

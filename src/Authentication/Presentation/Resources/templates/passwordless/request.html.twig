@@ -1,0 +1,26 @@
+{% extends '@Authentication/base.html.twig' %}
+
+{% block title %}Sign in or Register{% endblock %}
+
+{% block content %}
+<div class="card card-md">
+    <div class="card-body">
+        <twig:PasswordlessRequestForm />
+        <div class="hr-text">or</div>
+        <div class="row">
+            <div class="col">
+                <a href="oauthUrl(enum('App\\Module\\Auth\\Domain\\Enum\\SocialNetwork').GOOGLE)" class="btn btn-4 w-100">
+                    <twig:ux:icon name="tabler:brand-google" class="icon text-google icon-2" />
+                    Login with Google
+                </a>
+            </div>
+            <div class="col">
+                <a href="oauthUrl(enum('App\\Module\\Auth\\Domain\\Enum\\SocialNetwork').GITHUB)" class="btn btn-4 w-100">
+                    <twig:ux:icon name="tabler:brand-github" class="icon text-github icon-2" />
+                    Login with Github
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

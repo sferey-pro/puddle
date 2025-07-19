@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Identity\Domain\ValueObject;
 
 use Kernel\Domain\Result;
-use Kernel\Domain\ValueObject\ValueObjectInterface;
 use SharedKernel\Domain\ValueObject\Contact\PhoneNumber;
 
 final readonly class PhoneIdentity implements Identifier
@@ -46,6 +45,11 @@ final readonly class PhoneIdentity implements Identifier
     public function getClass(): string
     {
         return PhoneNumber::class;
+    }
+
+    public function getType(): string
+    {
+        return 'phone';
     }
 
     public static function uniqueFieldPath(): string

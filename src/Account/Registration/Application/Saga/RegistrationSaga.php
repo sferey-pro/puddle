@@ -13,7 +13,6 @@ use Kernel\Application\Saga\Process\SagaProcessInterface;
 use Kernel\Application\Saga\Step\SagaStepRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Workflow\WorkflowInterface;
 
@@ -42,7 +41,6 @@ final class RegistrationSaga
         private SagaStepRegistry $stepRegistry,
         private RegistrationProcessRepositoryInterface $processRepository,
         private LoggerInterface $logger,
-        private EventDispatcher $eventDispatcher,
         private ClockInterface $clock
     ) {
     }
@@ -109,7 +107,7 @@ final class RegistrationSaga
                 $this->clock->now()
             );
 
-            $this->eventDispatcher->dispatch($completionEvent);
+            
             $this->processRepository->save($sagaProcess);
         }
     }

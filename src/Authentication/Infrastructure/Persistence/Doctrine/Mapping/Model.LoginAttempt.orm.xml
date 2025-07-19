@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Authentication\Domain\Model\LoginAttempt" table="auth_login_attempts">
+        <id name="id" type="login_attempt_id" />
+
+        <field name="userId" type="user_id" column="user_id" nullable="true" />
+        <field name="identifier" type="string" column="identifier" length="255" />
+        <field name="attemptedAt" type="datetime_immutable" column="attempted_at" />
+        <field name="successful" type="boolean" column="successful" />
+        <field name="method" type="string" column="method" length="50" />
+        <field name="ipAddress" type="string" column="ip_address" length="45" />
+        <field name="userAgent" type="text" column="user_agent" nullable="true" />
+        <field name="failureReason" type="string" column="failure_reason" nullable="true" />
+    </entity>
+</doctrine-mapping>

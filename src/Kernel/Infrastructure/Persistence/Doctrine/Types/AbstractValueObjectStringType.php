@@ -6,6 +6,7 @@ namespace Kernel\Infrastructure\Persistence\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
+use Kernel\Domain\ValueObject\AbstractStringValueObject;
 
 abstract class AbstractValueObjectStringType extends StringType implements DoctrineCustomTypeInterface
 {
@@ -17,7 +18,7 @@ abstract class AbstractValueObjectStringType extends StringType implements Doctr
 
     /**
      * Doit retourner le FQCN (Fully Qualified Class Name) de la classe du Value Object.
-     * Ex: App\Module\SharedContext\Domain\ValueObject\EmailAddress::class.
+     * Ex: SharedKernel\Domain\ValueObject\EmailAddress::class.
      */
     abstract protected function getValueObjectClass(): string;
 

@@ -13,6 +13,10 @@ use Kernel\Domain\Event\DomainEvent;
  */
 final readonly class IdentityDetachedFromAccount extends DomainEvent
 {
+        /**
+     * @param UserId $userId L'ID du compte concerné.
+     * @param Identifier $detachedIdentifier L'identifiant qui a été détaché.
+     */
     public function __construct(
         private(set) UserId $userId,
         private(set) Identifier $detachedIdentifier,
@@ -20,6 +24,9 @@ final readonly class IdentityDetachedFromAccount extends DomainEvent
         parent::__construct($userId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function eventName(): string
     {
         return 'identity.identity.detached_from_account';

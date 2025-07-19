@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Account\Registration\Application\Command;
 
-use Account\Core\Domain\Account;
+use Account\Core\Domain\Model\Account;
 use Account\Core\Domain\Repository\AccountRepositoryInterface;
 use Account\Registration\Domain\Repository\RegistrationRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Kernel\Application\Bus\EventBusInterface;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Gère l'exécution de l'étape "Créer le compte d'authentification".
@@ -20,9 +19,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class CreateAccountHandler
 {
     public function __construct(
-        private RegistrationRepositoryInterface $registrationRepository,
+        private AccountRepositoryInterface $accountRepository,
         private EventBusInterface $eventBus,
-        private EventDispatcherInterface $eventDispatcher,
         private EntityManagerInterface $em,
     ) {
     }
@@ -30,12 +28,13 @@ final class CreateAccountHandler
     public function __invoke(CreateAccount $command): void
     {
         $account = Account::create(
-            $command->userId ?? UserId::generate()
+            $command->userId ?? UserId::generate(),
+            $command->identifier
         );
 
-        $this->registrationRepository->save($account);
+        $this->accountRepository->save($account);
         $this->em->flush();
 
-        $this->eventBus->publish(...$user->pullDomainEvents());
+        $this->eventBus->publish(...$account->pullDomainEvents());
     }
 }

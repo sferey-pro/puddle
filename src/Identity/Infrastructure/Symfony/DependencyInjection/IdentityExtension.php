@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 class IdentityExtension extends Extension implements PrependExtensionInterface
 {
-    const BUNDLE_DIR = '%kernel.project_dir%/src/Identity/';
+    private const string BUNDLE_DIR = '%kernel.project_dir%/src/Identity/';
 
     public function getAlias(): string
     {
@@ -35,12 +35,11 @@ class IdentityExtension extends Extension implements PrependExtensionInterface
         $doctrineConfig = [
             'orm' => [
                 'mappings' => [
-                    'IdentityBundle' => [
-                        'is_bundle' => true,
+                    'Identity' => [
+                        'is_bundle' => false,
                         'type' => 'xml',
-                        'dir' => '../Persistence/Doctrine/Mapping',
-                        'prefix' => 'Identity\\Domain',
-                        'alias' => 'IdentityBundle',
+                        'dir' => static::BUNDLE_DIR . 'Infrastructure/Persistence/Doctrine/Mapping',
+                        'prefix' => 'Identity\Domain',
                     ],
                 ],
             ],

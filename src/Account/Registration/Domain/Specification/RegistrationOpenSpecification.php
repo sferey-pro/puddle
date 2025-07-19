@@ -2,6 +2,8 @@
 
 namespace Account\Registration\Domain\Specification;
 
+use Account\Registration\Domain\Model\RegistrationConfig;
+use Account\Registration\Domain\Model\RegistrationRequest;
 use Account\Registration\Domain\Repository\RegistrationConfigRepositoryInterface;
 use Kernel\Domain\Specification\SpecificationInterface;
 use Kernel\Application\Clock\ClockInterface;
@@ -17,17 +19,17 @@ final class RegistrationOpenSpecification implements SpecificationInterface
 {
     public function __construct(
         private readonly ClockInterface $clock,
-        private readonly RegistrationConfigRepositoryInterface $configRepository
     ) {
     }
 
     public function failureReason(): ?string {
-        return $this->getErrorMessage();
+        return null;
     }
 
     public function isSatisfiedBy(mixed $candidate): bool
     {
-        $config = $this->configRepository->getActive();
+
+        $config = new RegistrationConfig();
 
         // 1. Vérifier si les inscriptions sont activées globalement
         if (!$config->isEnabled()) {
@@ -43,12 +45,12 @@ final class RegistrationOpenSpecification implements SpecificationInterface
         }
 
         // 3. Vérifier la limite de comptes
-        if ($config->hasUserLimit()) {
-            $currentCount = $this->configRepository->getTotalRegistrations();
-            if ($currentCount >= $config->getUserLimit()) {
-                return false;
-            }
-        }
+        // if ($config->hasUserLimit()) {
+        //     $currentCount = $this->configRepository->getTotalRegistrations();
+        //     if ($currentCount >= $config->getUserLimit()) {
+        //         return false;
+        //     }
+        // }
 
         // 4. Vérifier les restrictions géographiques (si applicable)
         if ($candidate instanceof RegistrationRequest && $config->hasGeoRestrictions()) {

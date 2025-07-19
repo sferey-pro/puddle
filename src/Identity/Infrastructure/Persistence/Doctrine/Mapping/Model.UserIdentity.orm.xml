@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+    ==================== USER IDENTITY (Identity Context) ====================
+
+    Agrégat root centralisant TOUS les identifiants d'un utilisateur.
+
+    Architecture relationnelle :
+        - UserIdentity (1) → AttachedIdentifier (N)
+        - Chaque identifier = 1 ligne dans AttachedIdentifier
+        - Types supportés : email, phone, loyalty_card, social_security, etc.
+        - Recherches optimisées par index sur type+valeur
+    -->
+
+    <entity name="Identity\Domain\Model\UserIdentity" table="identity_user_identities">
+
+        <!--
+            ID utilisateur partagé avec Account context
+        -->
+        <id name="userId" type="user_id" column="user_id" length="36" />
+
+        <!--
+            Collection des identifiants : approche relationnelle pure
+            Chaque ligne = un identifiant spécifique (email, phone, etc.)
+        -->
+        <one-to-many field="identifiers"
+                     target-entity="Identity\Domain\Model\AttachedIdentifier"
+                     mapped-by="userIdentity"
+                     cascade="{'persist', 'remove'}"
+                     orphan-removal="true">
+            <options>
+                <option name="comment">All user identifiers - one row per identifier</option>
+            </options>
+        </one-to-many>
+
+        <!-- ==================== MÉTADONNÉES ==================== -->
+
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false">
+            <options>
+                <option name="comment">When this user identity was created</option>
+            </options>
+        </field>
+
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="false">
+            <options>
+                <option name="comment">Last update timestamp</option>
+            </options>
+        </field>
+
+        <!-- ==================== OPTIONS DE TABLE ==================== -->
+
+        <options>
+            <option name="comment">User identity aggregate root - relational approach</option>
+            <option name="charset">utf8mb4</option>
+            <option name="collate">utf8mb4_unicode_ci</option>
+        </options>
+
+    </entity>
+
+</doctrine-mapping>

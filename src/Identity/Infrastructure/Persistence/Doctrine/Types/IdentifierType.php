@@ -6,16 +6,17 @@ namespace Identity\Infrastructure\Persistence\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Identity\Domain\ValueObject\Identifier;
 use Identity\Domain\ValueObject\EmailIdentity;
+use Identity\Domain\ValueObject\Identifier;
 use Identity\Domain\ValueObject\PhoneIdentity;
+use Kernel\Infrastructure\Persistence\Doctrine\Types\DoctrineCustomTypeInterface;
 
 /**
  * Type Doctrine custom pour persister les Value Objects Identifier polymorphiques.
  */
-final class IdentifierType extends Type
+final class IdentifierType extends Type implements DoctrineCustomTypeInterface
 {
-    public const NAME = 'identifier_type';
+    public const string NAME = 'identifier_type';
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {

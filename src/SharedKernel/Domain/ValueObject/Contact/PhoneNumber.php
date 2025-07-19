@@ -13,13 +13,13 @@ final readonly class PhoneNumber extends AbstractStringValueObject implements Un
 {
     use ValidatedValueObjectTrait;
 
-    private function __construct(private(set) string $value)
+    protected static function validate(...$args): void
     {
-        parent::__construct($value);
-    }
+        if (count($args) !== 1 || !is_string($args[0])) {
+            throw new \InvalidArgumentException('PhoneNumber::validate() expects exactly one string argument');
+        }
 
-    protected static function validate(string $phone): void
-    {
+        $phone = $args[0];
         $normalizedPhone = self::normalize($phone);
         Assert::that($normalizedPhone)
             ->notEmpty('Phone number cannot be empty.')

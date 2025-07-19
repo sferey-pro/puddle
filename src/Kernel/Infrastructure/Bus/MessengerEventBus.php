@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kernel\Infrastructure\Bus;
 
+use Kernel\Application\Bus\EventBusInterface;
+use Kernel\Domain\Event\DomainEventInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;

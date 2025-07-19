@@ -13,15 +13,15 @@ final readonly class EmailAddress extends AbstractStringValueObject implements U
 {
     use ValidatedValueObjectTrait;
 
-    private const MAX_LENGTH = 180;
+    private const int MAX_LENGTH = 180;
 
-    private function __construct(private(set) string $value)
+    protected static function validate(...$args): void
     {
-        parent::__construct($value);
-    }
+        if (count($args) !== 1 || !is_string($args[0])) {
+            throw new \InvalidArgumentException('EmailAddress::validate() expects exactly one string argument');
+        }
 
-    protected static function validate(string $email): void
-    {
+        $email = $args[0];
         $normalizedEmail = mb_strtolower(trim($email));
 
         Assert::that($normalizedEmail)

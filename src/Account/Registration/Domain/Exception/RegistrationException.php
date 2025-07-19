@@ -12,9 +12,9 @@ use SharedKernel\Domain\ValueObject\Contact\PhoneNumber;
  */
 final class RegistrationException extends \DomainException
 {
-    private const CAN_REGISTER = 'U-000';
-    private const EMAIL_ALREADY_EXISTS = 'U-001';
-    private const PHONE_ALREADY_EXISTS = 'U-002';
+    private const string CAN_REGISTER = 'U-000';
+    private const string EMAIL_ALREADY_EXISTS = 'U-001';
+    private const string PHONE_ALREADY_EXISTS = 'U-002';
 
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.

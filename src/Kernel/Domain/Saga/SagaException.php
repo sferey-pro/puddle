@@ -6,7 +6,7 @@ namespace Kernel\Domain\Saga;
 
 class SagaException extends \RuntimeException
 {
-    private const EXECUTION_FAILED = 'S-001';
+    private const string EXECUTION_FAILED = 'S-001';
 
     private function __construct(string $message, private string $errorCode, private mixed $payload = null, ?\Throwable $previous = null)
     {

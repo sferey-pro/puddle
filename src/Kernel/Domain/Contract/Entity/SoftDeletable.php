@@ -8,4 +8,5 @@ interface SoftDeletable
     public function restore(): void;
     public function isDeleted(): bool;
     public function getDeletedAt(): ?\DateTimeImmutable;
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): void;
 }

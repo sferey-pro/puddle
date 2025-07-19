@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Account\Core\Domain\Model\UserProfile" table="account_user_profiles">
+        <!-- ==================== IDENTIFIANT PRINCIPAL ==================== -->
+        <id name="id" type="user_id" column="id" length="36" />
+
+        <!-- ==================== PROPRIÉTÉS MÉTIER ==================== -->
+        <field name="displayName" type="string" column="display_name" length="100" />
+        <field name="firstName" type="string" column="first_name" nullable="true" length="50" />
+        <field name="lastName" type="string" column="last_name" nullable="true" length="50" />
+        <field name="avatarUrl" type="string" column="avatar_url" nullable="true" length="255" />
+        <field name="locale" type="string" column="locale" length="5" />
+        <field name="timezone" type="string" column="timezone" length="50" />
+
+        <!-- ==================== PROPRIÉTÉS DES CONTRACTS ==================== -->
+        <!-- Timestampable Contract -->
+        <field name="createdAt" type="datetime_immutable" column="created_at" />
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" />
+
+    </entity>
+</doctrine-mapping>

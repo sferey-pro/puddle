@@ -2,6 +2,7 @@
 
 namespace Account\Registration\Domain\Specification;
 
+use Account\Registration\Domain\Model\RegistrationRequest;
 use Identity\Application\Query\IsIdentityAvailable;
 use Kernel\Application\Bus\QueryBusInterface;
 use Kernel\Domain\Specification\CompositeSpecification;
@@ -16,6 +17,10 @@ final class CanRegisterSpecification extends CompositeSpecification
         private readonly ValidRegistrationDataSpecification $validData,
         private readonly QueryBusInterface $queryBus,
     ) {
+    }
+
+    public function failureReason(): ?string {
+        return null;
     }
 
     public function isSatisfiedBy(mixed $candidate): bool
@@ -36,7 +41,7 @@ final class CanRegisterSpecification extends CompositeSpecification
         }
 
         $isAvailable = $this->queryBus->ask(
-            new IsIdentityAvailable($candidate->getIdentity())
+            new IsIdentityAvailable($candidate->identifier)
         );
 
         // 3. Enfin vérifier l'unicité (plus coûteux)
@@ -45,23 +50,5 @@ final class CanRegisterSpecification extends CompositeSpecification
         }
 
         return true;
-    }
-
-    public function getErrorMessage(): string
-    {
-        // Retourne le message d'erreur approprié
-        if (!$this->registrationOpen->isSatisfiedBy($this->lastCandidate)) {
-            return $this->registrationOpen->getErrorMessage();
-        }
-
-        if (!$this->validData->isSatisfiedBy($this->lastCandidate)) {
-            return 'Invalid registration data provided';
-        }
-
-        if (!$this->identityNotUsed->isSatisfiedBy($this->lastCandidate)) {
-            return 'This identifier is already registered';
-        }
-
-        return 'Registration cannot be completed';
     }
 }

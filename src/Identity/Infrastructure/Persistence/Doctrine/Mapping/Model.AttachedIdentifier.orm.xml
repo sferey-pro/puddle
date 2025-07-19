@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        ==================== ATTACHED IDENTIFIER (Identity Context) ====================
+
+        Table relationnelle pure : 1 ligne = 1 identifiant
+
+        Exemples de données :
+        | id | user_id | type         | value              | is_primary | is_verified |
+        |____|_________|______________|____________________|____________|_____________|
+        | 1  | user123 | email        | john@example.com   | true       | true        |
+        | 2  | user123 | phone        | +33123456789       | false      | false       |
+        | 3  | user123 | loyalty_card | LC789456123        | false      | true        |
+        | 4  | user456 | email        | jane@example.com   | true       | true        |
+
+        Avantages :
+            - Recherche directe : WHERE type = 'email' AND value = 'john@example.com'
+            - Index optimisé sur (type, value) pour performance
+            - Contrainte unique globale sur (type, value)
+            - Extensibilité : nouveaux types sans migrations
+    -->
+
+    <entity name="Identity\Domain\Model\AttachedIdentifier" table="identity_attached_identifiers">
+
+        <!-- ==================== IDENTIFIANT TECHNIQUE ==================== -->
+
+        <id name="id" type="attached_identifier_id" column="id" length="36" />
+
+        <!-- ==================== RELATION AGRÉGAT ==================== -->
+
+        <!-- Relation vers l'agrégat UserIdentity -->
+        <many-to-one field="userIdentity"
+                     target-entity="Identity\Domain\Model\UserIdentity"
+                     inversed-by="identifiers">
+            <join-column name="user_id"
+                         referenced-column-name="user_id"
+                         nullable="false"
+                         on-delete="CASCADE"/>
+            <options>
+                <option name="comment">Link to user identity aggregate</option>
+            </options>
+        </many-to-one>
+
+        <!-- ==================== DONNÉES IDENTIFIER ==================== -->
+
+        <!--
+            Type d'identifiant : email, phone, loyalty_card, social_security, etc.
+            Valeurs possibles (extensibles) :
+                - email : Adresse email
+                - phone : Numéro de téléphone
+                - loyalty_card : Carte de fidélité
+                - social_security : Numéro de sécurité sociale
+                - passport : Numéro de passeport
+                - driver_license : Permis de conduire
+                - employee_id : ID employé
+                - student_id : ID étudiant
+                - member_id : ID membre
+        -->
+        <field name="type" type="string" column="identifier_type" length="50" nullable="false">
+            <options>
+                <option name="comment">Type of identifier (email, phone, loyalty_card, etc.)</option>
+            </options>
+        </field>
+
+        <!--
+            Valeur de l'identifiant (format dépend du type)
+                - email : john@example.com
+                - phone : +33123456789
+                - loyalty_card : LC789456123
+                - social_security : 1234567890123
+        -->
+        <field name="value" type="string" column="identifier_value" length="255" nullable="false">
+            <options>
+                <option name="comment">Actual identifier value</option>
+            </options>
+        </field>
+
+        <!-- ==================== MÉTADONNÉES IDENTIFIER ==================== -->
+
+        <!-- Est-ce l'identifiant principal pour cet utilisateur ? -->
+        <field name="isPrimary" type="boolean" column="is_primary" nullable="false">
+            <options>
+                <option name="default">false</option>
+                <option name="comment">Primary identifier for this user</option>
+            </options>
+        </field>
+
+        <!-- Est-ce que cet identifiant a été vérifié ? -->
+        <field name="isVerified" type="boolean" column="is_verified" nullable="false">
+            <options>
+                <option name="default">false</option>
+                <option name="comment">Whether this identifier is verified</option>
+            </options>
+        </field>
+
+        <!-- Quand cet identifiant a été attaché -->
+        <field name="attachedAt" type="datetime_immutable" column="attached_at" nullable="false">
+            <options>
+                <option name="comment">When this identifier was attached</option>
+            </options>
+        </field>
+
+        <!-- Quand cet identifiant a été vérifié (nullable) -->
+        <field name="verifiedAt" type="datetime_immutable" column="verified_at" nullable="true">
+            <options>
+                <option name="comment">When this identifier was verified</option>
+            </options>
+        </field>
+
+        <!-- ==================== CONTRAINTES UNIQUES ==================== -->
+
+        <unique-constraints>
+            <!--
+                CONTRAINTE GLOBALE : Un identifier (type+value) ne peut exister qu'une seule fois
+                Exemples bloqués :
+                    - Même email pour 2 utilisateurs différents
+                    - Même carte fidélité pour 2 utilisateurs différents
+            -->
+            <unique-constraint name="uniq_identifier_type_value" columns="identifier_type,identifier_value" />
+
+            <!--
+                CONTRAINTE UTILISATEUR : Un seul identifier primaire par utilisateur
+                    (optionnel, peut être géré en logique métier si règles complexes)
+                -->
+            <!-- <unique-constraint name="uniq_user_primary" columns="user_id,is_primary" /> -->
+        </unique-constraints>
+
+        <!-- ==================== OPTIONS DE TABLE ==================== -->
+
+        <options>
+            <option name="comment">Relational identifier storage - one row per identifier</option>
+            <option name="charset">utf8mb4</option>
+            <option name="collate">utf8mb4_unicode_ci</option>
+        </options>
+
+    </entity>
+
+</doctrine-mapping>

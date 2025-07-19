@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Identity\Domain\ValueObject;
 
 use Kernel\Domain\Result;
-use Kernel\Domain\ValueObject\ValueObjectInterface;
 use SharedKernel\Domain\ValueObject\Contact\EmailAddress;
 
 final readonly class EmailIdentity implements Identifier
@@ -46,6 +45,11 @@ final readonly class EmailIdentity implements Identifier
     public function getClass(): string
     {
         return EmailAddress::class;
+    }
+
+    public function getType(): string
+    {
+        return 'email';
     }
 
     public static function uniqueFieldPath(): string

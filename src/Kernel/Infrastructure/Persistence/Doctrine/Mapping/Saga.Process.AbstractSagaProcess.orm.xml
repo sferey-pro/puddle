@@ -1,25 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kernel\Domain\Saga\Process\AbstractSagaProcess" inheritance-type="SINGLE_TABLE" table="`saga_process`">
-        <discriminator-column name="saga_type" type="string" />
+    <!-- ==================== ABSTRACT SAGA PROCESS (SINGLE TABLE INHERITANCE) ====================
+
+        Table unique pour tous les types de Saga avec discriminator column.
+
+        Architecture :
+            - AbstractSagaProcess : Classe abstraite avec propriétés communes
+            - RegistrationSagaProcess, OrderSagaProcess, etc. : Classes concrètes
+            - SINGLE_TABLE : Une seule table `saga_process` pour tous les types
+            - Discriminator : Colonne `saga_type` pour différencier les types
+
+        Avantages SINGLE_TABLE :
+            - Performance : Pas de JOIN pour queries cross-saga
+            - Simplicité : Une table à maintenir
+            - Queries analytics faciles sur tous les processus
+
+        Inconvénients :
+            - Colonnes nullables pour propriétés spécifiques
+            - Table potentiellement large
+    -->
+
+    <entity name="Kernel\Domain\Saga\Process\AbstractSagaProcess"
+            inheritance-type="SINGLE_TABLE"
+            table="`saga_processes`">
+
+        <!-- ==================== DISCRIMINATOR MAPPING ==================== -->
+
+        <!-- Colonne discriminator pour identifier le type de saga -->
+        <discriminator-column name="saga_type" type="string" length="50" />
+
+        <!-- Mapping des types concrets vers leurs discriminators -->
         <discriminator-map>
-            <discriminator-mapping value="registration" class="Account\Registration\Domain\Saga\Process\RegistrationSagaProcess" />
+            <discriminator-mapping value="registration"
+                                   class="Account\Registration\Domain\Saga\Process\RegistrationSagaProcess" />
+            <!-- Futurs types de saga -->
+            <!-- <discriminator-mapping value="order" class="Order\Domain\Saga\Process\OrderSagaProcess" /> -->
+            <!-- <discriminator-mapping value="payment" class="Payment\Domain\Saga\Process\PaymentSagaProcess" /> -->
         </discriminator-map>
 
+        <!-- ==================== PROPRIÉTÉS COMMUNES ==================== -->
+
+        <!-- ID unique du processus Saga -->
         <id name="id" type="saga_state_id" column="id" length="36" />
-        <field name="currentState" type="string" length="255" />
 
-        <field name="context" type="json" />
-        <field name="history" type="json" />
+        <!-- État actuel dans le workflow -->
+        <field name="currentState" type="string" column="current_state" length="100" nullable="false">
+            <options>
+                <option name="comment">Current state in the saga workflow</option>
+            </options>
+        </field>
 
-        <field name="createdAt" type="datetime_immutable">
-            <gedmo:timestampable on="create"/>
+        <!--
+            Context JSON : Données métier spécifiques à chaque saga
+            Exemples :
+                - RegistrationSagaProcess : {"userId": "...", "identifier_value": "...", "channel": "..."}
+                - OrderSagaProcess : {"orderId": "...", "customerId": "...", "items": [...]}
+        -->
+        <field name="context" type="json" column="context" nullable="false">
+            <options>
+                <option name="comment">Saga-specific business context data</option>
+            </options>
         </field>
-        <field name="updatedAt" type="datetime_immutable">
-            <gedmo:timestampable on="update"/>
+
+        <!--
+            History JSON : Historique des transitions effectuées
+            Format : ["step1", "step2", "step3", ...]
+        -->
+        <field name="history" type="json" column="history" nullable="false">
+            <options>
+                <option name="comment">History of completed transitions</option>
+            </options>
         </field>
+
+        <!-- ==================== TIMESTAMPS ==================== -->
+
+        <!-- Timestampable contract implementation -->
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false">
+            <options>
+                <option name="comment">When this saga process was started</option>
+            </options>
+        </field>
+
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="false">
+            <options>
+                <option name="comment">Last update timestamp</option>
+            </options>
+        </field>
+
+        <!-- ==================== OPTIONS DE TABLE ==================== -->
+
+        <options>
+            <option name="comment">Single table for all saga processes with inheritance</option>
+            <option name="charset">utf8mb4</option>
+            <option name="collate">utf8mb4_unicode_ci</option>
+        </options>
+
     </entity>
 
 </doctrine-mapping>

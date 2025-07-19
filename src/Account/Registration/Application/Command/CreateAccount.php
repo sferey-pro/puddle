@@ -14,7 +14,8 @@ use Kernel\Application\Message\CommandInterface;
 final class CreateAccount implements CommandInterface
 {
     public function __construct(
-        public UserId $userId
+        public UserId $userId,
+        public Identifier $identifier
     ) {
     }
 }

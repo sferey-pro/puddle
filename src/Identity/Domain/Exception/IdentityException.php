@@ -12,10 +12,10 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  */
 final class IdentityException extends \DomainException
 {
-    private const IDENTITY_ALREADY_EXISTS = 'I-001';
-    private const IDENTITY_NOT_FOUND = 'I-002';
-    private const CANNOT_REMOVE_PRIMARY_IDENTITY = 'I-003';
-    private const CANNOT_REMOVE_LAST_IDENTITY = 'I-004';
+    private const string IDENTITY_ALREADY_EXISTS = 'I-001';
+    private const string IDENTITY_NOT_FOUND = 'I-002';
+    private const string CANNOT_REMOVE_PRIMARY_IDENTITY = 'I-003';
+    private const string CANNOT_REMOVE_LAST_IDENTITY = 'I-004';
 
 
     /**

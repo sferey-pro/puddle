@@ -18,7 +18,7 @@ use Kernel\Application\Saga\Step\SagaStepInterface;
 final readonly class TriggerWelcomeNotificationStep implements SagaStepInterface
 {
     public function __construct(
-        private CommandBusInterface $commandBus
+        private CommandBusInterface $commandBus,
     ) {
     }
 
@@ -35,7 +35,7 @@ final readonly class TriggerWelcomeNotificationStep implements SagaStepInterface
         $this->commandBus->dispatch(
             new SendWelcomeNotification(
                 $sagaProcess->userId(),
-                $sagaProcess->channel(),
+                $sagaProcess->identifier()
             )
         );
     }

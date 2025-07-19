@@ -43,5 +43,5 @@ interface ValueObjectInterface
      * @param array<string, mixed> $data
      * @return static
      */
-    public static function fromArray(array $data): static;
+    public static function fromArray(array $data): mixed;
 }

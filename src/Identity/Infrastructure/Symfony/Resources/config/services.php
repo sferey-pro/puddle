@@ -1,6 +1,7 @@
 <?php
 
-use Identity\Application\Saga\Step\AttachIdentityStep;
+use Identity\Domain\Repository\UserIdentityRepositoryInterface;
+use Identity\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserIdentityRepository;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return function (ContainerConfigurator $container): void {
@@ -12,12 +13,12 @@ return function (ContainerConfigurator $container): void {
             ->autoconfigure() // Automatically registers your services as commands, event subscribers, etc.
     ;
 
-     $services->load('Identity\\', '%kernel.project_dir%/src/Identity/')
+    $services->load('Identity\\', '%kernel.project_dir%/src/Identity/')
         ->exclude([
-            '%kernel.project_dir%/src/Identity/**/Domain',
-            '%kernel.project_dir%/src/Identity/**/Infrastructure/Symfony/Resources',
+            '%kernel.project_dir%/src/Identity/Domain/{Model,ValueObject,Event}',
+            '%kernel.project_dir%/src/Identity/Infrastructure/Symfony/Resources',
         ]);
 
-    $services->set(AttachIdentityStep::class)
-        ->tag('saga.step', ['transition' => 'trigger_welcome_link']);
+    // Repositories
+    $services->alias(UserIdentityRepositoryInterface::class, DoctrineUserIdentityRepository::class);
 };
