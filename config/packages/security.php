@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Module\Auth\Domain\UserAccount;
-use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkFailureHandler;
-use App\Module\Auth\Infrastructure\Symfony\Security\Authentication\AuthenticationLoginLinkSuccessHandler;
-use App\Module\Auth\Infrastructure\Symfony\Security\GoogleAuthenticator;
+use Authentication\Infrastructure\Security\UserSecurity;
 use Symfony\Config\SecurityConfig;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -20,7 +17,7 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
 
     $security->provider('app_user_provider')
         ->entity()
-            ->class(UserAccount::class)
+            ->class(UserSecurity::class)
             ->property('email.value')
     ;
 
@@ -36,15 +33,15 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
         ->provider('app_user_provider')
     ;
 
-    $mainFirewall->loginLink()
-        ->checkRoute('login_check')
-        ->checkPostOnly(true)
-        ->maxUses(1)
-        ->signatureProperties(['id'])
-        ->lifetime(300)
-        ->successHandler(AuthenticationLoginLinkSuccessHandler::class)
-        ->failureHandler(AuthenticationLoginLinkFailureHandler::class)
-    ;
+    // $mainFirewall->loginLink()
+    //     ->checkRoute('login_check')
+    //     ->checkPostOnly(true)
+    //     ->maxUses(1)
+    //     ->signatureProperties(['id'])
+    //     ->lifetime(300)
+    //     ->successHandler(AuthenticationLoginLinkSuccessHandler::class)
+    //     ->failureHandler(AuthenticationLoginLinkFailureHandler::class)
+    // ;
 
     $mainFirewall->formLogin()
         ->loginPath('login')
@@ -57,7 +54,7 @@ return static function (ContainerConfigurator $containerConfigurator, SecurityCo
         ->lifetime(604800)
     ;
 
-    $mainFirewall->customAuthenticators([GoogleAuthenticator::class]);
+    // $mainFirewall->customAuthenticators([GoogleAuthenticator::class]);
 
     $mainFirewall->logout()
         ->path('logout')

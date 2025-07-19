@@ -1,3 +1,0 @@
-twig_component:
-    defaults:
-        App\Module\ProductCatalog\UI\Twig\Components\: '@ProductCatalog/components/'

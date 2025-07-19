@@ -38,7 +38,7 @@ class IdentityExtension extends Extension implements PrependExtensionInterface
                     'IdentityBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
-                        'dir' => '../Persistence/Doctrine/Mapping',
+                        'dir' => 'Infrastructure/Persistence/Doctrine/Mapping',
                         'prefix' => 'Identity\\Domain',
                         'alias' => 'IdentityBundle',
                     ],

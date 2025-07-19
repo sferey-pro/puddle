@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block meta %}
+    {% if meta_description %}
+        <meta name="description" content="{{ meta_description }}">
+    {% endif %}
+    {% if meta_keywords %}
+        <meta name="keywords" content="{{ meta_keywords }}">
+    {% endif %}
+    {% if robots %}
+        <meta name="robots" content="{{ robots }}">
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="container-xl">
+        <div class="page-header">
+            <h1 class="page-title">{{ page_title }}</h1>
+        </div>
+
+        <div class="page-body">
+            {% block static_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

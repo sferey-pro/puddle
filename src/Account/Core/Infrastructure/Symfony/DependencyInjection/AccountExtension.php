@@ -55,9 +55,9 @@ class AccountExtension extends Extension implements PrependExtensionInterface
 
         $container->prependExtensionConfig('twig_component', [
             'defaults' => [
-                'Account\\Registration\\Presentation\\Twig\\Components' => '@AccountRegistration/components/',
-                'Account\\Profile\\Presentation\\Twig\\Components' => '@AccountProfile/components/',
-                'Account\\Core\\Presentation\\Twig\\Components' => '@AccountCore/components/',
+                'Account\\Registration\\Presentation\\Twig\\Components\\' => '@AccountRegistration/components/',
+                'Account\\Profile\\Presentation\\Twig\\Components\\' => '@AccountProfile/components/',
+                'Account\\Core\\Presentation\\Twig\\Components\\' => '@AccountCore/components/',
             ],
         ]);
     }
@@ -70,8 +70,8 @@ class AccountExtension extends Extension implements PrependExtensionInterface
                     'AccountBundle' => [
                         'is_bundle' => true,
                         'type' => 'xml',
-                        'dir' => '../Doctrine/Mapping',
-                        'prefix' => 'App\\Module\\Auth\\Domain',
+                        'dir' => 'Core/Infrastructure/Persistence/Doctrine/Mapping',
+                        'prefix' => 'Account\\Core\\Domain',
                         'alias' => 'AccountBundle',
                     ],
                 ],
