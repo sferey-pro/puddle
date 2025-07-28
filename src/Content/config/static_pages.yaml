@@ -1,0 +1,74 @@
+# Configuration des pages statiques de l'application.
+# Cette configuration centralise les métadonnées et les chemins des templates
+# pour toutes les pages statiques, permettant une gestion cohérente du SEO
+# et de la structure.
+
+pages:
+  # Conditions générales de vente
+  cgv:
+    template: 'static_pages/cgv.html.twig'
+    title: 'Conditions Générales de Vente'
+    meta_description: 'Consultez nos conditions générales de vente. Informations légales sur nos services, modalités de paiement et politique de retour.'
+    meta_keywords: 'CGV, conditions générales, vente, légal, paiement, retour'
+    robots: 'index, follow'
+    priority: 0.3
+    changefreq: 'monthly'
+
+  # Foire aux questions
+  faq:
+    template: 'static_pages/faq.html.twig'
+    title: 'Questions Fréquemment Posées - FAQ'
+    meta_description: 'Trouvez rapidement les réponses à vos questions les plus fréquentes. Support, utilisation, facturation et plus encore.'
+    meta_keywords: 'FAQ, questions, réponses, aide, support, assistance'
+    robots: 'index, follow'
+    priority: 0.7
+    changefreq: 'weekly'
+
+  # Page de maintenance / en construction
+  under_construction:
+    template: 'static_pages/under_construction.html.twig'
+    title: 'Page en Construction'
+    meta_description: 'Cette page est actuellement en développement. Revenez bientôt pour découvrir du nouveau contenu.'
+    meta_keywords: 'construction, développement, bientôt disponible'
+    robots: 'noindex, nofollow'
+    priority: 0.1
+    changefreq: 'yearly'
+
+  # Page de politique de confidentialité
+  privacy_policy:
+    template: 'static_pages/privacy_policy.html.twig'
+    title: 'Politique de Confidentialité'
+    meta_description: 'Notre politique de protection des données personnelles. Découvrez comment nous collectons, utilisons et protégeons vos informations.'
+    meta_keywords: 'confidentialité, données personnelles, RGPD, protection, vie privée'
+    robots: 'index, follow'
+    priority: 0.4
+    changefreq: 'monthly'
+
+  # Mentions légales
+  legal_notice:
+    template: 'static_pages/legal_notice.html.twig'
+    title: 'Mentions Légales'
+    meta_description: 'Mentions légales obligatoires : informations sur l\'éditeur, hébergeur et conditions d\'utilisation du site.'
+    meta_keywords: 'mentions légales, éditeur, hébergeur, légal, informations'
+    robots: 'index, follow'
+    priority: 0.2
+    changefreq: 'yearly'
+
+# Configuration globale pour toutes les pages statiques
+defaults:
+  layout: 'static_pages/base_layout.html.twig'
+  cache_duration: 3600  # 1 heure de cache par défaut
+
+# SEO et métadonnées par défaut
+seo_defaults:
+  meta_author: 'Votre Entreprise'
+  meta_viewport: 'width=device-width, initial-scale=1'
+  meta_charset: 'UTF-8'
+  og_type: 'website'
+  og_site_name: 'Votre Site'
+
+# Configuration pour la génération automatique de sitemap
+sitemap:
+  enabled: true
+  base_url: 'https://votre-domaine.com'
+  include_lastmod: true

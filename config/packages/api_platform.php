@@ -18,7 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
         'mapping' => [
             'paths' => [
-                '%kernel.project_dir%/src/Module/Sales/Infrastructure/Symfony/Resources/config/api_platform/resources',
+                // '%kernel.project_dir%/src/Module/Sales/Infrastructure/Symfony/Resources/config/api_platform/resources',
             ],
         ],
 

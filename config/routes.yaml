@@ -1,0 +1,3 @@
+auth_controllers:
+    resource: '../src/Authentication/Presentation/Controller/'
+    type: attribute

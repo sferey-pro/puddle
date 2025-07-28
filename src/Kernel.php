@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Core\Application\Clock\SystemTime;
-use App\Core\Infrastructure\Clock\SystemClock;
-use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
-use App\Core\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
+use Kernel\Application\Clock\SystemTime;
+use Kernel\Infrastructure\Clock\SystemClock;
+use Kernel\Infrastructure\Symfony\DependencyInjection\Compiler\AutoConfigureDoctrineTypesPass;
+use Kernel\Infrastructure\Symfony\DependencyInjection\Compiler\ClockConfigurationPass;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsEventHandler;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsQueryHandler;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -35,18 +38,21 @@ class Kernel extends BaseKernel
 
         $container->import(\sprintf('%s/config/{services}/*.{php,yaml}', $this->getProjectDir()));
         $container->import(\sprintf('%s/config/{services}/%s/*.{php,yaml}', $this->getProjectDir(), $this->environment));
-
-        $container->import(\sprintf('%s/config/services.yaml', $this->getProjectDir()));
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(\sprintf('%s/config/{routes}/%s/*.php', $this->getProjectDir(), $this->environment));
-        $routes->import(\sprintf('%s/config/{routes}/*.php', $this->getProjectDir()));
+        $routes->import(\sprintf('%s/config/{routes}/%s/*.{php,yaml}', $this->getProjectDir(), $this->environment));
+        $routes->import(\sprintf('%s/config/{routes}/*.{php,yaml}', $this->getProjectDir()));
+
+        $routes->import(\sprintf('%s/config/routes.yaml', $this->getProjectDir()));
     }
 
     protected function build(ContainerBuilder $container): void
     {
+        $container->addCompilerPass(new ClockConfigurationPass());
+        $container->addCompilerPass(new AutoConfigureDoctrineTypesPass());
+
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition): void {
             $definition->addTag('messenger.message_handler', ['bus' => 'query.bus']);
         });
@@ -55,8 +61,8 @@ class Kernel extends BaseKernel
             $definition->addTag('messenger.message_handler', ['bus' => 'command.bus']);
         });
 
-        // $container->registerAttributeForAutoconfiguration(AsEventHandler::class, static function (ChildDefinition $definition): void {
-        //     $definition->addTag('messenger.message_handler', ['bus' => 'event.bus']);
-        // });
+        $container->registerAttributeForAutoconfiguration(AsEventHandler::class, static function (ChildDefinition $definition): void {
+            $definition->addTag('messenger.message_handler', ['bus' => 'event.bus']);
+        });
     }
 }

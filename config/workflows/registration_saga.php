@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Module\Auth\Domain\Saga\Process\RegistrationSagaProcess;
+use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
 use Symfony\Config\FrameworkConfig;
 
 return static function (FrameworkConfig $framework): void {
@@ -20,11 +20,12 @@ return static function (FrameworkConfig $framework): void {
 
     $places = [
         'started',
-        'user_account_created',
-        'user_profile_created',
-        'welcome_link_triggered',
+        'account_created',
+        'identity_attached',
+        'user_created',
+        'welcome_sent',
         'completed',
-        'compensated',
+        'failed',
         'compensation_failed',
     ];
 
@@ -32,40 +33,46 @@ return static function (FrameworkConfig $framework): void {
         $userRegistrationSaga->place($place);
     }
 
-    # Étape 1 : UserAccount (Auth) créé
+    # Étape 1 : Account créé
     $userRegistrationSaga->transition()
-        ->name('create_user_account')
+        ->name('create_account')
             ->from('started')
-            ->to('user_account_created');
+            ->to('account_created');
 
-    # Étape 2 : User (UserManagement) créé
+    # Étape 1 : Identity créé et attribué
     $userRegistrationSaga->transition()
-        ->name('create_user_profile')
-            ->from('user_account_created')
-            ->to('user_profile_created');
+        ->name('attach_identity')
+            ->from('account_created')
+            ->to('identity_attached');
 
-    # Étape 3 : Email de bienvenue envoyé
+    # Étape 2 : Account/Profile créé
     $userRegistrationSaga->transition()
-        ->name('trigger_welcome_link')
-            ->from('user_profile_created')
-            ->to('welcome_link_triggered');
+        ->name('create_user')
+            ->from('identity_attached')
+            ->to('user_created');
+
+    # Étape 3 : Email ou Sms de bienvenue envoyé
+    $userRegistrationSaga->transition()
+        ->name('trigger_welcome')
+            ->from('user_created')
+            ->to('welcome_sent');
 
     # Étape 4 : Processus terminé
     $userRegistrationSaga->transition()
         ->name('complete')
-            ->from('welcome_link_triggered')
+            ->from('welcome_sent')
             ->to('completed');
 
     # --- Transitions de gestion d'échec ---
     # Transition pour un échec avec compensation réussie
     $userRegistrationSaga->transition()
         ->name('mark_as_compensated')
-            ->from(['started', 'user_account_created', 'user_profile_created', 'welcome_link_triggered'])
+            ->from(['started', 'account_created', 'identity_attached', 'profile_created', 'welcomed'])
             ->to('compensated');
 
     # Transition pour un échec critique de la compensation
     $userRegistrationSaga->transition()
         ->name('mark_as_compensation_failed')
-            ->from(['started', 'user_account_created', 'user_profile_created', 'welcome_link_triggered'])
+            ->from(['started', 'account_created', 'identity_attached', 'profile_created', 'welcomed'])
             ->to('compensation_failed');
 };

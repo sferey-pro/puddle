@@ -4,28 +4,28 @@ doctrine_mongodb:
     connections:
         default:
             server: '%env(resolve:MONGO_URL)%'
-            options: 
+            options:
                 {}
     default_database: '%env(resolve:MONGO_DB)%'
     document_managers:
         default:
-            mappings:
-                UserManagement:
-                    is_bundle: false
-                    type: xml
-                    dir: '%kernel.project_dir%/src/Module/UserManagement/Infrastructure/ReadModel/Mapping'
-                    prefix: 'App\Module\UserManagement\Application\ReadModel'
-                CostManagement:
-                    is_bundle: false
-                    type: xml
-                    dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/ReadModel/Mapping'
-                    prefix: 'App\Module\CostManagement\Application\ReadModel'
-                SalesReadModel:
-                    is_bundle: false
-                    type: xml
-                    dir: '%kernel.project_dir%/src/Module/Sales/Infrastructure/ReadModel/Mapping'
-                    prefix: 'App\Module\Sales\Application\ReadModel'
-                    alias: SalesReadModel
+    #         mappings:
+    #             UserManagement:
+    #                 is_bundle: false
+    #                 type: xml
+    #                 dir: '%kernel.project_dir%/src/Module/UserManagement/Infrastructure/ReadModel/Mapping'
+    #                 prefix: 'App\Module\UserManagement\Application\ReadModel'
+    #             CostManagement:
+    #                 is_bundle: false
+    #                 type: xml
+    #                 dir: '%kernel.project_dir%/src/Module/CostManagement/Infrastructure/ReadModel/Mapping'
+    #                 prefix: 'App\Module\CostManagement\Application\ReadModel'
+    #             SalesReadModel:
+    #                 is_bundle: false
+    #                 type: xml
+    #                 dir: '%kernel.project_dir%/src/Module/Sales/Infrastructure/ReadModel/Mapping'
+    #                 prefix: 'App\Module\Sales\Application\ReadModel'
+    #                 alias: SalesReadModel
 
 when@prod:
     doctrine_mongodb:

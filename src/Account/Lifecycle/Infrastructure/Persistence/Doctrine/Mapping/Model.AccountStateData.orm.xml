@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+    ==================== EMBEDDABLE ACCOUNT STATE DATA ====================
+
+        Classe concrète wrapper pour persister les états Account via Doctrine.
+
+        Architecture:
+            - AccountState (interface) : Comportements métier
+            - AccountStateData : Wrapper concret pour Doctrine
+            - PendingState, ActiveState, etc. : Implémentations métier
+
+        Pattern:
+        Account.state -> AccountStateData (embedded) -> AccountState (reconstitué)
+    -->
+
+    <embeddable name="Account\Lifecycle\Domain\Model\AccountStateData">
+
+        <!-- ==================== PROPRIÉTÉS PRINCIPALES ==================== -->
+
+        <!--
+            Nom de l'état - clé pour reconstruction + queries
+            Valeurs: pending, active, suspended, locked, deleted
+        -->
+        <field name="name" type="string" column="state_name" length="20" nullable="false">
+            <options>
+                <option name="comment">State name for reconstruction and queries</option>
+            </options>
+        </field>
+
+        <!--
+            Raison du changement d'état
+            Utilisée pour SuspendedState et LockedState principalement
+        -->
+        <field name="reason" type="string" column="state_reason" length="255" nullable="true">
+            <options>
+                <option name="comment">Reason for state change (suspension/lock)</option>
+            </options>
+        </field>
+
+        <!--
+            Métadonnées spécifiques à l'état (JSON)
+            Contient les données contextuelles de chaque état
+            Note: Pas d'index sur cette colonne pour éviter les problèmes PostgreSQL
+        -->
+        <field name="metadata" type="json" column="state_metadata" nullable="true">
+            <options>
+                <option name="comment">State-specific context data (no index for PostgreSQL compatibility)</option>
+            </options>
+        </field>
+
+        <!--
+            Timestamp du changement d'état
+            Crucial pour audit et logique métier
+        -->
+        <field name="changedAt" type="datetime_immutable" column="state_changed_at" nullable="false">
+            <options>
+                <option name="comment">When this state was entered</option>
+            </options>
+        </field>
+
+        <!-- ==================== PROPRIÉTÉS OPTIMISATION ==================== -->
+
+        <!--
+            Date d'expiration pour états temporaires
+            Optimise les queries de cleanup (suspensions temporaires)
+        -->
+        <field name="expiresAt" type="datetime_immutable" column="state_expires_at" nullable="true">
+            <options>
+                <option name="comment">Expiration for time-limited states</option>
+            </options>
+        </field>
+
+        <!--
+            Flag booléen pour états actifs
+            Index ultra-rapide pour filtrer les comptes actifs
+        -->
+        <field name="isActive" type="boolean" column="state_is_active" nullable="false">
+            <options>
+                <option name="default">false</option>
+                <option name="comment">Quick active state flag for queries</option>
+            </options>
+        </field>
+
+        <!--
+            Priorité de l'état
+            Utilisée pour résolution de conflits dans les workflows
+        -->
+        <field name="priority" type="integer" column="state_priority" nullable="false">
+            <options>
+                <option name="default">0</option>
+                <option name="unsigned">true</option>
+                <option name="comment">State priority for workflow resolution</option>
+            </options>
+        </field>
+
+    </embeddable>
+
+</doctrine-mapping>

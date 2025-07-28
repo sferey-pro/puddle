@@ -2,8 +2,17 @@ doctrine_migrations:
     migrations_paths:
         # namespace is arbitrary but should be different from App\Migrations
         # as migrations classes should NOT be autoloaded
-        'DoctrineMigrations': '%kernel.project_dir%/migrations'
-        # 'App\Module\Auth\Infrastructure\Doctrine\Migrations': '%kernel.project_dir%/src/Module/Auth/Infrastructure/Doctrine/Migrations'
-        # 'App\Module\User\Infrastructure\Doctrine\Migrations': '%kernel.project_dir%/src/Module/User/Infrastructure/Doctrine/Migrations'
-        
+        'DoctrineMigrations': 'migrations'
+        # 'DoctrineMigrations\Kernel': 'src/Kernel/Infrastructure/Migrations'
+        # 'DoctrineMigrations\Account': 'src/Account/Core/Infrastructure/Migrations'
+        # 'DoctrineMigrations\Authentication': 'src/Authentication/Infrastructure/Migrations'
+        # 'DoctrineMigrations\Identity': 'src/Identity/Infrastructure/Migrations'
+
     enable_profiler: false
+
+    storage:
+        table_storage:
+            table_name: 'doctrine_migration_versions'
+            version_column_name: 'version'
+            executed_at_column_name: 'executed_at'
+            execution_time_column_name: 'execution_time'

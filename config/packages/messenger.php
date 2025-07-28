@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Module\Music\Application\Command\FetchCurrentlyPlayingMusicCommand;
-use App\Core\Application\Command\CommandInterface;
-use App\Core\Application\Query\QueryInterface;
-use App\Core\Domain\Event\DomainEventInterface;
+use Kernel\Application\Message\CommandInterface;
+use Kernel\Application\Message\QueryInterface;
+use Kernel\Domain\Event\DomainEventInterface;
 use Symfony\Config\FrameworkConfig;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\env;
@@ -64,6 +63,7 @@ return static function (FrameworkConfig $framework): void {
     $messenger->routing(QueryInterface::class)->senders(['sync']);
     $messenger->routing(CommandInterface::class)->senders(['sync']);
     $messenger->routing(DomainEventInterface::class)->senders(['async_events']);
-    $messenger->routing(FetchCurrentlyPlayingMusicCommand::class)
-        ->senders(['async_priority_low']);
+
+    // $messenger->routing(FetchCurrentlyPlayingMusicCommand::class)
+    //     ->senders(['async_priority_low']);
 };

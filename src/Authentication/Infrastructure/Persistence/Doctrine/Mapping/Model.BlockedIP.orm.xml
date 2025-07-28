@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Authentication\Domain\Model\BlockedIP" table="blocked_ips">
+
+        <!-- IP comme clé primaire -->
+        <id name="ipAddress" type="string" column="ip_address" length="45" />
+
+        <!-- Raison du blocage -->
+        <field name="reason" type="text" column="reason" nullable="false">
+            <options>
+                <option name="comment">Reason for blocking this IP</option>
+            </options>
+        </field>
+
+        <!-- Timestamps -->
+        <field name="blockedAt" type="datetime_immutable" column="blocked_at" nullable="false">
+            <options>
+                <option name="default">CURRENT_TIMESTAMP</option>
+            </options>
+        </field>
+
+        <field name="expiresAt" type="datetime_immutable" column="expires_at" nullable="true">
+            <options>
+                <option name="comment">When the block expires (null = permanent)</option>
+            </options>
+        </field>
+
+        <!-- Qui a créé le blocage -->
+        <field name="createdBy" type="string" column="created_by" length="255" nullable="false">
+            <options>
+                <option name="default">system</option>
+                <option name="comment">Who created this block (system or admin email)</option>
+            </options>
+        </field>
+    </entity>
+
+</doctrine-mapping>

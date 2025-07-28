@@ -45,6 +45,7 @@
         "symfony/flex": "^2",
         "symfony/form": "^7",
         "symfony/framework-bundle": "^7",
+        "symfony/free-mobile-notifier": "^7",
         "symfony/intl": "^7",
         "symfony/mailer": "^7",
         "symfony/mercure-bundle": "^0.3.9",
@@ -71,6 +72,7 @@
         "symfonycasts/sass-bundle": "^0.8",
         "twig/cssinliner-extra": "^3.21",
         "twig/extra-bundle": "^3.21",
+        "twig/html-extra": "^3.21",
         "twig/inky-extra": "^3.21",
         "twig/intl-extra": "^3.21",
         "twig/twig": "^2.12|^3.0"
@@ -85,7 +87,13 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Kernel\\": "src/Kernel/",
+            "SharedKernel\\": "src/SharedKernel/",
+            "Content\\": "src/Content/",
+            "Account\\": "src/Account/",
+            "Identity\\": "src/Identity/",
+            "Authentication\\": "src/Authentication/"
         }
     },
     "autoload-dev": {
