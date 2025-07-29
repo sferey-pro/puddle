@@ -14,7 +14,7 @@ final readonly class VerifyMagicLinkHandler
     public function __construct(
         private AccessCredentialRepositoryInterface $credentialRepository,
         private FluentAccountRepository $accountRepository,
-        private SymfonyLoginLinkAdapter $loginLinkAdapter,
+        private LoginLinkAdapter $loginLinkAdapter,
         private EventBusInterface $eventBus
     ) {}
 

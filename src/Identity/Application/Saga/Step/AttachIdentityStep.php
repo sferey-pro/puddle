@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Identity\Application\Saga\Step;
 
+use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
 use Identity\Application\Command\AttachIdentity;
 use Identity\Application\Command\CompensateIdentityAttachment;
 use Kernel\Application\Bus\CommandBusInterface;
@@ -20,7 +21,10 @@ final readonly class AttachIdentityStep implements SagaStepInterface
 
     public function execute(SagaProcessInterface $sagaProcess): void
     {
-        /** @var RegistrationSagaProcess $sagaProcess */
+        if (!$sagaProcess instanceof RegistrationSagaProcess) {
+            throw new \LogicException('Cette étape ne peut être exécutée que pour une RegistrationSagaProcess.');
+        }
+
         $this->commandBus->dispatch(
             new AttachIdentity(
                 $sagaProcess->userId(),

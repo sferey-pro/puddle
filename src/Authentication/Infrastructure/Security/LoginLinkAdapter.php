@@ -1,55 +1,66 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Authentication\Infrastructure\Security;
 
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
+use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
 use Authentication\Domain\Exception\TooManyAttemptsException;
 use Authentication\Domain\Model\AccessCredential\MagicLinkCredential;
-use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
 use Authentication\Domain\ValueObject\Token\MagicLinkToken;
-use InvalidArgumentException;
 use Kernel\Application\Clock\SystemTime;
-use LogicException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
-use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use SharedKernel\Domain\ValueObject\Identity\UserId;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\LoginLink\Exception\InvalidLoginLinkException;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
-use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
-use Symfony\Component\Security\Http\LoginLink\LoginLinkHandler;
 
 /**
- * Décorateur qui ajoute la traçabilité au LoginLinkHandler de Symfony.
+ * Adapter pour intégrer Symfony LoginLink avec notre domaine
  */
-#[AsDecorator(decorates: LoginLinkHandlerInterface::class)]
-final class DatabaseLoginLinkHandler implements LoginLinkHandlerInterface
+final class LoginLinkAdapter
 {
+    public const LIFETIME = 300;
+
+    /**
+     * @param UserProviderInterface|UserProvider $userProvider
+     * @return void
+     */
     public function __construct(
-        #[AutowireDecorated]
-        private readonly LoginLinkHandlerInterface $inner,
+        private readonly LoginLinkHandlerInterface $loginLinkHandler,
         private readonly AccessCredentialRepositoryInterface $credentialRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly RequestStack $requestStack,
+        private readonly UserProviderInterface $userProvider
     ) {}
 
     /**
-     *
-     * @param UserInterface|UserSecurity $user
+     * Crée un Magic Link pour un compte
      */
-    public function createLoginLink(UserInterface $user, ?Request $request = null, ?int $lifetime = null): LoginLinkDetails
+    public function createLoginLink(UserId $userId, ?int $lifetime = null): LoginLinkDetails
     {
-        $latest = $this->credentialRepository->findLatestByIdentifier($user->getUserIdentifier());
+        $request = $this->requestStack->getMainRequest();
+
+        $user = $this->userProvider->loadUserByUserId($userId);
+
+        $latest = $this->credentialRepository->findLatestByIdentifier($user->identifier);
 
         if ($latest && $latest->createdAt > new \DateTimeImmutable('-1 minute')) {
             throw new TooManyAttemptsException('Please wait before requesting a new link');
         }
 
         // 1. Symfony créer le lien sécurisé
-        $loginLinkDetails = $this->inner->createLoginLink($user, $request, $lifetime ?? MagicLinkToken::EXPIRY_MINUTES);
+        $loginLinkDetails = $this->loginLinkHandler->createLoginLink($user, $request, $lifetime ?? MagicLinkToken::EXPIRY_MINUTES);
 
         // 2. Extraire le token de l'URL
-        $token = MagicLinkToken::create($this->extractTokenFromUrl($loginLinkDetails->getUrl()), $loginLinkDetails->getExpiresAt());
+        $token = MagicLinkToken::fromString(
+            $this->extractTokenFromUrl($loginLinkDetails->getUrl()),
+            $loginLinkDetails->getExpiresAt()
+        );
 
         if (!$user instanceof UserSecurity) {
             throw new \InvalidArgumentException('User must be instance of UserSecurity');
@@ -62,17 +73,22 @@ final class DatabaseLoginLinkHandler implements LoginLinkHandlerInterface
             expiresAt: $loginLinkDetails->getExpiresAt(),
         );
 
+        $credential->attachToUser($user->userId);
+
         $this->credentialRepository->save($credential);
 
         return $loginLinkDetails;
     }
 
-    public function consumeLoginLink(Request $request): UserInterface
+    /**
+     * Vérifie un Magic Link
+     */
+    public function consumeLoginLink(): UserInterface
     {
-        $token = $this->extractTokenFromRequest($request);
-        $expires = $this->extracExpiresFromRequest($request);
+        $token = $this->extractToken();
+        $expires = $this->extracExpires();
 
-        $credential = $this->credentialRepository->findByToken(MagicLinkToken::create($token, new \DateTimeImmutable($expires)));
+        $credential = $this->credentialRepository->findByToken(MagicLinkToken::fromString($token, new \DateTimeImmutable($expires)));
 
         if ($credential instanceof MagicLinkCredential) {
 
@@ -85,7 +101,7 @@ final class DatabaseLoginLinkHandler implements LoginLinkHandlerInterface
                 throw new InvalidLoginLinkException('This login link has already been used');
             }
 
-            $user = $this->inner->consumeLoginLink($request);
+            $user = $this->loginLinkHandler->consumeLoginLink($request);
 
             $credential->markAsUsed(SystemTime::now());
             $credential->addMetadata('consumed_ip', $request->getClientIp());
@@ -102,8 +118,10 @@ final class DatabaseLoginLinkHandler implements LoginLinkHandlerInterface
         return $request->get('hash');
     }
 
-    private function extractTokenFromRequest(Request $request): string
+    private function extractToken(): string
     {
+        $request = $this->requestStack->getMainRequest();
+
         if (!$hash = $request->get('hash')) {
             throw new InvalidLoginLinkException('Missing "hash" parameter.');
         }
@@ -114,8 +132,10 @@ final class DatabaseLoginLinkHandler implements LoginLinkHandlerInterface
         return $hash;
     }
 
-    private function extracExpiresFromRequest(Request $request): string
+    private function extracExpires(): string
     {
+        $request = $this->requestStack->getMainRequest();
+
         if (!$expires = $request->get('expires')) {
             throw new InvalidLoginLinkException('Missing "expires" parameter.');
         }

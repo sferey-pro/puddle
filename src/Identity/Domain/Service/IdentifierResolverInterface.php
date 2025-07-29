@@ -12,9 +12,4 @@ use Kernel\Domain\Result;
 interface IdentifierResolverInterface
 {
     public function resolve(string $identifier): Result;
-
-    /**
-     * Détecte le type d'un identifiant.
-     */
-    public function detectType(string $value): ?string;
 }

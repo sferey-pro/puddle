@@ -7,19 +7,19 @@ namespace Authentication\Domain\ValueObject\Token;
 /**
  * Token OTP pour SMS
  */
-final class OtpCode extends AbstractToken
+final class OTPCode extends AbstractToken
 {
     private const CODE_LENGTH = 6;
     private const EXPIRY_MINUTES = 5;
 
-    public static function generate(): self
+    public static function generate(int $length = self::CODE_LENGTH, $duration = self::EXPIRY_MINUTES): self
     {
         // Génère un code à 6 chiffres
-        $code = str_pad((string) random_int(0, 999999), self::CODE_LENGTH, '0', STR_PAD_LEFT);
+        $code = str_pad((string) random_int(0, 999999), $length, '0', STR_PAD_LEFT);
 
         return new self(
             $code,
-            new \DateTimeImmutable('+' . self::EXPIRY_MINUTES . ' minutes')
+            new \DateTimeImmutable('+' . $duration . ' minutes')
         );
     }
 

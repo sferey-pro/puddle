@@ -9,6 +9,7 @@ use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
 use Authentication\Domain\ValueObject\Token;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Identity\Domain\ValueObject\Identifier;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -43,6 +44,19 @@ final class DoctrineAccessCredentialRepository extends ServiceEntityRepository
 
     // ==================== RECHERCHES ESSENTIELLES ====================
 
+    public function findByIdentifierAndUserId(Identifier $identifier, UserId $userId): ?AbstractAccessCredential
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.identifier = :identifier')
+            ->andWhere('c.userId = :userId')
+            ->setParameter('identifier', $identifier->value())
+            ->setParameter('userId', $userId)
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findByToken(Token $token): ?AbstractAccessCredential
     {
         return $this->createQueryBuilder('c')
@@ -67,15 +81,29 @@ final class DoctrineAccessCredentialRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findLatestByIdentifier(string $identifier): ?AbstractAccessCredential
+    public function findLatestByIdentifier(Identifier $identifier): ?AbstractAccessCredential
     {
         return $this->createQueryBuilder('c')
             ->where('c.identifier = :identifier')
-            ->setParameter('identifier', $identifier)
+            ->setParameter('identifier', $identifier->value())
             ->orderBy('c.createdAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function countRecentAttempts(Identifier $identifier, \DateInterval $interval): int
+    {
+        $since = (new \DateTimeImmutable())->sub($interval);
+
+        $qb = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.identifier = :identifier')
+            ->andWhere('c.createdAt >= :since')
+            ->setParameter('identifier', $identifier->value())
+            ->setParameter('since', $since);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     // ==================== MAINTENANCE ====================

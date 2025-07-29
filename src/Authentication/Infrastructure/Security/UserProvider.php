@@ -22,7 +22,7 @@ final readonly class UserProvider implements UserProviderInterface
         private SecurityContextBuilder $contextBuilder,
     ) {}
 
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function loadUserByIdentifier(string $identifier): UserInterface|UserSecurity
     {
         // 1. Essayer comme UserId d'abord (pour LoginLink)
         if ($this->looksLikeUserId($identifier)) {
@@ -47,7 +47,7 @@ final readonly class UserProvider implements UserProviderInterface
     /**
      * Méthode interne pour charger par UserId.
      */
-    private function loadUserByUserId(UserId $userId): UserInterface
+    public function loadUserByUserId(UserId $userId): UserInterface|UserSecurity
     {
         $accountStatus = $this->accountContext->getAccountStatus($userId);
 
@@ -68,33 +68,8 @@ final readonly class UserProvider implements UserProviderInterface
 
     private function looksLikeUserId(string $value): bool
     {
-        // UUID format : 8-4-4-4-12
         return Uuid::isValid($value);
     }
-
-    // public function loadUserByIdentifier(string $identifier): UserInterface
-    // {
-    //     // 1. Trouver l'UserId via Identity context
-    //     $userId = $this->identityContext->findUserIdByIdentifier($identifier);
-
-    //     if (!$userId) {
-    //         throw new UserNotFoundException();
-    //     }
-
-    //     // 2. Vérifier le statut via Account context
-    //     $accountStatus = $this->accountContext->getAccountStatus($userId);
-
-    //     if (!$accountStatus || !$accountStatus->canAuthenticate()) {
-    //         throw new DisabledException('Account is not active');
-    //     }
-
-    //     // 3. Construire l'objet Security
-    //     return $this->contextBuilder->buildSecurityUser(
-    //         $userId,
-    //         $identifier,
-    //         $accountStatus
-    //     );
-    // }
 
     public function refreshUser(UserInterface $user): UserInterface
     {

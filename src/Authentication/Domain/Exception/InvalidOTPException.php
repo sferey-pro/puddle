@@ -29,4 +29,14 @@ final class InvalidOTPException extends AuthenticationException
     {
         return new self('Too many incorrect attempts. Please request a new code.');
     }
+
+    public static function alreadyUsed(): self
+    {
+        return new self('This code has already been used.');
+    }
+
+    public static function notFound(): self
+    {
+        return new self('Invalid code.');
+    }
 }

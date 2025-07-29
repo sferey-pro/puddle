@@ -25,8 +25,6 @@ return function (ContainerConfigurator $container): void {
             '%kernel.project_dir%/src/Authentication/Infrastructure/Symfony/Resources',
         ]);
 
-    $services->alias(TokenGeneratorInterface::class, SymfonyTokenGeneratorAdapter::class);
-
     // Repositories
     $services->alias(AccessCredentialRepositoryInterface::class, DoctrineAccessCredentialRepository::class);
     $services->alias(LoginAttemptRepositoryInterface::class, DoctrineLoginAttemptRepository::class);

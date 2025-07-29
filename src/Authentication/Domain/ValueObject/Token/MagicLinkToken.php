@@ -12,14 +12,6 @@ final class MagicLinkToken extends AbstractToken
     private const TOKEN_LENGTH = 64;
     public const EXPIRY_MINUTES = 15;
 
-    public static function create(string $token, \DateTimeImmutable $expiresAt): self
-    {
-        return new self(
-            $token,
-            $expiresAt,
-        );
-    }
-
     public static function fromString(string $value, ?\DateTimeImmutable $expiresAt = null): self
     {
         return new self(

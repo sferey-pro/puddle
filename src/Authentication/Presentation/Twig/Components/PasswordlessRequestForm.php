@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Authentication\Presentation\Twig\Components;
 
 use Authentication\Application\DTO\PasswordlessDTO;
-use Authentication\Application\Service\IdentifierResolverInterface;
 use Authentication\Application\Service\PasswordlessAuthenticationService;
 use Authentication\Domain\Exception\TooManyAttemptsException;
 use Authentication\Presentation\Form\PasswordlessFormType;
 use Kernel\Application\Bus\CommandBusInterface;
 use Psr\Log\LoggerInterface;
+use SharedKernel\Domain\Service\IdentifierAnalyzerInterface;
+use SharedKernel\Domain\Service\IdentityContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,16 +28,27 @@ final class PasswordlessRequestForm extends AbstractController
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
-    #[LiveProp()]
+    #[LiveProp]
     public ?PasswordlessDTO $data;
 
-    #[LiveProp()]
+    #[LiveProp]
     public ?string $errorMessage = null;
 
+    #[LiveProp]
+    public ?string $identifierType = null;
+
+    #[LiveProp]
+    public ?string $maskedIdentifier = null;
+
+    #[LiveProp]
+    public ?string $displayMessage = null;
+
     public function __construct(
-        private CommandBusInterface $commandBus,
-        private PasswordlessAuthenticationService $authService,
-        private LoggerInterface $logger
+        private readonly CommandBusInterface $commandBus,
+        private readonly PasswordlessAuthenticationService $authService,
+        private readonly IdentifierAnalyzerInterface $identifierAnalyzer,
+        private readonly IdentityContextInterface $identityContext,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -56,44 +68,61 @@ final class PasswordlessRequestForm extends AbstractController
     {
         $this->submitForm();
 
-        if ($this->getForm()->isValid()) {
-
-            try {
-
-                $type = $this->authService->initiatePasswordlessAuthentication(
-                    identifier: $this->data->identifier,
-                    ipAddress: $request->getClientIp(),
-                    userAgent: $request->headers->get('User-Agent')
-                );
-
-                switch ($type) {
-                    case 'magic_link': // Email envoyé
-                        $this->addFlash('success', 'Check your email! We sent you a magic link.');
-                        return $this->redirectToRoute('passwordless_email_sent', [
-                            'email' => $this->data->identifier
-                        ]);
-                        break;
-                    case 'otp': // SMS envoyé - redirection vers saisie OTP
-                        $this->addFlash('info', 'We sent you a verification code by SMS.');
-                        return $this->redirectToRoute('passwordless_verify_otp', [
-                            'phone' => base64_encode($this->data->identifier)
-                        ]);
-                        break;
-                    default:
-                        return $this->redirectToRoute('passwordless_error');
-                }
-
-            } catch (TooManyAttemptsException $e) {
-                $this->addFlash('error', $e->getMessage());
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'An error occurred. Please try again.');
-                $this->logger->error('Passwordless request failed', [
-                    'error' => $e->getMessage(),
-                    'identifier' => $this->data->identifier
-                ]);
-            }
+        if (!$this->getForm()->isValid()) {
+            return null;
         }
 
+        $analysis = $this->identifierAnalyzer->analyze($this->data->identifier);
+
+        if (!$analysis->isValid) {
+            $this->errorMessage = $analysis->errorMessage;
+            return null;
+        }
+
+        try {
+
+            $identifierResult = $this->identityContext->resolveIdentifier($analysis->normalizedValue);
+
+            if ($identifierResult->isFailure()) {
+                $this->errorMessage = 'Invalid identifier format.';
+                return null;
+            }
+
+            $this->authService->initiatePasswordlessAuthentication(
+                identifier: $identifierResult->value,
+                ipAddress: $request->getClientIp(),
+                userAgent: $request->headers->get('User-Agent')
+            );
+
+
+            if ($analysis->isEmail()) {
+                $this->addFlash('success', 'Check your email! We sent you a magic link.');
+                return $this->redirectToRoute('passwordless_email_sent', [
+                    'email' => $analysis->maskedValue
+                ]);
+            } else {
+                $this->addFlash('info', 'We sent you a verification code by SMS.');
+                return $this->redirectToRoute('passwordless_verify_otp', [
+                    'phone' => base64_encode($analysis->normalizedValue)
+                ]);
+            }
+
+        } catch (TooManyAttemptsException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'An error occurred. Please try again.');
+            $this->logger->error('Passwordless request failed', [
+                'error' => $e->getMessage(),
+                'identifier' => $this->data->identifier
+            ]);
+        }
         return null;
+    }
+
+    private function resetAnalysis(): void
+    {
+        $this->identifierType = null;
+        $this->maskedIdentifier = null;
+        $this->displayMessage = null;
     }
 }

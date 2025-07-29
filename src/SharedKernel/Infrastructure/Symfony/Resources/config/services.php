@@ -6,9 +6,11 @@ use Account\Core\Infrastructure\Adapter\Out\AccountContextService;
 use Account\Registration\Application\Service\AccountRegistrationContextService;
 use Authentication\Infrastructure\Adapter\Out\AuthenticationContextService;
 use Identity\Infrastructure\Adapter\Out\IdentityContextService;
+use Identity\Infrastructure\Service\IdentifierAnalyzer;
 use SharedKernel\Domain\Service\AccountContextInterface;
 use SharedKernel\Domain\Service\AccountRegistrationContextInterface;
 use SharedKernel\Domain\Service\AuthenticationContextInterface;
+use SharedKernel\Domain\Service\IdentifierAnalyzerInterface;
 use SharedKernel\Domain\Service\IdentityContextInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -29,6 +31,7 @@ return function (ContainerConfigurator $container): void {
 
     // Adapters
     $services->alias(IdentityContextInterface::class, IdentityContextService::class);
+    $services->alias(IdentifierAnalyzerInterface::class, IdentifierAnalyzer::class);
     $services->alias(AuthenticationContextInterface::class, AuthenticationContextService::class);
     $services->alias(AccountRegistrationContextInterface::class, AccountRegistrationContextService::class);
     $services->alias(AccountContextInterface::class, AccountContextService::class);

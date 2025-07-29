@@ -6,6 +6,8 @@ namespace Authentication\Domain\Repository;
 
 use Authentication\Domain\Model\AccessCredential\AbstractAccessCredential;
 use Authentication\Domain\ValueObject\Token;
+use DateInterval;
+use Identity\Domain\ValueObject\Identifier;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -33,6 +35,12 @@ interface AccessCredentialRepositoryInterface
     // ==================== RECHERCHES ESSENTIELLES ====================
 
     /**
+     * Trouve le credential crée par un user pour un identifier.
+     * Cas d'usage : Compensation de la création du credential
+     */
+    public function findByIdentifierAndUserId(Identifier $identifier, UserId $userId): ?AbstractAccessCredential;
+
+    /**
      * Trouve un credential par son token.
      * Cas d'usage : Validation lors du login
      */
@@ -48,9 +56,16 @@ interface AccessCredentialRepositoryInterface
 
     /**
      * Trouve le dernier credential créé pour un identifier.
-     * Cas d'usage : Rate limiting, éviter le spam
+     * Cas d'usage : Eviter le spam
      */
-    public function findLatestByIdentifier(string $identifier): ?AbstractAccessCredential;
+    public function findLatestByIdentifier(Identifier $identifier): ?AbstractAccessCredential;
+
+    /**
+     * Compte le nombre de tentatives récentes pour un identifiant donné.
+     * Cas d'usage :  Pour le rate limiting.
+     */
+    public function countRecentAttempts(Identifier $identifier, \DateInterval $interval): int;
+
 
     // ==================== MAINTENANCE ====================
 
@@ -67,4 +82,6 @@ interface AccessCredentialRepositoryInterface
      * Cas d'usage : Sécurité après changement de mot de passe ou logout global
      */
     public function invalidateAllForUser(UserId $userId): void;
+
+
 }

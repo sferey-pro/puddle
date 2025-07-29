@@ -4,88 +4,85 @@ declare(strict_types=1);
 
 namespace Authentication\Application\Command;
 
+use Authentication\Application\Notifier\LoginSmsNotification;
+use Authentication\Application\Notifier\OtpNotification;
+use Authentication\Domain\Model\AccessCredential\OTPCredential;
 use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
+use Authentication\Domain\Service\TokenGeneratorInterface;
+use Authentication\Domain\Exception\TooManyAttemptsException;
+use Authentication\Infrastructure\Security\OTPAdapter;
+use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\ValueObject\PhoneIdentity;
+use Kernel\Application\Notifier\NotifierService;
+use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use SharedKernel\Domain\Service\AccountRegistrationContextInterface;
-use SharedKernel\Domain\Service\AuthenticationContextInterface;
 use SharedKernel\Domain\Service\IdentityContextInterface;
+use SharedKernel\Domain\ValueObject\Identity\UserId;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
 
 #[AsCommandHandler]
 final readonly class RequestOTPHandler
 {
-
     public function __construct(
         private AccountRegistrationContextInterface $accountRegistrationContext,
-        private AuthenticationContextInterface $authenticationContext,
         private IdentityContextInterface $identityContext,
         private AccessCredentialRepositoryInterface $credentialRepository,
-        private TokenGeneratorInterface $tokenGenerator,
-        private NotificationInterface $smsNotification,
-        private CommandBusInterface $commandBus,
-        private EventBusInterface $eventBus
+        private OTPAdapter $otpAdapter,
+        private NotifierInterface $notifier
     ) {}
 
     public function __invoke(RequestOTP $command): void
     {
-        // 1. Normaliser le numéro
-        $normalizedPhone = $this->normalizePhoneNumber($command->phoneNumber);
+        $identifier = $command->identifier;
 
-        // 2. Rate limiting
+        // 1. Vérifier le rate limiting
         $recentAttempts = $this->credentialRepository->countRecentAttempts(
-            $normalizedPhone,
-            new \DateInterval('PT1M') // 1 minute pour OTP
+            $identifier,
+            new \DateInterval('PT2M') // 2 minutes pour SMS
         );
 
         if ($recentAttempts >= 3) {
-            throw new TooManyAttemptsException(
-                'Please wait before requesting another code.'
+            throw TooManyAttemptsException::forPhone(
+                $identifier->value(),
+                60 // Wait 60 seconds
             );
         }
 
-        // 3. Chercher un compte
-        $account = $this->accountRepository
-            ->withPhone($normalizedPhone)
-            ->notDeleted()
-            ->findOne();
+        // 2. Chercher un compte existant
+        $existingUserId = $this->identityContext->findUserIdByIdentifier($identifier->value());
 
-        if ($account === null) {
-            // Nouveau compte
+        $metadata = [
+            'ip_address' => $command->ipAddress,
+            'user_agent' => $command->userAgent,
+            'requested_at' => (new \DateTimeImmutable())->format('c'),
+        ];
+
+        if ($existingUserId === null) {
+            // 3a. Nouveau compte - démarrer la Saga Registration
             $this->accountRegistrationContext->initiateRegistration($identifier->value(), $command->ipAddress);
         } else {
-            // Compte existant
-            $this->sendOTPToExistingAccount($account, $command);
+            // 3b. Compte existant - envoyer le code OTP
+            $this->sendOTPToExistingAccount($existingUserId, $identifier, $command);
         }
     }
 
-    private function sendOTPToExistingAccount($account, $command): void
-    {
-        // Générer OTP
-        $otpCode = OTPCode::generate();
+    private function sendOTPToExistingAccount(
+        UserId $userId,
+        Identifier $identifier,
+        RequestOTP $command
+    ): void {
 
-        // Créer credential
-        $credential = OTPCredential::create(
-            identifier: $this->normalizePhoneNumber($command->phoneNumber),
-            code: $otpCode,
-            validity: new \DateInterval('PT5M')
+        $otpDetails = $this->otpAdapter->createOTP($userId, $identifier);
+
+        // Envoyer le code OTP
+        $notification = new LoginSmsNotification(
+            $otpDetails->code->value(),
+            $identifier->value(),
+            $otpDetails->code->expiresAt()
         );
 
-        $credential->attachToUser($account->getId());
-        $this->credentialRepository->save($credential);
-
-        // Envoyer SMS
-        $this->smsNotification->send(new NotificationMessage(
-            recipient: $command->phoneNumber,
-            channel: 'sms',
-            template: 'otp_template',
-            parameters: [
-                'code' => $otpCode->toString(),
-                'expires_in' => '5 minutes'
-            ]
-        ));
-
-        // Event
-        $this->eventBus->publish(new OTPRequested(
-            userId: $account->getId(),
-            phoneNumber: $command->phoneNumber
-        ));
+        $recipient = new Recipient((string) $identifier->value());
+        $this->notifier->send($notification, $recipient);
     }
 }

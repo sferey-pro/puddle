@@ -8,11 +8,13 @@ use Account\Registration\Application\Event\RegistrationProcessCompleted;
 use Account\Registration\Application\Saga\Event\RegistrationSagaStarted;
 use Account\Registration\Domain\Repository\RegistrationProcessRepositoryInterface;
 use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
+use Kernel\Application\Bus\EventBusInterface;
 use Kernel\Application\Clock\ClockInterface;
 use Kernel\Application\Saga\Process\SagaProcessInterface;
 use Kernel\Application\Saga\Step\SagaStepRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Workflow\WorkflowInterface;
 
@@ -41,7 +43,7 @@ final class RegistrationSaga
         private SagaStepRegistry $stepRegistry,
         private RegistrationProcessRepositoryInterface $processRepository,
         private LoggerInterface $logger,
-        private ClockInterface $clock
+        private ClockInterface $clock,
     ) {
     }
 
@@ -51,10 +53,10 @@ final class RegistrationSaga
     public function __invoke(RegistrationSagaStarted $event): void
     {
         /** @var RegistrationSagaProcess|null $sagaProcess */
-        $sagaProcess = $this->processRepository->find($event->sagaStateId());
+        $sagaProcess = $this->processRepository->findById($event->sagaStateId());
 
         // Si le parcours n'existe pas ou est déjà terminé, on ne fait rien.
-        if (null === $sagaProcess || $this->workflow->can($sagaProcess, 'complete')) {
+        if (null === $sagaProcess || $this->isCompleted($sagaProcess)) {
             return;
         }
 
@@ -68,6 +70,7 @@ final class RegistrationSaga
      */
     private function proceed(SagaProcessInterface $sagaProcess): void
     {
+
         while ($transitions = $this->workflow->getEnabledTransitions($sagaProcess)) {
             if (empty($transitions)) {
                 $this->logger->info('Saga process has reached a final state.', ['saga_id' => $sagaProcess->id]);
@@ -80,34 +83,25 @@ final class RegistrationSaga
                 break;
             }
 
-            $step = $this->stepRegistry->getStep($transitionName, 'registration');
-
             try {
+                $step = $this->stepRegistry->getStep($transitionName, 'registration');
+
                 $this->logger->info('Saga: Executing step for transition.', ['transition' => $transitionName]);
                 $step->execute($sagaProcess);
 
                 $this->workflow->apply($sagaProcess, $transitionName);
                 $sagaProcess->addTransitionToHistory($transitionName);
 
-                $this->processRepository->save($sagaProcess);
             } catch (\Throwable $e) {
                 $this->handleFailure($sagaProcess, $e);
-
+            } finally {
                 $this->processRepository->save($sagaProcess);
-                throw $e;
             }
         }
 
-        if ($this->workflow->can($sagaProcess, 'complete')) {
+        if ($this->isCompleted($sagaProcess)) {
             $this->workflow->apply($sagaProcess, 'complete');
             $this->logger->info('Saga completed successfully.');
-
-            $completionEvent = new RegistrationProcessCompleted(
-                $sagaProcess->userId(),
-                $this->clock->now()
-            );
-
-
             $this->processRepository->save($sagaProcess);
         }
     }
@@ -145,5 +139,10 @@ final class RegistrationSaga
         }
 
         return $allSucceeded;
+    }
+
+    private function isCompleted(SagaProcessInterface $sagaProcess): bool
+    {
+        return $this->workflow->can($sagaProcess, 'complete');
     }
 }

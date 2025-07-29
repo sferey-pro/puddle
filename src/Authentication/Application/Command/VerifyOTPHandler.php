@@ -9,7 +9,7 @@ use Account\Core\Domain\Repository\AccountRepositoryInterface;
 use Authentication\Domain\Event\AccountAuthenticatedViaPasswordless;
 use Authentication\Domain\Exception\InvalidMagicLinkException;
 use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
-use Authentication\Infrastructure\Security\SymfonyLoginLinkAdapter;
+use Authentication\Infrastructure\Security\LoginLinkAdapter;
 use Kernel\Application\Bus\EventBusInterface;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 
@@ -19,7 +19,7 @@ final readonly class VerifyOTPHandler
     public function __construct(
         private AccessCredentialRepositoryInterface $credentialRepository,
         private AccountRepositoryInterface $accountRepository,
-        private SymfonyLoginLinkAdapter $loginLinkAdapter,
+        private LoginLinkAdapter $loginLinkAdapter,
         private EventBusInterface $eventBus
     ) {}
 

@@ -52,7 +52,7 @@ final class DoctrineRegistrationProcessRepository extends ServiceEntityRepositor
     {
         // Le userId est stocké dans le context JSON
         return $this->createQueryBuilder('p')
-            ->where("JSON_UNQUOTE(JSON_EXTRACT(p.context, '$.userId')) = :userId")
+            ->where("JSON_GET_TEXT(p.context, 'userId') = :userId")
             ->setParameter('userId', (string) $userId)
             ->orderBy('p.createdAt', 'DESC')
             ->setMaxResults(1)
@@ -64,7 +64,7 @@ final class DoctrineRegistrationProcessRepository extends ServiceEntityRepositor
     {
         // Recherche dans le context JSON pour l'identifier actif
         return $this->createQueryBuilder('p')
-            ->where("JSON_UNQUOTE(JSON_EXTRACT(p.context, '$.identifier_value')) = :identifier")
+            ->where("JSON_GET_TEXT(p.context, 'identifier_value') = :identifier")
             ->andWhere('p.currentState NOT IN (:finalStates)')
             ->setParameter('identifier', $identifierValue)
             ->setParameter('finalStates', ['completed', 'failed', 'compensation_failed'])

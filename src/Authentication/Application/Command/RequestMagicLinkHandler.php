@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Authentication\Application\Command;
 
 use Authentication\Application\Notifier\CustomLoginLinkNotification;
+use Authentication\Application\Notifier\LoginEmailNotification;
 use Authentication\Domain\Exception\TooManyAttemptsException;
 use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
-use Authentication\Infrastructure\Security\SymfonyLoginLinkAdapter;
+use Authentication\Infrastructure\Security\LoginLinkAdapter;
+use Identity\Domain\ValueObject\Identifier;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use SharedKernel\Domain\Service\AccountRegistrationContextInterface;
 use SharedKernel\Domain\Service\IdentityContextInterface;
@@ -24,7 +26,7 @@ final readonly class RequestMagicLinkHandler
         private AccountRegistrationContextInterface $accountRegistrationContext,
         private IdentityContextInterface $identityContext,
         private AccessCredentialRepositoryInterface $credentialRepository,
-        private SymfonyLoginLinkAdapter $loginLinkAdapter,
+        private LoginLinkAdapter $loginLinkAdapter,
         private NotifierInterface $notifier
     ) {}
 
@@ -33,41 +35,49 @@ final readonly class RequestMagicLinkHandler
         $identifier = $command->email;
 
         // 1. Vérifier le rate limiting
-        // $recentAttempts = $this->credentialRepository->countRecentAttempts(
-        //     $identifier,
-        //     new \DateInterval('PT5M')
-        // );
+        $recentAttempts = $this->credentialRepository->countRecentAttempts(
+            $identifier,
+            new \DateInterval('PT5M')
+        );
 
-        // if ($recentAttempts >= 3) {
-        //     throw new TooManyAttemptsException(
-        //         'Please wait a few minutes before requesting another magic link.'
-        //     );
-        // }
+        if ($recentAttempts >= 3) {
+            throw TooManyAttemptsException::forEmail(
+                $identifier->value(),
+                60 // Wait 60 seconds
+            );
+        }
 
         // 2. Chercher un compte existant
-        $account = $this->identityContext->findUserIdByIdentifier($identifier->value());
+        $existingUserId = $this->identityContext->findUserIdByIdentifier($identifier->value());
 
-        if ($account === null) {
+        $metadata = [
+            'ip_address' => $command->ipAddress,
+            'user_agent' => $command->userAgent,
+            'requested_at' => (new \DateTimeImmutable())->format('c'),
+        ];
+
+        if ($existingUserId === null) {
             // 3a. Nouveau compte - démarrer la Saga Registration
             $this->accountRegistrationContext->initiateRegistration($identifier->value(), $command->ipAddress);
         } else {
             // 3b. Compte existant - envoyer le magic link
-            $this->sendMagicLinkToExistingAccount($account, $command);
+            $this->sendMagicLinkToExistingAccount($existingUserId, $command);
         }
     }
 
-    private function sendMagicLinkToExistingAccount($account): void
+    private function sendMagicLinkToExistingAccount($userId, RequestMagicLink $command): void
     {
         // Créer le credential avec Symfony LoginLink
-        $loginLinkDetails = $this->loginLinkAdapter->createMagicLinkForAccount($account);
+        $loginLinkDetails = $this->loginLinkAdapter->createLoginLink($userId);
 
         // Envoyer l'email
-        $notification = new CustomLoginLinkNotification(
+        $notification = new LoginEmailNotification(
             $loginLinkDetails,
-            'Votre lien de connexion Puddle' // email subject
+            'Votre lien de connexion Puddle', // email subject
+            $command->ipAddress
         );
 
-        $recipient = new Recipient((string) $account->email);
+        $recipient = new Recipient((string) $command->email);
         $this->notifier->send($notification, $recipient);
     }
 }

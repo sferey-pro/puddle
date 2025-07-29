@@ -42,7 +42,7 @@ final readonly class StartRegistrationSagaHandler
         $identifier = $identityResult->value();
         $userId = $command->userId;
 
-        $existingProcess = $this->processRepository->findActiveByIdentifier($identifier->getValue());
+        $existingProcess = $this->processRepository->findActiveByIdentifier($command->identifier);
 
         if ($existingProcess) {
             throw RegistrationException::alreadyInProgress($identifier->getValue());

@@ -7,6 +7,7 @@ namespace Authentication\Domain\Model\AccessCredential;
 use Authentication\Domain\Enum\CredentialType;
 use Authentication\Domain\Model\Identity\CredentialId;
 use Authentication\Domain\ValueObject\Token\OtpCode;
+use Authentication\Infrastructure\Security\OTP\OTPDetails;
 use Identity\Domain\ValueObject\Identifier;
 use Kernel\Application\Clock\SystemTime;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
@@ -16,8 +17,6 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  */
 final class OTPCredential extends AbstractAccessCredential
 {
-    
-
     private int $attempts = 0;
     private const MAX_ATTEMPTS = 3;
 
@@ -34,6 +33,18 @@ final class OTPCredential extends AbstractAccessCredential
             token: $token,
             createdAt: $now,
             expiresAt: $expiresAt
+        );
+    }
+
+    /**
+     * Crée un OTPCredential à partir d'OTPDetails.
+     */
+    public static function fromDetails(OTPDetails $details): self
+    {
+        return self::create(
+            identifier: $details->identifier,
+            token: $details->code,
+            expiresAt: $details->expiresAt,
         );
     }
 

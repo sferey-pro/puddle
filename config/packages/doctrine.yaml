@@ -20,6 +20,10 @@ doctrine:
         auto_mapping: true
         controller_resolver:
             auto_mapping: true
+        dql:
+            string_functions:
+                JSON_GET_TEXT: Kernel\Infrastructure\Persistence\Doctrine\DQL\JsonGetText
+
 
 when@test:
     doctrine:

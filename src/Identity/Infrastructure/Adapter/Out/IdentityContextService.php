@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Identity\Infrastructure\Adapter\Out;
 
-use Identity\Domain\ValueObject\Identifier;
 use Identity\Domain\Repository\UserIdentityRepositoryInterface;
 use Identity\Domain\Service\IdentifierResolverInterface;
 use Kernel\Domain\Result;

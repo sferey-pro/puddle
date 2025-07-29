@@ -1,7 +1,10 @@
 <?php
 
 use Identity\Domain\Repository\UserIdentityRepositoryInterface;
+use Identity\Domain\Service\IdentifierResolverInterface;
+use Identity\Domain\Service\IdentifierValidatorInterface;
 use Identity\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserIdentityRepository;
+use Identity\Infrastructure\Validator\SymfonyIdentifierValidator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return function (ContainerConfigurator $container): void {
@@ -20,5 +23,6 @@ return function (ContainerConfigurator $container): void {
         ]);
 
     // Repositories
+    $services->alias(IdentifierValidatorInterface::class, SymfonyIdentifierValidator::class);
     $services->alias(UserIdentityRepositoryInterface::class, DoctrineUserIdentityRepository::class);
 };

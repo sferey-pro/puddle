@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Authentication\Application\Service;
 
 use Authentication\Application\Command\RequestMagicLink;
-use Authentication\Application\Command\RequestOTP\RequestOTP;
+use Authentication\Application\Command\RequestOTP;
 use Authentication\Domain\Exception\InvalidIdentifierException;
 use Authentication\Domain\Exception\TooManyAttemptsException;
 use Identity\Domain\ValueObject\EmailIdentity;
+use Identity\Domain\ValueObject\Identifier;
 use Identity\Domain\ValueObject\PhoneIdentity;
 use Kernel\Application\Bus\CommandBusInterface;
 use Psr\Log\LoggerInterface;
@@ -34,62 +35,36 @@ final readonly class PasswordlessAuthenticationService
      * @throws TooManyAttemptsException
      */
     public function initiatePasswordlessAuthentication(
-        string $identifier,
+        Identifier $identifier,
         string $ipAddress,
         ?string $userAgent = null
-    ): string {
+    ): void {
         $this->logger->info('Initiating passwordless authentication', [
-            'identifier_length' => strlen($identifier),
+            'identifier_length' => strlen($identifier->value()),
             'ip' => $ipAddress
         ]);
 
-        // 1. Résoudre et valider l'identifiant
-        $identifierResult = $this->identityContext->resolveIdentifier($identifier);
-
-        if ($identifierResult->isFailure()) {
-            $this->logger->warning('Invalid identifier provided', [
-                'error' => $identifierResult->error->getMessage()
-            ]);
-
-            throw InvalidIdentifierException::withMessage(
-                'Please enter a valid email address or phone number.'
-            );
-        }
-
-        $resolvedIdentifier = $identifierResult->value();
-
         // 2. Dispatcher la commande appropriée
         try {
-            switch (true) {
-                case $resolvedIdentifier instanceof EmailIdentity:
-                    $this->commandBus->dispatch(new RequestMagicLink(
-                        email: $resolvedIdentifier,
+            $command = match($identifier::class) {
+                EmailIdentity::class => new RequestMagicLink(
+                        email: $identifier,
                         ipAddress: $ipAddress,
                         userAgent: $userAgent
-                    ));
-
-                    $this->logger->info('Magic link requested for email');
-                    return 'magic_link';
-
-                case $resolvedIdentifier instanceof PhoneIdentity:
-                    $this->commandBus->dispatch(new RequestOTP(
-                        phoneNumber: $resolvedIdentifier,
+                ),
+                PhoneIdentity::class => new RequestOTP(
+                        identifier: $identifier,
                         ipAddress: $ipAddress,
                         userAgent: $userAgent
-                    ));
+                ),
+                default => throw new \LogicException('Unsupported identifier type')
+            };
 
-                    $this->logger->info('OTP requested for phone');
-                    return 'otp';
+            $this->commandBus->dispatch($command);
 
-                default:
-                    throw InvalidIdentifierException::withMessage(
-                        'Unsupported identifier type'
-                    );
-            }
         } catch (TooManyAttemptsException $e) {
             $this->logger->warning('Rate limit exceeded', [
-                'identifier' => substr($identifier, -4),
-                'retry_after' => $e->getRetryAfter()
+                'identifier' => substr($identifier->value(), -4)
             ]);
             throw $e;
         }
@@ -98,14 +73,14 @@ final readonly class PasswordlessAuthenticationService
     /**
      * Renvoie un code OTP (pour le bouton "Resend code").
      */
-    public function resendOTP(string $phoneNumber, string $ipAddress): void
+    public function resendOTP(Identifier $identifier, string $ipAddress): void
     {
         $this->logger->info('Resending OTP code', [
-            'phone_suffix' => '...' . substr($phoneNumber, -4)
+            'phone_suffix' => '...' . substr($identifier->value(), -4)
         ]);
 
         $this->commandBus->dispatch(new RequestOTP(
-            phoneNumber: $phoneNumber,
+            identifier: $identifier,
             ipAddress: $ipAddress,
             userAgent: null
         ));

@@ -81,7 +81,7 @@ final class DoctrineUserIdentityRepository extends ServiceEntityRepository
             SELECT DISTINCT ai.user_id
             FROM identity_attached_identifiers ai
             WHERE ai.identifier_value = :value
-            AND ai.is_verified = 1
+            AND ai.is_verified = TRUE
             LIMIT 1
         SQL;
 

@@ -11,7 +11,7 @@ final class SendNotificationStep extends AbstractSagaStep
         private readonly NotificationInterface $emailNotification,
         private readonly NotificationInterface $smsNotification,
         private readonly AccessCredentialRepositoryInterface $credentialRepository,
-        private readonly SymfonyLoginLinkAdapter $loginLinkAdapter,
+        private readonly LoginLinkAdapter $loginLinkAdapter,
         private readonly UrlGeneratorInterface $urlGenerator
     ) {}
 
