@@ -13,8 +13,9 @@ use SharedKernel\Domain\ValueObject\Contact\PhoneNumber;
 final class RegistrationException extends \DomainException
 {
     private const string CAN_REGISTER = 'U-000';
-    private const string EMAIL_ALREADY_EXISTS = 'U-001';
-    private const string PHONE_ALREADY_EXISTS = 'U-002';
+    private const string ALREADY_IN_PROGRESS = 'U-001';
+    private const string INVALID_IDENTIFIER = 'U-003';
+    private const string PROCESS_NOT_FOUND = 'U-004';
 
     /**
      * Le constructeur est privé pour forcer l'utilisation des factory methods statiques.
@@ -26,32 +27,25 @@ final class RegistrationException extends \DomainException
 
     public static function canRegister(string $reason): self
     {
-        return new self($reason, self::CAN_REGISTER);
+        return new self(sprintf('Registration not allowed: %s', $reason), self::CAN_REGISTER);
     }
 
-    public static function identityAlreadyInUse(mixed $identifier): self
+    public static function alreadyInProgress(string $identifier): self
     {
-        return match ($identifier::class) {
-            EmailAddress::class => self::emailAlreadyExists($identifier),
-            PhoneNumber::class => self::phoneAlreadyExists($identifier),
-            default => new self('Cet identifiant est déjà utilisé.', "000"),
-        };
+        return new self(sprintf(
+            'A registration process is already in progress for identifier: %s',
+            $identifier
+        ), self::ALREADY_IN_PROGRESS);
     }
 
-    public static function emailAlreadyExists(EmailAddress $email): self
+    public static function invalidIdentifier(string $identifier): self
     {
-        return new self(
-            \sprintf('A user with the email "%s" already exists.', $email),
-            self::EMAIL_ALREADY_EXISTS
-        );
+        return new self(sprintf('Invalid identifier format: %s', $identifier), self::INVALID_IDENTIFIER);
     }
 
-    public static function phoneAlreadyExists(PhoneNumber $phone): self
+    public static function processNotFound(string $sagaId): self
     {
-        return new self(
-            \sprintf('A user with the phone "%s" already exists.', $phone),
-            self::PHONE_ALREADY_EXISTS
-        );
+        return new self(sprintf('Registration process not found: %s', $sagaId), self::PROCESS_NOT_FOUND);
     }
 
     public function payload(): mixed

@@ -24,8 +24,8 @@ abstract class AbstractSagaProcess implements SagaProcessInterface,
     Timestampable
 {
     // ==================== PROPRIÉTÉS PRINCIPALES ====================
-    public SagaStateId $id;
-    public string $currentState;
+    protected(set) SagaStateId $id;
+    protected(set) string $currentState;
     private array $history = [];
     private array $context = [];
 
@@ -44,11 +44,6 @@ abstract class AbstractSagaProcess implements SagaProcessInterface,
 
     public static function create() {
         return new static(SagaStateId::generate());
-    }
-
-    public function id(): SagaStateId
-    {
-        return $this->id;
     }
 
     // ==================== IMPLÉMENTATION TIMESTAMPABLE ====================

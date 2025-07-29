@@ -10,26 +10,13 @@ use Account\Registration\Domain\Exception\RegistrationException;
 use Account\Registration\Domain\Model\RegistrationRequest;
 use Account\Registration\Domain\Repository\RegistrationProcessRepositoryInterface;
 use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
-use Account\Registration\Domain\Service\IdentifierResolverInterface;
 use Account\Registration\Domain\Specification\CanRegisterSpecification;
-use Identity\Domain\ValueObject\Identifier;
-use Kernel\Application\Bus\CommandBusInterface;
 use Kernel\Application\Bus\EventBusInterface;
-use Kernel\Application\Bus\QueryBusInterface;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use SharedKernel\Domain\Service\IdentityContextInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-/**
- * Gère le démarrage du Saga d'inscription.
- *
- * Rôle métier :
- * Ce handler est le point d'entrée technique du "Parcours d'Inscription".
- * Il valide la règle d'unicité de l'email, crée l'objet `RegistrationSagaProcess`
- * qui suivra l'état du parcours, et notifie le système (via l'événement
- * `RegistrationSagaStarted`) que la première étape peut commencer.
- */
 #[AsCommandHandler]
 final readonly class StartRegistrationSagaHandler
 {
@@ -39,8 +26,6 @@ final readonly class StartRegistrationSagaHandler
         private CanRegisterSpecification $canRegisterSpecification,
         private IdentityContextInterface $identityContext,
         private AccountRepositoryInterface $accountRepository,
-        private QueryBusInterface $queryBus,
-        private CommandBusInterface $commandBus,
         private EventBusInterface $eventBus,
         private RegistrationProcessRepositoryInterface $processRepository,
     ) {
@@ -57,6 +42,12 @@ final readonly class StartRegistrationSagaHandler
         $identifier = $identityResult->value();
         $userId = $command->userId;
 
+        $existingProcess = $this->processRepository->findActiveByIdentifier($identifier->getValue());
+
+        if ($existingProcess) {
+            throw RegistrationException::alreadyInProgress($identifier->getValue());
+        }
+
         $registrationRequest = new RegistrationRequest(
             $identifier,
             $userId,
@@ -70,7 +61,6 @@ final readonly class StartRegistrationSagaHandler
         $sagaProcess = RegistrationSagaProcess::start(
             $command->userId,
             $identifier,
-            $channel,
         );
 
         $this->workflow->getMarking($sagaProcess);

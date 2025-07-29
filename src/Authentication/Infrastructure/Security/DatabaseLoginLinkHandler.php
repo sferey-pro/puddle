@@ -2,13 +2,17 @@
 
 namespace Authentication\Infrastructure\Security;
 
+use Authentication\Domain\Exception\TooManyAttemptsException;
 use Authentication\Domain\Model\AccessCredential\MagicLinkCredential;
 use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
 use Authentication\Domain\ValueObject\Token\MagicLinkToken;
+use InvalidArgumentException;
 use Kernel\Application\Clock\SystemTime;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\LoginLink\Exception\InvalidLoginLinkException;
@@ -29,8 +33,18 @@ final class DatabaseLoginLinkHandler implements LoginLinkHandlerInterface
         private readonly LoggerInterface $logger
     ) {}
 
+    /**
+     *
+     * @param UserInterface|UserSecurity $user
+     */
     public function createLoginLink(UserInterface $user, ?Request $request = null, ?int $lifetime = null): LoginLinkDetails
     {
+        $latest = $this->credentialRepository->findLatestByIdentifier($user->getUserIdentifier());
+
+        if ($latest && $latest->createdAt > new \DateTimeImmutable('-1 minute')) {
+            throw new TooManyAttemptsException('Please wait before requesting a new link');
+        }
+
         // 1. Symfony créer le lien sécurisé
         $loginLinkDetails = $this->inner->createLoginLink($user, $request, $lifetime ?? MagicLinkToken::EXPIRY_MINUTES);
 

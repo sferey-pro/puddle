@@ -9,7 +9,16 @@ use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
 use Authentication\Domain\ValueObject\Token;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use SharedKernel\Domain\ValueObject\Identity\UserId;
 
+/**
+ * Implémentation Doctrine du repository AccessCredential.
+ *
+ * ARCHITECTURE :
+ * - SINGLE_TABLE inheritance : une seule table `access_credentials`
+ * - Discriminator column `type` : 'magic_link' ou 'otp'
+ * - Gestion unifiée des credentials temporaires
+ */
 final class DoctrineAccessCredentialRepository extends ServiceEntityRepository
     implements AccessCredentialRepositoryInterface
 {
@@ -18,36 +27,85 @@ final class DoctrineAccessCredentialRepository extends ServiceEntityRepository
         parent::__construct($registry, AbstractAccessCredential::class);
     }
 
-    // ========== CRUD ==========
+    // ==================== CRUD BASIQUE ====================
 
     public function save(AbstractAccessCredential $credential): void
     {
-        $this->_em->persist($credential);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($credential);
+        $this->getEntityManager()->flush();
     }
 
     public function remove(AbstractAccessCredential $credential): void
     {
-        $this->_em->remove($credential);
-        $this->_em->flush();
+        $this->getEntityManager()->remove($credential);
+        $this->getEntityManager()->flush();
     }
+
+    // ==================== RECHERCHES ESSENTIELLES ====================
 
     public function findByToken(Token $token): ?AbstractAccessCredential
     {
-        return $this->createQueryBuilder('a')
-            ->where('a.token = :token')
+        return $this->createQueryBuilder('c')
+            ->where('c.token = :token')
             ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findActiveByUserId(UserId $userId): array
+    {
+        $now = new \DateTimeImmutable();
+
+        return $this->createQueryBuilder('c')
+            ->where('c.userId = :userId')
+            ->andWhere('c.usedAt IS NULL')
+            ->andWhere('c.expiresAt > :now')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', $now)
+            ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
+    public function findLatestByIdentifier(string $identifier): ?AbstractAccessCredential
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.identifier = :identifier')
+            ->setParameter('identifier', $identifier)
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    // ==================== MAINTENANCE ====================
+
     public function removeExpired(): int
     {
+        $now = new \DateTimeImmutable();
+
+        // Utilisation de DQL pour suppression en masse
         return $this->createQueryBuilder('c')
             ->delete()
             ->where('c.expiresAt < :now')
             ->andWhere('c.usedAt IS NULL')
-            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function invalidateAllForUser(UserId $userId): void
+    {
+        $now = new \DateTimeImmutable();
+
+        // Marquer tous les credentials non utilisés comme utilisés
+        $this->createQueryBuilder('c')
+            ->update()
+            ->set('c.usedAt', ':now')
+            ->where('c.userId = :userId')
+            ->andWhere('c.usedAt IS NULL')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', $now)
             ->getQuery()
             ->execute();
     }

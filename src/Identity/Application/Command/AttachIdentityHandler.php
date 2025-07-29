@@ -6,7 +6,6 @@ namespace Identity\Application\Command;
 
 use Identity\Domain\Exception\IdentityException;
 use Identity\Domain\Repository\UserIdentityRepositoryInterface;
-use Identity\Domain\Specification\IsUniqueIdentitySpecification;
 use Identity\Domain\UserIdentity;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 

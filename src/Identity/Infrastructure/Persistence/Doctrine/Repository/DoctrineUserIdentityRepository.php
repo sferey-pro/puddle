@@ -11,46 +11,45 @@ use Identity\Domain\Model\UserIdentity;
 use Identity\Domain\Repository\UserIdentityRepositoryInterface;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
+/**
+ * Implémentation Doctrine du repository UserIdentity.
+ *
+ * APPROCHE RELATIONNELLE :
+ * - UserIdentity (1) → AttachedIdentifier (N)
+ * - Requêtes DBAL directes pour les cas de performance critique
+ */
 final class DoctrineUserIdentityRepository extends ServiceEntityRepository
     implements UserIdentityRepositoryInterface
 {
-    public function __construct(
-        private readonly ManagerRegistry $registry,
-        private readonly Connection $connection
-    ) {
+    private readonly Connection $connection;
+
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, UserIdentity::class);
+        $this->connection = $this->getEntityManager()->getConnection();
     }
 
-    // ========== CRUD ==========
+    // ==================== CRUD BASIQUE ====================
 
     public function save(UserIdentity $userIdentity): void
     {
-        $this->_em->persist($userIdentity);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($userIdentity);
+        $this->getEntityManager()->flush();
     }
 
     public function remove(UserIdentity $userIdentity): void
     {
-        $this->_em->remove($userIdentity);
-        $this->_em->flush();
+        $this->getEntityManager()->remove($userIdentity);
+        $this->getEntityManager()->flush();
     }
 
-    /**
-     * Recherche une UserIdentity par son UserId.
-     */
+    // ==================== RECHERCHES ESSENTIELLES ====================
+
     public function findByUserId(UserId $userId): ?UserIdentity
     {
-        return $this->createQueryBuilder('ui')
-            ->where('ui.id = :id')
-            ->setParameter('id', $userId)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->find($userId);
     }
 
-    /**
-     * Recherche par valeur d'identifier, peu importe le type.
-     * Utilise l'index (identifier_type, identifier_value) pour performance.
-     */
     public function findByIdentifierValue(string $value): ?UserIdentity
     {
         return $this->createQueryBuilder('ui')
@@ -61,9 +60,6 @@ final class DoctrineUserIdentityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * Recherche avec type spécifique (plus rapide si on connait le type).
-     */
     public function findByTypedIdentifier(string $type, string $value): ?UserIdentity
     {
         return $this->createQueryBuilder('ui')
@@ -76,11 +72,11 @@ final class DoctrineUserIdentityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * Version directe pour performance maximale.
-     */
+    // ==================== REQUÊTES OPTIMISÉES ====================
+
     public function findUserIdByIdentifier(string $value): ?UserId
     {
+        // Requête DBAL directe pour éviter l'hydratation d'objets
         $sql = <<<'SQL'
             SELECT DISTINCT ai.user_id
             FROM identity_attached_identifiers ai
@@ -92,5 +88,22 @@ final class DoctrineUserIdentityRepository extends ServiceEntityRepository
         $result = $this->connection->fetchOne($sql, ['value' => $value]);
 
         return $result ? UserId::fromString($result) : null;
+    }
+
+    public function existsByTypedIdentifier(string $type, string $value): bool
+    {
+        // Utilisation de COUNT avec LIMIT pour performance maximale
+        $count = $this->createQueryBuilder('ui')
+            ->select('COUNT(ui.userId)')
+            ->innerJoin('ui.identifiers', 'ai')
+            ->where('ai.type = :type')
+            ->andWhere('ai.value = :value')
+            ->setParameter('type', $type)
+            ->setParameter('value', $value)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count > 0;
     }
 }

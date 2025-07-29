@@ -25,7 +25,7 @@ return static function (FrameworkConfig $framework): void {
         'user_created',
         'welcome_sent',
         'completed',
-        'failed',
+        'compensated',
         'compensation_failed',
     ];
 
@@ -39,40 +39,41 @@ return static function (FrameworkConfig $framework): void {
             ->from('started')
             ->to('account_created');
 
-    # Étape 1 : Identity créé et attribué
+    # Étape 2 : Identity attachée
     $userRegistrationSaga->transition()
         ->name('attach_identity')
             ->from('account_created')
             ->to('identity_attached');
 
-    # Étape 2 : Account/Profile créé
+    # Étape 3 : User créé
     $userRegistrationSaga->transition()
         ->name('create_user')
             ->from('identity_attached')
             ->to('user_created');
 
-    # Étape 3 : Email ou Sms de bienvenue envoyé
+    # Étape 4 : Email/SMS de bienvenue envoyé
     $userRegistrationSaga->transition()
         ->name('trigger_welcome')
             ->from('user_created')
             ->to('welcome_sent');
 
-    # Étape 4 : Processus terminé
+    # Étape 5 : Processus terminé
     $userRegistrationSaga->transition()
         ->name('complete')
             ->from('welcome_sent')
             ->to('completed');
 
-    # --- Transitions de gestion d'échec ---
-    # Transition pour un échec avec compensation réussie
+    // ==================== TRANSITIONS DE COMPENSATION ====================
+
+    # Compensation réussie depuis n'importe quel état non-final
     $userRegistrationSaga->transition()
         ->name('mark_as_compensated')
-            ->from(['started', 'account_created', 'identity_attached', 'profile_created', 'welcomed'])
+            ->from(['started', 'account_created', 'identity_attached', 'user_created', 'welcome_sent'])
             ->to('compensated');
 
-    # Transition pour un échec critique de la compensation
+    # Échec de compensation depuis n'importe quel état non-final
     $userRegistrationSaga->transition()
         ->name('mark_as_compensation_failed')
-            ->from(['started', 'account_created', 'identity_attached', 'profile_created', 'welcomed'])
+            ->from(['started', 'account_created', 'identity_attached', 'user_created', 'welcome_sent'])
             ->to('compensation_failed');
 };

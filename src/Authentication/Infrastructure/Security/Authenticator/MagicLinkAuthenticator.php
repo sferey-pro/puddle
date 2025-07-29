@@ -28,7 +28,8 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 /**
  * Authenticator pour magic links avec traçabilité.
  */
-final class MagicLinkAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
+final class MagicLinkAuthenticator extends AbstractAuthenticator
+    implements AuthenticationEntryPointInterface
 {
     use TargetPathTrait;
 
@@ -117,12 +118,12 @@ final class MagicLinkAuthenticator extends AbstractAuthenticator implements Auth
         $user = $token->getUser();
 
         // Event pour l'audit
-        // $this->eventBus->publish(new UserAuthenticatedViaMagicLink(
-        //     userId: $user->getUserId(),
-        //     ipAddress: $request->getClientIp(),
-        //     userAgent: $request->headers->get('User-Agent', 'Unknown'),
-        //     authenticatedAt: new \DateTimeImmutable()
-        // ));
+        $this->eventBus->publish(new UserAuthenticatedViaMagicLink(
+            userId: $user->getUserId(),
+            ipAddress: $request->getClientIp(),
+            userAgent: $request->headers->get('User-Agent', 'Unknown'),
+            authenticatedAt: new \DateTimeImmutable()
+        ));
 
         // Message de succès
         $request->getSession()->getFlashBag()->add(

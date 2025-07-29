@@ -6,7 +6,6 @@ namespace Account\Registration\Application\Command;
 
 use Account\Core\Domain\Model\Account;
 use Account\Core\Domain\Repository\AccountRepositoryInterface;
-use Account\Registration\Domain\Repository\RegistrationRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Kernel\Application\Bus\EventBusInterface;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;

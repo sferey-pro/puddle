@@ -51,7 +51,7 @@ final class RegistrationSaga
     public function __invoke(RegistrationSagaStarted $event): void
     {
         /** @var RegistrationSagaProcess|null $sagaProcess */
-        $sagaProcess = $this->processRepository->ofId($event->sagaStateId());
+        $sagaProcess = $this->processRepository->find($event->sagaStateId());
 
         // Si le parcours n'existe pas ou est déjà terminé, on ne fait rien.
         if (null === $sagaProcess || $this->workflow->can($sagaProcess, 'complete')) {
@@ -107,7 +107,7 @@ final class RegistrationSaga
                 $this->clock->now()
             );
 
-            
+
             $this->processRepository->save($sagaProcess);
         }
     }
