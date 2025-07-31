@@ -8,6 +8,7 @@ use Authentication\Domain\Model\LoginAttempt;
 use Authentication\Domain\Repository\LoginAttemptRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Identity\Domain\ValueObject\Identifier;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -18,7 +19,8 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  * - Index sur (ip_address, attempted_at, successful) pour blocage IP
  * - Requêtes COUNT optimisées pour performance
  */
-final class DoctrineLoginAttemptRepository extends ServiceEntityRepository implements LoginAttemptRepositoryInterface
+final class DoctrineLoginAttemptRepository extends ServiceEntityRepository
+    implements LoginAttemptRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -113,6 +115,32 @@ final class DoctrineLoginAttemptRepository extends ServiceEntityRepository imple
         }
 
         return $suspiciousIps;
+    }
+
+    public function findRecentByIdentifier(Identifier $identifier, int $windowMinutes = 30): array {
+        $since = (new \DateTimeImmutable())->modify("-{$windowMinutes} minutes");
+
+        return $this->createQueryBuilder('a')
+            ->where('a.identifier = :identifier')
+            ->andWhere('a.attemptedAt >= :since')
+            ->setParameter('identifier', $identifier->value())
+            ->setParameter('since', $since)
+            ->orderBy('a.attemptedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findRecentByIp(string $ipAddress, int $windowMinutes = 30): array {
+        $since = (new \DateTimeImmutable())->modify("-{$windowMinutes} minutes");
+
+        return $this->createQueryBuilder('a')
+            ->where('a.ipAddress = :ipAddress')
+            ->andWhere('a.attemptedAt >= :since')
+            ->setParameter('ipAddress', $ipAddress)
+            ->setParameter('since', $since)
+            ->orderBy('a.attemptedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     // ==================== MAINTENANCE ====================

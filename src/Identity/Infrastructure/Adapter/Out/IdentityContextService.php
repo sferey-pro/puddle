@@ -6,7 +6,7 @@ namespace Identity\Infrastructure\Adapter\Out;
 
 use Identity\Domain\Repository\UserIdentityRepositoryInterface;
 use Identity\Domain\Service\IdentifierResolverInterface;
-use Kernel\Domain\Result;
+use Identity\Domain\ValueObject\Identifier;
 use SharedKernel\Domain\DTO\Identity\UserIdentifierDTO;
 use SharedKernel\Domain\DTO\Identity\UserIdentifiersDTO;
 use SharedKernel\Domain\Service\IdentityContextInterface;
@@ -50,6 +50,25 @@ final class IdentityContextService implements IdentityContextInterface
         return $this->userIdentityRepository->findUserIdByIdentifier($identifierValue);
     }
 
+    public function resolveIdentifierorThrow(string $value): Identifier
+    {
+        return $this->identifierResolver->resolve($value);
+    }
+
+    // ===== NOUVELLES MÉTHODES ENRICHIES =====
+
+    public function tryResolveIdentifier(string $value): ?Identifier
+    {
+        return $this->identifierResolver->tryResolveIdentifier($value);
+    }
+
+    public function resolveMultiple(array $rawIdentifiers): array
+    {
+        return $this->identifierResolver->resolveMultiple($rawIdentifiers);
+    }
+
+    // ===== HELPERS PRIVÉS =====
+
     private function findPrimaryIdentifier(array $identifiers): ?UserIdentifierDTO
     {
         foreach ($identifiers as $identifier) {
@@ -58,10 +77,5 @@ final class IdentityContextService implements IdentityContextInterface
             }
         }
         return null;
-    }
-
-    public function resolveIdentifier(string $value): ?Result
-    {
-        return $this->identifierResolver->resolve($value);
     }
 }

@@ -11,6 +11,7 @@ use Account\Registration\Domain\Model\RegistrationRequest;
 use Account\Registration\Domain\Repository\RegistrationProcessRepositoryInterface;
 use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
 use Account\Registration\Domain\Specification\CanRegisterSpecification;
+use Identity\Domain\ValueObject\Identifier;
 use Kernel\Application\Bus\EventBusInterface;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
 use SharedKernel\Domain\Service\IdentityContextInterface;
@@ -33,24 +34,17 @@ final readonly class StartRegistrationSagaHandler
 
     public function __invoke(StartRegistrationSaga $command): void
     {
-        $identityResult = $this->identityContext->resolveIdentifier($command->identifier);
+        $identifier = $this->identityContext->resolveIdentifierOrThrow($command->identifier);
 
-        if ($identityResult->isFailure()) {
-            throw new \InvalidArgumentException($identityResult->error->getMessage());
-        }
-
-        $identifier = $identityResult->value();
-        $userId = $command->userId;
-
-        $existingProcess = $this->processRepository->findActiveByIdentifier($command->identifier);
-
+        $existingProcess = $this->processRepository->findActiveByIdentifier($identifier);
         if ($existingProcess) {
-            throw RegistrationException::alreadyInProgress($identifier->getValue());
+            throw RegistrationException::alreadyInProgress($identifier);
         }
 
+        // ===== RÈGLES MÉTIER PURES =====
         $registrationRequest = new RegistrationRequest(
             $identifier,
-            $userId,
+            $command->userId,
             ['ip_address' => $command->ipAddress]
         );
 
@@ -58,6 +52,11 @@ final readonly class StartRegistrationSagaHandler
             throw RegistrationException::canRegister($this->canRegisterSpecification->failureReason());
         }
 
+        if ($this->identityContext->findUserIdByIdentifier($identifier)) {
+            throw RegistrationException::identifierAlreadyExists($identifier);
+        }
+
+        // ===== CRÉATION DU SAGA =====
         $sagaProcess = RegistrationSagaProcess::start(
             $command->userId,
             $identifier,

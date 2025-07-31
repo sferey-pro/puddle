@@ -1,25 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Account\Registration\Domain\Specification;
 
 use Account\Registration\Domain\Model\RegistrationRequest;
-use Identity\Application\Query\IsIdentityAvailable;
-use Kernel\Application\Bus\QueryBusInterface;
 use Kernel\Domain\Specification\CompositeSpecification;
 
 /**
- * Specification principale qui combine toutes les règles.
+ * Specification principale CORRIGÉE - Plus de dépendance QueryBus
  */
 final class CanRegisterSpecification extends CompositeSpecification
 {
-    public function __construct(
-        private readonly RegistrationOpenSpecification $registrationOpen,
-        private readonly ValidRegistrationDataSpecification $validData,
-        private readonly QueryBusInterface $queryBus,
-    ) {
-    }
+    private mixed $lastCandidate = null;
 
-    public function failureReason(): ?string {
+    public function __construct(
+        private readonly RegistrationIsOpenSpecification $registrationOpen,
+        private readonly ValidRegistrationDataSpecification $validData,
+    ) {}
+
+    public function failureReason(): ?string
+    {
+        if (!$this->registrationOpen->isSatisfiedBy($this->lastCandidate)) {
+            return $this->registrationOpen->failureReason();
+        }
+
+        if (!$this->validData->isSatisfiedBy($this->lastCandidate)) {
+            return $this->validData->failureReason();
+        }
+
         return null;
     }
 
@@ -29,26 +38,9 @@ final class CanRegisterSpecification extends CompositeSpecification
             return false;
         }
 
-        // L'ordre est important pour l'UX
-        // 1. D'abord vérifier si les inscriptions sont ouvertes
-        if (!$this->registrationOpen->isSatisfiedBy($candidate)) {
-            return false;
-        }
+        $this->lastCandidate = $candidate;
 
-        // 2. Ensuite valider les données
-        if (!$this->validData->isSatisfiedBy($candidate)) {
-            return false;
-        }
-
-        $isAvailable = $this->queryBus->ask(
-            new IsIdentityAvailable($candidate->identifier)
-        );
-
-        // 3. Enfin vérifier l'unicité (plus coûteux)
-        if (false === $isAvailable) {
-            return false;
-        }
-
-        return true;
+        return $this->registrationOpen->isSatisfiedBy($candidate)
+            && $this->validData->isSatisfiedBy($candidate);
     }
 }

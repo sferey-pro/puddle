@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Identity\Domain\Service;
 
+use Identity\Domain\ValueObject\Identifier;
 use Kernel\Domain\Result;
 
 /**
@@ -11,5 +12,9 @@ use Kernel\Domain\Result;
  */
 interface IdentifierResolverInterface
 {
-    public function resolve(string $identifier): Result;
+    public function resolve(string $identifier): Identifier;
+
+    public function tryResolveIdentifier(string $identifier): ?Identifier;
+    
+    public function resolveMultiple(array $identifiers): array;
 }

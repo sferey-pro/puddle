@@ -23,10 +23,15 @@ final readonly class AccountContextService implements AccountContextInterface
         private AuthenticationContextInterface $authContext,
     ) {}
 
+    public function ofId(UserId $userId): ?Account
+    {
+        return $this->accountRepository->findById($userId);
+    }
+
     public function getAccountStatus(UserId $userId): ?AccountStatusDTO
     {
         /** @var Account $account */
-        $account = $this->accountRepository->find($userId);
+        $account = $this->accountRepository->findById($userId);
 
         if ($account === null) {
             return null;

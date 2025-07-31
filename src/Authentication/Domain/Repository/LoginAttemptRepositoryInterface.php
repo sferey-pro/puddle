@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Authentication\Domain\Repository;
 
 use Authentication\Domain\Model\LoginAttempt;
+use Identity\Domain\ValueObject\Identifier;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -65,6 +66,16 @@ interface LoginAttemptRepositoryInterface
     public function findRecentByUserId(UserId $userId, int $limit = 10): array;
 
     /**
+     * Récupère l'historique des tentatives pour un identifiant donné.
+     * Cas d'usage : Dashboard sécurité utilisateur
+     *
+     * @param Identifier $identifier
+     * @param int $windowMinutes
+     * @return LoginAttempt[]
+     */
+    public function findRecentByIdentifier(Identifier $identifier, int $windowMinutes = 30): array;
+
+    /**
      * Trouve les IPs suspectes (multiples échecs).
      * Cas d'usage : Dashboard admin sécurité
      *
@@ -73,6 +84,13 @@ interface LoginAttemptRepositoryInterface
      * @return array<string, int> [ip => count]
      */
     public function findSuspiciousIps(\DateInterval $period, int $threshold = 5): array;
+
+    /**
+     * Récupère les tentatives récentes depuis une IP donnée.
+     *
+     * @return LoginAttempt[]
+     */
+    public function findRecentByIp(string $ipAddress, int $windowMinutes = 30): array;
 
     // ==================== MAINTENANCE ====================
 

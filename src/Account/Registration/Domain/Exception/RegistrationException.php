@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Account\Registration\Domain\Exception;
 
-use SharedKernel\Domain\ValueObject\Contact\EmailAddress;
-use SharedKernel\Domain\ValueObject\Contact\PhoneNumber;
-
 /**
  * Exception de base pour toutes les erreurs métier liées à l'agrégat Registration.
  */
@@ -14,6 +11,7 @@ final class RegistrationException extends \DomainException
 {
     private const string CAN_REGISTER = 'U-000';
     private const string ALREADY_IN_PROGRESS = 'U-001';
+    private const string ALREADY_EXISTS = 'U-002';
     private const string INVALID_IDENTIFIER = 'U-003';
     private const string PROCESS_NOT_FOUND = 'U-004';
 
@@ -46,6 +44,11 @@ final class RegistrationException extends \DomainException
     public static function processNotFound(string $sagaId): self
     {
         return new self(sprintf('Registration process not found: %s', $sagaId), self::PROCESS_NOT_FOUND);
+    }
+
+    public static function identifierAlreadyExists(string $identifier): self
+    {
+        return new self(sprintf('An account with identifier "%s" already exists.', $identifier), self::ALREADY_EXISTS);
     }
 
     public function payload(): mixed

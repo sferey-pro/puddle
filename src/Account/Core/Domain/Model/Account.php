@@ -13,6 +13,7 @@ use Account\Lifecycle\Domain\Model\AccountState;
 use Account\Lifecycle\Domain\Model\AccountStateData;
 use Account\Lifecycle\Domain\Model\State\ActiveState;
 use Account\Lifecycle\Domain\Model\State\PendingState;
+use Account\Lifecycle\Domain\Model\State\SuspendedState;
 use Identity\Domain\ValueObject\Identifier;
 use Kernel\Application\Clock\SystemTime;
 use Kernel\Domain\Aggregate\AggregateRoot;
@@ -91,6 +92,16 @@ final class Account extends AggregateRoot implements
     public function markAsVerified(): void {
         $this->verifiedAt = SystemTime::now();
     }
+
+    public function getSuspendedAt(): ?\DateTimeImmutable
+    {
+        if($this->getState() instanceof SuspendedState) {
+            return $this->getState()->until;
+        }
+
+        return null;
+    }
+
 
     // ==================== IMPLÉMENTATION TIMESTAMPABLE ====================
 

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace SharedKernel\Domain\Service;
 
-use SharedKernel\Domain\DTO\Account\AccountPermissionsDTO;
-use SharedKernel\Domain\DTO\Account\AccountPlanDTO;
+use Account\Core\Domain\Model\Account;
 use SharedKernel\Domain\DTO\Account\AccountStatusDTO;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
@@ -15,6 +14,11 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  */
 interface AccountContextInterface
 {
+    /**
+     * Récupère un compte par son ID.
+     */
+    public function ofId(UserId $userId): ?Account;
+
     /**
      * Informations de statut pour Authentication
      */

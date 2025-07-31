@@ -81,15 +81,10 @@ final class PasswordlessRequestForm extends AbstractController
 
         try {
 
-            $identifierResult = $this->identityContext->resolveIdentifier($analysis->normalizedValue);
-
-            if ($identifierResult->isFailure()) {
-                $this->errorMessage = 'Invalid identifier format.';
-                return null;
-            }
+            $identifier = $this->identityContext->resolveIdentifierOrThrow($analysis->normalizedValue);
 
             $this->authService->initiatePasswordlessAuthentication(
-                identifier: $identifierResult->value,
+                identifier: $identifier,
                 ipAddress: $request->getClientIp(),
                 userAgent: $request->headers->get('User-Agent')
             );

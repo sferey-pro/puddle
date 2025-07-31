@@ -7,15 +7,25 @@ declare(strict_types=1);
  */
 namespace Authentication\Application\Command;
 
+use Account\Core\Domain\Model\Account;
+use Account\Registration\Domain\Model\RegistrationRequest;
 use Authentication\Application\Notifier\CustomLoginLinkNotification;
 use Authentication\Application\Notifier\LoginEmailNotification;
+use Authentication\Application\Service\LoginValidationService;
+use Authentication\Domain\Exception\AuthenticationException;
 use Authentication\Domain\Exception\TooManyAttemptsException;
+use Authentication\Domain\Model\LoginRequest;
 use Authentication\Domain\Repository\AccessCredentialRepositoryInterface;
+use Authentication\Domain\Repository\LoginAttemptRepositoryInterface;
+use Authentication\Domain\ValueObject\LoginAttemptHistory;
 use Authentication\Infrastructure\Security\LoginLinkAdapter;
+use Identity\Domain\ValueObject\EmailIdentity;
 use Identity\Domain\ValueObject\Identifier;
 use Kernel\Infrastructure\Symfony\Messenger\Attribute\AsCommandHandler;
+use SharedKernel\Domain\Service\AccountContextInterface;
 use SharedKernel\Domain\Service\AccountRegistrationContextInterface;
 use SharedKernel\Domain\Service\IdentityContextInterface;
+use SharedKernel\Domain\ValueObject\Identity\UserId;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Notifier\Recipient\Recipient;
 
@@ -24,8 +34,11 @@ final readonly class RequestMagicLinkHandler
 {
     public function __construct(
         private AccountRegistrationContextInterface $accountRegistrationContext,
+        private LoginValidationService $loginValidation,
         private IdentityContextInterface $identityContext,
+        private AccountContextInterface $accountContext,
         private AccessCredentialRepositoryInterface $credentialRepository,
+        private LoginAttemptRepositoryInterface $attemptRepository,
         private LoginLinkAdapter $loginLinkAdapter,
         private NotifierInterface $notifier
     ) {}
@@ -34,50 +47,103 @@ final readonly class RequestMagicLinkHandler
     {
         $identifier = $command->email;
 
-        // 1. Vérifier le rate limiting
-        $recentAttempts = $this->credentialRepository->countRecentAttempts(
-            $identifier,
-            new \DateInterval('PT5M')
-        );
-
-        if ($recentAttempts >= 3) {
-            throw TooManyAttemptsException::forEmail(
-                $identifier->value(),
-                60 // Wait 60 seconds
-            );
-        }
-
-        // 2. Chercher un compte existant
+        // ===== DÉTECTION : INSCRIPTION VS CONNEXION =====
         $existingUserId = $this->identityContext->findUserIdByIdentifier($identifier->value());
 
-        $metadata = [
-            'ip_address' => $command->ipAddress,
-            'user_agent' => $command->userAgent,
-            'requested_at' => (new \DateTimeImmutable())->format('c'),
-        ];
-
         if ($existingUserId === null) {
-            // 3a. Nouveau compte - démarrer la Saga Registration
-            $this->accountRegistrationContext->initiateRegistration($identifier->value(), $command->ipAddress);
+            // 🆕 NOUVEAU COMPTE → PROCESSUS D'INSCRIPTION
+            $this->handleRegistration($identifier, $command);
         } else {
-            // 3b. Compte existant - envoyer le magic link
-            $this->sendMagicLinkToExistingAccount($existingUserId, $command);
+            // 🔑 COMPTE EXISTANT → PROCESSUS DE CONNEXION
+            $this->handleLogin($identifier, $existingUserId, $command);
         }
     }
 
-    private function sendMagicLinkToExistingAccount($userId, RequestMagicLink $command): void
+    // ===== PROCESSUS D'INSCRIPTION =====
+    private function handleRegistration(EmailIdentity $identifier, RequestMagicLink $command): void
     {
-        // Créer le credential avec Symfony LoginLink
-        $loginLinkDetails = $this->loginLinkAdapter->createLoginLink($userId);
+        // Construction de la demande d'inscription
+        $registrationRequest = new RegistrationRequest(
+            identifier: $identifier,
+            userId: UserId::generate(), // Nouveau UserId
+            metadata: [
+                'ip_address' => $command->ipAddress,
+                'user_agent' => $command->userAgent,
+                'country' => $this->extractCountryFromIp($command->ipAddress),
+            ]
+        );
 
-        // Envoyer l'email
+        // ✅ SPECIFICATIONS DE REGISTRATION
+        if (!$this->canRegister->isSatisfiedBy($registrationRequest)) {
+            throw AuthenticationException::registrationNotAllowed(
+                $this->canRegister->failureReason()
+            );
+        }
+
+        // Démarrer le Saga de Registration
+        $this->registrationContext->initiateRegistration(
+            $identifier->value(),
+            $command->ipAddress
+        );
+    }
+
+    // ===== PROCESSUS DE CONNEXION =====
+    private function handleLogin(EmailIdentity $identifier, UserId $userId, RequestMagicLink $command): void
+    {
+        // Charger les tentatives récentes depuis le repository existant
+        $recentAttemptsByIdentifier = $this->attemptRepository->getRecentAttemptsByIdentifier(
+            $identifier,
+            15 // 15 minutes
+        );
+
+        $recentAttemptsByIp = $this->attemptRepository->getRecentAttemptsByIp(
+            $command->ipAddress,
+            15 // 15 minutes
+        );
+
+        // Construction de la demande de connexion
+        $loginRequest = new LoginRequest(
+            identifier: $identifier,
+            account: $this->loadAccount($userId),
+            ipAddress: $command->ipAddress,
+            userAgent: $command->userAgent,
+            requestedAt: new \DateTimeImmutable(),
+            recentAttemptsByIdentifier: $recentAttemptsByIdentifier,
+            recentAttemptsByIp: $recentAttemptsByIp,
+        );
+
+        // ✅ SPECIFICATIONS D'AUTHENTICATION
+        $validationResult = $this->loginValidation->validateLoginRequest($loginRequest);
+
+        if (!$validationResult->isValid) {
+            throw AuthenticationException::loginNotAllowed(
+                $validationResult->errorCode,
+                $validationResult->errorMessage
+            );
+        }
+
+        // Générer et envoyer le Magic Link
+        $this->sendMagicLink($identifier, $userId, $command);
+    }
+
+    // ===== HELPERS PRIVÉS =====
+    private function sendMagicLink(EmailIdentity $identifier, UserId $userId, RequestMagicLink $command): void
+    {
+        $loginDetails = $this->loginLinkAdapter->createLoginLink($userId);
+
         $notification = new LoginEmailNotification(
-            $loginLinkDetails,
-            'Votre lien de connexion Puddle', // email subject
+            $loginDetails,
+            'Votre lien de connexion Puddle',
             $command->ipAddress
         );
 
-        $recipient = new Recipient((string) $command->email);
+        $recipient = new Recipient($identifier->value());
         $this->notifier->send($notification, $recipient);
+    }
+
+    private function loadAccount(UserId $userId): ?Account
+    {
+        // Charger le compte pour les validations Authentication
+        return $this->accountContext->ofId($userId);
     }
 }
