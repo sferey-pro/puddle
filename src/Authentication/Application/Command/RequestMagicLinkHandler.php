@@ -9,6 +9,7 @@ namespace Authentication\Application\Command;
 
 use Account\Core\Domain\Model\Account;
 use Account\Registration\Domain\Model\RegistrationRequest;
+use Account\Registration\Domain\Specification\CanRegisterSpecification;
 use Authentication\Application\Notifier\CustomLoginLinkNotification;
 use Authentication\Application\Notifier\LoginEmailNotification;
 use Authentication\Application\Service\LoginValidationService;
@@ -36,6 +37,7 @@ final readonly class RequestMagicLinkHandler
         private AccountRegistrationContextInterface $accountRegistrationContext,
         private LoginValidationService $loginValidation,
         private IdentityContextInterface $identityContext,
+        private CanRegisterSpecification $canRegister,
         private AccountContextInterface $accountContext,
         private AccessCredentialRepositoryInterface $credentialRepository,
         private LoginAttemptRepositoryInterface $attemptRepository,
@@ -68,8 +70,7 @@ final readonly class RequestMagicLinkHandler
             userId: UserId::generate(), // Nouveau UserId
             metadata: [
                 'ip_address' => $command->ipAddress,
-                'user_agent' => $command->userAgent,
-                'country' => $this->extractCountryFromIp($command->ipAddress),
+                'user_agent' => $command->userAgent
             ]
         );
 
@@ -81,7 +82,7 @@ final readonly class RequestMagicLinkHandler
         }
 
         // Démarrer le Saga de Registration
-        $this->registrationContext->initiateRegistration(
+        $this->accountRegistrationContext->initiateRegistration(
             $identifier->value(),
             $command->ipAddress
         );
@@ -91,15 +92,9 @@ final readonly class RequestMagicLinkHandler
     private function handleLogin(EmailIdentity $identifier, UserId $userId, RequestMagicLink $command): void
     {
         // Charger les tentatives récentes depuis le repository existant
-        $recentAttemptsByIdentifier = $this->attemptRepository->getRecentAttemptsByIdentifier(
-            $identifier,
-            15 // 15 minutes
-        );
+        $recentAttemptsByIdentifier = $this->attemptRepository->findRecentByIdentifier($identifier, 15);
 
-        $recentAttemptsByIp = $this->attemptRepository->getRecentAttemptsByIp(
-            $command->ipAddress,
-            15 // 15 minutes
-        );
+        $recentAttemptsByIp = $this->attemptRepository->findRecentByIp($command->ipAddress, 15);
 
         // Construction de la demande de connexion
         $loginRequest = new LoginRequest(

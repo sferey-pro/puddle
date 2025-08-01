@@ -1,2 +1,0 @@
-# Le Pattern Read Models
-

@@ -6,47 +6,36 @@ namespace Account\Core\Infrastructure\Persistence\Doctrine\Repository;
 
 use Account\Core\Domain\Model\Account;
 use Account\Core\Domain\Repository\AccountRepositoryInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Kernel\Infrastructure\Persistence\Doctrine\Repository\AbstractDoctrineRepository;
+use SharedKernel\Domain\ValueObject\Contact\EmailAddress;
+use SharedKernel\Domain\ValueObject\Contact\PhoneNumber;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
  * Implémentation Doctrine du repository Account.
  *
  * APPROCHE :
- * - Utilisation directe de ServiceEntityRepository
  * - Requêtes optimisées avec COUNT pour les vérifications
  * - Pas de flush automatique pour plus de contrôle
+ *
+ * @extends AbstractDoctrineRepository<Account, UserId>
  */
-final class DoctrineAccountRepository extends ServiceEntityRepository implements AccountRepositoryInterface
+final class DoctrineAccountRepository extends AbstractDoctrineRepository
+    implements AccountRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    // Recherche par critère unique
+    // ============================
+
+    public function ofUserId(UserId $id): ?Account
     {
-        parent::__construct($registry, Account::class);
+        return $this->createQueryBuilder('a')
+            ->where('a.id = :userId')
+            ->setParameter('uerId', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
-    // ==================== CRUD BASIQUE ====================
-
-    public function save(Account $account): void
-    {
-        $this->getEntityManager()->persist($account);
-        $this->getEntityManager()->flush();
-    }
-
-    public function remove(Account $account): void
-    {
-        $this->getEntityManager()->remove($account);
-        $this->getEntityManager()->flush();
-    }
-
-    // ==================== RECHERCHES ESSENTIELLES ====================
-
-    public function findById(UserId $userId): ?Account
-    {
-        return $this->find($userId);
-    }
-
-    public function findByEmail(string $email): ?Account
+    public function ofEmail(EmailAddress $email): ?Account
     {
         return $this->createQueryBuilder('a')
             ->where('a.email = :email')
@@ -55,7 +44,7 @@ final class DoctrineAccountRepository extends ServiceEntityRepository implements
             ->getOneOrNullResult();
     }
 
-    public function findByPhone(string $phone): ?Account
+    public function ofPhone(PhoneNumber $phone): ?Account
     {
         return $this->createQueryBuilder('a')
             ->where('a.phone = :phone')
@@ -64,21 +53,22 @@ final class DoctrineAccountRepository extends ServiceEntityRepository implements
             ->getOneOrNullResult();
     }
 
-    // ==================== REQUÊTES OPTIMISÉES ====================
+    // Vérification existence
+    // ======================
 
-    public function exists(UserId $userId): bool
+    public function existsUserId(UserId $id): bool
     {
         $count = $this->createQueryBuilder('a')
             ->select('COUNT(a.id)')
             ->where('a.id = :userId')
-            ->setParameter('userId', $userId)
+            ->setParameter('userId', $id)
             ->getQuery()
             ->getSingleScalarResult();
 
         return $count > 0;
     }
 
-    public function emailExists(string $email): bool
+    public function emailExists(EmailAddress $email): bool
     {
         $count = $this->createQueryBuilder('a')
             ->select('COUNT(a.id)')
@@ -90,7 +80,7 @@ final class DoctrineAccountRepository extends ServiceEntityRepository implements
         return $count > 0;
     }
 
-    public function phoneExists(string $phone): bool
+    public function phoneExists(PhoneNumber $phone): bool
     {
         $count = $this->createQueryBuilder('a')
             ->select('COUNT(a.id)')
@@ -102,7 +92,8 @@ final class DoctrineAccountRepository extends ServiceEntityRepository implements
         return $count > 0;
     }
 
-    // ==================== REQUÊTES MÉTIER ====================
+    // Spécifique métier
+    // =================
 
     public function countActive(): int
     {

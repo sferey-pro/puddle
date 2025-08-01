@@ -1,1 +1,0 @@
-# Le Pattern Event Sourcing

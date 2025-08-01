@@ -61,4 +61,13 @@ final readonly class PhoneIdentity implements Identifier
     {
         return $this->value();
     }
+
+    public function mask(): string {
+        $length = strlen($this->value());
+        if ($length > 5) {
+            return substr($this->value(), 0, 3) . '***' . substr($this->value(), -2);
+        }
+
+        return '***';
+    }
 }

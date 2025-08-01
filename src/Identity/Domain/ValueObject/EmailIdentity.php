@@ -61,4 +61,9 @@ final readonly class EmailIdentity implements Identifier
     {
         return $this->value();
     }
+
+    public function mask(): string {
+        [$local, $domain] = explode('@', $this->value());
+        return substr($local, 0, 3) . '***@' . $domain;
+    }
 }

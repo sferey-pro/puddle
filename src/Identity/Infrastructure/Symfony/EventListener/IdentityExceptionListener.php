@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kernel\Infrastructure\Symfony\EventListener;
+namespace Identity\Infrastructure\Symfony\EventListener;
 
 use Identity\Domain\Exception\InvalidIdentifierException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;

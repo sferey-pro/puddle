@@ -18,4 +18,6 @@ interface Identifier extends UniqueValueInterface
     public function getType(): string;
 
     public function getClass(): string;
+
+    public function mask(): string;
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Account\Registration\Domain\Repository;
 
 use Account\Registration\Domain\Saga\Process\RegistrationSagaProcess;
+use Identity\Domain\ValueObject\Identifier;
+use Kernel\Domain\Repository\RepositoryInterface;
 use Kernel\Domain\Saga\SagaStateId;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
@@ -15,42 +17,26 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  * - Tracking de l'état du processus d'inscription
  * - Recherche par différents critères
  * - Support des états du workflow
+ *
+ * @extends RepositoryInterface<RegistrationSagaProcess, SagaStateId>
  */
-interface RegistrationProcessRepositoryInterface
+interface RegistrationProcessRepositoryInterface extends RepositoryInterface
 {
-    // ==================== CRUD BASIQUE ====================
-
-    /**
-     * Persiste un processus de Saga.
-     */
-    public function save(RegistrationSagaProcess $process): void;
-
-    /**
-     * Supprime un processus de Saga.
-     */
-    public function remove(RegistrationSagaProcess $process): void;
-
-    // ==================== RECHERCHES ESSENTIELLES ====================
-
-    /**
-     * Trouve un processus par son ID de Saga.
-     * Cas d'usage : Récupération dans RegistrationSaga après événement
-     */
-    public function findById(SagaStateId $sagaStateId): ?RegistrationSagaProcess;
+    // Recherche par critère unique
+    // ============================
 
     /**
      * Trouve un processus par UserId.
-     * Cas d'usage : Vérifier si une inscription est déjà en cours
      */
-    public function findByUserId(UserId $userId): ?RegistrationSagaProcess;
+    public function ofUserId(UserId $id): ?RegistrationSagaProcess;
 
     /**
-     * Trouve un processus actif par identifier.
-     * Cas d'usage : Éviter les inscriptions multiples avec même email/phone
+     * Trouve un processus par Identifier.
      */
-    public function findActiveByIdentifier(string $identifierValue): ?RegistrationSagaProcess;
+    public function ofIdentifier(Identifier $identifier): ?RegistrationSagaProcess;
 
-    // ==================== REQUÊTES MÉTIER ====================
+    // Recherche multiple
+    // ==================
 
     /**
      * Trouve tous les processus dans un état donné.
@@ -59,7 +45,7 @@ interface RegistrationProcessRepositoryInterface
      * @param string $state État du workflow (started, account_created, etc.)
      * @return RegistrationSagaProcess[]
      */
-    public function findByState(string $state): array;
+    public function allofState(string $state): array;
 
     /**
      * Trouve les processus bloqués (non terminés depuis X temps).
@@ -68,7 +54,16 @@ interface RegistrationProcessRepositoryInterface
      * @param \DateInterval $stuckSince Durée depuis laquelle considérer comme bloqué
      * @return RegistrationSagaProcess[]
      */
-    public function findStuckProcesses(\DateInterval $stuckSince): array;
+    public function allStuckProcesses(\DateInterval $stuckSince): array;
+
+    // Spécifique métier
+    // =================
+
+    /**
+     * Trouve un processus actif par identifier.
+     * Cas d'usage : Éviter les inscriptions multiples avec même email/phone
+     */
+    public function findActiveByIdentifier(Identifier $identifier): ?RegistrationSagaProcess;
 
     /**
      * Compte les processus actifs.
@@ -76,7 +71,8 @@ interface RegistrationProcessRepositoryInterface
      */
     public function countActive(): int;
 
-    // ==================== MAINTENANCE ====================
+    // Spécifique system
+    // =================
 
     /**
      * Nettoie les anciens processus terminés.

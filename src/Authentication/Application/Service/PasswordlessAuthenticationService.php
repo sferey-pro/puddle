@@ -8,9 +8,8 @@ use Authentication\Application\Command\RequestMagicLink;
 use Authentication\Application\Command\RequestOTP;
 use Authentication\Domain\Exception\InvalidIdentifierException;
 use Authentication\Domain\Exception\TooManyAttemptsException;
-use Identity\Domain\ValueObject\EmailIdentity;
+use Authentication\Infrastructure\Adapter\Out\IdentityContextAdapter;
 use Identity\Domain\ValueObject\Identifier;
-use Identity\Domain\ValueObject\PhoneIdentity;
 use Kernel\Application\Bus\CommandBusInterface;
 use Psr\Log\LoggerInterface;
 use SharedKernel\Domain\Service\IdentityContextInterface;
@@ -22,7 +21,7 @@ final readonly class PasswordlessAuthenticationService
 {
     public function __construct(
         private CommandBusInterface $commandBus,
-        private IdentityContextInterface $identityContext,
+        private IdentityContextAdapter $identityAdapter,
         private LoggerInterface $logger
     ) {}
 
@@ -44,18 +43,17 @@ final readonly class PasswordlessAuthenticationService
             'ip' => $ipAddress
         ]);
 
-        // 2. Dispatcher la commande appropriée
         try {
-            $command = match($identifier::class) {
-                EmailIdentity::class => new RequestMagicLink(
+            $command = match($identifier->getType()) {
+                'email' => new RequestMagicLink(
                         email: $identifier,
                         ipAddress: $ipAddress,
                         userAgent: $userAgent
                 ),
-                PhoneIdentity::class => new RequestOTP(
+                'phone' => new RequestOTP(
                         identifier: $identifier,
                         ipAddress: $ipAddress,
-                        userAgent: $userAgent
+                        userAgent: null
                 ),
                 default => throw new \LogicException('Unsupported identifier type')
             };
@@ -83,6 +81,22 @@ final readonly class PasswordlessAuthenticationService
             identifier: $identifier,
             ipAddress: $ipAddress,
             userAgent: null
+        ));
+    }
+
+    /**
+     * Renvoie un Email de magic link (pour le bouton "Resend magic link").
+     */
+    public function resetMagicLink(Identifier $identifier, string $ipAddress, string $userAgent): void
+    {
+        $this->logger->info('Resetting magic link', [
+            'email' => $identifier->value()
+        ]);
+
+        $this->commandBus->dispatch(new RequestMagicLink(
+            email: $identifier,
+            ipAddress: $ipAddress,
+            userAgent: $userAgent
         ));
     }
 }

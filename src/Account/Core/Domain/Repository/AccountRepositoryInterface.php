@@ -5,71 +5,66 @@ declare(strict_types=1);
 namespace Account\Core\Domain\Repository;
 
 use Account\Core\Domain\Model\Account;
+use Kernel\Domain\Repository\RepositoryInterface;
+use SharedKernel\Domain\ValueObject\Contact\EmailAddress;
+use SharedKernel\Domain\ValueObject\Contact\PhoneNumber;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
  * Repository pour l'agrégat Account.
  *
- * PHILOSOPHIE : KISS - Uniquement les opérations essentielles
- * - CRUD basique
+ * PHILOSOPHIE :
+ * - CRUD
  * - Recherche par identifiants pour l'authentification
- * - Pas de specifications complexes dans un premier temps
+ *
+ * @extends RepositoryInterface<Account, UserId>
  */
-interface AccountRepositoryInterface
+interface AccountRepositoryInterface extends RepositoryInterface
 {
-    // ==================== CRUD BASIQUE ====================
-
-    /**
-     * Persiste un Account (create ou update).
-     */
-    public function save(Account $account): void;
-
-    /**
-     * Supprime un Account.
-     */
-    public function remove(Account $account): void;
-
-    // ==================== RECHERCHES ESSENTIELLES ====================
+    // Recherche par critère unique
+    // ============================
 
     /**
      * Trouve un Account par son UserId.
-     * Cas d'usage : Chargement depuis un Command/Query avec UserId connu
      */
-    public function findById(UserId $userId): ?Account;
+    public function ofUserId(UserId $id): ?Account;
 
     /**
      * Trouve un Account par email.
      * Cas d'usage : Authentification, vérification d'unicité
      */
-    public function findByEmail(string $email): ?Account;
+    public function ofEmail(EmailAddress $email): ?Account;
 
     /**
      * Trouve un Account par numéro de téléphone.
      * Cas d'usage : Authentification par SMS, vérification d'unicité
      */
-    public function findByPhone(string $phone): ?Account;
+    public function ofPhone(PhoneNumber $phone): ?Account;
 
-    // ==================== REQUÊTES OPTIMISÉES ====================
+    // Vérification existence
+    // ======================
 
     /**
      * Vérifie si un Account existe.
      * Cas d'usage : Validations rapides sans charger l'agrégat
      */
-    public function exists(UserId $userId): bool;
+    public function existsUserId(UserId $id): bool;
 
     /**
      * Vérifie si un email est déjà utilisé.
      * Cas d'usage : Validation lors de l'inscription
      */
-    public function emailExists(string $email): bool;
+    public function existsEmail(EmailAddress $email): bool;
 
     /**
      * Vérifie si un numéro de téléphone est déjà utilisé.
      * Cas d'usage : Validation lors de l'inscription
      */
-    public function phoneExists(string $phone): bool;
+    public function existsPhone(PhoneNumber $phone): bool;
 
-    // ==================== REQUÊTES MÉTIER ====================
+
+    // Spécifique métier
+    // =================
 
     /**
      * Compte les Accounts actifs.
