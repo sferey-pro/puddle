@@ -6,6 +6,7 @@ namespace Authentication\Domain\Repository;
 
 use Authentication\Domain\Model\LoginAttempt;
 use Identity\Domain\ValueObject\Identifier;
+use Kernel\Domain\Repository\RepositoryInterface;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -15,15 +16,14 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  * - Traçabilité complète des tentatives
  * - Rate limiting par identifier ET par IP
  * - Analyse des patterns de sécurité
+ *
+ * @extends RepositoryInterface<LoginAttempt, LoginAttemptId>
  */
-interface LoginAttemptRepositoryInterface
+interface LoginAttemptRepositoryInterface extends RepositoryInterface
 {
-    // ==================== CRUD BASIQUE ====================
 
-    /**
-     * Enregistre une tentative de connexion.
-     */
-    public function save(LoginAttempt $attempt): void;
+    // Spécifique métier
+    // =================
 
     // ==================== RATE LIMITING ====================
 
@@ -92,7 +92,8 @@ interface LoginAttemptRepositoryInterface
      */
     public function findRecentByIp(string $ipAddress, int $windowMinutes = 30): array;
 
-    // ==================== MAINTENANCE ====================
+    // Spécifique métier
+    // =================
 
     /**
      * Supprime les anciennes tentatives.

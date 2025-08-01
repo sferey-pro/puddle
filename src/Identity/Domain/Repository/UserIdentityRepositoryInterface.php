@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Identity\Domain\Repository;
 
 use Identity\Domain\Model\UserIdentity;
+use Identity\Domain\ValueObject\Identifier;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -30,10 +31,13 @@ interface UserIdentityRepositoryInterface
     // ==================== RECHERCHES ESSENTIELLES ====================
 
     /**
-     * Trouve un UserIdentity par son UserId.
-     * Cas d'usage : Chargement depuis un Command/Query avec UserId connu
+     * Vérifie si un identifier existe déjà.
+     * Cas d'usage : Validation d'unicité lors de l'inscription
+     *
+     * @param string $type Le type d'identifier
+     * @param string $value La valeur de l'identifier
      */
-    public function findByUserId(UserId $userId): ?UserIdentity;
+    public function existsByIdentity(Identifier $identifier): bool;
 
     /**
      * Trouve un UserIdentity par valeur d'identifier (email, phone, etc.).
@@ -41,18 +45,7 @@ interface UserIdentityRepositoryInterface
      *
      * @param string $value La valeur de l'identifier (ex: "user@example.com")
      */
-    public function findByIdentifierValue(string $value): ?UserIdentity;
-
-    /**
-     * Version optimisée quand on connaît le type.
-     * Cas d'usage : Recherche ciblée plus rapide
-     *
-     * @param string $type Le type d'identifier ('email', 'phone', etc.)
-     * @param string $value La valeur de l'identifier
-     */
-    public function findByTypedIdentifier(string $type, string $value): ?UserIdentity;
-
-    // ==================== REQUÊTES OPTIMISÉES ====================
+    public function ofIdentifier(Identifier $identifier): ?UserIdentity;
 
     /**
      * Récupère uniquement le UserId pour un identifier donné.
@@ -60,14 +53,12 @@ interface UserIdentityRepositoryInterface
      *
      * @param string $value La valeur de l'identifier
      */
-    public function findUserIdByIdentifier(string $value): ?UserId;
+    public function findUserIdByIdentifier(Identifier $identifier): ?UserId;
+
 
     /**
-     * Vérifie si un identifier existe déjà.
-     * Cas d'usage : Validation d'unicité lors de l'inscription
-     *
-     * @param string $type Le type d'identifier
-     * @param string $value La valeur de l'identifier
+     * Trouve un UserIdentity par son UserId.
+     * Cas d'usage : Chargement depuis un Command/Query avec UserId connu
      */
-    public function existsByTypedIdentifier(string $type, string $value): bool;
+    public function findByUserId(UserId $userId): ?UserIdentity;
 }

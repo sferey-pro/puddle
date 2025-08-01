@@ -9,6 +9,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 use Identity\Domain\Model\UserIdentity;
 use Identity\Domain\Repository\UserIdentityRepositoryInterface;
+use Identity\Domain\ValueObject\EmailIdentity;
+use Identity\Domain\ValueObject\Identifier;
+use Identity\Domain\ValueObject\PhoneIdentity;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -74,7 +77,7 @@ final class DoctrineUserIdentityRepository extends ServiceEntityRepository
 
     // ==================== REQUÊTES OPTIMISÉES ====================
 
-    public function findUserIdByIdentifier(string $value): ?UserId
+    public function findUserIdByIdentifier(Identifier $value): ?UserId
     {
         // Requête DBAL directe pour éviter l'hydratation d'objets
         $sql = <<<'SQL'
@@ -106,4 +109,19 @@ final class DoctrineUserIdentityRepository extends ServiceEntityRepository
 
         return $count > 0;
     }
+
+
+    // ==================== HELPERS PRIVÉS ====================
+
+    private function extractTypeAndValue(Identifier $identifier): array
+    {
+        $type = match ($identifier::class) {
+            EmailIdentity::class => 'email',
+            PhoneIdentity::class => 'phone',
+            default => throw new \InvalidArgumentException('Unknown identifier type')
+        };
+
+        return [$type, $identifier->value()];
+    }
 }
+

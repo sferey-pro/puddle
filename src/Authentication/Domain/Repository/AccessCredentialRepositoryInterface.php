@@ -8,6 +8,7 @@ use Authentication\Domain\Model\AccessCredential\AbstractAccessCredential;
 use Authentication\Domain\ValueObject\Token;
 use DateInterval;
 use Identity\Domain\ValueObject\Identifier;
+use Kernel\Domain\Repository\RepositoryInterface;
 use SharedKernel\Domain\ValueObject\Identity\UserId;
 
 /**
@@ -15,36 +16,24 @@ use SharedKernel\Domain\ValueObject\Identity\UserId;
  *
  * PHILOSOPHIE : Focus sur l'authentification passwordless
  * - Magic Links pour email
- * - OTP codes pour SMS
+ * - OTP codes pour SMS/Email
  * - Gestion de l'expiration et usage unique
+ *
+ * @extends RepositoryInterface<AbstractAccessCredential, CredentialId>
  */
-interface AccessCredentialRepositoryInterface
+interface AccessCredentialRepositoryInterface extends RepositoryInterface
 {
-    // ==================== CRUD BASIQUE ====================
-
-    /**
-     * Persiste un credential (MagicLink ou OTP).
-     */
-    public function save(AbstractAccessCredential $credential): void;
-
-    /**
-     * Supprime un credential.
-     */
-    public function remove(AbstractAccessCredential $credential): void;
-
-    // ==================== RECHERCHES ESSENTIELLES ====================
-
-    /**
-     * Trouve le credential crée par un user pour un identifier.
-     * Cas d'usage : Compensation de la création du credential
-     */
-    public function findByIdentifierAndUserId(Identifier $identifier, UserId $userId): ?AbstractAccessCredential;
+    // Recherche par critère unique
+    // ============================
 
     /**
      * Trouve un credential par son token.
      * Cas d'usage : Validation lors du login
      */
-    public function findByToken(Token $token): ?AbstractAccessCredential;
+    public function ofToken(Token $token): ?AbstractAccessCredential;
+
+    // Recherche multiple
+    // ==================
 
     /**
      * Trouve les credentials actifs d'un utilisateur.
@@ -52,7 +41,16 @@ interface AccessCredentialRepositoryInterface
      *
      * @return AbstractAccessCredential[]
      */
-    public function findActiveByUserId(UserId $userId): array;
+    public function allActiveByUserId(UserId $userId): array;
+
+    // Spécifique métier
+    // =================
+
+    /**
+     * Trouve le credential crée par un user pour un identifier.
+     * Cas d'usage : Compensation de la création du credential
+     */
+    public function findByIdentifierAndUserId(Identifier $identifier, UserId $userId): ?AbstractAccessCredential;
 
     /**
      * Trouve le dernier credential créé pour un identifier.
@@ -66,8 +64,8 @@ interface AccessCredentialRepositoryInterface
      */
     public function countRecentAttempts(Identifier $identifier, \DateInterval $interval): int;
 
-
-    // ==================== MAINTENANCE ====================
+    // Spécifique system
+    // =================
 
     /**
      * Supprime tous les credentials expirés.
@@ -82,6 +80,4 @@ interface AccessCredentialRepositoryInterface
      * Cas d'usage : Sécurité après changement de mot de passe ou logout global
      */
     public function invalidateAllForUser(UserId $userId): void;
-
-
 }

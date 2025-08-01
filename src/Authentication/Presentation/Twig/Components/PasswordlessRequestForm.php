@@ -7,11 +7,10 @@ namespace Authentication\Presentation\Twig\Components;
 use Authentication\Application\DTO\PasswordlessDTO;
 use Authentication\Application\Service\PasswordlessAuthenticationService;
 use Authentication\Domain\Exception\TooManyAttemptsException;
+use Authentication\Infrastructure\Adapter\Out\IdentityContextAdapter;
 use Authentication\Presentation\Form\PasswordlessFormType;
 use Kernel\Application\Bus\CommandBusInterface;
 use Psr\Log\LoggerInterface;
-use SharedKernel\Domain\Service\IdentifierAnalyzerInterface;
-use SharedKernel\Domain\Service\IdentityContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -46,8 +45,7 @@ final class PasswordlessRequestForm extends AbstractController
     public function __construct(
         private readonly CommandBusInterface $commandBus,
         private readonly PasswordlessAuthenticationService $authService,
-        private readonly IdentifierAnalyzerInterface $identifierAnalyzer,
-        private readonly IdentityContextInterface $identityContext,
+        private readonly IdentityContextAdapter $identityAdapter,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -72,16 +70,8 @@ final class PasswordlessRequestForm extends AbstractController
             return null;
         }
 
-        $analysis = $this->identifierAnalyzer->analyze($this->data->identifier);
-
-        if (!$analysis->isValid) {
-            $this->errorMessage = $analysis->errorMessage;
-            return null;
-        }
-
         try {
-
-            $identifier = $this->identityContext->resolveIdentifierOrThrow($analysis->normalizedValue);
+            $identifier = $this->identityAdapter->context->resolveIdentifierOrThrow($this->data->identifier);
 
             $this->authService->initiatePasswordlessAuthentication(
                 identifier: $identifier,
@@ -89,28 +79,32 @@ final class PasswordlessRequestForm extends AbstractController
                 userAgent: $request->headers->get('User-Agent')
             );
 
-
-            if ($analysis->isEmail()) {
+            if ($identifier->getType() === 'email') {
                 $this->addFlash('success', 'Check your email! We sent you a magic link.');
                 return $this->redirectToRoute('passwordless_email_sent', [
-                    'email' => $analysis->maskedValue
-                ]);
-            } else {
-                $this->addFlash('info', 'We sent you a verification code by SMS.');
-                return $this->redirectToRoute('passwordless_verify_otp', [
-                    'phone' => base64_encode($analysis->normalizedValue)
+                    'email' => $identifier->mask()
                 ]);
             }
+
+            if ($identifier->getType() === 'phone') {
+                $this->addFlash('info', 'We sent you a verification code by SMS.');
+                return $this->redirectToRoute('passwordless_verify_otp', [
+                    'phone' => $identifier->mask()
+                ]);
+            }
+
 
         } catch (TooManyAttemptsException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (\Exception $e) {
             $this->addFlash('error', 'An error occurred. Please try again.');
+
             $this->logger->error('Passwordless request failed', [
                 'error' => $e->getMessage(),
                 'identifier' => $this->data->identifier
             ]);
         }
+
         return null;
     }
 
